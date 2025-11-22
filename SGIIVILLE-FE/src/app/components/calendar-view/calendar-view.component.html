@@ -1,0 +1,187 @@
+<div class="calendar-container">
+  <!-- En-tête du calendrier -->
+  <div class="calendar-header">
+    <div class="header-left">
+      <h2>📅 Calendrier des Interventions</h2>
+      <span class="current-month">{{ getMonthName() }}</span>
+    </div>
+
+    <div class="header-center">
+      <div class="navigation-controls">
+        <button class="btn-nav" (click)="previousMonth()">‹</button>
+        <button class="btn-today" (click)="today()">Aujourd'hui</button>
+        <button class="btn-nav" (click)="nextMonth()">›</button>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="view-controls">
+        <select [(ngModel)]="viewMode" class="view-select">
+          <option value="month">Mois</option>
+          <option value="week">Semaine</option>
+          <option value="day">Jour</option>
+        </select>
+      </div>
+
+      <button class="btn-report" (click)="generateReport()">📊 Rapport</button>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="calendar-filters">
+    <div class="filter-group">
+      <label>Technicien:</label>
+      <select [(ngModel)]="filtreTechnicien" (change)="applyFilters()">
+        <option value="all">Tous les techniciens</option>
+        <option *ngFor="let tech of techniciensDisponibilite" [value]="tech.technicienId">
+          {{ tech.nom }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Type:</label>
+      <select [(ngModel)]="filtreType" (change)="applyFilters()">
+        <option value="all">Tous les types</option>
+        <option value="INTERVENTION">Interventions</option>
+        <option value="MAINTENANCE">Maintenances</option>
+        <option value="FORMATION">Formations</option>
+        <option value="CONGE">Congés</option>
+      </select>
+    </div>
+
+    <div class="filter-actions">
+      <button class="btn-secondary" (click)="applyFilters()">🔄 Appliquer</button>
+    </div>
+  </div>
+
+  <!-- Calendrier Mois -->
+  <div *ngIf="viewMode === 'month'" class="month-view">
+    <!-- En-tête jours -->
+    <div class="week-header">
+      <div *ngFor="let dayName of getDayNames()" class="day-header">
+        {{ dayName }}
+      </div>
+    </div>
+
+    <!-- Semaines -->
+    <div *ngFor="let week of monthView.weeks || []" class="week-row">
+      <div *ngFor="let day of week.days || []"
+           class="day-cell"
+           [class.current-month]="isCurrentMonth(day.date)"
+           [class.today]="isToday(day.date)"
+           [class.selected]="selectedDate && isSameDay(selectedDate, day.date)"
+           (click)="selectDate(day.date, day.events || [])">
+
+        <div class="day-header">
+          <span class="day-number">{{ day.date.getDate() }}</span>
+          <span *ngIf="!isCurrentMonth(day.date)" class="other-month">•</span>
+        </div>
+
+        <div class="day-events">
+          <div *ngFor="let event of (day.events || []).slice(0, 3)"
+               class="event-item"
+               [style.background-color]="event.color.secondary"
+               [style.border-left-color]="event.color.primary"
+               (click)="selectEvent(event); $event.stopPropagation()">
+            <span class="event-time">{{ event.start | date:'HH:mm' }}</span>
+            <span class="event-title">{{ event.title }}</span>
+          </div>
+
+          <div *ngIf="(day.events || []).length > 3" class="more-events">
+            +{{ (day.events || []).length - 3 }} plus
+          </div>
+        </div>
+
+        <!-- Indicateurs de types d'événements -->
+        <div class="event-indicators">
+          <span *ngFor="let type of getEventTypes(day.events || [])"
+                class="event-indicator"
+                [style.background-color]="getEventTypeColor(type)">
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p>Chargement du calendrier...</p>
+  </div>
+
+  <!-- Modal Détails Événement -->
+  <div *ngIf="showEventModal && selectedEvent" class="modal-overlay" (click)="closeEventModal()">
+    <div class="modal-content event-modal" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeEventModal()">×</button>
+
+      <div class="event-header">
+        <h3>{{ selectedEvent.title }}</h3>
+        <span class="event-type" [style.background-color]="selectedEvent.color.secondary"
+              [style.color]="selectedEvent.color.primary">
+          {{ selectedEvent.meta.type }}
+        </span>
+      </div>
+
+      <div class="event-details">
+        <div class="detail-row">
+          <span class="label">📅 Date:</span>
+          <span>{{ selectedEvent.start | date:'fullDate' }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">⏰ Horaire:</span>
+          <span>{{ selectedEvent.start | date:'HH:mm' }} - {{ selectedEvent.end | date:'HH:mm' }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">🎯 Priorité:</span>
+          <span class="priority">{{ selectedEvent.meta.priorite }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">🔧 État:</span>
+          <span>{{ selectedEvent.meta.etat }}</span>
+        </div>
+
+        <div *ngIf="selectedEvent.meta.description" class="detail-row">
+          <span class="label">📝 Description:</span>
+          <p>{{ selectedEvent.meta.description }}</p>
+        </div>
+
+        <div *ngIf="selectedEvent.meta.technicienIds?.length" class="detail-row">
+          <span class="label">👷 Techniciens:</span>
+          <span>{{ selectedEvent.meta.technicienIds.length }} technicien(s)</span>
+        </div>
+      </div>
+
+      <div class="event-actions">
+        <button class="btn-secondary">Modifier</button>
+        <button class="btn-primary">Voir détails</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Légende -->
+  <div class="calendar-legend">
+    <h4>Légende:</h4>
+    <div class="legend-items">
+      <div class="legend-item">
+        <span class="color-dot" style="background-color: #2196F3;"></span>
+        <span>Interventions</span>
+      </div>
+      <div class="legend-item">
+        <span class="color-dot" style="background-color: #FF9800;"></span>
+        <span>Maintenances</span>
+      </div>
+      <div class="legend-item">
+        <span class="color-dot" style="background-color: #9C27B0;"></span>
+        <span>Formations</span>
+      </div>
+      <div class="legend-item">
+        <span class="color-dot" style="background-color: #4CAF50;"></span>
+        <span>Congés</span>
+      </div>
+    </div>
+  </div>
+</div>

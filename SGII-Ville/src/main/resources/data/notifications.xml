@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Notifications xmlns="http://example.com/gestion-interventions">
+        
+    
+    <Notification>
+                
+        <idNotification>1</idNotification>
+                
+        <message>✅ Votre demande #21 a été acceptée ! Intervention #8 en cours.</message>
+                
+        <createdAt>2025-11-21T15:33:01.204438</createdAt>
+                
+        <userId>11</userId>
+                
+        <readable>false</readable>
+            
+    </Notification>
+    
+    <Notification>
+        <idNotification>2</idNotification>
+        <message>✅ Votre demande #22 a été acceptée ! Intervention #9 en cours.</message>
+        <createdAt>2025-11-21T15:35:27.554541</createdAt>
+        <userId>11</userId>
+        <readable>false</readable>
+    </Notification>
+</Notifications>

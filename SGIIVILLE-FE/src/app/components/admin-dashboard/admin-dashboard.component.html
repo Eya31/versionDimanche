@@ -1,0 +1,130 @@
+<div class="admin-dashboard">
+  <header>
+    <h1>Dashboard Administrateur</h1>
+    <div class="header-actions">
+      <!-- Icône notifications -->
+      <div class="notification-bell" (click)="toggleNotificationsDropdown()">
+        🔔
+        <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+        
+        <!-- Dropdown notifications -->
+        <div class="notifications-dropdown" *ngIf="showNotificationsDropdown" (click)="$event.stopPropagation()">
+          <div class="dropdown-header">
+            <h4>Notifications</h4>
+            <span class="count">{{ unreadCount }} non lue(s)</span>
+          </div>
+          <div class="notifications-list">
+            <div *ngIf="notifications.length === 0" class="empty-state">
+              Aucune notification
+            </div>
+            <div *ngFor="let notif of notifications" 
+                 class="notification-item"
+                 [class.unread]="!notif.readable"
+                 (click)="markAsRead(notif)">
+              <div class="notif-icon">
+                {{ notif.readable ? '📬' : '📭' }}
+              </div>
+              <div class="notif-content">
+                <p class="notif-message">{{ notif.message }}</p>
+                <span class="notif-time">{{ formatNotificationDate(notif.createdAt) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-logout" (click)="logout()">Déconnexion</button>
+    </div>
+  </header>
+
+  <div class="actions">
+    <button class="btn-primary" (click)="showCreateTechForm = !showCreateTechForm">
+      {{ showCreateTechForm ? 'Annuler' : '+ Nouveau Technicien' }}
+    </button>
+    <button class="btn-primary" (click)="showCreateChefForm = !showCreateChefForm">
+      {{ showCreateChefForm ? 'Annuler' : '+ Nouveau Chef de Service' }}
+    </button>
+  </div>
+
+  <!-- Formulaire Technicien -->
+  <div class="form-container" *ngIf="showCreateTechForm">
+    <h2>Créer un Technicien</h2>
+    <form (ngSubmit)="createTechnicien()">
+      <div class="form-group">
+        <label>Nom:</label>
+        <input type="text" [(ngModel)]="newTechnicien.nom" name="nom" required>
+      </div>
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" [(ngModel)]="newTechnicien.email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label>Mot de passe:</label>
+        <input type="password" [(ngModel)]="newTechnicien.motDePasse" name="password" required>
+      </div>
+      <div class="form-group">
+        <label>Compétences:</label>
+        <div class="competences-input">
+          <input type="text" [(ngModel)]="competenceInput" name="comp" placeholder="Ajouter une compétence">
+          <button type="button" (click)="addCompetence()">Ajouter</button>
+        </div>
+        <div class="competences-list">
+          <span *ngFor="let comp of newTechnicien.competences; let i = index" class="chip">
+            {{comp}} <button type="button" (click)="removeCompetence(i)">×</button>
+          </span>
+        </div>
+      </div>
+      <button type="submit" class="btn-success">Créer Technicien</button>
+    </form>
+  </div>
+
+  <!-- Formulaire Chef de Service -->
+  <div class="form-container" *ngIf="showCreateChefForm">
+    <h2>Créer un Chef de Service</h2>
+    <form (ngSubmit)="createChef()">
+      <div class="form-group">
+        <label>Nom:</label>
+        <input type="text" [(ngModel)]="newChef.nom" name="nomChef" required>
+      </div>
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" [(ngModel)]="newChef.email" name="emailChef" required>
+      </div>
+      <div class="form-group">
+        <label>Mot de passe:</label>
+        <input type="password" [(ngModel)]="newChef.motDePasse" name="passwordChef" required>
+      </div>
+      <div class="form-group">
+        <label>Département:</label>
+        <input type="text" [(ngModel)]="newChef.departement" name="dept" required>
+      </div>
+      <button type="submit" class="btn-success">Créer Chef de Service</button>
+    </form>
+  </div>
+
+  <!-- Liste des utilisateurs -->
+  <div class="users-list">
+    <h2>Utilisateurs ({{users.length}})</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{user.id}}</td>
+          <td>{{user.nom}}</td>
+          <td>{{user.email}}</td>
+          <td><span class="role-badge">{{user.role}}</span></td>
+          <td>
+            <button class="btn-danger" (click)="deleteUser(user.id)">Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

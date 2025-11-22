@@ -1,0 +1,210 @@
+<div class="modal-overlay planification-modal" (click)="close()">
+  <div class="modal-content large" (click)="$event.stopPropagation()">
+    <!-- En-tête -->
+    <div class="modal-header">
+      <h2>📅 Planifier l'intervention</h2>
+      <button class="close-btn" (click)="close()">×</button>
+    </div>
+
+    <!-- Informations de la demande -->
+    <div class="demande-info">
+      <h3>Demande #{{ demande.id }}</h3>
+      <p class="description">{{ demande.description }}</p>
+      <div class="metadata">
+        <span class="priority" [class]="demande.priority?.toLowerCase()">
+          🏷️ {{ demande.priority || 'MOYENNE' }}
+        </span>
+        <span class="category">📂 {{ demande.category || 'Général' }}</span>
+      </div>
+    </div>
+
+    <!-- Étape 1: Sélection des ressources -->
+    <div *ngIf="etapeActuelle === 'selection'" class="etape-selection">
+      <h3>1. Sélection des ressources</h3>
+
+      <!-- Date et filtres -->
+      <div class="form-section">
+        <div class="form-group">
+          <label>📅 Date planifiée *</label>
+<input type="date" [(ngModel)]="dateSelectionnee" [min]="getDateMin()">
+        </div>
+
+        <div class="form-group">
+          <label>🎯 Filtre compétences</label>
+          <input type="text" [(ngModel)]="competencesFiltre"
+                 placeholder="Ex: Électricité, Plomberie...">
+        </div>
+      </div>
+
+      <!-- Sélection des techniciens -->
+      <div class="resource-section">
+        <h4>👷 Techniciens ({{ planification.techniciensIds.length }} sélectionnés)</h4>
+        <div class="techniciens-grid">
+          <div *ngFor="let tech of techniciens"
+               class="technicien-card"
+               [class.selected]="planification.techniciensIds.includes(tech.id)"
+               [class.disabled]="!isTechnicienDisponible(tech.id) && dateSelectionnee"
+               (click)="toggleTechnicien(tech.id)">
+
+            <div class="tech-header">
+              <h5>{{ tech.nom }}</h5>
+              <span class="dispo-indicator"
+                    [class.disponible]="isTechnicienDisponible(tech.id)"
+                    [class.indisponible]="!isTechnicienDisponible(tech.id) && dateSelectionnee">
+                {{ dateSelectionnee ?
+                   (isTechnicienDisponible(tech.id) ? '✅' : '❌') :
+                   '⏳' }}
+              </span>
+            </div>
+
+            <div class="tech-details">
+              <p>📧 {{ tech.email }}</p>
+              <p>🎯 {{ tech.competences?.join(', ') || 'Compétences non définies' }}</p>
+              <small *ngIf="dateSelectionnee && !isTechnicienDisponible(tech.id)" class="indispo-text">
+                Indisponible le {{ dateSelectionnee }}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sélection des équipements -->
+      <div class="resource-section">
+        <h4>🛠️ Équipements</h4>
+        <div class="checkbox-grid">
+          <label *ngFor="let eq of equipements" class="checkbox-item">
+            <input type="checkbox"
+                   [value]="eq.id"
+                   [checked]="planification.equipementsIds.includes(eq.id)"
+                   (change)="toggleEquipementSelection(eq.id)">
+
+            <span class="checkmark"></span>
+            {{ eq.type }}
+            <small>({{ eq.etat }})</small>
+          </label>
+        </div>
+      </div>
+
+      <!-- Sélection des ressources matérielles -->
+      <div class="resource-section">
+        <h4>📦 Ressources matérielles</h4>
+        <div class="checkbox-grid">
+          <label *ngFor="let res of ressources" class="checkbox-item">
+            <input type="checkbox"
+                   [value]="res.id"
+                   [checked]="planification.ressourcesIds.includes(res.id)"
+                   (change)="toggleRessourceSelection(res.id)">
+            <span class="checkmark"></span>
+            {{ res.designation }}
+            <small>(Stock: {{ res.quantiteEnStock }})</small>
+          </label>
+        </div>
+      </div>
+
+      <!-- Paramètres avancés -->
+      <div class="form-section">
+        <div class="form-group">
+          <label>🎯 Priorité</label>
+          <select [(ngModel)]="planification.priorite">
+            <option value="HAUTE">🔴 Haute</option>
+            <option value="MOYENNE">🟡 Moyenne</option>
+            <option value="BASSE">🟢 Basse</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>💰 Budget estimé (DT)</label>
+          <input type="number" [(ngModel)]="planification.budget" min="0" step="50">
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="modal-actions">
+        <button class="btn secondary" (click)="close()">Annuler</button>
+        <button class="btn primary"
+                (click)="verifierDisponibilites()"
+                [disabled]="!peutPasserVerification() || verificationEnCours">
+          {{ verificationEnCours ? 'Vérification...' : 'Vérifier disponibilités →' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Étape 2: Vérification des disponibilités -->
+    <div *ngIf="etapeActuelle === 'verification'" class="etape-verification">
+      <h3>2. Vérification des disponibilités</h3>
+
+      <!-- Résumé techniciens -->
+      <div class="verification-section" [class.success]="nombreTechniciensDisponibles > 0">
+        <h4>👷 Techniciens disponibles</h4>
+        <div class="verification-result">
+          <span class="status-icon">
+            {{ nombreTechniciensDisponibles > 0 ? '✅' : '❌' }}
+          </span>
+          <span class="status-text">
+            {{ nombreTechniciensDisponibles }} / {{ techniciens.length }} techniciens disponibles
+          </span>
+        </div>
+
+        <div class="disponibilites-list">
+          <div *ngFor="let tech of techniciensDisponibles" class="dispo-item">
+            <span class="tech-name">{{ getTechName(tech.technicienId) }}</span>
+            <span class="creneaux" [class.disponible]="tech.disponible">
+              {{ getCreneauxTechnicien(tech.technicienId) }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Résumé ressources -->
+      <div class="verification-section" [class.success]="tousRessourcesDisponibles">
+        <h4>📦 Ressources disponibles</h4>
+        <div class="verification-result">
+          <span class="status-icon">
+            {{ tousRessourcesDisponibles ? '✅' : '❌' }}
+          </span>
+          <span class="status-text">
+            {{ tousRessourcesDisponibles ? 'Toutes disponibles' : 'Ressources manquantes' }}
+          </span>
+        </div>
+
+        <div *ngIf="ressourcesDisponibilite?.message" class="ressource-message">
+          {{ ressourcesDisponibilite?.message }}
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="modal-actions">
+        <button class="btn secondary" (click)="retourEtapePrecedente()">← Retour</button>
+        <button class="btn primary"
+                (click)="confirmerPlanification()"
+                [disabled]="!tousRessourcesDisponibles || nombreTechniciensDisponibles === 0">
+          Confirmer la planification →
+        </button>
+      </div>
+    </div>
+
+    <!-- Étape 3: Confirmation -->
+    <div *ngIf="etapeActuelle === 'confirmation'" class="etape-confirmation">
+      <h3>3. Confirmation</h3>
+
+      <div class="confirmation-summary">
+        <div class="summary-card">
+          <h4>📋 Récapitulatif de l'intervention</h4>
+          <div class="summary-details">
+            <p><strong>Date:</strong> {{ planification.datePlanifiee | date:'fullDate' }}</p>
+            <p><strong>Techniciens:</strong> {{ planification.techniciensIds.length }}</p>
+            <p><strong>Priorité:</strong> {{ planification.priorite }}</p>
+            <p><strong>Budget:</strong> {{ planification.budget }} DT</p>
+          </div>
+        </div>
+
+        <div class="confirmation-actions">
+          <button class="btn secondary" (click)="retourEtapePrecedente()">← Modifier</button>
+          <button class="btn success" (click)="finaliserPlanification()">
+            ✅ Planifier l'intervention
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

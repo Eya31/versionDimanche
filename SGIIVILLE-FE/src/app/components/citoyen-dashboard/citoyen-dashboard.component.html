@@ -1,0 +1,200 @@
+<div class="citoyen-dashboard">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1>Espace Citoyen</h1>
+      <p>Bienvenue. Gérez vos signalements et suivez leur état.</p>
+    </div>
+    <div class="header-actions">
+      <!-- Icône notifications -->
+      <div class="notification-bell" (click)="toggleNotificationsDropdown()">
+        🔔
+        <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+        
+        <!-- Dropdown notifications -->
+        <div class="notifications-dropdown" *ngIf="showNotificationsDropdown" (click)="$event.stopPropagation()">
+          <div class="dropdown-header">
+            <h4>Notifications</h4>
+            <span class="count">{{ unreadCount }} non lue(s)</span>
+          </div>
+          <div class="notifications-list">
+            <div *ngIf="notifications.length === 0" class="empty-state">
+              Aucune notification
+            </div>
+            <div *ngFor="let notif of notifications" 
+                 class="notification-item"
+                 [class.unread]="!notif.readable"
+                 (click)="markAsRead(notif)">
+              <div class="notif-icon">
+                {{ notif.readable ? '📬' : '📭' }}
+              </div>
+              <div class="notif-content">
+                <p class="notif-message">{{ notif.message }}</p>
+                <span class="notif-time">{{ formatNotificationDate(notif.createdAt) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-logout" (click)="logout()">
+        <span>🚪 Déconnexion</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-container">
+    <div class="stat-card stat-total">
+      <div class="stat-icon">📂</div>
+      <div class="stat-info">
+        <h3>{{ stats.total }}</h3>
+        <p>Total signalés</p>
+      </div>
+    </div>
+    <div class="stat-card stat-encours">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-info">
+        <h3>{{ stats.enCours }}</h3>
+        <p>En traitement</p>
+      </div>
+    </div>
+    <div class="stat-card stat-terminee">
+      <div class="stat-icon">✅</div>
+      <div class="stat-info">
+        <h3>{{ stats.traitee }}</h3>
+        <p>Résolus</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions-bar">
+    <h2 style="color: #2c3e50; margin: 0;">Mes Demandes</h2>
+    <button class="btn-primary" (click)="showCreateForm = !showCreateForm">
+      {{ showCreateForm ? '✖ Fermer le formulaire' : '+ Nouveau Signalement' }}
+    </button>
+  </div>
+
+  <div *ngIf="showCreateForm" class="form-container animate-fade">
+    <app-demande-form></app-demande-form>
+  </div>
+
+  <div class="demandes-grid" *ngIf="!showCreateForm">
+    <div *ngIf="demandes.length === 0" class="empty-state">
+      <p>Aucune demande pour le moment.</p>
+    </div>
+
+    <div *ngFor="let d of demandes" class="demande-card">
+      <div class="card-header">
+        <span class="id-badge">#{{d.id}}</span>
+        <span class="status-badge" [ngClass]="getStatusClass(d.etat)">
+          {{ d.etat }}
+        </span>
+      </div>
+
+      <div class="card-body">
+        <h3>{{ d.category || 'Signalement divers' }}</h3>
+        <p class="card-desc">{{ d.description }}</p>
+
+        <div class="meta-info">
+          <span>📅 {{ d.dateSoumission | date:'shortDate' }}</span>
+          <span *ngIf="d.localisation">📍 {{ d.localisation.latitude | number:'1.2-2' }}...</span>
+        </div>
+      </div>
+
+      <button class="btn-details" (click)="openDetails(d)">
+        👁️ Voir les détails
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="selectedDemande" (click)="closeDetails()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>🔍 Suivi de la Demande #{{ selectedDemande.id }}</h2>
+      <button class="btn-close" (click)="closeDetails()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Barre de progression globale -->
+      <div class="progress-section">
+        <h3>📊 Progression du traitement</h3>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" [style.width.%]="getProgressPercentage(selectedDemande)">
+            {{ getProgressPercentage(selectedDemande) }}%
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline visuelle des états -->
+      <div class="timeline-section">
+        <h3>🔍 Suivi détaillé de votre demande</h3>
+        <div class="timeline">
+          <div class="timeline-item" 
+               *ngFor="let step of getDemandeTimeline(selectedDemande); let last = last"
+               [class.completed]="step.completed"
+               [class.current]="step.current">
+            <div class="timeline-icon">
+              <span class="icon">{{ step.icon }}</span>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <h4>{{ step.label }}</h4>
+                <span class="timeline-date" *ngIf="step.date">
+                  <ng-container *ngIf="step.date !== 'En cours'; else enCoursLabel">
+                    {{ step.date | date:'dd/MM/yyyy HH:mm' }}
+                  </ng-container>
+                  <ng-template #enCoursLabel>{{ step.date }}</ng-template>
+                </span>
+              </div>
+              <p class="timeline-description">{{ step.description }}</p>
+            </div>
+            <div class="timeline-line" *ngIf="!last"></div>
+          </div>
+        </div>
+      </div>
+
+        <!-- Informations détaillées regroupées -->
+        <div class="details-section">
+          <h3>📋 Informations de la demande</h3>
+          
+          <div class="details-grid">
+            
+          <span class="detail-label">📅 Date</span>
+          <span class="detail-value">{{ selectedDemande.dateSoumission | date:'dd/MM/yyyy' }}</span>
+            
+          <span class="detail-label">⚡ Priorité</span>
+          <span class="detail-value">
+            <span class="status-badge" [ngClass]="getPriorityClass(selectedDemande.priority)">
+              {{ selectedDemande.priority }}
+            </span>
+          </span>
+          
+          <span class="detail-label">🏷️ État</span>
+          <span class="detail-value">
+            <span class="status-badge" [ngClass]="getStatusClass(selectedDemande.etat)">
+              {{ selectedDemande.etat }}
+            </span>
+          </span>
+           
+          <span class="detail-label">📝 Description</span>
+          <span class="detail-value">{{ selectedDemande.description }}</span>
+            
+          <span >📍 Localisation</span>
+          <span class="detail-value">
+            {{ selectedDemande.localisation?.address || 'Coordonnées GPS' }}
+            <small class="text-muted"> ({{ selectedDemande.localisation?.latitude }}, {{ selectedDemande.localisation?.longitude }})</small>
+          </span>
+           
+            <div class="detail-row" *ngIf="selectedDemande.attachments?.length">
+          <span class="detail-label">📎 Pièces jointes</span>
+          <span class="detail-value">{{ selectedDemande.attachments.length }} fichier(s)</span>
+            </div>
+          </div>
+        </div>
+          </div>
+
+          <div class="modal-footer">
+        <button class="btn-details" (click)="closeDetails()">Fermer</button>
+          </div>
+        </div>
+      </div>
+

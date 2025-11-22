@@ -1,0 +1,449 @@
+<div class="chef-container">
+
+  <!-- Header Moderne -->
+  <header class="header">
+    <div class="header-content">
+      <h1>🎯 Espace Chef de Service</h1>
+      <p class="subtitle">Gestion intelligente des interventions urbaines • Tunis 2025</p>
+    </div>
+    
+    <!-- Icône notifications -->
+    <div class="notification-bell" (click)="toggleNotificationsDropdown()">
+      🔔
+      <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+      
+      <!-- Dropdown notifications -->
+      <div class="notifications-dropdown" *ngIf="showNotificationsDropdown" (click)="$event.stopPropagation()">
+        <div class="dropdown-header">
+          <h4>Notifications</h4>
+          <span class="count">{{ unreadCount }} non lue(s)</span>
+        </div>
+        <div class="notifications-list">
+          <div *ngIf="notifications.length === 0" class="empty-state">
+            Aucune notification
+          </div>
+          <div *ngFor="let notif of notifications" 
+               class="notification-item"
+               [class.unread]="!notif.readable"
+               (click)="markAsRead(notif)">
+            <div class="notif-icon">
+              {{ notif.readable ? '📬' : '📭' }}
+            </div>
+            <div class="notif-content">
+              <p class="notif-message">{{ notif.message }}</p>
+              <span class="notif-time">{{ formatNotificationDate(notif.createdAt) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats Cards Modernes -->
+  <div class="stats-grid">
+    <div class="stat-card pending" (click)="filtrerDemandes('NON_TRAITEES')">
+      <div class="icon">⏳</div>
+      <div class="info">
+        <h3>{{ demandesPendantes }}</h3>
+        <p>Demandes en attente</p>
+      </div>
+    </div>
+    <div class="stat-card progress" (click)="openInterventionsModal()">
+      <div class="icon">🔧</div>
+      <div class="info">
+        <h3>{{ interventionsEnCoursCount }}</h3>
+        <p>Interventions en cours</p>
+      </div>
+    </div>
+    <div class="stat-card success" (click)="filtrerDemandes('TRAITEES')">
+      <div class="icon">✅</div>
+      <div class="info">
+        <h3>{{ demandesTraitees }}</h3>
+        <p>Demandes traitées</p>
+      </div>
+    </div>
+    <div class="stat-card equip" (click)="openEquipementsModal()">
+      <div class="icon">🛠️</div>
+      <div class="info">
+        <h3>{{ equipements.length }}</h3>
+        <p>Équipements disponibles</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Filtres Modernisée -->
+  <div class="filters-section">
+    <h3>📊 Filtrer les demandes</h3>
+    <div class="filter-buttons">
+      <button [class.active]="filtreActif === 'TOUS'" (click)="filtrerDemandes('TOUS')" class="filter-btn">
+        📋 Toutes ({{ demandes.length }})
+      </button>
+      <button [class.active]="filtreActif === 'NON_TRAITEES'" (click)="filtrerDemandes('NON_TRAITEES')" class="filter-btn">
+        ⏳ Non traitées ({{ demandesPendantes }})
+      </button>
+      <button [class.active]="filtreActif === 'TRAITEES'" (click)="filtrerDemandes('TRAITEES')" class="filter-btn">
+        ✅ Traitées ({{ demandesTraitees }})
+      </button>
+    </div>
+  </div>
+
+  <!-- Actions Rapides Organisées -->
+  <div class="quick-actions">
+    <h3>⚡ Actions rapides</h3>
+    <div class="actions-grid">
+      <button class="action-btn primary" (click)="refreshAll()">
+        🔄 Actualiser
+      </button>
+      <button class="action-btn danger" (click)="openMapModal()">
+        🗺️ Carte des demandes ({{ demandesPendantes }})
+      </button>
+      <button class="action-btn info" (click)="openMapInterventionsModal()">
+        🗺️ Carte interventions ({{ interventionsEnCoursCount }})
+      </button>
+      <button class="action-btn warning" (click)="openTechniciensModal()">
+        👷 Techniciens ({{ techniciens.length }})
+      </button>
+      <button class="action-btn success" (click)="openEquipementsModal()">
+        🛠️ Équipements ({{ equipements.length }})
+      </button>
+      <button class="action-btn info" (click)="openInterventionsModal()">
+        🔧 Interventions ({{ interventions.length }})
+      </button>
+      <button class="action-btn warning" (click)="openRessourcesModal()">
+        📦 Matériels
+      </button>
+      <button class="action-btn secondary" (click)="exportReport()">
+        📥 Exporter
+      </button>
+    </div>
+  </div>
+
+  <!-- Tableau des Demandes Modernisé -->
+  <section class="section">
+    <h3>📋 Demandes citoyennes <span style="color: #667eea; font-weight: 700;">({{ demandesFiltrees.length }})</span></h3>
+    <div class="table-container">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>📌 Référence</th>
+            <th>📝 Description</th>
+            <th>📅 Date</th>
+            <th>🏷️ Statut</th>
+            <th>📍 Localisation</th>
+            <th>📸 Photos</th>
+            <th>⚙️ Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of demandesFiltrees">
+            <td><strong style="color: #667eea;">#{{ d.id }}</strong></td>
+            <td class="description-cell">
+              {{ d.description.length > 60 ? (d.description | slice:0:60) + '...' : d.description }}
+            </td>
+            <td>{{ d.dateSoumission | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <span class="status" [ngClass]="getEtatBadgeClass(d.etat)">
+                {{ getEtatText(d.etat) }}
+              </span>
+            </td>
+            <td class="location-cell">
+              <span *ngIf="d.localisation" style="font-size: 12px;">
+                📍 {{ d.localisation.latitude | number:'1.4' }}, {{ d.localisation.longitude | number:'1.4' }}
+              </span>
+              <span *ngIf="!d.localisation" class="text-muted">Non précisée</span>
+            </td>
+            <td style="text-align: center;">
+              <span *ngIf="d.photos?.length" 
+                    style="background: #e3f2fd; color: #2196f3; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">
+                {{ d.photos?.length }} 📸
+              </span>
+              <span *ngIf="!d.photos?.length" class="text-muted" style="font-size: 12px;">Aucune</span>
+            </td>
+            <td class="actions-cell">
+              <button class="btn-small view" (click)="openDetailModal(d)">👁️ Détails</button>
+              <button class="btn-small plan" (click)="planifierDemande(d)"
+                      [disabled]="d.etat === 'TRAITEE'">
+                {{ d.etat === 'TRAITEE' ? '✅ Planifiée' : '📅 Planifier' }}
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="!demandesFiltrees.length">
+            <td colspan="7" class="no-data">
+              <div style="padding: 20px;">
+                <div style="font-size: 48px; margin-bottom: 10px;">📭</div>
+                <p>Aucune demande à afficher</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- MODAL TECHNICIENS -->
+  <div class="modal-overlay" *ngIf="showTechniciensModal" (click)="closeModal()">
+    <div class="modal-content techniciens-modal" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()">×</button>
+      <h2>👷 Liste des Techniciens</h2>
+      <p class="subtitle">Total : {{ techniciens.length }} technicien(s) disponible(s)</p>
+
+      <div class="techniciens-grid">
+        <div class="technicien-card" *ngFor="let tech of techniciens">
+          <div class="tech-header">
+            <h4>{{ tech.nom }}</h4>
+            <span class="status" 
+                  [ngClass]="tech.disponibilite ? 'done' : 'error'"
+                  [style.text-transform]="'uppercase'">
+              {{ tech.disponibilite ? '✅ DISPONIBLE' : '❌ OCCUPÉ' }}
+            </span>
+          </div>
+          <div class="equip-details">
+            <p>📧 <strong>Email :</strong> {{ tech.email }}</p>
+            <p><strong>🎯 Compétences :</strong></p>
+            <div class="competences-list" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
+              <span class="priority basse" 
+                    *ngFor="let c of tech.competences"
+                    style="display: inline-block;">
+                {{ c }}
+              </span>
+              <span class="text-muted" *ngIf="!tech.competences?.length">Aucune compétence</span>
+            </div>
+          </div>
+        </div>
+        <div class="no-data" *ngIf="!techniciens.length">
+          <div style="font-size: 48px;">👷</div>
+          <p>Aucun technicien trouvé</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DÉTAILS DEMANDE -->
+  <div class="modal-overlay" *ngIf="showDetailModal && selectedDemande" (click)="closeDetailModal()">
+    <div class="modal-content detail-modal" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeDetailModal()">×</button>
+      <div class="detail-header">
+        <h2>📋 Détail de la demande #{{ selectedDemande.id }}</h2>
+        <span class="status" [ngClass]="getEtatBadgeClass(selectedDemande.etat)">
+          {{ getEtatText(selectedDemande.etat) }}
+        </span>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-left">
+          <div class="info-block">
+            <h3>📝 Description complète</h3>
+            <p class="description">{{ selectedDemande.description }}</p>
+          </div>
+          <div class="info-block">
+            <h3>📅 Date de soumission</h3>
+            <p>{{ selectedDemande.dateSoumission | date:'fullDate' }}</p>
+          </div>
+          <div class="info-block">
+            <h3>📍 Localisation GPS</h3>
+            <ng-container *ngIf="selectedDemande.localisation as loc; else noLocation">
+              <p><strong>Lat:</strong> {{ loc.latitude | number:'1.6' }}<br>
+                 <strong>Lng:</strong> {{ loc.longitude | number:'1.6' }}</p>
+              <a [href]="'https://www.google.com/maps?q=' + loc.latitude + ',' + loc.longitude" target="_blank" class="map-link">
+                Voir sur Google Maps
+              </a>
+            </ng-container>
+            <ng-template #noLocation><p class="text-muted">Localisation non fournie</p></ng-template>
+          </div>
+          <div class="action-buttons" *ngIf="selectedDemande.etat !== 'TRAITEE'">
+            <button class="action-btn primary large" (click)="planifierDemande(selectedDemande)">
+              Planifier l'intervention
+            </button>
+          </div>
+        </div>
+        <div class="detail-right">
+          <h3>Photos jointes ({{ selectedDemande.photos?.length || 0 }})</h3>
+          <div class="photos-grid" *ngIf="selectedDemande.photos?.length; else noPhotos">
+            <div class="photo-item" *ngFor="let photo of selectedDemande.photos">
+              <div class="photo-container">
+                <img [src]="getPhotoUrl(photo.url)" [alt]="photo.nom" (error)="handleImageError($event)" class="demande-photo">
+                <div class="photo-overlay">
+                  <button class="view-photo-btn" (click)="openPhotoModal(getPhotoUrl(photo.url))">Agrandir</button>
+                </div>
+              </div>
+              <p class="photo-caption">{{ photo.nom || 'Photo' }}</p>
+            </div>
+          </div>
+          <ng-template #noPhotos>
+            <div class="no-photos-message"><div class="no-photos-icon">Photo</div><p>Aucune photo</p></div>
+          </ng-template>
+        </div>
+      </div>
+      <div class="detail-actions">
+        <button class="action-btn secondary" (click)="closeDetailModal()">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL INTERVENTIONS -->
+  <div class="modal-overlay" *ngIf="showInterventionModal" (click)="closeModal()">
+    <div class="modal-content interventions-modal" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()">×</button>
+      <h2>Liste des Interventions</h2>
+      <div class="interventions-list">
+        <div class="intervention-card" *ngFor="let i of interventions">
+          <div class="intervention-header">
+            <h4>Intervention #{{ i.id }}</h4>
+            <span [ngClass]="getEtatBadgeClass(i.etat)">{{ i.etat }}</span>
+          </div>
+          <div class="intervention-details">
+            <p><strong>Priorité:</strong> {{ i.priorite }}</p>
+            <p><strong>Date:</strong> {{ i.datePlanifiee | date:'dd/MM/yyyy' }}</p>
+            <p><strong>Budget:</strong> {{ i.budget | currency:'EUR' }}</p>
+            <p *ngIf="i.technicienId"><strong>Technicien:</strong> #{{ i.technicienId }}</p>
+          </div>
+        </div>
+        <div *ngIf="!interventions.length" class="no-data">Aucune intervention planifiée</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ÉQUIPEMENTS -->
+  <div class="modal-overlay" *ngIf="showEquipementModal" (click)="closeModal()">
+    <div class="modal-content equipements-modal" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()">×</button>
+      <h2>Gestion des Équipements</h2>
+      <div class="modal-actions">
+        <button class="action-btn success" (click)="openAddEquipement()">+ Nouvel équipement</button>
+      </div>
+      <div class="equipements-grid">
+        <div class="equip-card" *ngFor="let e of equipements">
+          <div class="equip-header">
+            <h4>{{ e.type }}</h4>
+            <span [ngClass]="getEtatBadgeClass(e.etat)">{{ getEtatText(e.etat) }}</span>
+          </div>
+          <div class="equip-details">
+            <p><strong>Valeur:</strong> {{ e.valeurAchat | currency:'EUR' }}</p>
+            <p *ngIf="e.fournisseur"><strong>Fournisseur:</strong> {{ e.fournisseur.nom }}</p>
+            <p *ngIf="e.localisation">
+              <strong>Localisation:</strong>
+              {{ e.localisation.latitude | number:'1.4' }}, {{ e.localisation.longitude | number:'1.4' }}
+            </p>
+          </div>
+          <div class="equip-actions">
+            <button class="btn-small edit" (click)="editEquipement(e)">Modifier</button>
+            <button class="btn-small delete" (click)="deleteEquipement(e.id)">Supprimer</button>
+          </div>
+        </div>
+        <div *ngIf="!equipements.length" class="no-data Quasi">Aucun équipement enregistré</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL MATÉRIELS -->
+  <div class="modal-overlay" *ngIf="showRessourceModal" (click)="closeModal()">
+    <div class="modal-content ressources-modal" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()">×</button>
+      <h2>Gestion des Matériels</h2>
+      <div class="modal-actions">
+        <button class="action-btn success" (click)="openAddRessource()">+ Nouvel matériel</button>
+      </div>
+      <div class="ressources-grid">
+        <div class="ress-card" *ngFor="let r of ressources">
+          <div class="ress-header"><h4>{{ r.designation }}</h4></div>
+          <div class="ress-details">
+            <p><strong>Quantité:</strong> {{ r.quantiteEnStock }}</p>
+            <p><strong>Valeur:</strong> {{ r.valeurAchat | currency:'EUR' }}</p>
+            <p *ngIf="r.fournisseur"><strong>Fournisseur:</strong> {{ r.fournisseur.nom }}</p>
+          </div>
+          <div class="ress-actions">
+            <button class="btn-small edit" (click)="editRessource(r)">Modifier</button>
+            <button class="btn-small delete" (click)="deleteRessource(r.id)">Supprimer</button>
+          </div>
+        </div>
+        <div *ngIf="!ressources.length" class="no-data">Aucun matériel enregistré</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FORMULAIRE ÉQUIPEMENT -->
+  <div class="modal-overlay" *ngIf="showFormModal" (click)="closeModal()">
+    <div class="modal-content form-modal" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()">×</button>
+      <h2>{{ editingEquipement ? 'Modifier' : 'Ajouter' }} un équipement</h2>
+      <form (ngSubmit)="saveEquipement()" class="equipement-form">
+        <div class="form-group">
+          <label>Type d'équipement *</label>
+          <input [(ngModel)]="currentEquipement.type" name="type" placeholder="Ex: Camion-benne..." required>
+        </div>
+        <div class="form-group">
+          <label>État</label>
+          <select [(ngModel)]="currentEquipement.etat" name="etat">
+            <option value="FONCTIONNEL">Fonctionnel</option>
+            <option value="DEFECTUEUX">Défectueux</option>
+            <option value="EN_MAINTENANCE">En maintenance</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Valeur d'achat (€)</label>
+          <input type="number" [(ngModel)]="currentEquipement.valeurAchat" name="valeurAchat" step="0.01" min="0">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="action-btn secondary" (click)="closeModal()">Annuler</button>
+          <button type="submit" class="action-btn primary">Sauvegarder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL CARTE DES DEMANDES -->
+  <div class="modal-overlay" *ngIf="showMapModal" (click)="closeMapModal()">
+    <div class="modal-content map-modal" (click)="$event.stopPropagation()" style="max-width: 1200px; width: 95%; height: 85vh;">
+      <button class="close-btn" (click)="closeMapModal()">×</button>
+      <h2>🗺️ Carte des demandes non traitées</h2>
+      
+      <!-- Légende -->
+      <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; gap: 20px; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 20px; height: 20px; border-radius: 50%; background: #f44336; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+          <span style="font-weight: 600; color: #333;">🔴 Urgent</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 20px; height: 20px; border-radius: 50%; background: #FFC107; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+          <span style="font-weight: 600; color: #333;">🟡 Moyen</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 20px; height: 20px; border-radius: 50%; background: #4CAF50; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+          <span style="font-weight: 600; color: #333;">🟢 Bas</span>
+        </div>
+        <div style="margin-left: 20px; color: #667eea; font-weight: 700;">
+          Total: {{ demandesNonTraitees.length }} demande(s)
+        </div>
+      </div>
+
+      <!-- Carte Leaflet -->
+      <div id="mapChef" style="height: calc(100% - 120px); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>
+    </div>
+  </div>
+
+  <!-- MODAL CARTE DES INTERVENTIONS -->
+  <div class="modal-overlay" *ngIf="showMapInterventionsModal" (click)="closeMapInterventionsModal()">
+    <div class="modal-content map-modal" (click)="$event.stopPropagation()" style="max-width: 1200px; width: 95%; height: 85vh;">
+      <button class="close-btn" (click)="closeMapInterventionsModal()">×</button>
+      <h2>🗺️ Carte des interventions en cours</h2>
+      
+      <!-- Légende -->
+      <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; gap: 20px; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 20px; height: 20px; border-radius: 50%; background: #2196F3; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+          <span style="font-weight: 600; color: #333;">🔵 En cours</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 20px; height: 20px; border-radius: 50%; background: #FF9800; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+          <span style="font-weight: 600; color: #333;">🟠 En attente</span>
+        </div>
+        <div style="margin-left: 20px; color: #667eea; font-weight: 700;">
+          Total: {{ interventionsEnCours.length }} intervention(s)
+        </div>
+      </div>
+
+      <!-- Carte Leaflet -->
+      <div id="mapInterventions" style="height: calc(100% - 120px); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>
+    </div>
+  </div>
+
+</div>

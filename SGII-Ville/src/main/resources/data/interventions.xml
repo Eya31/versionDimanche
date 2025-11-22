@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Interventions xmlns="http://example.com/gestion-interventions">
+                                                                        
+
+    
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <id>1</id>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <demandeId>9</demandeId>
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                                
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                
+        
+        
+        
+        
+        
+        
+        <id>2</id>
+                                                                
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                
+        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                                
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                                
+        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                                
+        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                                
+        
+        
+        
+        
+        
+        
+        <demandeId>15</demandeId>
+                                                            
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                            
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                        
+        
+        
+        
+        
+        
+        <id>3</id>
+                                                        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                        
+        
+        
+        
+        
+        
+        <demandeId>19</demandeId>
+                                                    
+    
+    
+    
+    
+    
+    </Intervention>
+                        
+    
+    
+    
+    
+    
+    <Intervention>
+                                                
+        
+        
+        
+        
+        <id>4</id>
+                                                
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                
+        
+        
+        
+        
+        <demandeId>20</demandeId>
+                                            
+    
+    
+    
+    
+    </Intervention>
+                    
+    
+    
+    
+    
+    <Intervention>
+                                        
+        
+        
+        
+        <id>5</id>
+                                        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                        
+        
+        
+        
+        <budget>800.00</budget>
+                                        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                        
+        
+        
+        
+        <demandeId>18</demandeId>
+                                    
+    
+    
+    
+    </Intervention>
+                
+    
+    
+    
+    <Intervention>
+                                
+        
+        
+        <id>6</id>
+                                
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                
+        
+        
+        <budget>800.00</budget>
+                                
+        
+        
+        <technicienId>0</technicienId>
+                                
+        
+        
+        <demandeId>17</demandeId>
+                            
+    
+    
+    </Intervention>
+            
+    
+    
+    <Intervention>
+                        
+        
+        <id>7</id>
+                        
+        
+        <priorite>PLANIFIEE</priorite>
+                        
+        
+        <etat>EN_ATTENTE</etat>
+                        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                        
+        
+        <budget>800.00</budget>
+                        
+        
+        <technicienId>0</technicienId>
+                        
+        
+        <demandeId>16</demandeId>
+                    
+    
+    </Intervention>
+        
+    
+    <Intervention>
+                
+        <id>8</id>
+                
+        <priorite>PLANIFIEE</priorite>
+                
+        <etat>EN_ATTENTE</etat>
+                
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                
+        <budget>800.00</budget>
+                
+        <technicienId>0</technicienId>
+                
+        <demandeId>21</demandeId>
+            
+    </Intervention>
+    
+    <Intervention>
+        <id>9</id>
+        <priorite>PLANIFIEE</priorite>
+        <etat>EN_ATTENTE</etat>
+        <datePlanifiee>2025-11-28</datePlanifiee>
+        <budget>800.00</budget>
+        <technicienId>0</technicienId>
+        <demandeId>22</demandeId>
+    </Intervention>
+</Interventions>
