@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Demande } from '../../models/demande.model';
-import { TechnicienModel } from '../../models/technicien.model';
+import { Technicien } from '../../models/technicien.model';
 import { Equipement } from '../../models/equipement.model';
 import { RessourceMaterielle } from '../../models/ressource.model';
 import { PlanificationService, PlanificationRequest, TechnicienDisponibilite, RessourceDisponibilite } from '../../services/planification.service';
@@ -24,7 +24,7 @@ export class PlanificationModalComponent implements OnInit {
   @Output() closed = new EventEmitter<void>();
 
   // Données disponibles
-  techniciens: TechnicienModel[] = [];
+  techniciens: Technicien[] = [];
   equipements: Equipement[] = [];
   ressources: RessourceMaterielle[] = [];
 

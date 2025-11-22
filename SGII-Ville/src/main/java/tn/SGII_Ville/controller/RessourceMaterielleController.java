@@ -25,10 +25,7 @@ public class RessourceMaterielleController {
     @PostMapping
     public RessourceMaterielle create(@RequestBody RessourceMaterielle r) { return service.create(r); }
 
-    @PutMapping("/{id}")
-    public RessourceMaterielle update(@PathVariable int id, @RequestBody RessourceMaterielle r) {
-        return service.update(id, r);
-    }
+   
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id) { service.delete(id); }
