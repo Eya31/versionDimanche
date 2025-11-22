@@ -2,13 +2,27 @@ package tn.SGII_Ville.entities;
 
 
 import tn.SGII_Ville.model.enums.EtatDemandeAjoutType;
+import tn.SGII_Ville.model.enums.TypeDemandeAjout;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class DemandeAjout {
     private int id;
+    private TypeDemandeAjout typeDemande;
+    private String designation;
+    private int quantite;
+    private double budget;
+    private String justification;
+    private EtatDemandeAjoutType etat;
+    private int chefId;
+    private Integer adminId;
+    private LocalDateTime dateTraitement;
+    private String motifRefus;
+    private LocalDateTime dateDemande;
+    
+    // Anciens champs pour compatibilité
     private String typeObjet;
     private int idChefService;
-    private EtatDemandeAjoutType etat;
     private LocalDate dateSoumission;
 
     // Constructeurs
@@ -32,6 +46,87 @@ public class DemandeAjout {
         this.id = id;
     }
 
+    public TypeDemandeAjout getTypeDemande() {
+        return typeDemande;
+    }
+
+    public void setTypeDemande(TypeDemandeAjout typeDemande) {
+        this.typeDemande = typeDemande;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public int getQuantite() {
+        return quantite;
+    }
+
+    public void setQuantite(int quantite) {
+        this.quantite = quantite;
+    }
+
+    public double getBudget() {
+        return budget;
+    }
+
+    public void setBudget(double budget) {
+        this.budget = budget;
+    }
+
+    public String getJustification() {
+        return justification;
+    }
+
+    public void setJustification(String justification) {
+        this.justification = justification;
+    }
+
+    public int getChefId() {
+        return chefId;
+    }
+
+    public void setChefId(int chefId) {
+        this.chefId = chefId;
+    }
+
+    public Integer getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Integer adminId) {
+        this.adminId = adminId;
+    }
+
+    public LocalDateTime getDateTraitement() {
+        return dateTraitement;
+    }
+
+    public void setDateTraitement(LocalDateTime dateTraitement) {
+        this.dateTraitement = dateTraitement;
+    }
+
+    public String getMotifRefus() {
+        return motifRefus;
+    }
+
+    public void setMotifRefus(String motifRefus) {
+        this.motifRefus = motifRefus;
+    }
+
+    public LocalDateTime getDateDemande() {
+        return dateDemande;
+    }
+
+    public void setDateDemande(LocalDateTime dateDemande) {
+        this.dateDemande = dateDemande;
+    }
+
+    // Anciens getters/setters pour compatibilité
     public String getTypeObjet() {
         return typeObjet;
     }
@@ -68,10 +163,13 @@ public class DemandeAjout {
     public String toString() {
         return "DemandeAjout{" +
                 "id=" + id +
-                ", typeObjet='" + typeObjet + '\'' +
-                ", idChefService=" + idChefService +
+                ", typeDemande=" + typeDemande +
+                ", designation='" + designation + '\'' +
+                ", quantite=" + quantite +
+                ", budget=" + budget +
                 ", etat=" + etat +
-                ", dateSoumission=" + dateSoumission +
+                ", chefId=" + chefId +
+                ", dateDemande=" + dateDemande +
                 '}';
     }
 }
