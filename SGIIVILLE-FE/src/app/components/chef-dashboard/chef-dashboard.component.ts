@@ -243,7 +243,10 @@ loadTechniciens(): void {
 
   loadInterventions(): void {
     this.interventionService.getAllInterventions().subscribe({
-      next: (data) => this.interventions = data,
+      next: (data) => {
+        this.interventions = data;
+        this.updateStats(); // Mettre à jour les statistiques après le chargement
+      },
       error: (error) => {
         console.error('Erreur chargement interventions:', error);
         alert('Erreur lors du chargement des interventions');
