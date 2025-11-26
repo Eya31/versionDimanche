@@ -7,7 +7,7 @@ import { RessourceMaterielle } from '../models/ressource.model';
   providedIn: 'root'
 })
 export class RessourceService {
-private apiUrl = 'http://localhost:8080/api/ressources';
+  private apiUrl = 'http://localhost:8080/api/ressources';
 
   constructor(private http: HttpClient) {}
 

@@ -1,94 +1,136 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Utilisateurs xmlns="http://example.com/gestion-interventions">
-                    
+                        
+    
     
     
     
     <!-- Utilisateurs vides - Prêt pour de nouvelles instances -->
-                
+                    
+    
     
     
     
     <Citoyen>
-                                
+                                        
+        
         
         
         <id>1</id>
-                                
+                                        
+        
         
         
         <nom>citoyen </nom>
-                                
+                                        
+        
         
         
         <email>citoyen@gmail.com</email>
-                                
+                                        
+        
         
         
         <motDePasse>$2a$10$1yFgSlL6nzNxi4SkL6BLw.FQKJ/l052Y5MQvH2UYGacZcJ8uDaE9u</motDePasse>
-                                
+                                        
+        
         
         
         <role>CITOYEN</role>
-                                
+                                        
+        
         
         
         <adresse>route matar</adresse>
-                                
+                                        
+        
         
         
         <telephone>29733006</telephone>
-                            
+                                    
+    
     
     
     </Citoyen>
-            
+                
+    
     
     
     <ChefDeService>
-                        
+                                
+        
         
         <id>2</id>
-                        
+                                
+        
         
         <nom>chef</nom>
-                        
+                                
+        
         
         <email>chefchef@gmail.com</email>
-                        
+                                
+        
         
         <motDePasse>$2a$10$oSbXeOatfGHw4RAN2R//yOg5la6sduNFKc1qP8j1XsZbcm2XhIOVm</motDePasse>
-                        
+                                
+        
         
         <role>CHEF_SERVICE</role>
-                        
+                                
+        
         
         <departement>nnnn</departement>
-                    
+                            
+    
     
     </ChefDeService>
-        
+            
+    
     
     <Administrateur>
-                
+                        
+        
         <id>3</id>
-                
+                        
+        
         <nom>admin</nom>
-                
+                        
+        
         <email>adminadmin@gmail.com</email>
-                
+                        
+        
         <motDePasse>$2a$10$neWmTLEjZo9wt/ea5L3PtuvsSM1Jn0J772Gie19MrKuI/LDeusKuq</motDePasse>
-                
+                        
+        
         <role>ADMINISTRATEUR</role>
-            
+                    
+    
     </Administrateur>
+        
     
     <Technicien>
+                
         <id>4</id>
+                
         <nom>technicien</nom>
+                
         <email>technicien@gmail.com</email>
+                
         <motDePasse>$2a$10$IRfIM6fhBTHOOSi44EJtXOjLgk8sfI3faDJEPGRWPZ6z6S58LBKG6</motDePasse>
+                
         <role>TECHNICIEN</role>
+                
         <disponibilite>true</disponibilite>
+            
     </Technicien>
+    
+    <ChefDeService>
+        <id>5</id>
+        <nom>eya</nom>
+        <email>eyabb@gmail.com</email>
+        <motDePasse>$2a$10$bbpefeCil9p8qk2vATTOGeGMYXyBfIA6YAOklwbOmMOcrObDe2q7S</motDePasse>
+        <role>CHEF_SERVICE</role>
+        <departement>....</departement>
+    </ChefDeService>
 </Utilisateurs>

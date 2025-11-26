@@ -1,8 +1,11 @@
 package tn.SGII_Ville.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import tn.SGII_Ville.entities.RessourceMaterielle;
 import tn.SGII_Ville.service.RessourceMaterielleService;
-import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -17,16 +20,64 @@ public class RessourceMaterielleController {
     }
 
     @GetMapping
-    public List<RessourceMaterielle> getAll() { return service.getAll(); }
+    public ResponseEntity<List<RessourceMaterielle>> getAll() {
+        try {
+            List<RessourceMaterielle> ressources = service.getAll();
+            return ResponseEntity.ok(ressources);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @GetMapping("/{id}")
-    public RessourceMaterielle getOne(@PathVariable int id) { return service.getById(id); }
+    public ResponseEntity<RessourceMaterielle> getOne(@PathVariable int id) {
+        try {
+            RessourceMaterielle ressource = service.getById(id);
+            if (ressource != null) {
+                return ResponseEntity.ok(ressource);
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @PostMapping
-    public RessourceMaterielle create(@RequestBody RessourceMaterielle r) { return service.create(r); }
+    public ResponseEntity<RessourceMaterielle> create(@RequestBody RessourceMaterielle r) {
+        try {
+            RessourceMaterielle nouvelleRessource = service.create(r);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nouvelleRessource);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
-   
+    @PutMapping("/{id}")
+public ResponseEntity<RessourceMaterielle> update(@PathVariable int id, @RequestBody RessourceMaterielle r) {
+    try {
+        RessourceMaterielle updated = service.update(id, r);
+        if (updated != null) {
+            return ResponseEntity.ok(updated);
+        }
+        return ResponseEntity.notFound().build();
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) { service.delete(id); }
+    public ResponseEntity<Void> delete(@PathVariable int id) {
+        try {
+            service.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
 }

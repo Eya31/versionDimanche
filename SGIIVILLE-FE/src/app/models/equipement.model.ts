@@ -1,19 +1,22 @@
-export interface Fournisseur {
-  id: number;
-  nom: string;
-  email: string;
-  telephone: string;
-  adresse: string;
-}
-
 export interface Equipement {
   id: number;
+  nom: string;
   type: string;
-  etat: 'FONCTIONNEL' | 'DEFECTUEUX' | 'EN_MAINTENANCE';
-  fournisseur?: Fournisseur;
-  valeurAchat: number;
-  localisation?: {
-    latitude: number;
-    longitude: number;
-  };
+  etat: string;
+  fournisseurId?: number;
+  valeurAchat?: number;
+  localisation?: Localisation;
+  dateAchat?: string;
+  disponible?: boolean;
+  indisponibilites?: PeriodeIndisponibilite[];
+}
+
+export interface Localisation {
+  latitude: number;
+  longitude: number;
+}
+
+export interface PeriodeIndisponibilite {
+  debut: string;
+  fin: string;
 }

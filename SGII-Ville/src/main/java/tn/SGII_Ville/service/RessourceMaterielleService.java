@@ -2,20 +2,15 @@ package tn.SGII_Ville.service;
 
 import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-import tn.SGII_Ville.entities.Fournisseur;
 import tn.SGII_Ville.entities.RessourceMaterielle;
 
-import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +18,10 @@ import java.util.List;
 public class RessourceMaterielleService {
 
     private static final String XML_PATH = "src/main/resources/data/ressources.xml";
+    private static final String NAMESPACE_URI = "http://example.com/gestion-interventions";
     private Document document;
 
-    @PostConstruct
+    @Autowired
     public void init() {
         try {
             loadXML();
@@ -34,7 +30,7 @@ public class RessourceMaterielleService {
         }
     }
 
-    private void loadXML() throws ParserConfigurationException, IOException, SAXException {
+    private void loadXML() throws Exception {
         File xmlFile = new File(XML_PATH);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
@@ -42,7 +38,7 @@ public class RessourceMaterielleService {
 
         if (!xmlFile.exists()) {
             document = builder.newDocument();
-            Element root = document.createElementNS("http://example.com/gestion-interventions", "RessourcesMaterielles");
+            Element root = document.createElementNS(NAMESPACE_URI, "RessourcesMaterielles");
             document.appendChild(root);
             saveXML();
         } else {
@@ -63,19 +59,12 @@ public class RessourceMaterielleService {
         }
     }
 
-    // ============================================================
-    // ===============   LECTURE (GET)   ==========================
-    // ============================================================
-
     public List<RessourceMaterielle> getAll() {
         List<RessourceMaterielle> list = new ArrayList<>();
-        NodeList nodes = document.getElementsByTagName("id");
-
-        Node root = document.getDocumentElement();
-        NodeList children = root.getChildNodes();
-
-        for (int i = 0; i < children.getLength(); i++) {
-            Node n = children.item(i);
+        NodeList nodes = document.getElementsByTagNameNS(NAMESPACE_URI, "RessourceMaterielle");
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node n = nodes.item(i);
             if (n.getNodeType() == Node.ELEMENT_NODE) {
                 list.add(parseRessource((Element) n));
             }
@@ -84,16 +73,12 @@ public class RessourceMaterielleService {
     }
 
     public RessourceMaterielle getById(int id) {
-        Node root = document.getDocumentElement();
-        NodeList items = root.getChildNodes();
-
-        for (int i = 0; i < items.getLength(); i++) {
-            Node n = items.item(i);
-            if (n.getNodeType() == Node.ELEMENT_NODE) {
-                Element e = (Element) n;
-                if (Integer.parseInt(e.getElementsByTagName("id").item(0).getTextContent()) == id) {
-                    return parseRessource(e);
-                }
+        NodeList nodes = document.getElementsByTagNameNS(NAMESPACE_URI, "RessourceMaterielle");
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Element e = (Element) nodes.item(i);
+            if (Integer.parseInt(getElementTextContent(e, "id")) == id) {
+                return parseRessource(e);
             }
         }
         return null;
@@ -102,137 +87,130 @@ public class RessourceMaterielleService {
     private RessourceMaterielle parseRessource(Element e) {
         RessourceMaterielle r = new RessourceMaterielle();
 
-        r.setId(Integer.parseInt(e.getElementsByTagName("id").item(0).getTextContent()));
-        r.setDesignation(e.getElementsByTagName("designation").item(0).getTextContent());
-        r.setQuantiteEnStock(Integer.parseInt(e.getElementsByTagName("quantiteEnStock").item(0).getTextContent()));
-        r.setValeurAchat(new BigDecimal(e.getElementsByTagName("valeurAchat").item(0).getTextContent()));
-
-        // Fournisseur ID (clé étrangère)
-        NodeList fournisseurIdNodes = e.getElementsByTagName("fournisseurId");
-        if (fournisseurIdNodes.getLength() > 0) {
-            r.setFournisseurId(Integer.parseInt(fournisseurIdNodes.item(0).getTextContent()));
+        r.setId(Integer.parseInt(getElementTextContent(e, "id")));
+        r.setDesignation(getElementTextContent(e, "designation"));
+        r.setQuantiteEnStock(Integer.parseInt(getElementTextContent(e, "quantiteEnStock")));
+        
+        // Valeur d'achat
+        try {
+            r.setValeurAchat(Double.parseDouble(getElementTextContent(e, "valeurAchat")));
+        } catch (Exception ex) {
+            r.setValeurAchat(0.0);
         }
-
-        // Unité (optionnel)
-        NodeList uniteNodes = e.getElementsByTagName("unite");
-        if (uniteNodes.getLength() > 0) {
-            r.setUnite(uniteNodes.item(0).getTextContent());
+        
+        // Fournisseur
+        try {
+            r.setFournisseurId(Integer.parseInt(getElementTextContent(e, "fournisseurId")));
+        } catch (Exception ex) {
+            r.setFournisseurId(null);
         }
+        
+        // Unité
+        r.setUnite(getElementTextContent(e, "unite"));
 
         return r;
     }
 
-    // ============================================================
-    // ===============   CRÉATION (POST)   ========================
-    // ============================================================
-
     public RessourceMaterielle create(RessourceMaterielle r) {
         Element root = document.getDocumentElement();
 
-        Element item = document.createElement("RessourceMaterielle");
+        Element item = document.createElementNS(NAMESPACE_URI, "RessourceMaterielle");
 
-        appendElement(item, "id", String.valueOf(r.getId()));
+        appendElement(item, "id", String.valueOf(generateNewId()));
         appendElement(item, "designation", r.getDesignation());
         appendElement(item, "quantiteEnStock", String.valueOf(r.getQuantiteEnStock()));
-        appendElement(item, "valeurAchat", r.getValeurAchat().toString());
-
-        // Fournisseur ID (clé étrangère)
+        appendElement(item, "valeurAchat", String.valueOf(r.getValeurAchat()));
+        
         if (r.getFournisseurId() != null) {
             appendElement(item, "fournisseurId", String.valueOf(r.getFournisseurId()));
         }
-
-        // Unité (optionnel)
+        
         if (r.getUnite() != null) {
             appendElement(item, "unite", r.getUnite());
         }
 
         root.appendChild(item);
-
         saveXML();
         return r;
     }
 
-    // ============================================================
-    // ===============   MISE À JOUR (PUT)   =====================
-    // ============================================================
-
     public RessourceMaterielle update(int id, RessourceMaterielle updated) {
-        Node root = document.getDocumentElement();
-        NodeList nodes = root.getChildNodes();
-
+        NodeList nodes = document.getElementsByTagNameNS(NAMESPACE_URI, "RessourceMaterielle");
+        
         for (int i = 0; i < nodes.getLength(); i++) {
-            Node n = nodes.item(i);
+            Element e = (Element) nodes.item(i);
+            int currentId = Integer.parseInt(getElementTextContent(e, "id"));
 
-            if (n.getNodeType() == Node.ELEMENT_NODE) {
-                Element e = (Element) n;
-                int currentId = Integer.parseInt(e.getElementsByTagName("id").item(0).getTextContent());
-
-                if (currentId == id) {
-                    e.getElementsByTagName("designation").item(0).setTextContent(updated.getDesignation());
-                    e.getElementsByTagName("quantiteEnStock").item(0).setTextContent(String.valueOf(updated.getQuantiteEnStock()));
-                    e.getElementsByTagName("valeurAchat").item(0).setTextContent(updated.getValeurAchat().toString());
-
-                    // Fournisseur ID
-                    if (updated.getFournisseurId() != null) {
-                        NodeList fournIdNodes = e.getElementsByTagName("fournisseurId");
-                        if (fournIdNodes.getLength() > 0) {
-                            fournIdNodes.item(0).setTextContent(String.valueOf(updated.getFournisseurId()));
-                        } else {
-                            Element fournIdEl = document.createElement("fournisseurId");
-                            fournIdEl.setTextContent(String.valueOf(updated.getFournisseurId()));
-                            e.appendChild(fournIdEl);
-                        }
-                    }
-
-                    // Unité
-                    if (updated.getUnite() != null) {
-                        NodeList uniteNodes = e.getElementsByTagName("unite");
-                        if (uniteNodes.getLength() > 0) {
-                            uniteNodes.item(0).setTextContent(updated.getUnite());
-                        } else {
-                            Element uniteEl = document.createElement("unite");
-                            uniteEl.setTextContent(updated.getUnite());
-                            e.appendChild(uniteEl);
-                        }
-                    }
-
-                    saveXML();
-                    return updated;
+            if (currentId == id) {
+                updateElementTextContent(e, "designation", updated.getDesignation());
+                updateElementTextContent(e, "quantiteEnStock", String.valueOf(updated.getQuantiteEnStock()));
+                updateElementTextContent(e, "valeurAchat", String.valueOf(updated.getValeurAchat()));
+                
+                if (updated.getFournisseurId() != null) {
+                    updateElementTextContent(e, "fournisseurId", String.valueOf(updated.getFournisseurId()));
                 }
+                
+                if (updated.getUnite() != null) {
+                    updateElementTextContent(e, "unite", updated.getUnite());
+                }
+
+                saveXML();
+                return updated;
             }
         }
-
         return null;
     }
 
-    // ============================================================
-    // ==================   SUPPRESSION (DELETE)   ================
-    // ============================================================
-
     public void delete(int id) {
-        Node root = document.getDocumentElement();
-        NodeList nodes = root.getChildNodes();
-
+        NodeList nodes = document.getElementsByTagNameNS(NAMESPACE_URI, "RessourceMaterielle");
+        Element root = document.getDocumentElement();
+        
         for (int i = 0; i < nodes.getLength(); i++) {
-            Node n = nodes.item(i);
+            Element e = (Element) nodes.item(i);
+            int currentId = Integer.parseInt(getElementTextContent(e, "id"));
 
-            if (n.getNodeType() == Node.ELEMENT_NODE) {
-                Element e = (Element) n;
-
-                int currentId = Integer.parseInt(e.getElementsByTagName("id").item(0).getTextContent());
-
-                if (currentId == id) {
-                    root.removeChild(e);
-                    saveXML();
-                    return;
-                }
+            if (currentId == id) {
+                root.removeChild(e);
+                saveXML();
+                return;
             }
         }
     }
 
     private void appendElement(Element parent, String tag, String value) {
-        Element el = document.createElement(tag);
+        Element el = document.createElementNS(NAMESPACE_URI, tag);
         el.setTextContent(value);
         parent.appendChild(el);
+    }
+
+    private String getElementTextContent(Element parent, String tagName) {
+        NodeList nodes = parent.getElementsByTagNameNS(NAMESPACE_URI, tagName);
+        if (nodes.getLength() > 0) {
+            return nodes.item(0).getTextContent();
+        }
+        return "";
+    }
+
+    private void updateElementTextContent(Element parent, String tagName, String textContent) {
+        NodeList nodes = parent.getElementsByTagNameNS(NAMESPACE_URI, tagName);
+        if (nodes.getLength() > 0) {
+            nodes.item(0).setTextContent(textContent);
+        } else {
+            // Créer l'élément s'il n'existe pas
+            appendElement(parent, tagName, textContent);
+        }
+    }
+
+    private int generateNewId() {
+        NodeList nodes = document.getElementsByTagNameNS(NAMESPACE_URI, "RessourceMaterielle");
+        int maxId = 0;
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Element e = (Element) nodes.item(i);
+            int id = Integer.parseInt(getElementTextContent(e, "id"));
+            if (id > maxId) {
+                maxId = id;
+            }
+        }
+        return maxId + 1;
     }
 }

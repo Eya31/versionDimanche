@@ -19,11 +19,16 @@ export class EquipementService {
     return this.http.get<Equipement>(`${this.baseUrl}/${id}`);
   }
 
-  createEquipement(equipement: Omit<Equipement, 'id'>): Observable<Equipement> {
-    return this.http.post<Equipement>(this.baseUrl, equipement);
+  createEquipement(equipement: Equipement): Observable<Equipement> {
+    // S'assurer que l'équipement est disponible à la création
+    const equipementToCreate = {
+      ...equipement,
+      disponible: true
+    };
+    return this.http.post<Equipement>(this.baseUrl, equipementToCreate);
   }
 
-  updateEquipement(id: number, equipement: Partial<Equipement>): Observable<Equipement> {
+  updateEquipement(id: number, equipement: Equipement): Observable<Equipement> {
     return this.http.put<Equipement>(`${this.baseUrl}/${id}`, equipement);
   }
 

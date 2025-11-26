@@ -31,7 +31,10 @@ techniciens: Technicien[] = [];
   equipements: Equipement[] = [];
   interventions: Intervention[] = [];
   ressources: RessourceMaterielle[] = [];
-  
+showEquipementModal = false;
+showRessourceModal = false;
+showEquipementFormModal = false;
+showRessourceFormModal = false;
   // Cartes Leaflet
   private mapDemandes?: L.Map;
   private mapInterventions?: L.Map;
@@ -53,14 +56,12 @@ techniciens: Technicien[] = [];
   demandesTraitees = 0;
 
   // Modals
-  showEquipementModal = false;
   showInterventionModal = false;
   showFormModal = false;
-  showRessourceModal = false;
   showDetailModal = false;
   showPlanificationModal = false;
   selectedDemande: Demande | null = null;
-  
+
   // Planification
   planificationData: any = {
     technicienId: null,
@@ -81,23 +82,30 @@ techniciens: Technicien[] = [];
   editingEquipement: Equipement | null = null;
   editingRessource: RessourceMaterielle | null = null;
 
-  currentEquipement: Equipement = {
-    id: 0,
-    type: '',
-    etat: 'FONCTIONNEL',
-    valeurAchat: 0,
-    localisation: { latitude: 36.8065, longitude: 10.1815 }
-  };
+ currentEquipement: Equipement = {
+  id: 0,
+  nom: '',
+  type: '',
+  etat: 'FONCTIONNEL',
+  fournisseurId: undefined,
+  valeurAchat: 0,
+  localisation: undefined,
+  dateAchat: new Date().toISOString().split('T')[0],
+  disponible: true,
+  indisponibilites: []
+};
 
-  currentRessource: RessourceMaterielle = {
-    id: 0,
-    designation: '',
-    quantiteEnStock: 0,
-    valeurAchat: 0
-  } as RessourceMaterielle;
+currentRessource: RessourceMaterielle = {
+  id: 0,
+  designation: '',
+  quantiteEnStock: 0,
+  valeurAchat: 0,
+  fournisseurId: undefined,
+  unite: ''
+};
 
   filtreActif: 'TOUS' | 'NON_TRAITEES' | 'TRAITEES' = 'TOUS';
-  
+
   // Sidebar state
   sidebarCollapsed = true;
 
@@ -136,7 +144,7 @@ techniciens: Technicien[] = [];
 
     this.notificationService.getNotificationsByUser(userId).subscribe({
       next: (data) => {
-        this.notifications = data.sort((a, b) => 
+        this.notifications = data.sort((a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         this.unreadCount = this.notifications.filter(n => !n.readable).length;
@@ -400,21 +408,21 @@ loadTechniciens(): void {
       next: (intervention) => {
         console.log('=== PLANIFICATION RÉUSSIE ===');
         console.log('Intervention créée:', intervention);
-        
+
         if (this.selectedDemande) {
           this.selectedDemande.etat = 'TRAITEE';
         }
-        
+
         this.updateStats();
         this.appliquerFiltre();
         this.loadInterventions();
         this.loadAllData(); // Recharger toutes les données
-        
+
         alert('✅ Intervention planifiée avec succès !\n\n' +
               'Intervention #' + intervention.id + '\n' +
               'Technicien notifié\n' +
               'État: Planifiée');
-        
+
         this.closePlanificationModal();
         this.closeDetailModal();
       },
@@ -425,9 +433,9 @@ loadTechniciens(): void {
         console.error('Message:', error.message);
         console.error('Error body:', error.error);
         console.error('URL appelée:', error.url);
-        
+
         let message = '❌ Erreur lors de la planification\n\n';
-        
+
         if (error?.status === 0) {
           message += 'Impossible de contacter le serveur.\nVérifiez que le backend est démarré.';
         } else if (error?.status === 404) {
@@ -448,7 +456,7 @@ loadTechniciens(): void {
         } else {
           message += 'Erreur inconnue. Vérifiez la console pour plus de détails.';
         }
-        
+
         alert(message);
       }
     });
@@ -490,15 +498,39 @@ loadTechniciens(): void {
     }
   }
 
-  openAddEquipement() {
-    this.editingEquipement = null;
-    this.showEquipementForm = true;
-  }
+  openAddEquipement(): void {
+  this.editingEquipement = null;
+  this.resetEquipementForm();
+  this.showEquipementFormModal = true;
+}
 
-  editEquipement(equipement: any): void {
-    this.editingEquipement = equipement;
-    this.showEquipementForm = true;
-  }
+  // === MÉTHODES CRUD ===
+editEquipement(equipement: Equipement): void {
+  this.editingEquipement = equipement;
+  this.currentEquipement = { ...equipement };
+  this.showEquipementFormModal = true;
+}
+// === MÉTHODES POUR FERMER LES MODALS ===
+closeEquipementForm(): void {
+  this.showEquipementFormModal = false;
+  this.editingEquipement = null;
+  this.resetEquipementForm();
+}
+
+closeRessourceForm(): void {
+  this.showRessourceFormModal = false;
+  this.editingRessource = null;
+  this.resetRessourceForm();
+}
+
+closeModal(): void {
+  this.showTechniciensModal = false;
+  this.showEquipementModal = false;
+  this.showRessourceModal = false;
+  this.showInterventionModal = false;
+  this.showDetailModal = false;
+  this.showPlanificationModal = false;
+}
 
   // === DÉTAILS DEMANDE ===
   openDetailModal(demande: Demande): void {
@@ -513,9 +545,9 @@ loadTechniciens(): void {
 
   // === GESTION ÉQUIPEMENTS ===
   openEquipementsModal(): void {
-    this.showEquipementModal = true;
-    this.loadEquipements();
-  }
+  this.showEquipementModal = true;
+  this.loadEquipements();
+}
 
   openInterventionsModal(): void {
     this.showInterventionModal = true;
@@ -524,118 +556,132 @@ loadTechniciens(): void {
 
   // === GESTION RESSOURCES (MATERIELS) ===
   openRessourcesModal(): void {
-    this.showRessourceModal = true;
-    this.loadRessources();
-  }
+  this.showRessourceModal = true;
+  this.loadRessources();
+}
 
-  openAddRessource(): void {
-    this.editingRessource = null;
-    this.resetRessourceForm();
-    this.showFormModal = true;
-  }
+ openAddRessource(): void {
+  this.editingRessource = null;
+  this.resetRessourceForm();
+  this.showRessourceFormModal = true;
+}
 
-  editRessource(r: RessourceMaterielle): void {
-    this.editingRessource = r;
-    this.currentRessource = { ...r };
-    this.showFormModal = true;
-  }
+  editRessource(ressource: RessourceMaterielle): void {
+  this.editingRessource = ressource;
+  this.currentRessource = { ...ressource };
+  this.showRessourceFormModal = true;
+}
+private resetEquipementForm(): void {
+  this.currentEquipement = {
+    id: 0,
+    nom: '',
+    type: '',
+    etat: 'FONCTIONNEL',
+    fournisseurId: undefined,
+    valeurAchat: 0,
+    localisation: undefined,
+    dateAchat: new Date().toISOString().split('T')[0],
+    disponible: true,
+    indisponibilites: []
+  };
+}
 
   deleteRessource(id: number): void {
-    if (!confirm('Supprimer ce matériel ?')) return;
+  if (confirm('Êtes-vous sûr de vouloir supprimer ce matériel ?')) {
     this.ressourceService.delete(id).subscribe({
       next: () => {
-        this.ressources = this.ressources.filter(x => x.id !== id);
-        alert('Matériel supprimé');
+        this.ressources = this.ressources.filter(r => r.id !== id);
+        alert('✅ Matériel supprimé avec succès');
       },
       error: (error) => {
         console.error('Erreur suppression matériel:', error);
-        alert('Erreur lors de la suppression');
+        alert('❌ Erreur lors de la suppression du matériel');
       }
     });
   }
+}
 
-  closeModal(): void {
-        this.showTechniciensModal = false;
 
-    this.showEquipementModal = false;
-    this.showInterventionModal = false;
-    this.showFormModal = false;
-    this.showRessourceModal = false;
-    this.showDetailModal = false;
-    this.editingEquipement = null;
-    this.editingRessource = null;
-    this.selectedDemande = null;
-    this.resetForm();
-  }
-
-  private resetForm(): void {
-    this.currentEquipement = {
-      id: 0,
-      type: '',
-      etat: 'FONCTIONNEL',
-      valeurAchat: 0,
-      localisation: { latitude: 36.8065, longitude: 10.1815 }
-    };
-    this.resetRessourceForm();
-  }
+ private resetForm(): void {
+  this.resetEquipementForm();
+  this.resetRessourceForm();
+}
 
   private resetRessourceForm(): void {
-    this.currentRessource = {
-      id: 0,
-      designation: '',
-      quantiteEnStock: 0,
-      valeurAchat: 0
-    } as RessourceMaterielle;
-  }
+  this.currentRessource = {
+    id: 0,
+    designation: '',
+    quantiteEnStock: 0,
+    valeurAchat: 0,
+    fournisseurId: undefined,
+    unite: ''
+  };
+}
+
 
   saveEquipement(): void {
-    if (!this.currentEquipement.type) {
-      alert('Veuillez remplir le type d\'équipement');
-      return;
-    }
-
-    const equipementData = {
-      ...this.currentEquipement,
-      fournisseur: this.currentEquipement.fournisseur || {
-        id: 1,
-        nom: 'Fournisseur Standard',
-        email: 'contact@fournisseur.tn',
-        telephone: '+216 70 000 000',
-        adresse: ''
-      }
-    };
-
-    const action = this.editingEquipement
-      ? this.equipementService.updateEquipement(this.editingEquipement.id, equipementData)
-      : this.equipementService.createEquipement(equipementData);
-
-    action.subscribe({
-      next: () => {
-        alert(this.editingEquipement ? 'Équipement modifié !' : 'Équipement ajouté !');
-        this.closeModal();
-        this.loadEquipements();
-      },
-      error: (error) => {
-        console.error('Erreur sauvegarde équipement:', error);
-        alert('Erreur lors de la sauvegarde');
-      }
-    });
+  if (!this.currentEquipement.nom || !this.currentEquipement.type) {
+    alert('Veuillez remplir le nom et le type d\'équipement');
+    return;
   }
+
+  const equipementToSave: Equipement = {
+    ...this.currentEquipement,
+    etat: this.currentEquipement.etat || 'FONCTIONNEL',
+    dateAchat: this.currentEquipement.dateAchat || new Date().toISOString().split('T')[0],
+    disponible: true // Toujours disponible à la création
+  };
+
+  const action = this.editingEquipement
+    ? this.equipementService.updateEquipement(this.editingEquipement.id, equipementToSave)
+    : this.equipementService.createEquipement(equipementToSave);
+
+  action.subscribe({
+    next: (savedEquipement) => {
+      alert(this.editingEquipement ? '✅ Équipement modifié !' : '✅ Équipement ajouté !');
+      this.closeEquipementForm();
+      this.loadEquipements();
+    },
+    error: (error) => {
+      console.error('Erreur sauvegarde équipement:', error);
+      alert('❌ Erreur lors de la sauvegarde: ' + (error.error?.message || error.message));
+    }
+  });
+}
+
 
   saveRessource(): void {
-    const payload = { ...this.currentRessource } as RessourceMaterielle;
-    if (this.editingRessource) {
-      this.ressourceService.update(this.editingRessource.id, payload).subscribe({
-        next: () => { this.loadRessources(); this.closeModal(); alert('Matériel modifié !'); },
-        error: (error) => { console.error(error); alert('Erreur lors de la sauvegarde'); }
-      });
-    } else {
-      this.ressourceService.create(payload).subscribe({
-        next: () => { this.loadRessources(); this.closeModal(); alert('Matériel ajouté !'); },
-        error: (error) => { console.error(error); alert('Erreur lors de la sauvegarde'); }
-      });
-    }
+  if (!this.currentRessource.designation) {
+    alert('Veuillez remplir la désignation');
+    return;
   }
+
+  if (this.currentRessource.quantiteEnStock < 0) {
+    alert('La quantité ne peut pas être négative');
+    return;
+  }
+
+  if (this.currentRessource.valeurAchat < 0) {
+    alert('Le prix ne peut pas être négatif');
+    return;
+  }
+
+  const action = this.editingRessource
+    ? this.ressourceService.update(this.editingRessource.id, this.currentRessource)
+    : this.ressourceService.create(this.currentRessource);
+
+  action.subscribe({
+    next: (savedRessource) => {
+      alert(this.editingRessource ? '✅ Matériel modifié !' : '✅ Matériel ajouté !');
+      this.closeRessourceForm();
+      this.loadRessources();
+    },
+    error: (error) => {
+      console.error('Erreur sauvegarde matériel:', error);
+      alert('❌ Erreur lors de la sauvegarde: ' + (error.error?.message || error.message));
+    }
+  });
+}
 
   // Open photo in a new browser tab (simple viewer fallback)
   openPhotoModal(url: string, name?: string): void {
@@ -643,14 +689,20 @@ loadTechniciens(): void {
     window.open(fullUrl, '_blank');
   }
 
-  deleteEquipement(id: number): void {
-    if (confirm('Supprimer cet équipement ?')) {
-      this.equipementService.deleteEquipement(id).subscribe({
-        next: () => { this.equipements = this.equipements.filter(e => e.id !== id); alert('Équipement supprimé'); },
-        error: (error) => { console.error('Erreur suppression:', error); alert('Erreur lors de la suppression'); }
-      });
-    }
+ deleteEquipement(id: number): void {
+  if (confirm('Êtes-vous sûr de vouloir supprimer cet équipement ?')) {
+    this.equipementService.deleteEquipement(id).subscribe({
+      next: () => {
+        this.equipements = this.equipements.filter(e => e.id !== id);
+        alert('✅ Équipement supprimé avec succès');
+      },
+      error: (error) => {
+        console.error('Erreur suppression équipement:', error);
+        alert('❌ Erreur lors de la suppression de l\'équipement');
+      }
+    });
   }
+}
 
   refreshAll(): void {
     this.loadAllData();
@@ -659,18 +711,18 @@ loadTechniciens(): void {
 
   // Carte des demandes non traitées
   openMapModal(): void {
-    this.demandesNonTraitees = this.demandes.filter(d => 
-      (d.etat === 'SOUMISE' || d.etat === 'EN_ATTENTE') && 
-      d.localisation && 
-      d.localisation.latitude && 
+    this.demandesNonTraitees = this.demandes.filter(d =>
+      (d.etat === 'SOUMISE' || d.etat === 'EN_ATTENTE') &&
+      d.localisation &&
+      d.localisation.latitude &&
       d.localisation.longitude
     );
-    
+
     if (this.demandesNonTraitees.length === 0) {
       alert('Aucune demande non traitée avec localisation disponible');
       return;
     }
-    
+
     this.showMapModal = true;
     setTimeout(() => this.initMap(), 100);
   }
@@ -689,7 +741,7 @@ loadTechniciens(): void {
       if (demande.localisation) {
         const color = this.getMarkerColor(demande.priority);
         const icon = this.createColoredIcon(color);
-        
+
         const marker = L.marker(
           [demande.localisation.latitude, demande.localisation.longitude],
           { icon: icon }
@@ -793,15 +845,15 @@ loadTechniciens(): void {
   // Carte des interventions en cours
   openMapInterventionsModal(): void {
     // Filtrer les interventions en cours et trouver leurs demandes associées
-    this.interventionsEnCours = this.interventions.filter(i => 
+    this.interventionsEnCours = this.interventions.filter(i =>
       i.etat === 'EN_COURS' || i.etat === 'EN_ATTENTE'
     );
-    
+
     if (this.interventionsEnCours.length === 0) {
       alert('Aucune intervention en cours disponible');
       return;
     }
-    
+
     this.showMapInterventionsModal = true;
     setTimeout(() => this.initMapInterventions(), 100);
   }
@@ -822,11 +874,11 @@ loadTechniciens(): void {
     this.interventionsEnCours.forEach(intervention => {
       // Trouver la demande associée pour obtenir la localisation
       const demande = this.demandes.find(d => d.id === intervention.demandeId);
-      
+
       if (demande?.localisation?.latitude && demande?.localisation?.longitude) {
         const color = this.getInterventionColor(intervention.etat);
         const icon = this.createInterventionIcon(color);
-        
+
         const marker = L.marker(
           [demande.localisation.latitude, demande.localisation.longitude],
           { icon: icon }

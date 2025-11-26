@@ -1,4 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <RessourcesMaterielles xmlns="http://example.com/gestion-interventions">
+        
     <!-- Ressources matérielles vides - Prêt pour de nouvelles instances -->
+    
+    <RessourceMaterielle>
+        <id>1</id>
+        <designation>tuyaux</designation>
+        <quantiteEnStock>5</quantiteEnStock>
+        <valeurAchat>1000.0</valeurAchat>
+        <unite/>
+    </RessourceMaterielle>
 </RessourcesMaterielles>
