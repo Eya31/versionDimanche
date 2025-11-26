@@ -3,23 +3,28 @@ package tn.SGII_Ville.entities;
 
 import java.math.BigDecimal;
 
+/**
+ * Entité Ressource Matérielle conforme au schéma XSD ressources.xsd
+ * Relation: 1 Fournisseur -> * RessourcesMaterielles
+ */
 public class RessourceMaterielle {
     private int id;
     private String designation;
     private int quantiteEnStock;
     private BigDecimal valeurAchat;
-    private Fournisseur fournisseur;
+    private Integer fournisseurId; // Référence au fournisseur (clé étrangère)
+    private String unite; // Unité de mesure (optionnel)
 
     // Constructeurs
     public RessourceMaterielle() {}
 
     public RessourceMaterielle(int id, String designation, int quantiteEnStock, 
-                              BigDecimal valeurAchat, Fournisseur fournisseur) {
+                              BigDecimal valeurAchat, Integer fournisseurId) {
         this.id = id;
         this.designation = designation;
         this.quantiteEnStock = quantiteEnStock;
         this.valeurAchat = valeurAchat;
-        this.fournisseur = fournisseur;
+        this.fournisseurId = fournisseurId;
     }
 
     // Getters et Setters
@@ -55,12 +60,20 @@ public class RessourceMaterielle {
         this.valeurAchat = valeurAchat;
     }
 
-    public Fournisseur getFournisseur() {
-        return fournisseur;
+    public Integer getFournisseurId() {
+        return fournisseurId;
     }
 
-    public void setFournisseur(Fournisseur fournisseur) {
-        this.fournisseur = fournisseur;
+    public void setFournisseurId(Integer fournisseurId) {
+        this.fournisseurId = fournisseurId;
+    }
+
+    public String getUnite() {
+        return unite;
+    }
+
+    public void setUnite(String unite) {
+        this.unite = unite;
     }
 
     @Override
@@ -70,6 +83,8 @@ public class RessourceMaterielle {
                 ", designation='" + designation + '\'' +
                 ", quantiteEnStock=" + quantiteEnStock +
                 ", valeurAchat=" + valeurAchat +
+                ", fournisseurId=" + fournisseurId +
+                ", unite='" + unite + '\'' +
                 '}';
     }
 }

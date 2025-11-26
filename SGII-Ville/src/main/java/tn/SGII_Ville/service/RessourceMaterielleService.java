@@ -107,16 +107,18 @@ public class RessourceMaterielleService {
         r.setQuantiteEnStock(Integer.parseInt(e.getElementsByTagName("quantiteEnStock").item(0).getTextContent()));
         r.setValeurAchat(new BigDecimal(e.getElementsByTagName("valeurAchat").item(0).getTextContent()));
 
-        // Fournisseur
-        Element f = (Element) e.getElementsByTagName("fournisseur").item(0);
-        Fournisseur fournisseur = new Fournisseur();
-        fournisseur.setId(Integer.parseInt(f.getElementsByTagName("id").item(0).getTextContent()));
-        fournisseur.setNom(f.getElementsByTagName("nom").item(0).getTextContent());
-        fournisseur.setEmail(f.getElementsByTagName("email").item(0).getTextContent());
-        fournisseur.setTelephone(f.getElementsByTagName("telephone").item(0).getTextContent());
-        fournisseur.setAdresse(f.getElementsByTagName("adresse").item(0).getTextContent());
+        // Fournisseur ID (clé étrangère)
+        NodeList fournisseurIdNodes = e.getElementsByTagName("fournisseurId");
+        if (fournisseurIdNodes.getLength() > 0) {
+            r.setFournisseurId(Integer.parseInt(fournisseurIdNodes.item(0).getTextContent()));
+        }
 
-        r.setFournisseur(fournisseur);
+        // Unité (optionnel)
+        NodeList uniteNodes = e.getElementsByTagName("unite");
+        if (uniteNodes.getLength() > 0) {
+            r.setUnite(uniteNodes.item(0).getTextContent());
+        }
+
         return r;
     }
 
@@ -134,15 +136,16 @@ public class RessourceMaterielleService {
         appendElement(item, "quantiteEnStock", String.valueOf(r.getQuantiteEnStock()));
         appendElement(item, "valeurAchat", r.getValeurAchat().toString());
 
-        // FOUNISSEUR
-        Element f = document.createElement("fournisseur");
-        appendElement(f, "id", String.valueOf(r.getFournisseur().getId()));
-        appendElement(f, "nom", r.getFournisseur().getNom());
-        appendElement(f, "email", r.getFournisseur().getEmail());
-        appendElement(f, "telephone", r.getFournisseur().getTelephone());
-        appendElement(f, "adresse", r.getFournisseur().getAdresse());
+        // Fournisseur ID (clé étrangère)
+        if (r.getFournisseurId() != null) {
+            appendElement(item, "fournisseurId", String.valueOf(r.getFournisseurId()));
+        }
 
-        item.appendChild(f);
+        // Unité (optionnel)
+        if (r.getUnite() != null) {
+            appendElement(item, "unite", r.getUnite());
+        }
+
         root.appendChild(item);
 
         saveXML();
@@ -169,12 +172,29 @@ public class RessourceMaterielleService {
                     e.getElementsByTagName("quantiteEnStock").item(0).setTextContent(String.valueOf(updated.getQuantiteEnStock()));
                     e.getElementsByTagName("valeurAchat").item(0).setTextContent(updated.getValeurAchat().toString());
 
-                    Element f = (Element) e.getElementsByTagName("fournisseur").item(0);
-                    f.getElementsByTagName("id").item(0).setTextContent(String.valueOf(updated.getFournisseur().getId()));
-                    f.getElementsByTagName("nom").item(0).setTextContent(updated.getFournisseur().getNom());
-                    f.getElementsByTagName("email").item(0).setTextContent(updated.getFournisseur().getEmail());
-                    f.getElementsByTagName("telephone").item(0).setTextContent(updated.getFournisseur().getTelephone());
-                    f.getElementsByTagName("adresse").item(0).setTextContent(updated.getFournisseur().getAdresse());
+                    // Fournisseur ID
+                    if (updated.getFournisseurId() != null) {
+                        NodeList fournIdNodes = e.getElementsByTagName("fournisseurId");
+                        if (fournIdNodes.getLength() > 0) {
+                            fournIdNodes.item(0).setTextContent(String.valueOf(updated.getFournisseurId()));
+                        } else {
+                            Element fournIdEl = document.createElement("fournisseurId");
+                            fournIdEl.setTextContent(String.valueOf(updated.getFournisseurId()));
+                            e.appendChild(fournIdEl);
+                        }
+                    }
+
+                    // Unité
+                    if (updated.getUnite() != null) {
+                        NodeList uniteNodes = e.getElementsByTagName("unite");
+                        if (uniteNodes.getLength() > 0) {
+                            uniteNodes.item(0).setTextContent(updated.getUnite());
+                        } else {
+                            Element uniteEl = document.createElement("unite");
+                            uniteEl.setTextContent(updated.getUnite());
+                            e.appendChild(uniteEl);
+                        }
+                    }
 
                     saveXML();
                     return updated;

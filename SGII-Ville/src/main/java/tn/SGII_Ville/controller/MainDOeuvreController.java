@@ -84,8 +84,8 @@ public class MainDOeuvreController {
             
             // Filtrer les interventions où l'agent est affecté
             List<Intervention> myInterventions = allInterventions.stream()
-                    .filter(i -> i.getMainDOeuvreIds() != null && 
-                               i.getMainDOeuvreIds().contains(mainDOeuvreId))
+                    .filter(i -> i.getOuvrierIds() != null && 
+                               i.getOuvrierIds().contains(mainDOeuvreId))
                     .collect(Collectors.toList());
 
             // Filtrer par état si fourni
@@ -123,8 +123,8 @@ public class MainDOeuvreController {
 
             // Vérifier que l'agent est affecté à cette intervention
             int mainDOeuvreId = agent.getMainDOeuvreId();
-            if (intervention.getMainDOeuvreIds() == null || 
-                !intervention.getMainDOeuvreIds().contains(mainDOeuvreId)) {
+            if (intervention.getOuvrierIds() == null || 
+                !intervention.getOuvrierIds().contains(mainDOeuvreId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
@@ -152,8 +152,8 @@ public class MainDOeuvreController {
             List<Intervention> allInterventions = interventionService.getAllInterventions();
             
             List<Intervention> myInterventions = allInterventions.stream()
-                    .filter(i -> i.getMainDOeuvreIds() != null && 
-                               i.getMainDOeuvreIds().contains(mainDOeuvreId))
+                    .filter(i -> i.getOuvrierIds() != null && 
+                               i.getOuvrierIds().contains(mainDOeuvreId))
                     .collect(Collectors.toList());
 
             long total = myInterventions.size();
@@ -253,8 +253,8 @@ public class MainDOeuvreController {
             // Vérifier que l'intervention est bien assignée à cet agent
             Intervention intervention = interventionService.findById(interventionId);
             if (intervention == null || 
-                intervention.getMainDOeuvreIds() == null || 
-                !intervention.getMainDOeuvreIds().contains(mainDOeuvre.getId())) {
+                intervention.getOuvrierIds() == null || 
+                !intervention.getOuvrierIds().contains(mainDOeuvre.getId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 

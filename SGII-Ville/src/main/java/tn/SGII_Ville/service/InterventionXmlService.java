@@ -128,9 +128,8 @@ public class InterventionXmlService {
             xmlService.addTextElement(doc, newIntervention, "budget", intervention.getBudget().toString());
             xmlService.addTextElement(doc, newIntervention, "technicienId", String.valueOf(intervention.getTechnicienId()));
             
-            if (intervention.getDemandeId() != null) {
-                xmlService.addTextElement(doc, newIntervention, "demandeId", String.valueOf(intervention.getDemandeId()));
-            }
+            // demandeId (obligatoire)
+            xmlService.addTextElement(doc, newIntervention, "demandeId", String.valueOf(intervention.getDemandeId()));
 
             // Ajouter à la racine
             root.appendChild(newIntervention);
@@ -200,12 +199,12 @@ public class InterventionXmlService {
             
             String dateDebutStr = xmlService.getElementTextContent(el, "dateDebut");
             if (dateDebutStr != null && !dateDebutStr.isEmpty()) {
-                i.setDateDebut(java.time.LocalDateTime.parse(dateDebutStr));
+                i.setDateDebut(java.time.LocalDate.parse(dateDebutStr));
             }
             
             String dateFinStr = xmlService.getElementTextContent(el, "dateFin");
             if (dateFinStr != null && !dateFinStr.isEmpty()) {
-                i.setDateFin(java.time.LocalDateTime.parse(dateFinStr));
+                i.setDateFin(java.time.LocalDate.parse(dateFinStr));
             }
 
             // Charger mainDOeuvreIds
@@ -221,7 +220,7 @@ public class InterventionXmlService {
                     }
                 }
             }
-            i.setMainDOeuvreIds(mainDOeuvreIds);
+            i.setOuvrierIds(mainDOeuvreIds);
             logger.debug("Intervention {} - mainDOeuvreIds chargés: {}", i.getId(), mainDOeuvreIds);
 
             // Charger photoIds
@@ -237,7 +236,6 @@ public class InterventionXmlService {
                     }
                 }
             }
-            i.setPhotoIds(photoIds);
 
             // Charger equipementIds
             List<Integer> equipementIds = new ArrayList<>();
@@ -345,9 +343,9 @@ public class InterventionXmlService {
             }
             xmlService.addTextElement(doc, newIntervention, "technicienId", String.valueOf(intervention.getTechnicienId()));
             
-            if (intervention.getDemandeId() != null) {
-                xmlService.addTextElement(doc, newIntervention, "demandeId", String.valueOf(intervention.getDemandeId()));
-            }
+            // demandeId (obligatoire)
+            xmlService.addTextElement(doc, newIntervention, "demandeId", String.valueOf(intervention.getDemandeId()));
+            
             if (intervention.getChefServiceId() != null) {
                 xmlService.addTextElement(doc, newIntervention, "chefServiceId", String.valueOf(intervention.getChefServiceId()));
             }
@@ -365,25 +363,14 @@ public class InterventionXmlService {
             }
 
             // Main-d'œuvre
-            if (intervention.getMainDOeuvreIds() != null && !intervention.getMainDOeuvreIds().isEmpty()) {
-                Element mainDOeuvreEl = doc.createElementNS(xmlService.getNamespaceUri(), "mainDOeuvreIds");
-                for (Integer id : intervention.getMainDOeuvreIds()) {
-                    Element idEl = doc.createElementNS(xmlService.getNamespaceUri(), "id");
+            if (intervention.getOuvrierIds() != null && !intervention.getOuvrierIds().isEmpty()) {
+                Element ouvrierIdsEl = doc.createElementNS(xmlService.getNamespaceUri(), "ouvrierIds");
+                for (Integer id : intervention.getOuvrierIds()) {
+                    Element idEl = doc.createElementNS(xmlService.getNamespaceUri(), "ouvrierId");
                     idEl.setTextContent(String.valueOf(id));
-                    mainDOeuvreEl.appendChild(idEl);
+                    ouvrierIdsEl.appendChild(idEl);
                 }
-                newIntervention.appendChild(mainDOeuvreEl);
-            }
-
-            // Photos
-            if (intervention.getPhotoIds() != null && !intervention.getPhotoIds().isEmpty()) {
-                Element photosEl = doc.createElementNS(xmlService.getNamespaceUri(), "photoIds");
-                for (Integer id : intervention.getPhotoIds()) {
-                    Element idEl = doc.createElementNS(xmlService.getNamespaceUri(), "id");
-                    idEl.setTextContent(String.valueOf(id));
-                    photosEl.appendChild(idEl);
-                }
-                newIntervention.appendChild(photosEl);
+                newIntervention.appendChild(ouvrierIdsEl);
             }
 
             // Équipements
@@ -451,7 +438,7 @@ public class InterventionXmlService {
             intervention.setDatePlanifiee(request.getDatePlanifiee() != null ? request.getDatePlanifiee() : LocalDate.now().plusDays(1));
             
             if (request.getHeureDebut() != null) {
-                intervention.setDateDebut(java.time.LocalDateTime.of(request.getDatePlanifiee(), request.getHeureDebut()));
+                intervention.setDateDebut(request.getDatePlanifiee());
             }
             
             intervention.setBudget(request.getBudget() != null ? request.getBudget() : new BigDecimal("500.00"));
@@ -464,8 +451,8 @@ public class InterventionXmlService {
             if (request.getRessourceIds() != null) {
                 intervention.setRessourceIds(request.getRessourceIds());
             }
-            if (request.getMainDOeuvreIds() != null) {
-                intervention.setMainDOeuvreIds(request.getMainDOeuvreIds());
+            if (request.getOuvrierIds() != null) {
+                intervention.setOuvrierIds(request.getOuvrierIds());
             }
 
             // Récupérer le chef de service depuis la demande ou l'authentification

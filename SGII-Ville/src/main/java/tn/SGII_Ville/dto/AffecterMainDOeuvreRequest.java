@@ -3,17 +3,17 @@ package tn.SGII_Ville.dto;
 import java.util.List;
 
 public class AffecterMainDOeuvreRequest {
-    private List<Integer> mainDOeuvreIds;
+    private List<Integer> ouvrierIds;
     private Integer interventionId;
 
     public AffecterMainDOeuvreRequest() {}
 
-    public List<Integer> getMainDOeuvreIds() {
-        return mainDOeuvreIds;
+    public List<Integer> getOuvrierIds() {
+        return ouvrierIds;
     }
 
-    public void setMainDOeuvreIds(List<Integer> mainDOeuvreIds) {
-        this.mainDOeuvreIds = mainDOeuvreIds;
+    public void setOuvrierIds(List<Integer> ouvrierIds) {
+        this.ouvrierIds = ouvrierIds;
     }
 
     public Integer getInterventionId() {

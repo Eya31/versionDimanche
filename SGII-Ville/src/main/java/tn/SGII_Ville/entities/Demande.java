@@ -20,8 +20,8 @@ public class Demande {
     private PointGeo localisation;
     private List<Photo> photos = new ArrayList<>();
 
-    // ID du citoyen qui a créé la demande
-    private Integer citoyenId;
+    // ID du citoyen qui a créé la demande (clé étrangère - obligatoire selon XSD)
+    private int citoyenId;
 
     // Nouveaux champs selon XML
     private String category;
@@ -33,8 +33,8 @@ public class Demande {
     @JsonProperty("isAnonymous")
     private boolean isAnonymous;
 
-    // Références aux photos via ID
-    private List<Integer> photoRefs = new ArrayList<>();
+    // Références aux photos via ID (1 Demande -> 1..* Photos selon XSD)
+    private List<Integer> photoIds = new ArrayList<>();
 
     // Constructeurs
     public Demande() {}
@@ -84,14 +84,14 @@ public class Demande {
     public boolean isAnonymous() { return isAnonymous; }
     public void setAnonymous(boolean anonymous) { this.isAnonymous = anonymous; }
 
-    public Integer getCitoyenId() { return citoyenId; }
-    public void setCitoyenId(Integer citoyenId) { this.citoyenId = citoyenId; }
+    public int getCitoyenId() { return citoyenId; }
+    public void setCitoyenId(int citoyenId) { this.citoyenId = citoyenId; }
 
-    public List<Integer> getPhotoRefs() { 
-        if (photoRefs == null) photoRefs = new ArrayList<>();
-        return photoRefs; 
+    public List<Integer> getPhotoIds() { 
+        if (photoIds == null) photoIds = new ArrayList<>();
+        return photoIds; 
     }
-    public void setPhotoRefs(List<Integer> photoRefs) { this.photoRefs = photoRefs; }
+    public void setPhotoIds(List<Integer> photoIds) { this.photoIds = photoIds; }
 
     // Méthode utilitaire pour obtenir les URLs des photos à partir des références
     public List<String> getPhotoUrls() {
@@ -115,7 +115,7 @@ public class Demande {
                 ", priority='" + priority + '\'' +
                 ", address='" + address + '\'' +
                 ", photosCount=" + (photos != null ? photos.size() : 0) +
-                ", photoRefsCount=" + (photoRefs != null ? photoRefs.size() : 0) +
+                ", photoIdsCount=" + (photoIds != null ? photoIds.size() : 0) +
                 '}';
     }
 }

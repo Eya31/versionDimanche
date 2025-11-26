@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <disponibilites>
-    <disponibilite>
-        <technicienId>1</technicienId>
-        <date>2024-01-15</date>
-        <creneaux>
-            <creneau>
-                <debut>08:00</debut>
-                <fin>12:00</fin>
-                <disponible>true</disponible>
-            </creneau>
-            <creneau>
-                <debut>14:00</debut>
-                <fin>18:00</fin>
-                <disponible>true</disponible>
-            </creneau>
-        </creneaux>
-    </disponibilite>
+    <!-- Disponibilités vides - Prêt pour de nouvelles instances -->
 </disponibilites>

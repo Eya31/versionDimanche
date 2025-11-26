@@ -104,8 +104,8 @@ public class MainDOeuvreVerificationService {
 
         for (Intervention autreIntervention : toutesInterventions) {
             if (autreIntervention.getId() == intervention.getId()) continue;
-            if (autreIntervention.getMainDOeuvreIds() == null || 
-                !autreIntervention.getMainDOeuvreIds().contains(mainDOeuvre.getId())) continue;
+            if (autreIntervention.getOuvrierIds() == null || 
+                !autreIntervention.getOuvrierIds().contains(mainDOeuvre.getId())) continue;
             if (autreIntervention.getDatePlanifiee() == null) continue;
 
             LocalDateTime dateAutre = autreIntervention.getDatePlanifiee().atStartOfDay();
@@ -128,8 +128,8 @@ public class MainDOeuvreVerificationService {
             List<String> erreurs) {
         
         // Vérifier si déjà dans cette intervention
-        if (intervention.getMainDOeuvreIds() != null && 
-            intervention.getMainDOeuvreIds().contains(mainDOeuvre.getId())) {
+        if (intervention.getOuvrierIds() != null && 
+            intervention.getOuvrierIds().contains(mainDOeuvre.getId())) {
             erreurs.add("L'agent est déjà affecté à cette intervention");
             return false;
         }

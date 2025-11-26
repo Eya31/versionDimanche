@@ -58,18 +58,11 @@ public class EquipementXmlService {
         );
         BigDecimal valeurAchat = new BigDecimal(xmlService.getElementTextContent(equipementElement, "valeurAchat"));
 
-        // Parse Fournisseur
-        Fournisseur fournisseur = null;
-        Element fournisseurEl = (Element) equipementElement.getElementsByTagNameNS(
-            xmlService.getNamespaceUri(), "fournisseur").item(0);
-        if (fournisseurEl != null) {
-            int fournisseurId = Integer.parseInt(xmlService.getElementTextContent(fournisseurEl, "id"));
-            String nom = xmlService.getElementTextContent(fournisseurEl, "nom");
-            String contact = xmlService.getElementTextContent(fournisseurEl, "contact");
-            String telephone = xmlService.getElementTextContent(fournisseurEl, "telephone");
-            // The Fournisseur entity uses 'email' instead of 'contact' and requires an 'adresse' argument.
-            // Map the XML 'contact' element to the Fournisseur email and provide an empty adresse when missing.
-            fournisseur = new Fournisseur(fournisseurId, nom, contact, telephone, "");
+        // Parse FournisseurId
+        Integer fournisseurId = null;
+        String fournisseurIdStr = xmlService.getElementTextContent(equipementElement, "fournisseurId");
+        if (fournisseurIdStr != null && !fournisseurIdStr.isEmpty()) {
+            fournisseurId = Integer.parseInt(fournisseurIdStr);
         }
 
         // Parse Localisation
@@ -82,7 +75,7 @@ public class EquipementXmlService {
             localisation = new PointGeo(lat, lng);
         }
 
-        return new Equipement(id, type, etat, fournisseur, valeurAchat, localisation);
+        return new Equipement(id, type, etat, fournisseurId, valeurAchat, localisation);
     }
 
     public Equipement save(Equipement equipement) {
@@ -101,16 +94,16 @@ public class EquipementXmlService {
             xmlService.addTextElement(doc, equipementEl, "valeurAchat", 
                 equipement.getValeurAchat() != null ? equipement.getValeurAchat().toString() : "0");
 
-            // Fournisseur
-            if (equipement.getFournisseur() != null) {
-                Element fournisseurEl = doc.createElementNS(xmlService.getNamespaceUri(), "fournisseur");
-                Fournisseur f = equipement.getFournisseur();
-                xmlService.addTextElement(doc, fournisseurEl, "id", String.valueOf(f.getId()));
-                xmlService.addTextElement(doc, fournisseurEl, "nom", f.getNom());
-                // Use email accessor since Fournisseur stores contact as 'email'
-                xmlService.addTextElement(doc, fournisseurEl, "contact", f.getEmail());
-                xmlService.addTextElement(doc, fournisseurEl, "telephone", f.getTelephone());
-                equipementEl.appendChild(fournisseurEl);
+            // Fournisseur ID (clé étrangère)
+            if (equipement.getFournisseurId() != null) {
+                xmlService.addTextElement(doc, equipementEl, "fournisseurId", 
+                    String.valueOf(equipement.getFournisseurId()));
+            }
+
+            // Date d'achat (optionnel)
+            if (equipement.getDateAchat() != null) {
+                xmlService.addTextElement(doc, equipementEl, "dateAchat", 
+                    equipement.getDateAchat().toString());
             }
 
             // Localisation
@@ -149,22 +142,14 @@ public class EquipementXmlService {
                     updateElementTextContent(el, "valeurAchat", 
                         equipement.getValeurAchat() != null ? equipement.getValeurAchat().toString() : "0");
 
-                    // Fournisseur: update or create
-                    if (equipement.getFournisseur() != null) {
-                        NodeList fournNodes = el.getElementsByTagNameNS(xmlService.getNamespaceUri(), "fournisseur");
-                        Element fournEl;
-                        if (fournNodes.getLength() > 0) {
-                            fournEl = (Element) fournNodes.item(0);
-                        } else {
-                            fournEl = doc.createElementNS(xmlService.getNamespaceUri(), "fournisseur");
-                            el.appendChild(fournEl);
-                        }
-                        Fournisseur f = equipement.getFournisseur();
-                        updateOrCreateTextElement(doc, fournEl, "id", String.valueOf(f.getId()));
-                        updateOrCreateTextElement(doc, fournEl, "nom", f.getNom());
-                        // map email -> contact in XML
-                        updateOrCreateTextElement(doc, fournEl, "contact", f.getEmail());
-                        updateOrCreateTextElement(doc, fournEl, "telephone", f.getTelephone());
+                    // Fournisseur ID (clé étrangère)
+                    if (equipement.getFournisseurId() != null) {
+                        updateElementTextContent(el, "fournisseurId", String.valueOf(equipement.getFournisseurId()));
+                    }
+
+                    // Date d'achat
+                    if (equipement.getDateAchat() != null) {
+                        updateElementTextContent(el, "dateAchat", equipement.getDateAchat().toString());
                     }
 
                     // Localisation: update or create

@@ -69,7 +69,7 @@ public ResponseEntity<?> planifierDemande(@PathVariable int id) {
         notificationService.notifierNouvelleIntervention(intervention.getId(), id);
         
         // 2. Notifier le citoyen que sa demande est acceptée
-        if (demande.getCitoyenId() != null) {
+        if (demande.getCitoyenId() > 0) {
             notificationService.notifierCitoyenInterventionLancee(demande.getCitoyenId(), id, intervention.getId());
         }
 

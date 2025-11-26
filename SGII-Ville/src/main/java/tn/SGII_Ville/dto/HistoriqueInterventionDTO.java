@@ -1,6 +1,6 @@
 package tn.SGII_Ville.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -9,8 +9,8 @@ import java.util.List;
 public class HistoriqueInterventionDTO {
     private int interventionId;
     private String description;
-    private LocalDateTime dateDebut;
-    private LocalDateTime dateFin;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
     private int tempsPasseMinutes;
     private String etat; // TERMINEE, EN_COURS, etc.
     private List<String> competencesUtilisees;
@@ -35,19 +35,19 @@ public class HistoriqueInterventionDTO {
         this.description = description;
     }
 
-    public LocalDateTime getDateDebut() {
+    public LocalDate getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(LocalDateTime dateDebut) {
+    public void setDateDebut(LocalDate dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public LocalDateTime getDateFin() {
+    public LocalDate getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(LocalDateTime dateFin) {
+    public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
     }
 

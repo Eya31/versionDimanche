@@ -89,7 +89,7 @@ public class DemandeController {
         try {
             List<Demande> toutes = demandeService.getAllDemandes();
             List<Demande> demandesCitoyen = toutes.stream()
-                    .filter(d -> d.getCitoyenId() != null && d.getCitoyenId() == citoyenId)
+                    .filter(d -> d.getCitoyenId() == citoyenId)
                     .collect(java.util.stream.Collectors.toList());
             return ResponseEntity.ok(demandesCitoyen);
         } catch (Exception e) {
@@ -217,7 +217,7 @@ public class DemandeController {
             if (files != null && files.length > 0) {
                 List<Photo> savedPhotos = fileStorageService.storeFiles(files);
                 List<Integer> photoIds = savedPhotos.stream().map(Photo::getIdPhoto).toList();
-                demande.setPhotoRefs(photoIds);
+                demande.setPhotoIds(photoIds);
             }
 
             Demande nouvelle = demandeService.save(demande);
@@ -288,7 +288,7 @@ public class DemandeController {
             }
 
             // 3. Notifier le citoyen
-            if (demande.getCitoyenId() != null) {
+            if (demande.getCitoyenId() > 0) {
                 notificationService.notifierCitoyenInterventionLancee(demande.getCitoyenId(), request.getDemandeId(), intervention.getId());
             }
 
@@ -343,7 +343,7 @@ public ResponseEntity<?> planifierDemande(@PathVariable int id) {
         System.out.println("   ✅ Notification admin envoyée");
         
         // 2. Notifier le citoyen que sa demande est acceptée
-        if (demande.getCitoyenId() != null) {
+        if (demande.getCitoyenId() > 0) {
             System.out.println("2️⃣ Notification CITOYEN (ID: " + demande.getCitoyenId() + ") pour intervention lancée...");
             notificationService.notifierCitoyenInterventionLancee(demande.getCitoyenId(), id, intervention.getId());
             System.out.println("   ✅ Notification citoyen envoyée");

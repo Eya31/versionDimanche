@@ -153,7 +153,7 @@ public class DemandeXmlService {
         demande.setContactEmail(contactEmail);
         demande.setAddress(address);
         demande.setCitoyenId(citoyenId);
-        demande.setPhotoRefs(photoRefs);
+        demande.setPhotoIds(photoRefs);
         demande.setPhotos(photos);
 
         return demande;
@@ -184,10 +184,8 @@ public class DemandeXmlService {
             appendText(doc, demandeEl, "priority", demande.getPriority());
             appendText(doc, demandeEl, "contactEmail", demande.getContactEmail());
             
-            // CitoyenId
-            if (demande.getCitoyenId() != null) {
-                appendText(doc, demandeEl, "citoyenId", String.valueOf(demande.getCitoyenId()));
-            }
+            // CitoyenId (obligatoire)
+            appendText(doc, demandeEl, "citoyenId", String.valueOf(demande.getCitoyenId()));
 
             // Localisation
             if (demande.getLocalisation() != null) {
@@ -198,15 +196,15 @@ public class DemandeXmlService {
                 demandeEl.appendChild(loc);
             }
 
-            // Attachments
-            if (demande.getPhotoRefs() != null && !demande.getPhotoRefs().isEmpty()) {
-                Element attachments = doc.createElementNS(xmlService.getNamespaceUri(), "attachments");
-                for (Integer ref : demande.getPhotoRefs()) {
-                    Element refEl = doc.createElementNS(xmlService.getNamespaceUri(), "photoRef");
-                    appendText(doc, refEl, "id_photo", String.valueOf(ref));
-                    attachments.appendChild(refEl);
+            // Photo IDs (1 Demande -> 1..* Photos)
+            if (demande.getPhotoIds() != null && !demande.getPhotoIds().isEmpty()) {
+                Element photoIdsEl = doc.createElementNS(xmlService.getNamespaceUri(), "photoIds");
+                for (Integer photoId : demande.getPhotoIds()) {
+                    Element photoIdEl = doc.createElementNS(xmlService.getNamespaceUri(), "photoId");
+                    photoIdEl.setTextContent(String.valueOf(photoId));
+                    photoIdsEl.appendChild(photoIdEl);
                 }
-                demandeEl.appendChild(attachments);
+                demandeEl.appendChild(photoIdsEl);
             }
 
             root.appendChild(demandeEl);

@@ -10,24 +10,36 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entité Intervention conforme au schéma XSD interventions.xsd
+ * Relations:
+ * - 1 Demande -> 0..1 Intervention (demandeId obligatoire)
+ * - 1 Technicien -> * Interventions (technicienId optionnel)
+ * - 1 ChefService -> * Interventions (chefServiceId optionnel)
+ * - * Intervention <-> * Equipements (many-to-many)
+ * - * Intervention <-> * RessourcesMaterielles (many-to-many)
+ * - * Intervention <-> * MainDOeuvre (many-to-many)
+ */
 public class Intervention {
     private int id;
+    private int demandeId; // Clé étrangère obligatoire vers Demande
+    private Integer technicienId; // Clé étrangère optionnelle vers Technicien
+    private Integer chefServiceId; // Clé étrangère optionnelle vers ChefService
     private String description;
     private String typeIntervention; // "ECLAIRAGE", "EAU", "ROUTE", etc.
     private PrioriteType priorite;
     private EtatInterventionType etat;
     private LocalDate datePlanifiee;
-    private LocalDateTime dateDebut;
-    private LocalDateTime dateFin;
+    private LocalDate dateDebut; // Changé de LocalDateTime à LocalDate pour conformité XSD
+    private LocalDate dateFin; // Changé de LocalDateTime à LocalDate pour conformité XSD
     private BigDecimal budget;
-    private int technicienId;
-    private Integer demandeId;
-    private Integer chefServiceId;
-    private PointGeo localisation;
-    private List<Integer> mainDOeuvreIds = new ArrayList<>(); // IDs de la main-d'œuvre affectée
-    private List<Integer> equipementIds = new ArrayList<>(); // IDs des équipements utilisés
-    private List<Integer> ressourceIds = new ArrayList<>(); // IDs des ressources utilisées
-    private List<Integer> photoIds = new ArrayList<>(); // IDs des photos
+    private PointGeo localisation; // Optionnel
+    
+    // Relations many-to-many via collections d'IDs
+    private List<Integer> equipementIds = new ArrayList<>(); // * Intervention <-> * Equipements
+    private List<Integer> ressourceIds = new ArrayList<>(); // * Intervention <-> * RessourcesMaterielles
+    private List<Integer> ouvrierIds = new ArrayList<>(); // * Intervention <-> * MainDOeuvre
+    
     private String commentaire;
     private String rapportFinal;
     private Integer tempsPasseMinutes; // Temps passé en minutes
@@ -52,20 +64,20 @@ public class Intervention {
     public LocalDate getDatePlanifiee() { return datePlanifiee; }
     public void setDatePlanifiee(LocalDate datePlanifiee) { this.datePlanifiee = datePlanifiee; }
 
-    public LocalDateTime getDateDebut() { return dateDebut; }
-    public void setDateDebut(LocalDateTime dateDebut) { this.dateDebut = dateDebut; }
+    public LocalDate getDateDebut() { return dateDebut; }
+    public void setDateDebut(LocalDate dateDebut) { this.dateDebut = dateDebut; }
 
-    public LocalDateTime getDateFin() { return dateFin; }
-    public void setDateFin(LocalDateTime dateFin) { this.dateFin = dateFin; }
+    public LocalDate getDateFin() { return dateFin; }
+    public void setDateFin(LocalDate dateFin) { this.dateFin = dateFin; }
 
     public BigDecimal getBudget() { return budget; }
     public void setBudget(BigDecimal budget) { this.budget = budget; }
 
-    public int getTechnicienId() { return technicienId; }
-    public void setTechnicienId(int technicienId) { this.technicienId = technicienId; }
+    public Integer getTechnicienId() { return technicienId; }
+    public void setTechnicienId(Integer technicienId) { this.technicienId = technicienId; }
 
-    public Integer getDemandeId() { return demandeId; }
-    public void setDemandeId(Integer demandeId) { this.demandeId = demandeId; }
+    public int getDemandeId() { return demandeId; }
+    public void setDemandeId(int demandeId) { this.demandeId = demandeId; }
 
     public Integer getChefServiceId() { return chefServiceId; }
     public void setChefServiceId(Integer chefServiceId) { this.chefServiceId = chefServiceId; }
@@ -73,9 +85,9 @@ public class Intervention {
     public PointGeo getLocalisation() { return localisation; }
     public void setLocalisation(PointGeo localisation) { this.localisation = localisation; }
 
-    public List<Integer> getMainDOeuvreIds() { return mainDOeuvreIds; }
-    public void setMainDOeuvreIds(List<Integer> mainDOeuvreIds) { 
-        this.mainDOeuvreIds = mainDOeuvreIds != null ? mainDOeuvreIds : new ArrayList<>(); 
+    public List<Integer> getOuvrierIds() { return ouvrierIds; }
+    public void setOuvrierIds(List<Integer> ouvrierIds) { 
+        this.ouvrierIds = ouvrierIds != null ? ouvrierIds : new ArrayList<>(); 
     }
 
     public List<Integer> getEquipementIds() { return equipementIds; }
@@ -86,11 +98,6 @@ public class Intervention {
     public List<Integer> getRessourceIds() { return ressourceIds; }
     public void setRessourceIds(List<Integer> ressourceIds) { 
         this.ressourceIds = ressourceIds != null ? ressourceIds : new ArrayList<>(); 
-    }
-
-    public List<Integer> getPhotoIds() { return photoIds; }
-    public void setPhotoIds(List<Integer> photoIds) { 
-        this.photoIds = photoIds != null ? photoIds : new ArrayList<>(); 
     }
 
     public String getCommentaire() { return commentaire; }
@@ -121,10 +128,9 @@ public class Intervention {
                 ", demandeId=" + demandeId +
                 ", chefServiceId=" + chefServiceId +
                 ", localisation=" + localisation +
-                ", mainDOeuvreIds=" + mainDOeuvreIds +
+                ", ouvrierIds=" + ouvrierIds +
                 ", equipementIds=" + equipementIds +
                 ", ressourceIds=" + ressourceIds +
-                ", photoIds=" + photoIds +
                 ", tempsPasseMinutes=" + tempsPasseMinutes +
                 '}';
     }

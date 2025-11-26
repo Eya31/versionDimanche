@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDate;
 import tn.SGII_Ville.dto.*;
 import tn.SGII_Ville.entities.*;
 import tn.SGII_Ville.model.enums.EtatInterventionType;
@@ -168,7 +169,7 @@ public class TechnicienController {
             }
 
             intervention.setEtat(EtatInterventionType.EN_COURS);
-            intervention.setDateDebut(LocalDateTime.now());
+            intervention.setDateDebut(LocalDate.now());
             interventionService.updateIntervention(intervention);
 
             // Notification au chef
@@ -252,10 +253,7 @@ public class TechnicienController {
             // Utiliser storeFiles qui prend un tableau et retourne une liste de Photo
             List<Photo> photos = fileStorageService.storeFiles(files);
             
-            // Ajouter les IDs des photos à l'intervention
-            for (Photo photo : photos) {
-                intervention.getPhotoIds().add(photo.getIdPhoto());
-            }
+            // Note: Les photos sont liées à la demande, pas à l'intervention
 
             interventionService.updateIntervention(intervention);
 
@@ -357,11 +355,9 @@ public class TechnicienController {
             intervention.setCommentaire(request.getProblemesRencontres());
             intervention.setSignatureElectronique(request.getSignatureElectronique());
             intervention.setEtat(EtatInterventionType.TERMINEE);
-            intervention.setDateFin(LocalDateTime.now());
+            intervention.setDateFin(LocalDate.now());
 
-            if (request.getPhotoIds() != null) {
-                intervention.getPhotoIds().addAll(request.getPhotoIds());
-            }
+            // Note: Les photos sont liées à la demande, pas à l'intervention
 
             interventionService.updateIntervention(intervention);
 
@@ -604,7 +600,7 @@ public class TechnicienController {
             List<String> toutesErreurs = new ArrayList<>();
 
             // Vérifier chaque agent avant affectation
-            for (Integer mainDOeuvreId : request.getMainDOeuvreIds()) {
+            for (Integer mainDOeuvreId : request.getOuvrierIds()) {
                 MainDOeuvre mainDOeuvre = mainDOeuvreService.findById(mainDOeuvreId);
                 if (mainDOeuvre == null) {
                     toutesErreurs.add("Agent #" + mainDOeuvreId + " non trouvé");
@@ -628,14 +624,14 @@ public class TechnicienController {
             }
 
             // Affecter les agents (éviter les doublons)
-            for (Integer mainDOeuvreId : request.getMainDOeuvreIds()) {
-                if (!intervention.getMainDOeuvreIds().contains(mainDOeuvreId)) {
-                    intervention.getMainDOeuvreIds().add(mainDOeuvreId);
+            for (Integer mainDOeuvreId : request.getOuvrierIds()) {
+                if (!intervention.getOuvrierIds().contains(mainDOeuvreId)) {
+                    intervention.getOuvrierIds().add(mainDOeuvreId);
                 }
             }
             
             // Mettre à jour la disponibilité et l'historique
-            for (Integer mainDOeuvreId : request.getMainDOeuvreIds()) {
+            for (Integer mainDOeuvreId : request.getOuvrierIds()) {
                 MainDOeuvre mainDOeuvre = mainDOeuvreService.findById(mainDOeuvreId);
                 if (mainDOeuvre != null) {
                     mainDOeuvre.setDisponibilite("OCCUPE");
@@ -658,7 +654,7 @@ public class TechnicienController {
 
             // Recharger l'intervention depuis la base pour s'assurer d'avoir les données à jour
             Intervention updatedIntervention = interventionService.findById(id);
-            System.out.println("Intervention mise à jour, mainDOeuvreIds: " + updatedIntervention.getMainDOeuvreIds());
+            System.out.println("Intervention mise à jour, mainDOeuvreIds: " + updatedIntervention.getOuvrierIds());
             return ResponseEntity.ok(updatedIntervention);
 
         } catch (Exception e) {
@@ -683,7 +679,7 @@ public class TechnicienController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
-            intervention.getMainDOeuvreIds().removeIf(mid -> mid == mainDOeuvreId);
+            intervention.getOuvrierIds().removeIf(mid -> mid == mainDOeuvreId);
             interventionService.updateIntervention(intervention);
 
             // Remettre la disponibilité (vérifier s'il n'est pas affecté ailleurs)
@@ -692,8 +688,8 @@ public class TechnicienController {
                 // Vérifier si l'agent est encore affecté à d'autres interventions
                 List<Intervention> toutesInterventions = interventionService.getAllInterventions();
                 boolean encoreAffecte = toutesInterventions.stream()
-                    .anyMatch(i -> i.getMainDOeuvreIds() != null && 
-                                  i.getMainDOeuvreIds().contains(mainDOeuvreId) && 
+                    .anyMatch(i -> i.getOuvrierIds() != null && 
+                                  i.getOuvrierIds().contains(mainDOeuvreId) && 
                                   i.getId() != id);
                 
                 if (!encoreAffecte) {
@@ -1108,7 +1104,7 @@ public class TechnicienController {
             }
 
             intervention.setEtat(EtatInterventionType.TERMINEE);
-            intervention.setDateFin(LocalDateTime.now());
+            intervention.setDateFin(LocalDate.now());
             interventionService.updateIntervention(intervention);
 
             // Notification au chef de service
@@ -1118,9 +1114,9 @@ public class TechnicienController {
             }
 
             // Notification au citoyen
-            if (intervention.getDemandeId() != null) {
+            if (intervention.getDemandeId() > 0) {
                 Demande demande = demandeService.findById(intervention.getDemandeId());
-                if (demande != null && demande.getCitoyenId() != null) {
+                if (demande != null && demande.getCitoyenId() > 0) {
                     notificationService.notifierCitoyen(demande.getCitoyenId(),
                         "Votre demande #" + demande.getId() + " a été traitée avec succès ! Intervention #" + interventionId + " terminée.");
                 }

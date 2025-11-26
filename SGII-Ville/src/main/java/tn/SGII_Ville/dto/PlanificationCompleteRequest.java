@@ -20,7 +20,7 @@ public class PlanificationCompleteRequest {
     private String typeIntervention;
     private List<Integer> equipementIds = new ArrayList<>();
     private List<Integer> ressourceIds = new ArrayList<>();
-    private List<Integer> mainDOeuvreIds = new ArrayList<>();
+    private List<Integer> ouvrierIds = new ArrayList<>();
     private String remarques;
 
     public PlanificationCompleteRequest() {}
@@ -121,12 +121,12 @@ public class PlanificationCompleteRequest {
         this.ressourceIds = ressourceIds != null ? ressourceIds : new ArrayList<>();
     }
 
-    public List<Integer> getMainDOeuvreIds() {
-        return mainDOeuvreIds;
+    public List<Integer> getOuvrierIds() {
+        return ouvrierIds;
     }
 
-    public void setMainDOeuvreIds(List<Integer> mainDOeuvreIds) {
-        this.mainDOeuvreIds = mainDOeuvreIds != null ? mainDOeuvreIds : new ArrayList<>();
+    public void setOuvrierIds(List<Integer> ouvrierIds) {
+        this.ouvrierIds = ouvrierIds != null ? ouvrierIds : new ArrayList<>();
     }
 
     public String getRemarques() {

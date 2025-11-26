@@ -66,12 +66,15 @@ public class AdminController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
             }
 
-            Technicien technicien = new Technicien();
-            technicien.setNom(request.getNom());
-            technicien.setEmail(request.getEmail());
-            technicien.setMotDePasse(userXmlService.encodePassword(request.getMotDePasse()));
-            technicien.setCompetences(request.getCompetences());
-            technicien.setDisponibilite(true);
+            // Créer le technicien avec le constructeur complet (comme dans AuthService)
+            Technicien technicien = new Technicien(
+                    0, // L'ID sera généré automatiquement
+                    request.getNom(),
+                    request.getEmail(),
+                    userXmlService.encodePassword(request.getMotDePasse()),
+                    request.getCompetences() != null ? request.getCompetences() : new java.util.ArrayList<>(),
+                    true // Disponible par défaut
+            );
 
             Utilisateur savedUser = userXmlService.save(technicien);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
@@ -97,11 +100,14 @@ public class AdminController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
             }
 
-            ChefDeService chef = new ChefDeService();
-            chef.setNom(request.getNom());
-            chef.setEmail(request.getEmail());
-            chef.setMotDePasse(userXmlService.encodePassword(request.getMotDePasse()));
-            chef.setDepartement(request.getDepartement());
+            // Créer le chef de service avec le constructeur complet (comme dans AuthService)
+            ChefDeService chef = new ChefDeService(
+                    0, // L'ID sera généré automatiquement
+                    request.getNom(),
+                    request.getEmail(),
+                    userXmlService.encodePassword(request.getMotDePasse()),
+                    request.getDepartement()
+            );
 
             Utilisateur savedUser = userXmlService.save(chef);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
