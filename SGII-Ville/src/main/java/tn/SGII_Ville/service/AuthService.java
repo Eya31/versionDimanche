@@ -179,6 +179,10 @@ public class AuthService {
                     request.getEmail(),
                     request.getMotDePasse()
             );
+            case MAIN_DOEUVRE -> {
+                // Les agents main-d'œuvre sont créés via TechnicienController, pas via register
+                throw new IllegalArgumentException("Les agents main-d'œuvre ne peuvent pas s'inscrire directement");
+            }
         };
     }
 

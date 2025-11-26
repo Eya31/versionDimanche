@@ -1,0 +1,67 @@
+<!-- ============================================
+     CALENDRIER DE DISPONIBILITÉ - MAIN-D'ŒUVRE
+     ============================================ -->
+
+<div class="availability-calendar" *ngIf="mainDOeuvre">
+  <div class="calendar-header">
+    <h3>📅 Disponibilité de {{ mainDOeuvre.nom }} {{ mainDOeuvre.prenom || '' }}</h3>
+    <div class="header-controls">
+      <button class="nav-btn" (click)="previousWeek()">‹</button>
+      <button class="today-btn" (click)="goToToday()">Aujourd'hui</button>
+      <button class="nav-btn" (click)="nextWeek()">›</button>
+    </div>
+  </div>
+
+  <!-- SEMAINE -->
+  <div class="week-view">
+    <div class="week-header">
+      <div class="time-column"></div>
+      <div 
+        *ngFor="let date of getWeekDates()" 
+        class="day-header"
+        [class.today]="isToday(date)"
+        [class.selected]="isSelected(date)"
+        (click)="selectDate(date)">
+        <div class="day-name">{{ weekDays[date.getDay() === 0 ? 6 : date.getDay() - 1] }}</div>
+        <div class="day-number">{{ date.getDate() }}</div>
+      </div>
+    </div>
+
+    <!-- CRÉNEAUX HORAIRES -->
+    <div class="time-slots">
+      <div *ngFor="let time of timeSlots" class="time-row">
+        <div class="time-label">{{ time }}</div>
+        <div class="day-slots">
+          <div 
+            *ngFor="let date of getWeekDates()" 
+            class="slot-cell"
+            [class.available]="checkSlotAvailability(date, time)"
+            [class.conflict]="checkSlotConflict(date, time)"
+            [class.unavailable]="!checkSlotAvailability(date, time) && !checkSlotConflict(date, time)"
+            [title]="getSlotTooltip(date, time)"
+            (click)="selectSlotForDate(date, time)">
+            <span *ngIf="checkSlotAvailability(date, time)" class="slot-indicator">✓</span>
+            <span *ngIf="checkSlotConflict(date, time)" class="slot-indicator">⚠</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LÉGENDE -->
+  <div class="legend">
+    <div class="legend-item">
+      <span class="legend-box available"></span>
+      <span>Disponible</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-box conflict"></span>
+      <span>Conflit</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-box unavailable"></span>
+      <span>Indisponible</span>
+    </div>
+  </div>
+</div>
+

@@ -46,6 +46,7 @@ public class XmlService {
         SECTION_FILES.put("DemandesAjout", "demandesajout.xml");
         SECTION_FILES.put("Techniciens", "techniciens.xml");
         SECTION_FILES.put("Photos", "photos.xml");
+        SECTION_FILES.put("Taches", "taches.xml");
     }
 
     // ====================== MÉTHODES CLASSIQUES ======================

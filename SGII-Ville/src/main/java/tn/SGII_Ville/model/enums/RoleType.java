@@ -4,5 +4,6 @@ public enum RoleType {
     CITOYEN,
     TECHNICIEN,
     CHEF_SERVICE,
-    ADMINISTRATEUR
+    ADMINISTRATEUR,
+    MAIN_DOEUVRE
 }

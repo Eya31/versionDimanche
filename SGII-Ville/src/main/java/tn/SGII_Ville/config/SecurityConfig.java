@@ -63,8 +63,8 @@ public class SecurityConfig {
                 // Endpoints TECHNICIEN
                 .requestMatchers("/api/technicien/**").hasRole("TECHNICIEN")
                 
-                // Endpoints MAIN_OEUVRE
-                .requestMatchers("/api/workforce/tasks").hasRole("MAIN_OEUVRE")
+                // Endpoints MAIN_DOEUVRE
+                .requestMatchers("/api/main-doeuvre/**").hasRole("MAIN_DOEUVRE")
                 
                 // Toutes les autres requêtes nécessitent une authentification
                 .anyRequest().authenticated()

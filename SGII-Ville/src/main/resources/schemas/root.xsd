@@ -12,6 +12,7 @@
   <xs:include schemaLocation="entities/equipements.xsd"/>
   <xs:include schemaLocation="entities/ressources.xsd"/>
   <xs:include schemaLocation="entities/maindoeuvre.xsd"/>
+  <xs:include schemaLocation="entities/photos.xsd"/>
   <xs:include schemaLocation="workflow/notifications.xsd"/>
   <xs:include schemaLocation="workflow/demandesAjout.xsd"/>
 
@@ -95,8 +96,183 @@
           </xs:complexType>
         </xs:element>
 
+        <xs:element name="Photos" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Photo" type="tns:PhotoType" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
       </xs:sequence>
     </xs:complexType>
+
+    <!-- ========== CLÉS PRIMAIRES (xs:key) ========== -->
+    
+    <!-- Clé primaire pour Utilisateurs (tous types) -->
+    <xs:key name="utilisateurKey">
+      <xs:selector xpath="tns:Utilisateurs/*"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Citoyens -->
+    <xs:key name="citoyenKey">
+      <xs:selector xpath="tns:Utilisateurs/tns:Citoyen"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Techniciens -->
+    <xs:key name="technicienKey">
+      <xs:selector xpath="tns:Utilisateurs/tns:Technicien"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Chefs de Service -->
+    <xs:key name="chefServiceKey">
+      <xs:selector xpath="tns:Utilisateurs/tns:ChefDeService"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Administrateurs -->
+    <xs:key name="administrateurKey">
+      <xs:selector xpath="tns:Utilisateurs/tns:Administrateur"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Demandes -->
+    <xs:key name="demandeKey">
+      <xs:selector xpath="tns:Demandes/tns:Demande"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Interventions -->
+    <xs:key name="interventionKey">
+      <xs:selector xpath="tns:Interventions/tns:Intervention"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Fournisseurs -->
+    <xs:key name="fournisseurKey">
+      <xs:selector xpath="tns:Fournisseurs/tns:Fournisseur"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Equipements -->
+    <xs:key name="equipementKey">
+      <xs:selector xpath="tns:Equipements/tns:Equipement"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Ressources Matérielles -->
+    <xs:key name="ressourceMaterielleKey">
+      <xs:selector xpath="tns:RessourcesMaterielles/tns:RessourceMaterielle"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Main d'Oeuvre -->
+    <xs:key name="mainDOeuvreKey">
+      <xs:selector xpath="tns:MainDOeuvre/tns:Ouvrier"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Photos -->
+    <xs:key name="photoKey">
+      <xs:selector xpath="tns:Photos/tns:Photo"/>
+      <xs:field xpath="tns:id_photo"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Notifications -->
+    <xs:key name="notificationKey">
+      <xs:selector xpath="tns:Notifications/tns:Notification"/>
+      <xs:field xpath="tns:id_notification"/>
+    </xs:key>
+
+    <!-- Clé primaire pour Demandes d'Ajout -->
+    <xs:key name="demandeAjoutKey">
+      <xs:selector xpath="tns:DemandesAjout/tns:DemandeAjout"/>
+      <xs:field xpath="tns:id"/>
+    </xs:key>
+
+    <!-- ========== CLÉS ÉTRANGÈRES (xs:keyref) ========== -->
+    
+    <!-- 1 Citoyen -> * Demandes -->
+    <xs:keyref name="demandeCitoyenRef" refer="tns:citoyenKey">
+      <xs:selector xpath="tns:Demandes/tns:Demande"/>
+      <xs:field xpath="tns:citoyenId"/>
+    </xs:keyref>
+
+    <!-- 1 Demande -> 0..1 Intervention -->
+    <xs:keyref name="interventionDemandeRef" refer="tns:demandeKey">
+      <xs:selector xpath="tns:Interventions/tns:Intervention"/>
+      <xs:field xpath="tns:demandeId"/>
+    </xs:keyref>
+
+    <!-- 1 Technicien -> * Interventions -->
+    <xs:keyref name="interventionTechnicienRef" refer="tns:technicienKey">
+      <xs:selector xpath="tns:Interventions/tns:Intervention"/>
+      <xs:field xpath="tns:technicienId"/>
+    </xs:keyref>
+
+    <!-- 1 ChefService -> * Interventions -->
+    <xs:keyref name="interventionChefServiceRef" refer="tns:chefServiceKey">
+      <xs:selector xpath="tns:Interventions/tns:Intervention"/>
+      <xs:field xpath="tns:chefServiceId"/>
+    </xs:keyref>
+
+    <!-- * Intervention -> * Equipements -->
+    <xs:keyref name="interventionEquipementRef" refer="tns:equipementKey">
+      <xs:selector xpath="tns:Interventions/tns:Intervention/tns:equipementIds/tns:equipementId"/>
+      <xs:field xpath="."/>
+    </xs:keyref>
+
+    <!-- * Intervention -> * RessourcesMaterielles -->
+    <xs:keyref name="interventionRessourceRef" refer="tns:ressourceMaterielleKey">
+      <xs:selector xpath="tns:Interventions/tns:Intervention/tns:ressourceIds/tns:ressourceId"/>
+      <xs:field xpath="."/>
+    </xs:keyref>
+
+    <!-- * Intervention -> * MainDOeuvre -->
+    <xs:keyref name="interventionOuvrierRef" refer="tns:mainDOeuvreKey">
+      <xs:selector xpath="tns:Interventions/tns:Intervention/tns:ouvrierIds/tns:ouvrierId"/>
+      <xs:field xpath="."/>
+    </xs:keyref>
+
+    <!-- 1 Fournisseur -> * Equipements -->
+    <xs:keyref name="equipementFournisseurRef" refer="tns:fournisseurKey">
+      <xs:selector xpath="tns:Equipements/tns:Equipement"/>
+      <xs:field xpath="tns:fournisseurId"/>
+    </xs:keyref>
+
+    <!-- 1 Fournisseur -> * RessourcesMaterielles -->
+    <xs:keyref name="ressourceFournisseurRef" refer="tns:fournisseurKey">
+      <xs:selector xpath="tns:RessourcesMaterielles/tns:RessourceMaterielle"/>
+      <xs:field xpath="tns:fournisseurId"/>
+    </xs:keyref>
+
+    <!-- 1 Demande -> * Photos -->
+    <xs:keyref name="photoDemandeRef" refer="tns:demandeKey">
+      <xs:selector xpath="tns:Demandes/tns:Demande/tns:photoIds/tns:photoId"/>
+      <xs:field xpath="."/>
+    </xs:keyref>
+
+    <!-- 1 Utilisateur -> * Notifications -->
+    <xs:keyref name="notificationUtilisateurRef" refer="tns:utilisateurKey">
+      <xs:selector xpath="tns:Notifications/tns:Notification"/>
+      <xs:field xpath="tns:user_id"/>
+    </xs:keyref>
+
+    <!-- 1 ChefService -> * DemandesAjout (créateur) -->
+    <xs:keyref name="demandeAjoutChefRef" refer="tns:chefServiceKey">
+      <xs:selector xpath="tns:DemandesAjout/tns:DemandeAjout"/>
+      <xs:field xpath="tns:chefId"/>
+    </xs:keyref>
+
+    <!-- 1 Admin traite * DemandesAjout -->
+    <xs:keyref name="demandeAjoutAdminRef" refer="tns:administrateurKey">
+      <xs:selector xpath="tns:DemandesAjout/tns:DemandeAjout"/>
+      <xs:field xpath="tns:adminId"/>
+    </xs:keyref>
+
   </xs:element>
 
 </xs:schema>

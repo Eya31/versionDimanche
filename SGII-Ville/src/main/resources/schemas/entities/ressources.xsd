@@ -4,16 +4,15 @@
            xmlns:tns="http://example.com/gestion-interventions" 
            elementFormDefault="qualified">
 
-  <xs:include schemaLocation="fournisseurs.xsd"/>
-
-  <!-- Ressource matérielle avec stock -->
+  <!-- Ressource matérielle avec stock (1 Fournisseur -> * RessourcesMaterielles) -->
   <xs:complexType name="RessourceMaterielleType">
     <xs:sequence>
       <xs:element name="id" type="xs:int"/>
       <xs:element name="designation" type="xs:string"/>
       <xs:element name="quantiteEnStock" type="xs:int"/>
       <xs:element name="valeurAchat" type="xs:decimal"/>
-      <xs:element name="fournisseur" type="tns:FournisseurType"/>
+      <xs:element name="fournisseurId" type="xs:int"/>
+      <xs:element name="unite" type="xs:string" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 

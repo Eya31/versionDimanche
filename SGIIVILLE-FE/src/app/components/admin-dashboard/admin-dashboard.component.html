@@ -36,12 +36,42 @@
     </div>
   </header>
 
+  <!-- Carte Interventions en Cours -->
+  <div class="interventions-card">
+    <div class="card-header">
+      <h2>🗺️ Carte des Interventions en Cours</h2>
+      <span class="total-count">Total: {{ interventionsEnCours.length }}</span>
+    </div>
+    
+    <!-- Légende -->
+    <div class="map-legend">
+      <div class="legend-item">
+        <div class="legend-marker en-cours"></div>
+        <span>🔵 En cours</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-marker en-attente"></div>
+        <span>🟠 En attente</span>
+      </div>
+    </div>
+
+    <!-- Carte Leaflet -->
+    <div id="mapInterventionsAdmin" class="interventions-map"></div>
+
+    <div class="no-interventions" *ngIf="interventionsEnCours.length === 0">
+      <div class="empty-icon">🗺️</div>
+      <p>Aucune intervention en cours avec localisation</p>
+    </div>
+  </div>
+
   <div class="actions">
-    <button class="btn-primary" (click)="showCreateTechForm = !showCreateTechForm">
-      {{ showCreateTechForm ? 'Annuler' : '+ Nouveau Technicien' }}
+    <button class="btn-create" [class.btn-cancel]="showCreateTechForm" (click)="showCreateTechForm = !showCreateTechForm">
+      <span class="btn-icon">{{ showCreateTechForm ? '✕' : '👤' }}</span>
+      {{ showCreateTechForm ? 'Annuler' : 'Nouveau Technicien' }}
     </button>
-    <button class="btn-primary" (click)="showCreateChefForm = !showCreateChefForm">
-      {{ showCreateChefForm ? 'Annuler' : '+ Nouveau Chef de Service' }}
+    <button class="btn-create" [class.btn-cancel]="showCreateChefForm" (click)="showCreateChefForm = !showCreateChefForm">
+      <span class="btn-icon">{{ showCreateChefForm ? '✕' : '👔' }}</span>
+      {{ showCreateChefForm ? 'Annuler' : 'Nouveau Chef de Service' }}
     </button>
   </div>
 
@@ -103,28 +133,43 @@
 
   <!-- Liste des utilisateurs -->
   <div class="users-list">
-    <h2>Utilisateurs ({{users.length}})</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nom</th>
-          <th>Email</th>
-          <th>Rôle</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{user.id}}</td>
-          <td>{{user.nom}}</td>
-          <td>{{user.email}}</td>
-          <td><span class="role-badge">{{user.role}}</span></td>
-          <td>
-            <button class="btn-danger" (click)="deleteUser(user.id)">Supprimer</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="users-header">
+      <h2>👥 Gestion des Utilisateurs</h2>
+      <span class="users-count">Total: {{users.length}}</span>
+    </div>
+    <div class="table-wrapper">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>📌 ID</th>
+            <th>👤 Nom</th>
+            <th>📧 Email</th>
+            <th>🏷️ Rôle</th>
+            <th>⚙️ Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users" class="user-row">
+            <td><strong class="user-id">#{{user.id}}</strong></td>
+            <td class="user-name">{{user.nom}}</td>
+            <td class="user-email">{{user.email}}</td>
+            <td><span class="role-badge" [ngClass]="getRoleClass(user.role)">{{user.role}}</span></td>
+            <td>
+              <button class="btn-delete" (click)="deleteUser(user.id)">
+                🗑️ Supprimer
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="users.length === 0">
+            <td colspan="5" class="no-data">
+              <div class="empty-state">
+                <div class="empty-icon">👥</div>
+                <p>Aucun utilisateur trouvé</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

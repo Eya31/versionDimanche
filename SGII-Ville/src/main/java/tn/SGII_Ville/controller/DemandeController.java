@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import tn.SGII_Ville.entities.Demande;
 import tn.SGII_Ville.entities.Intervention;
 import tn.SGII_Ville.entities.Photo;
+import tn.SGII_Ville.dto.PlanificationCompleteRequest;
 import tn.SGII_Ville.model.enums.EtatDemandeType;
 import tn.SGII_Ville.service.DemandeXmlService;
 import tn.SGII_Ville.service.FileStorageService;
@@ -255,7 +256,52 @@ public class DemandeController {
         }
     }
 
-    // ==================== PLANIFIER UNE DEMANDE (CORRIGÉ & FINAL) ====================
+    // ==================== PLANIFIER UNE DEMANDE COMPLÈTE (AVEC TECHNICIEN, RESSOURCES, etc.) ====================
+    
+    @PostMapping("/planifier-complete")
+    public ResponseEntity<?> planifierDemandeComplete(@RequestBody tn.SGII_Ville.dto.PlanificationCompleteRequest request) {
+        try {
+            logger.info("=== DÉBUT PLANIFICATION COMPLÈTE DEMANDE #{} ===", request.getDemandeId());
+
+            Demande demande = demandeService.findById(request.getDemandeId());
+            if (demande == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Demande non trouvée : " + request.getDemandeId()));
+            }
+
+            if (demande.getEtat() == EtatDemandeType.TRAITEE) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "Cette demande est déjà planifiée."));
+            }
+
+            // Planifier l'intervention avec tous les détails
+            Intervention intervention = interventionService.planifierInterventionComplete(request);
+            logger.info("Intervention #{} planifiée avec succès", intervention.getId());
+
+            // NOTIFICATIONS
+            // 1. Notifier l'admin
+            notificationService.notifierNouvelleIntervention(intervention.getId(), request.getDemandeId());
+
+            // 2. Notifier le technicien assigné
+            if (request.getTechnicienId() != null && request.getTechnicienId() > 0) {
+                notificationService.notifierTechnicienIntervention(request.getTechnicienId(), intervention.getId(), request.getDemandeId());
+            }
+
+            // 3. Notifier le citoyen
+            if (demande.getCitoyenId() != null) {
+                notificationService.notifierCitoyenInterventionLancee(demande.getCitoyenId(), request.getDemandeId(), intervention.getId());
+            }
+
+            return ResponseEntity.ok(intervention);
+
+        } catch (Exception e) {
+            logger.error("Erreur planification complète", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Erreur lors de la planification", "details", e.getMessage()));
+        }
+    }
+
+    // ==================== PLANIFIER UNE DEMANDE (SIMPLE - GARDE POUR COMPATIBILITÉ) ====================
     
     @PostMapping("/planifier/{id}")
 public ResponseEntity<?> planifierDemande(@PathVariable int id) {

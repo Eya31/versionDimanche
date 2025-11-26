@@ -7,7 +7,9 @@ import tn.SGII_Ville.entities.Utilisateur;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import tn.SGII_Ville.entities.AgentMainDOeuvre;
 
 @Service
 public class NotificationService {
@@ -105,5 +107,108 @@ public class NotificationService {
         return notificationXmlService.getNotificationsByUserId(userId).stream()
             .filter(n -> !n.isReadable())
             .count();
+    }
+
+    /**
+     * Notifie un chef de service spécifique
+     */
+    public void notifierChefService(Integer chefServiceId, String message) {
+        if (chefServiceId == null) {
+            return;
+        }
+        
+        Notification notification = new Notification();
+        notification.setMessage(message);
+        notification.setCreatedAt(LocalDateTime.now());
+        notification.setUserId(chefServiceId);
+        notification.setReadable(false);
+        
+        notificationXmlService.save(notification);
+    }
+
+    /**
+     * Notifie un technicien qu'une intervention lui a été assignée
+     */
+    public void notifierTechnicienIntervention(int technicienId, int interventionId, int demandeId) {
+        Notification notification = new Notification();
+        notification.setMessage("🔧 Nouvelle intervention #" + interventionId + " assignée pour la demande #" + demandeId + ". Veuillez consulter vos interventions.");
+        notification.setCreatedAt(LocalDateTime.now());
+        notification.setUserId(technicienId);
+        notification.setReadable(false);
+        
+        notificationXmlService.save(notification);
+    }
+
+    /**
+     * Notifie un technicien (méthode générique)
+     */
+    public void notifierTechnicien(int technicienId, String message) {
+        Notification notification = new Notification();
+        notification.setMessage(message);
+        notification.setCreatedAt(LocalDateTime.now());
+        notification.setUserId(technicienId);
+        notification.setReadable(false);
+        
+        notificationXmlService.save(notification);
+    }
+
+    /**
+     * Notifie une main-d'œuvre
+     */
+    public void notifierMainDOeuvre(Integer mainDOeuvreId, String message) {
+        if (mainDOeuvreId == null) {
+            System.out.println("⚠️ [NOTIFICATION] mainDOeuvreId est null - notification annulée");
+            return;
+        }
+        
+        System.out.println("📢 [NOTIFICATION] Notifier main-d'œuvre ID: " + mainDOeuvreId);
+        System.out.println("📝 [NOTIFICATION] Message: " + message);
+        
+        // Trouver l'utilisateur AgentMainDOeuvre correspondant
+        Optional<Utilisateur> userOpt = utilisateurService.findAll().stream()
+            .filter(u -> u instanceof AgentMainDOeuvre)
+            .filter(u -> {
+                AgentMainDOeuvre agent = (AgentMainDOeuvre) u;
+                return agent.getMainDOeuvreId() == mainDOeuvreId;
+            })
+            .findFirst();
+        
+        if (userOpt.isPresent()) {
+            Utilisateur user = userOpt.get();
+            System.out.println("✅ [NOTIFICATION] Utilisateur AgentMainDOeuvre trouvé - ID: " + user.getId() + ", Email: " + user.getEmail());
+            
+            Notification notification = new Notification();
+            notification.setMessage(message);
+            notification.setCreatedAt(LocalDateTime.now());
+            notification.setUserId(user.getId());
+            notification.setReadable(false);
+            
+            try {
+                Notification saved = notificationXmlService.save(notification);
+                System.out.println("✅ [NOTIFICATION] Notification créée avec succès - ID: " + saved.getIdNotification() + " pour userId: " + saved.getUserId());
+            } catch (Exception e) {
+                System.err.println("❌ [NOTIFICATION] Erreur lors de la sauvegarde: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            System.err.println("❌ [NOTIFICATION] Aucun utilisateur AgentMainDOeuvre trouvé pour mainDOeuvreId: " + mainDOeuvreId);
+        }
+    }
+
+    /**
+     * Notifie un citoyen
+     */
+    public void notifierCitoyen(Integer citoyenId, String message) {
+        if (citoyenId == null) {
+            return;
+        }
+        
+        Notification notification = new Notification();
+        notification.setMessage(message);
+        notification.setCreatedAt(LocalDateTime.now());
+        notification.setUserId(citoyenId);
+        notification.setReadable(false);
+        
+        notificationXmlService.save(notification);
     }
 }

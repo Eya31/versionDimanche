@@ -66,6 +66,9 @@ export class LoginComponent {
       case 'CITOYEN':
         this.router.navigate(['/citoyen']);
         break;
+      case 'MAIN_DOEUVRE':
+        this.router.navigate(['/main-doeuvre']);
+        break;
       default:
         this.router.navigate(['/home']);
     }

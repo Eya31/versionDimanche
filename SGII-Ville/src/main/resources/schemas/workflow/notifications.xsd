@@ -4,7 +4,7 @@
            xmlns:tns="http://example.com/gestion-interventions" 
            elementFormDefault="qualified">
 
-  <!-- Notification -->
+  <!-- Notification (1 Utilisateur -> * Notifications) -->
   <xs:complexType name="NotificationType">
     <xs:sequence>
       <xs:element name="id_notification" type="xs:int"/>
@@ -12,6 +12,7 @@
       <xs:element name="created_at" type="xs:dateTime"/>
       <xs:element name="user_id" type="xs:int"/>
       <xs:element name="readable" type="xs:boolean"/>
+      <xs:element name="type" type="xs:string" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 

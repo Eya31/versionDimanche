@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Utilisateurs xmlns="http://example.com/gestion-interventions">
-                                
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -8,7 +17,16 @@
     
     
     <!-- Exemple de citoyen -->
-                                
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -16,7 +34,16 @@
     
     
     <Citoyen>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -24,7 +51,16 @@
         
         
         <id>1</id>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -32,7 +68,16 @@
         
         
         <nom>Ahmed Ben Ali</nom>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -40,7 +85,16 @@
         
         
         <email>ahmed.benali@example.com</email>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -48,7 +102,16 @@
         
         
         <motDePasse>password123</motDePasse>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -56,7 +119,16 @@
         
         
         <role>CITOYEN</role>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -64,7 +136,16 @@
         
         
         <adresse>12 Avenue Habib Bourguiba, Tunis</adresse>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -72,7 +153,16 @@
         
         
         <telephone>12345678</telephone>
-                                                            
+                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -80,7 +170,16 @@
     
     
     </Citoyen>
-                                
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -89,7 +188,16 @@
     
     
     <!-- Admin par défaut -->
-                                
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -97,7 +205,16 @@
     
     
     <Administrateur>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -105,7 +222,16 @@
         
         
         <id>2</id>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -113,7 +239,16 @@
         
         
         <nom>Admin Principal</nom>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -121,7 +256,16 @@
         
         
         <email>admin@sgii.tn</email>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -129,7 +273,16 @@
         
         
         <!-- Mot de passe: admin123 -->
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -137,7 +290,16 @@
         
         
         <motDePasse>$2a$10$YourValidBCryptHashHere</motDePasse>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -145,7 +307,16 @@
         
         
         <role>ADMINISTRATEUR</role>
-                                                            
+                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -153,7 +324,16 @@
     
     
     </Administrateur>
-                                
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -162,7 +342,16 @@
     
     
     <Technicien>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -170,7 +359,16 @@
         
         
         <id>3</id>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -178,7 +376,16 @@
         
         
         <nom>Mohamed Technicien</nom>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -186,7 +393,16 @@
         
         
         <email>tech@test.tn</email>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -194,7 +410,16 @@
         
         
         <motDePasse>$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy</motDePasse>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -202,7 +427,16 @@
         
         
         <role>TECHNICIEN</role>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -210,7 +444,16 @@
         
         
         <competences>
-                                                                                                
+                                                                                                                                                                                                            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
@@ -218,7 +461,16 @@
             
             
             <competences>Électricité</competences>
-                                                                                                
+                                                                                                                                                                                                            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
@@ -226,7 +478,16 @@
             
             
             <competences>Plomberie</competences>
-                                                                                            
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -234,7 +495,16 @@
         
         
         </competences>
-                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -242,7 +512,16 @@
         
         
         <disponibilite>true</disponibilite>
-                                                            
+                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -250,6 +529,1280 @@
     
     
     </Technicien>
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Administrateur>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>4</id>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>eya</nom>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>eya@gmail.com</email>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <motDePasse>$2a$10$nBbrmynT8XRTbxM4V5byV.rAp101LNtiErRKU9TL.QYaXv1YMAguK</motDePasse>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <role>ADMINISTRATEUR</role>
+                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Administrateur>
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Citoyen>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>5</id>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>citoyen </nom>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>citoyen@gmail.com</email>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <motDePasse>$2a$10$ny32NGsWvFLzq6q/F8gPy.bQ17zzkDTTPBzDxYrgK/MYlJrnOMtnK</motDePasse>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <role>CITOYEN</role>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <adresse>matar</adresse>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>25964613</telephone>
+                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Citoyen>
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Citoyen>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>6</id>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>eyacitoyen</nom>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>eyacitoyen@gmail.com</email>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <motDePasse>$2a$10$He7Oni/plPC6Cbfg9xvGzO.Dp8gsMoFt66xyqLxb1og7/jF42fhnO</motDePasse>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <role>CITOYEN</role>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <adresse>matar</adresse>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>95571012</telephone>
+                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Citoyen>
+                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <ChefDeService>
+                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>7</id>
+                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>Eya</nom>
+                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>eyabb@gmail.com</email>
+                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <motDePasse>$2a$10$2qXCbpc4lxEri6SvR.IB/uXwuuK9JKfFUPnMsQsmY/HYrP5Kc9jh6</motDePasse>
+                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <role>CHEF_SERVICE</role>
+                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <departement>7777</departement>
+                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </ChefDeService>
+                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Citoyen>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>8</id>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>eya</nom>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>eyacc@gmail.com</email>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <motDePasse>$2a$10$EkztU6fVURMAOuLjKxksWu.JGxooKADcgk3wRG.yewhNXcwWyGZaq</motDePasse>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <role>CITOYEN</role>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <adresse>sokra</adresse>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>53176236</telephone>
+                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Citoyen>
+                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <ChefDeService>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>9</id>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>imen</nom>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>imen@gmail.com</email>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <motDePasse>$2a$10$iS4uZ3McPXsx3gQlkj/.suWZZj1dyBL2/AJFvf0XiSIw0uBrV/j.y</motDePasse>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <role>CHEF_SERVICE</role>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <departement>nnnn</departement>
+                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </ChefDeService>
+                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Citoyen>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>10</id>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>imenc</nom>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>imenc@gmail.com</email>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <motDePasse>$2a$10$xbwKyX95doPOMSNYJBOLjuZAzQYjzPccBEGrHVpdf/BCxNLeiYLY2</motDePasse>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <role>CITOYEN</role>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <adresse>imenc</adresse>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>2343543541</telephone>
+                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Citoyen>
+                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Citoyen>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>11</id>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>dodo</nom>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>dodo@gmail.com</email>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <motDePasse>$2a$10$lFR1.dckgXJTHc4GOiWFB.XbnTlOqSoG3GwvNR.VTRi1hxIDTG/Ey</motDePasse>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <role>CITOYEN</role>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <adresse>dodo</adresse>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>3453453</telephone>
+                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Citoyen>
+                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Administrateur>
+                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>12</id>
+                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>eyaA</nom>
+                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>eyaA@gmail.com</email>
+                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <motDePasse>$2a$10$nY.KUGIHwblrXWiIGWKjQ.gRWkQch7p8ICLVEvx8MjMzqGWIgetH2</motDePasse>
+                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <role>ADMINISTRATEUR</role>
+                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Administrateur>
+                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Technicien>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>13</id>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>eyaT</nom>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>eyaT@gmail.com</email>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <motDePasse>$2a$10$kiEC9BHzataCygBdTfByweopn17VR.41uKEdR8Ime5Ye/2sqrMD0i</motDePasse>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <role>TECHNICIEN</role>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <disponibilite>true</disponibilite>
+                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    </Technicien>
+                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Citoyen>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <id>14</id>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <nom>farah farah</nom>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <email>farahfrikha471@gmail.com</email>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <motDePasse>$2a$10$G9HYpROTJu6vdR0UQFg5tezO3/gLqZJEzTgTv/noqlUtfiR5tyiK.</motDePasse>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <role>CITOYEN</role>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <adresse>qwertzuiop</adresse>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>58725259</telephone>
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    </Citoyen>
                                 
     
     
@@ -266,7 +1819,7 @@
         
         
         
-        <id>4</id>
+        <id>15</id>
                                                                 
         
         
@@ -274,7 +1827,7 @@
         
         
         
-        <nom>eya</nom>
+        <nom>farah farah</nom>
                                                                 
         
         
@@ -282,7 +1835,7 @@
         
         
         
-        <email>eya@gmail.com</email>
+        <email>farahfrikha@gmail.com</email>
                                                                 
         
         
@@ -290,7 +1843,7 @@
         
         
         
-        <motDePasse>$2a$10$nBbrmynT8XRTbxM4V5byV.rAp101LNtiErRKU9TL.QYaXv1YMAguK</motDePasse>
+        <motDePasse>$2a$10$Oluxn8pUN297q6zWi2cVReFewNIeXjKO.kHSStTEGFK9/4iRAXMsa</motDePasse>
                                                                 
         
         
@@ -307,152 +1860,6 @@
     
     
     </Administrateur>
-                                
-    
-    
-    
-    
-    
-    
-    
-    <Citoyen>
-                                                                
-        
-        
-        
-        
-        
-        
-        <id>5</id>
-                                                                
-        
-        
-        
-        
-        
-        
-        <nom>citoyen </nom>
-                                                                
-        
-        
-        
-        
-        
-        
-        <email>citoyen@gmail.com</email>
-                                                                
-        
-        
-        
-        
-        
-        
-        <motDePasse>$2a$10$ny32NGsWvFLzq6q/F8gPy.bQ17zzkDTTPBzDxYrgK/MYlJrnOMtnK</motDePasse>
-                                                                
-        
-        
-        
-        
-        
-        
-        <role>CITOYEN</role>
-                                                                
-        
-        
-        
-        
-        
-        
-        <adresse>matar</adresse>
-                                                                
-        
-        
-        
-        
-        
-        
-        <telephone>25964613</telephone>
-                                                            
-    
-    
-    
-    
-    
-    
-    </Citoyen>
-                                
-    
-    
-    
-    
-    
-    
-    
-    <Citoyen>
-                                                                
-        
-        
-        
-        
-        
-        
-        <id>6</id>
-                                                                
-        
-        
-        
-        
-        
-        
-        <nom>eyacitoyen</nom>
-                                                                
-        
-        
-        
-        
-        
-        
-        <email>eyacitoyen@gmail.com</email>
-                                                                
-        
-        
-        
-        
-        
-        
-        <motDePasse>$2a$10$He7Oni/plPC6Cbfg9xvGzO.Dp8gsMoFt66xyqLxb1og7/jF42fhnO</motDePasse>
-                                                                
-        
-        
-        
-        
-        
-        
-        <role>CITOYEN</role>
-                                                                
-        
-        
-        
-        
-        
-        
-        <adresse>matar</adresse>
-                                                                
-        
-        
-        
-        
-        
-        
-        <telephone>95571012</telephone>
-                                                            
-    
-    
-    
-    
-    
-    
-    </Citoyen>
                             
     
     
@@ -467,28 +1874,28 @@
         
         
         
-        <id>7</id>
+        <id>16</id>
                                                         
         
         
         
         
         
-        <nom>Eya</nom>
+        <nom>mariem</nom>
                                                         
         
         
         
         
         
-        <email>eyabb@gmail.com</email>
+        <email>mariem@gmail.com</email>
                                                         
         
         
         
         
         
-        <motDePasse>$2a$10$2qXCbpc4lxEri6SvR.IB/uXwuuK9JKfFUPnMsQsmY/HYrP5Kc9jh6</motDePasse>
+        <motDePasse>$2a$10$3zWAwNxmFv.KWwXqKy4sRu7EUAz76NzXt.5ADFQTWTUlPUaQkpDfK</motDePasse>
                                                         
         
         
@@ -502,7 +1909,7 @@
         
         
         
-        <departement>7777</departement>
+        <departement>Éclairage public</departement>
                                                     
     
     
@@ -516,183 +1923,212 @@
     
     
     
-    <Citoyen>
+    <Technicien>
                                                 
         
         
         
         
-        <id>8</id>
+        <id>17</id>
                                                 
         
         
         
         
-        <nom>eya</nom>
+        <nom>technicien</nom>
                                                 
         
         
         
         
-        <email>eyacc@gmail.com</email>
+        <email>technicien1@smartcity.tn</email>
                                                 
         
         
         
         
-        <motDePasse>$2a$10$EkztU6fVURMAOuLjKxksWu.JGxooKADcgk3wRG.yewhNXcwWyGZaq</motDePasse>
+        <motDePasse>$2a$10$e9gzN.YbVuvDRj1/iWSIDexu1fTPmfFhE2U4Y6gHsjRymqfpYvAGC</motDePasse>
                                                 
         
         
         
         
-        <role>CITOYEN</role>
+        <role>TECHNICIEN</role>
                                                 
         
         
         
         
-        <adresse>sokra</adresse>
-                                                
-        
-        
-        
-        
-        <telephone>53176236</telephone>
+        <disponibilite>true</disponibilite>
                                             
     
     
     
     
-    </Citoyen>
+    </Technicien>
                     
     
     
     
     
-    <ChefDeService>
+    <Citoyen>
                                         
         
         
         
-        <id>9</id>
+        <id>18</id>
                                         
         
         
         
-        <nom>imen</nom>
+        <nom>test2</nom>
                                         
         
         
         
-        <email>imen@gmail.com</email>
+        <email>test2@gmail.com</email>
                                         
         
         
         
-        <motDePasse>$2a$10$iS4uZ3McPXsx3gQlkj/.suWZZj1dyBL2/AJFvf0XiSIw0uBrV/j.y</motDePasse>
+        <motDePasse>$2a$10$.SxO0anS0XGQuULErUCJcO/LEf4GO6FS5/AUbQnrPOJNcCE5DoS/S</motDePasse>
                                         
         
         
         
-        <role>CHEF_SERVICE</role>
+        <role>CITOYEN</role>
                                         
         
         
         
-        <departement>nnnn</departement>
+        <adresse>qwertzuiop</adresse>
+                                        
+        
+        
+        
+        <telephone>00000000</telephone>
                                     
     
     
     
-    </ChefDeService>
+    </Citoyen>
                 
     
     
     
-    <Citoyen>
+    <AgentMainDOeuvre>
                                 
         
         
-        <id>10</id>
+        <id>19</id>
                                 
         
         
-        <nom>imenc</nom>
+        <nom>salh</nom>
                                 
         
         
-        <email>imenc@gmail.com</email>
+        <email>salh@gmail.com</email>
                                 
         
         
-        <motDePasse>$2a$10$xbwKyX95doPOMSNYJBOLjuZAzQYjzPccBEGrHVpdf/BCxNLeiYLY2</motDePasse>
+        <motDePasse>$2a$10$FkdSpGKqjHnMrrKOOxk.2.wtuQBqLrO1VShCHobjpXWFmORuhw/me</motDePasse>
                                 
         
         
-        <role>CITOYEN</role>
+        <role>MAIN_DOEUVRE</role>
                                 
         
         
-        <adresse>imenc</adresse>
+        <prenom>ali</prenom>
                                 
         
         
-        <telephone>2343543541</telephone>
+        <matricule>00000</matricule>
+                                
+        
+        
+        <cin>00000000</cin>
+                                
+        
+        
+        <telephone>55555555555555</telephone>
+                                
+        
+        
+        <metier>electricien</metier>
+                                
+        
+        
+        <mainDOeuvreId>2</mainDOeuvreId>
                             
     
     
-    </Citoyen>
+    </AgentMainDOeuvre>
             
     
     
-    <Citoyen>
+    <AgentMainDOeuvre>
                         
         
-        <id>11</id>
+        <id>20</id>
                         
         
-        <nom>dodo</nom>
+        <nom>foulen</nom>
                         
         
-        <email>dodo@gmail.com</email>
+        <email>foulen@gmail.com</email>
                         
         
-        <motDePasse>$2a$10$lFR1.dckgXJTHc4GOiWFB.XbnTlOqSoG3GwvNR.VTRi1hxIDTG/Ey</motDePasse>
+        <motDePasse>$2a$10$EakE6di89U0gRXTN5fHgRu36XLUcYLlEYxRqFqMwPpUbmqplucezq</motDePasse>
                         
         
-        <role>CITOYEN</role>
+        <role>MAIN_DOEUVRE</role>
                         
         
-        <adresse>dodo</adresse>
+        <prenom>ben falten</prenom>
                         
         
-        <telephone>3453453</telephone>
+        <matricule>00000</matricule>
+                        
+        
+        <cin>00000000</cin>
+                        
+        
+        <telephone>55555555555555</telephone>
+                        
+        
+        <metier>electricien</metier>
+                        
+        
+        <mainDOeuvreId>3</mainDOeuvreId>
                     
     
-    </Citoyen>
+    </AgentMainDOeuvre>
         
     
-    <Administrateur>
+    <ChefDeService>
                 
-        <id>12</id>
+        <id>21</id>
                 
-        <nom>eyaA</nom>
+        <nom>chefeya</nom>
                 
-        <email>eyaA@gmail.com</email>
+        <email>chefeya@gmail.com</email>
                 
-        <motDePasse>$2a$10$nY.KUGIHwblrXWiIGWKjQ.gRWkQch7p8ICLVEvx8MjMzqGWIgetH2</motDePasse>
+        <motDePasse>$2a$10$Ch9sqUFkS3JQKaVgH.Sf5ejca1HcqomUcpaoE4Xz0V0MmmCbt5eyW</motDePasse>
                 
-        <role>ADMINISTRATEUR</role>
+        <role>CHEF_SERVICE</role>
+                
+        <departement>nnnn</departement>
             
-    </Administrateur>
+    </ChefDeService>
     
-    <Technicien>
-        <id>13</id>
-        <nom>eyaT</nom>
-        <email>eyaT@gmail.com</email>
-        <motDePasse>$2a$10$kiEC9BHzataCygBdTfByweopn17VR.41uKEdR8Ime5Ye/2sqrMD0i</motDePasse>
-        <role>TECHNICIEN</role>
-        <disponibilite>true</disponibilite>
-    </Technicien>
+    <ChefDeService>
+        <id>22</id>
+        <nom>eyachef</nom>
+        <email>eyachef@gmail.com</email>
+        <motDePasse>$2a$10$oXNddh462phAa2NyYbAVlum.f6b1yOe2.BAZ/syZSEEyBjGysYMUG</motDePasse>
+        <role>CHEF_SERVICE</role>
+        <departement>nnnn</departement>
+    </ChefDeService>
 </Utilisateurs>

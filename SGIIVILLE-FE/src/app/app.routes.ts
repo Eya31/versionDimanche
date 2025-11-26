@@ -27,16 +27,65 @@ export const routes: Routes = [
     component: ChefDashboardComponent,
     canActivate: [authGuard, roleGuard(['CHEF_SERVICE'])]
   },
+  // ROUTES TECHNICIEN AVEC LAYOUT COMMUN
   {
     path: 'technicien',
-    component: TechnicienDashboardComponent,
-    canActivate: [authGuard, roleGuard(['TECHNICIEN'])]
+    loadComponent: () => import('./components/technicien-layout/technicien-layout.component').then(m => m.TechnicienLayoutComponent),
+    canActivate: [authGuard, roleGuard(['TECHNICIEN'])],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./components/technicien-dashboard/technicien-dashboard.component').then(m => m.TechnicienDashboardComponent)
+      },
+      // T2 - Tableau de Bord du Technicien
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./components/technicien-dashboard/technicien-dashboard.component').then(m => m.TechnicienDashboardComponent)
+      },
+      {
+        path: 'T2',
+        redirectTo: '',
+        pathMatch: 'full'
+      },
+      // T3 - Gestion d'une Intervention
+      {
+        path: 'intervention/:id',
+        loadComponent: () => import('./components/intervention-detail/intervention-detail.component').then(m => m.InterventionDetailComponent)
+      },
+      {
+        path: 'T3/:id',
+        loadComponent: () => import('./components/intervention-detail/intervention-detail.component').then(m => m.InterventionDetailComponent)
+      },
+      {
+        path: 'intervention/:id/rapport',
+        loadComponent: () => import('./components/rapport-final/rapport-final.component').then(m => m.RapportFinalComponent)
+      },
+      {
+        path: 'profil',
+        loadComponent: () => import('./components/technicien-profil/technicien-profil.component').then(m => m.TechnicienProfilComponent)
+      },
+      {
+        path: 'main-doeuvre',
+        loadComponent: () => import('./components/main-doeuvre-gestion/main-doeuvre-gestion.component').then(m => m.MainDOeuvreGestionComponent)
+      }
+    ]
   },
   {
     path: 'citoyen',
     // ou 'dashboard' si tu préfères
     component: CitoyenDashboardComponent,
     canActivate: [authGuard, roleGuard(['CITOYEN'])]
+  },
+  // ROUTES MAIN-D'ŒUVRE
+  {
+    path: 'main-doeuvre',
+    loadComponent: () => import('./components/main-doeuvre-dashboard/main-doeuvre-dashboard.component').then(m => m.MainDOeuvreDashboardComponent),
+    canActivate: [authGuard, roleGuard(['MAIN_DOEUVRE'])]
+  },
+  {
+    path: 'main-doeuvre/intervention/:id',
+    loadComponent: () => import('./components/intervention-detail/intervention-detail.component').then(m => m.InterventionDetailComponent),
+    canActivate: [authGuard, roleGuard(['MAIN_DOEUVRE'])]
   },
 
   // Routes classiques (gardées pour compatibilité)

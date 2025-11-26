@@ -1,6 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Photos xmlns="http://example.com/gestion-interventions">
+                            
+    
+    
+    
+    
+    
+    <Photo>
+                                                        
+        
+        
+        
+        
+        
+        <id_photo>1</id_photo>
+                                                        
+        
+        
+        
+        
+        
+        <url>/api/demandes/uploads/1763660269858_vv.png</url>
+                                                        
+        
+        
+        
+        
+        
+        <nom>vv.png</nom>
+                                                    
+    
+    
+    
+    
+    
+    </Photo>
+                        
+    
+    
+    
+    
+    
+    <Photo>
+                                                
+        
+        
+        
+        
+        <id_photo>1</id_photo>
+                                                
+        
+        
+        
+        
+        <url>/api/demandes/uploads/1763661683746_invitation_soutenance.jpg</url>
+                                                
+        
+        
+        
+        
+        <nom>invitation soutenance.jpg</nom>
+                                            
+    
+    
+    
+    
+    </Photo>
                     
+    
     
     
     
@@ -14,12 +81,12 @@
         
         
         
-        <url>/api/demandes/uploads/1763660269858_vv.png</url>
+        <url>/api/demandes/uploads/1763662033893_tweet_capture.png</url>
                                         
         
         
         
-        <nom>vv.png</nom>
+        <nom>tweet_capture.png</nom>
                                     
     
     
@@ -37,11 +104,11 @@
                                 
         
         
-        <url>/api/demandes/uploads/1763661683746_invitation_soutenance.jpg</url>
+        <url>/api/demandes/uploads/1763723969235_WhatsApp_Image_2024-02-07_at_10.30.13_(5).jpeg</url>
                                 
         
         
-        <nom>invitation soutenance.jpg</nom>
+        <nom>WhatsApp Image 2024-02-07 at 10.30.13 (5).jpeg</nom>
                             
     
     
@@ -55,10 +122,10 @@
         <id_photo>1</id_photo>
                         
         
-        <url>/api/demandes/uploads/1763662033893_tweet_capture.png</url>
+        <url>/api/demandes/uploads/1763724153573_IMG_4963.jpg</url>
                         
         
-        <nom>tweet_capture.png</nom>
+        <nom>IMG_4963.jpg</nom>
                     
     
     </Photo>
@@ -68,15 +135,15 @@
                 
         <id_photo>1</id_photo>
                 
-        <url>/api/demandes/uploads/1763723969235_WhatsApp_Image_2024-02-07_at_10.30.13_(5).jpeg</url>
+        <url>/api/demandes/uploads/1763802548725_vv.png</url>
                 
-        <nom>WhatsApp Image 2024-02-07 at 10.30.13 (5).jpeg</nom>
+        <nom>vv.png</nom>
             
     </Photo>
     
     <Photo>
         <id_photo>1</id_photo>
-        <url>/api/demandes/uploads/1763724153573_IMG_4963.jpg</url>
-        <nom>IMG_4963.jpg</nom>
+        <url>/api/demandes/uploads/1763810424697_matrice_confusion.png</url>
+        <nom>matrice_confusion.png</nom>
     </Photo>
 </Photos>

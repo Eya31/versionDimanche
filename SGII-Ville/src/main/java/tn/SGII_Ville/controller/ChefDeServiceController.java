@@ -21,10 +21,15 @@ public class ChefDeServiceController {
      * GET /api/chef/techniciens
      * → Retourne uniquement les techniciens depuis ton service existant
      */
-   
     @GetMapping("/techniciens")
-public ResponseEntity<List<Technicien>> getAllTechniciens() {
-    List<Technicien> techniciens = userXmlService.findAllTechniciensFromXml();
-    return ResponseEntity.ok(techniciens);
-}
+    public ResponseEntity<List<Technicien>> getAllTechniciens() {
+        try {
+            // Lire dynamiquement depuis utilisateurs.xml (pas statique)
+            List<Technicien> techniciens = userXmlService.findAllTechniciensFromXml();
+            return ResponseEntity.ok(techniciens);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

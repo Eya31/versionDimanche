@@ -58,7 +58,26 @@ techniciens: Technicien[] = [];
   showFormModal = false;
   showRessourceModal = false;
   showDetailModal = false;
+  showPlanificationModal = false;
   selectedDemande: Demande | null = null;
+  
+  // Planification
+  planificationData: any = {
+    technicienId: null,
+    datePlanifiee: '',
+    heureDebut: '',
+    heureFin: '',
+    dureeMinutes: 60,
+    priorite: 'NORMALE',
+    budget: 500,
+    description: '',
+    typeIntervention: '',
+    equipementIds: [],
+    ressourceIds: [],
+    mainDOeuvreIds: [],
+    remarques: ''
+  };
+  techniciensDisponibles: any[] = [];
   editingEquipement: Equipement | null = null;
   editingRessource: RessourceMaterielle | null = null;
 
@@ -78,6 +97,9 @@ techniciens: Technicien[] = [];
   } as RessourceMaterielle;
 
   filtreActif: 'TOUS' | 'NON_TRAITEES' | 'TRAITEES' = 'TOUS';
+  
+  // Sidebar state
+  sidebarCollapsed = true;
 
   constructor(
     private demandeService: DemandeService,
@@ -171,11 +193,14 @@ techniciens: Technicien[] = [];
 loadTechniciens(): void {
     this.technicienListService.getAllTechniciens().subscribe({
       next: (data) => {
-        this.techniciens = data;
+        this.techniciens = data || [];
+        console.log('Techniciens chargés:', this.techniciens.length);
       },
       error: (err) => {
         console.error('Erreur chargement techniciens:', err);
-        alert('Impossible de charger la liste des techniciens');
+        console.error('Détails erreur:', err.status, err.message, err.error);
+        this.techniciens = []; // Initialiser à vide en cas d'erreur
+        alert('Impossible de charger la liste des techniciens. Vérifiez que le backend est démarré et accessible.');
       }
     });
   }
@@ -266,44 +291,201 @@ loadTechniciens(): void {
   }
 
   planifierDemande(demande: Demande): void {
-  if (demande.etat === 'TRAITEE') {
-    alert('Cette demande est déjà planifiée !');
-    return;
+    if (demande.etat === 'TRAITEE') {
+      alert('Cette demande est déjà planifiée !');
+      return;
+    }
+
+    // Ouvrir le modal de planification
+    this.selectedDemande = demande;
+    this.planificationData = {
+      demandeId: demande.id,
+      technicienId: null,
+      datePlanifiee: new Date().toISOString().split('T')[0], // Aujourd'hui par défaut
+      heureDebut: '09:00',
+      heureFin: '17:00',
+      dureeMinutes: 60,
+      priorite: 'NORMALE',
+      budget: 500,
+      description: demande.description,
+      typeIntervention: demande.category || '',
+      equipementIds: [],
+      ressourceIds: [],
+      mainDOeuvreIds: [],
+      remarques: ''
+    };
+    this.loadTechniciensDisponibles();
+    this.showPlanificationModal = true;
   }
 
-  if (confirm(`Planifier l'intervention pour la demande #${demande.id} ?`)) {
-    this.demandeService.planifierIntervention(demande.id).subscribe({
+  loadTechniciensDisponibles(): void {
+    // Charger tous les techniciens disponibles
+    this.technicienListService.getAllTechniciens().subscribe({
+      next: (data) => {
+        this.techniciensDisponibles = data.filter(t => t.disponibilite !== false);
+      },
+      error: (err) => {
+        console.error('Erreur chargement techniciens:', err);
+        this.techniciensDisponibles = [];
+      }
+    });
+  }
+
+  validerPlanification(): void {
+    if (!this.selectedDemande) {
+      alert('Aucune demande sélectionnée');
+      return;
+    }
+
+    // Validation des champs obligatoires
+    if (!this.planificationData.technicienId) {
+      alert('Veuillez sélectionner un technicien');
+      return;
+    }
+
+    if (!this.planificationData.datePlanifiee) {
+      alert('Veuillez sélectionner une date');
+      return;
+    }
+
+    if (!this.planificationData.budget || this.planificationData.budget <= 0) {
+      alert('Veuillez entrer un budget valide');
+      return;
+    }
+
+    // Confirmation
+    if (!confirm('Valider la planification de cette intervention ?')) {
+      return; // L'utilisateur a annulé
+    }
+
+    // Préparer les données pour l'envoi
+    const requestData: any = {
+      demandeId: this.selectedDemande.id,
+      technicienId: Number(this.planificationData.technicienId),
+      datePlanifiee: this.planificationData.datePlanifiee,
+      priorite: this.convertPrioriteToBackend(this.planificationData.priorite || 'NORMALE'),
+      budget: Number(this.planificationData.budget),
+      description: this.planificationData.description || this.selectedDemande.description,
+      typeIntervention: this.planificationData.typeIntervention || '',
+      remarques: this.planificationData.remarques || '',
+      equipementIds: this.planificationData.equipementIds || [],
+      ressourceIds: this.planificationData.ressourceIds || [],
+      mainDOeuvreIds: this.planificationData.mainDOeuvreIds || []
+    };
+
+    // Ajouter heureDebut si fournie
+    if (this.planificationData.heureDebut) {
+      requestData.heureDebut = this.planificationData.heureDebut;
+    }
+
+    // Ajouter heureFin si fournie
+    if (this.planificationData.heureFin) {
+      requestData.heureFin = this.planificationData.heureFin;
+    }
+
+    // Ajouter dureeMinutes si fournie
+    if (this.planificationData.dureeMinutes) {
+      requestData.dureeMinutes = Number(this.planificationData.dureeMinutes);
+    }
+
+    console.log('=== DÉBUT PLANIFICATION ===');
+    console.log('Données à envoyer:', JSON.stringify(requestData, null, 2));
+    console.log('Demande sélectionnée:', this.selectedDemande);
+
+    // Appeler le nouvel endpoint de planification complète
+    this.demandeService.planifierInterventionComplete(requestData).subscribe({
       next: (intervention) => {
-        demande.etat = 'TRAITEE';  // Mise à jour immédiate dans l'interface
+        console.log('=== PLANIFICATION RÉUSSIE ===');
+        console.log('Intervention créée:', intervention);
+        
+        if (this.selectedDemande) {
+          this.selectedDemande.etat = 'TRAITEE';
+        }
+        
         this.updateStats();
         this.appliquerFiltre();
-        this.loadInterventions();  // Recharge la liste des interventions
-        alert('Intervention planifiée avec succès ! Intervention #' + intervention.id);
+        this.loadInterventions();
+        this.loadAllData(); // Recharger toutes les données
+        
+        alert('✅ Intervention planifiée avec succès !\n\n' +
+              'Intervention #' + intervention.id + '\n' +
+              'Technicien notifié\n' +
+              'État: Planifiée');
+        
+        this.closePlanificationModal();
         this.closeDetailModal();
       },
       error: (error) => {
+        console.error('=== ERREUR PLANIFICATION ===');
         console.error('Erreur complète:', error);
-
-        // MESSAGE CLAIR AU LIEU DE [object Object]
-        let message = 'Erreur lors de la planification';
-
-        if (error?.error?.error) {
-          message += ' : ' + error.error.error;
-        } else if (error?.error?.details) {
-          message += ' : ' + error.error.details;
-        } else if (error?.error) {
-          message += ' : ' + error.error;
-        } else if (error?.message) {
-          message += ' : ' + error.message;
+        console.error('Status:', error.status);
+        console.error('Message:', error.message);
+        console.error('Error body:', error.error);
+        console.error('URL appelée:', error.url);
+        
+        let message = '❌ Erreur lors de la planification\n\n';
+        
+        if (error?.status === 0) {
+          message += 'Impossible de contacter le serveur.\nVérifiez que le backend est démarré.';
+        } else if (error?.status === 404) {
+          message += 'Endpoint non trouvé.\nVérifiez la configuration du backend.';
         } else if (error?.status === 500) {
-          message = 'Erreur serveur (500) – Contactez l’administrateur';
+          message += 'Erreur serveur.\nVérifiez les logs du backend.';
+        } else if (error?.error?.error) {
+          message += 'Erreur: ' + error.error.error;
+          if (error.error.details) {
+            message += '\nDétails: ' + error.error.details;
+          }
+        } else if (error?.error?.details) {
+          message += 'Détails: ' + error.error.details;
+        } else if (error?.error?.message) {
+          message += 'Message: ' + error.error.message;
+        } else if (error?.message) {
+          message += 'Message: ' + error.message;
+        } else {
+          message += 'Erreur inconnue. Vérifiez la console pour plus de détails.';
         }
-
+        
         alert(message);
       }
     });
   }
-}
+
+  closePlanificationModal(): void {
+    this.showPlanificationModal = false;
+    this.selectedDemande = null;
+    this.planificationData = {
+      technicienId: null,
+      datePlanifiee: '',
+      heureDebut: '',
+      heureFin: '',
+      dureeMinutes: 60,
+      priorite: 'NORMALE',
+      budget: 500,
+      equipementIds: [],
+      ressourceIds: [],
+      mainDOeuvreIds: [],
+      remarques: ''
+    };
+  }
+
+  toggleEquipement(id: number): void {
+    const index = this.planificationData.equipementIds.indexOf(id);
+    if (index > -1) {
+      this.planificationData.equipementIds.splice(index, 1);
+    } else {
+      this.planificationData.equipementIds.push(id);
+    }
+  }
+
+  toggleRessource(id: number): void {
+    const index = this.planificationData.ressourceIds.indexOf(id);
+    if (index > -1) {
+      this.planificationData.ressourceIds.splice(index, 1);
+    } else {
+      this.planificationData.ressourceIds.push(id);
+    }
+  }
 
   openAddEquipement() {
     this.editingEquipement = null;
@@ -470,10 +652,6 @@ loadTechniciens(): void {
   refreshAll(): void {
     this.loadAllData();
     alert('Données actualisées !');
-  }
-
-  exportReport(): void {
-    alert('Fonctionnalité export PDF en cours de développement...');
   }
 
   // Carte des demandes non traitées
@@ -771,6 +949,25 @@ loadTechniciens(): void {
     }
   }
 
+  /**
+   * Convertit la priorité du frontend vers le format backend
+   * Backend accepte seulement: URGENTE, PLANIFIEE
+   */
+  convertPrioriteToBackend(priorite: string): string {
+    switch (priorite?.toUpperCase()) {
+      case 'URGENTE':
+      case 'CRITIQUE':
+      case 'HAUTE':
+        return 'URGENTE';
+      case 'PLANIFIEE':
+      case 'NORMALE':
+      case 'MOYENNE':
+      case 'BASSE':
+      default:
+        return 'PLANIFIEE';
+    }
+  }
+
   getPhotoUrl(url: string): string {
     if (!url) return '';
     // Si l'URL commence par /api, ajouter le baseURL
@@ -787,5 +984,15 @@ loadTechniciens(): void {
 
   handleImageError(event: any): void {
     event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VjZjBmMSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5NWE1YTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBub24gZGlzcG9uaWJsZTwvdGV4dD48L3N2Zz4=';
+  }
+
+  // === SIDEBAR TOGGLE ===
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
+  exportReport(): void {
+    alert('Fonctionnalité d\'export en cours de développement');
+    // TODO: Implémenter l'export des rapports
   }
 }

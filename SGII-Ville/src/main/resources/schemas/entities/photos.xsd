@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="http://example.com/gestion-interventions" 
+           xmlns:tns="http://example.com/gestion-interventions" 
+           elementFormDefault="qualified">
+
+  <!-- Photo -->
+  <xs:complexType name="PhotoType">
+    <xs:sequence>
+      <xs:element name="id_photo" type="xs:int"/>
+      <xs:element name="url" type="xs:string"/>
+      <xs:element name="nom" type="xs:string"/>
+      <xs:element name="demandeId" type="xs:int" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

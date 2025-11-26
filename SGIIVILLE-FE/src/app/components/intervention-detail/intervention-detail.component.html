@@ -1,0 +1,679 @@
+<div class="intervention-detail" *ngIf="intervention">
+  <header class="detail-header">
+    <h1>Intervention #{{intervention.id}}</h1>
+    <button class="btn-secondary" (click)="retour()">Retour</button>
+  </header>
+
+  <!-- VUE SIMPLIFIÉE POUR MAIN-D'ŒUVRE -->
+  <div class="detail-content" *ngIf="isMainDOeuvre">
+    <!-- Informations principales -->
+    <section class="info-section">
+      <h2>📋 Informations de l'Intervention</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <strong>Description:</strong>
+          <p>{{intervention.description || 'Non spécifiée'}}</p>
+        </div>
+        <div class="info-item">
+          <strong>Type:</strong>
+          <span>{{intervention.typeIntervention || 'Non spécifié'}}</span>
+        </div>
+        <div class="info-item">
+          <strong>Priorité:</strong>
+          <span class="badge" [class]="'priorite-' + (intervention.priorite || 'NORMALE').toLowerCase()">
+            {{intervention.priorite}}
+          </span>
+        </div>
+        <div class="info-item">
+          <strong>État:</strong>
+          <span class="badge" [class]="'etat-' + (intervention.etat || 'EN_ATTENTE').toLowerCase()">
+            {{intervention.etat}}
+          </span>
+        </div>
+        <div class="info-item" *ngIf="intervention.datePlanifiee">
+          <strong>Date prévue:</strong>
+          <span>{{intervention.datePlanifiee | date:'dd/MM/yyyy'}}</span>
+        </div>
+        <div class="info-item" *ngIf="intervention.dateDebut">
+          <strong>Date début:</strong>
+          <span>{{intervention.dateDebut | date:'dd/MM/yyyy HH:mm'}}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mes Tâches (uniquement celles assignées à cette main-d'œuvre) -->
+    <section class="taches-section">
+      <div class="section-header">
+        <h2>📋 Mes Tâches</h2>
+        <p class="section-subtitle">Tâches qui vous sont assignées pour cette intervention</p>
+      </div>
+
+      <!-- Liste des tâches -->
+      <div class="taches-list">
+        <div *ngIf="taches.length === 0" class="empty-taches">
+          <p>📭 Aucune tâche assignée pour le moment</p>
+          <p class="hint">Le technicien vous assignera des tâches prochainement.</p>
+        </div>
+
+        <div *ngFor="let tache of taches" class="tache-card" [class]="getEtatTacheClass(tache.etat)">
+          <div class="tache-header">
+            <div class="tache-title">
+              <span class="tache-ordre">#{{tache.ordre || tache.id}}</span>
+              <h3>{{tache.libelle}}</h3>
+            </div>
+            <span class="badge-etat" [class]="getEtatTacheClass(tache.etat)">
+              {{getEtatTacheLabel(tache.etat)}}
+            </span>
+          </div>
+
+          <div class="tache-body" *ngIf="tache.description">
+            <p>{{tache.description}}</p>
+          </div>
+
+          <div class="tache-info">
+            <div class="info-item" *ngIf="tache.dateDebut">
+              <strong>Débutée le:</strong>
+              <span>{{tache.dateDebut | date:'dd/MM/yyyy HH:mm'}}</span>
+            </div>
+            <div class="info-item" *ngIf="tache.dateFin">
+              <strong>Terminée le:</strong>
+              <span>{{tache.dateFin | date:'dd/MM/yyyy HH:mm'}}</span>
+            </div>
+            <div class="info-item" *ngIf="tache.tempsPasseMinutes">
+              <strong>Temps passé:</strong>
+              <span>{{tache.tempsPasseMinutes}} minutes</span>
+            </div>
+            <div class="info-item" *ngIf="tache.commentaireMainDOeuvre">
+              <strong>Votre commentaire:</strong>
+              <p>{{tache.commentaireMainDOeuvre}}</p>
+            </div>
+            <div class="info-item" *ngIf="tache.commentaireTechnicien">
+              <strong>Commentaire du technicien:</strong>
+              <p>{{tache.commentaireTechnicien}}</p>
+            </div>
+          </div>
+
+          <div class="tache-actions">
+            <!-- Commencer la tâche -->
+            <button 
+              *ngIf="tache.etat === 'A_FAIRE'" 
+              class="btn-primary"
+              (click)="commencerTacheMainDOeuvre(tache)">
+              ▶️ Commencer la tâche
+            </button>
+
+            <!-- Terminer la tâche -->
+            <button 
+              *ngIf="tache.etat === 'EN_COURS'" 
+              class="btn-success"
+              (click)="ouvrirTerminerTacheMainDOeuvre(tache)">
+              ✅ Terminer la tâche
+            </button>
+
+            <!-- Tâche terminée, en attente de vérification -->
+            <div *ngIf="tache.etat === 'TERMINEE' && !tache.verifiee" class="tache-en-attente">
+              <p class="info-text">⏳ Tâche terminée, en attente de vérification par le technicien</p>
+            </div>
+
+            <!-- Tâche vérifiée -->
+            <div *ngIf="tache.verifiee" class="tache-verifiee">
+              <p class="success-text">✅ Tâche vérifiée et validée par le technicien</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal pour terminer la tâche -->
+      <div *ngIf="selectedTacheForTerminer" class="modal-terminer-tache">
+        <div class="modal-content">
+          <h3>Terminer la tâche: {{selectedTacheForTerminer.libelle}}</h3>
+          <div class="form-group">
+            <label>Commentaire (optionnel)</label>
+            <textarea 
+              [(ngModel)]="terminerTacheRequest.commentaire" 
+              placeholder="Ajoutez un commentaire sur votre travail..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Temps passé (minutes, optionnel)</label>
+            <input 
+              type="number" 
+              [(ngModel)]="terminerTacheRequest.tempsPasseMinutes" 
+              placeholder="Ex: 120">
+          </div>
+          <div class="modal-actions">
+            <button class="btn-secondary" (click)="selectedTacheForTerminer = null">Annuler</button>
+            <button class="btn-success" (click)="terminerTacheMainDOeuvre()">✅ Terminer</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- VUE COMPLÈTE POUR TECHNICIEN -->
+  <div class="detail-content" *ngIf="isTechnicien">
+    <!-- Informations principales -->
+    <section class="info-section">
+      <h2>Informations</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <strong>Description:</strong>
+          <p>{{intervention.description || 'Non spécifiée'}}</p>
+        </div>
+        <div class="info-item">
+          <strong>Type:</strong>
+          <span>{{intervention.typeIntervention || 'Non spécifié'}}</span>
+        </div>
+        <div class="info-item">
+          <strong>Priorité:</strong>
+          <span class="badge" [class]="'priorite-' + (intervention.priorite || 'NORMALE').toLowerCase()">
+            {{intervention.priorite}}
+          </span>
+        </div>
+        <div class="info-item">
+          <strong>État:</strong>
+          <span class="badge" [class]="'etat-' + (intervention.etat || 'EN_ATTENTE').toLowerCase()">
+            {{intervention.etat}}
+          </span>
+        </div>
+        <div class="info-item">
+          <strong>Date prévue:</strong>
+          <span>{{intervention.datePlanifiee | date:'dd/MM/yyyy'}}</span>
+        </div>
+        <div class="info-item" *ngIf="intervention.dateDebut">
+          <strong>Date début:</strong>
+          <span>{{intervention.dateDebut | date:'dd/MM/yyyy HH:mm'}}</span>
+        </div>
+        <div class="info-item" *ngIf="intervention.tempsPasseMinutes">
+          <strong>Temps passé:</strong>
+          <span>{{intervention.tempsPasseMinutes}} minutes</span>
+        </div>
+        <div class="info-item">
+          <strong>Budget:</strong>
+          <span>{{intervention.budget}} DT</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Actions d'intervention (uniquement pour technicien) -->
+    <section class="actions-section" *ngIf="isTechnicien">
+      <h2>Actions</h2>
+      <div class="action-buttons">
+        <button *ngIf="intervention.etat === 'EN_ATTENTE'" 
+                class="btn-primary" 
+                (click)="commencer()">
+          Commencer l'intervention
+        </button>
+        <button *ngIf="intervention.etat === 'EN_COURS'" 
+                class="btn-warning" 
+                (click)="mettreEnPause()">
+          Mettre en pause
+        </button>
+        <button *ngIf="intervention.etat === 'SUSPENDUE'" 
+                class="btn-primary" 
+                (click)="reprendre()">
+          Reprendre
+        </button>
+        <button *ngIf="intervention.etat === 'EN_COURS'" 
+                class="btn-success" 
+                (click)="terminer()">
+          Terminer
+        </button>
+        <button class="btn-secondary" 
+                (click)="showUpdateEtat = !showUpdateEtat">
+          Mettre à jour l'état
+        </button>
+      </div>
+
+      <!-- Formulaire mise à jour état -->
+      <div *ngIf="showUpdateEtat" class="update-etat-form">
+        <h3>Mettre à jour l'état</h3>
+        <select [(ngModel)]="updateEtatRequest.nouvelEtat">
+          <option value="EN_ATTENTE">EN_ATTENTE</option>
+          <option value="EN_COURS">EN_COURS</option>
+          <option value="SUSPENDUE">SUSPENDUE</option>
+          <option value="TERMINEE">TERMINEE</option>
+        </select>
+        <input type="number" 
+               [(ngModel)]="updateEtatRequest.tempsPasseMinutes" 
+               placeholder="Temps passé (minutes)">
+        <textarea [(ngModel)]="updateEtatRequest.commentaire" 
+                  placeholder="Commentaire"></textarea>
+        <button class="btn-primary" (click)="updateEtat()">Enregistrer</button>
+      </div>
+    </section>
+
+    <!-- 📘 3.1 - Gestion main-d'œuvre affectée -->
+    <section class="main-doeuvre-section">
+      <div class="section-header">
+        <h2>👷 Gestion de la Main-d'Œuvre</h2>
+        <a routerLink="/technicien/main-doeuvre" class="link-manage">
+          📋 Gérer toutes les fiches
+        </a>
+      </div>
+
+      <!-- Liste de main-d'œuvre affectée (T3.1) -->
+      <div class="affectee-section">
+        <h3>📘 Main-d'Œuvre Affectée à cette Intervention</h3>
+        <!-- Debug info (à retirer en production) -->
+        <div style="font-size: 0.8em; color: #666; margin-bottom: 10px; padding: 8px; background: #f0f0f0; border-radius: 4px;" *ngIf="intervention">
+          <strong>🔍 Debug:</strong><br>
+          • IDs dans intervention: <strong>{{intervention.mainDOeuvreIds ? intervention.mainDOeuvreIds.join(', ') : 'aucun'}}</strong><br>
+          • Nombre de main-d'œuvre chargées: <strong>{{mainDOeuvreAffectee.length}}</strong><br>
+          <span *ngIf="mainDOeuvreAffectee.length > 0">
+            • Main-d'œuvre chargées: 
+            <span *ngFor="let md of mainDOeuvreAffectee; let i = index">
+              {{md.nom}} {{md.prenom || ''}} (ID: {{md.id}})<span *ngIf="i < mainDOeuvreAffectee.length - 1">, </span>
+            </span>
+          </span>
+        </div>
+        <div *ngIf="mainDOeuvreAffectee.length > 0" class="main-doeuvre-list-affectee">
+          <div *ngFor="let md of mainDOeuvreAffectee" class="main-doeuvre-card-affectee">
+            <div class="card-content">
+              <div class="card-header-main">
+                <div>
+                  <h4>{{md.nom}} {{md.prenom || ''}}</h4>
+                  <p class="id-interne">ID Interne: #{{md.id}}</p>
+                </div>
+                <span class="badge-disponibilite" [class]="'status-' + (md.disponibilite || 'DISPONIBLE').toLowerCase()">
+                  {{getDisponibiliteLabel(md.disponibilite)}}
+                </span>
+              </div>
+              
+              <div class="card-details">
+                <div class="detail-item" *ngIf="md.matricule">
+                  <strong>Matricule:</strong> {{md.matricule}}
+                </div>
+                <div class="detail-item" *ngIf="md.metier">
+                  <strong>Métier:</strong> {{md.metier}}
+                </div>
+                
+                <div class="detail-item" *ngIf="md.competences && md.competences.length > 0">
+                  <strong>Compétences:</strong>
+                  <div class="tags-list">
+                    <span *ngFor="let comp of md.competences" class="tag-competence">{{comp}}</span>
+                  </div>
+                </div>
+                
+                <div class="detail-item" *ngIf="md.habilitations && md.habilitations.length > 0">
+                  <strong>Habilitations:</strong>
+                  <div class="tags-list">
+                    <span *ngFor="let hab of md.habilitations" class="tag-habilitation">{{hab}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <button 
+              class="btn-danger btn-desaffecter" 
+              (click)="desaffecterMainDOeuvre(md.id)"
+              [attr.aria-label]="'Désaffecter ' + md.nom + ' ' + md.prenom">
+              🗑️ Désaffecter
+            </button>
+          </div>
+        </div>
+        
+        <div *ngIf="mainDOeuvreAffectee.length === 0" class="empty-main-doeuvre">
+          <div class="empty-icon">👷</div>
+          <p>Aucune main-d'œuvre affectée à cette intervention</p>
+        </div>
+      </div>
+
+      <!-- 📙 3.2 - Ajouter / Affecter de la main-d'œuvre (uniquement pour technicien) -->
+      <div class="affecter-section" *ngIf="isTechnicien">
+        <div class="section-header-with-action">
+          <div>
+            <h3>📙 Affecter de la Main-d'Œuvre</h3>
+            <p class="section-description">
+              Sélectionnez des membres disponibles pour cette intervention. 
+              Le système vérifie automatiquement la disponibilité, les compétences, 
+              les habilitations et les conflits d'horaires.
+            </p>
+          </div>
+          <button 
+            *ngIf="selectedMainDOeuvreForCalendar"
+            class="btn-calendar-toggle"
+            (click)="hideAvailabilityCalendar()">
+            ✕ Fermer Calendrier
+          </button>
+        </div>
+
+        <!-- CALENDRIER DE DISPONIBILITÉ -->
+        <div *ngIf="showAvailabilityCalendar && selectedMainDOeuvreForCalendar" class="availability-calendar-container">
+          <app-availability-calendar
+            [mainDOeuvre]="selectedMainDOeuvreForCalendar"
+            [currentIntervention]="intervention"
+            [allInterventions]="allInterventionsForCalendar"
+            (slotSelected)="onSlotSelected($event)">
+          </app-availability-calendar>
+        </div>
+
+        <!-- Filtres pour la recherche -->
+        <div class="filters-main-doeuvre">
+          <input 
+            type="text" 
+            [(ngModel)]="rechercheMainDOeuvre"
+            (input)="filtrerMainDOeuvreDisponible()"
+            placeholder="Rechercher par nom, matricule, compétence..."
+            class="search-input">
+          
+          <select 
+            [(ngModel)]="filtreCompetenceMainDOeuvre"
+            (change)="filtrerMainDOeuvreDisponible()"
+            class="filter-select">
+            <option value="">Toutes les compétences</option>
+            <option *ngFor="let comp of competencesDisponibles" [value]="comp">{{comp}}</option>
+          </select>
+          
+          <select 
+            [(ngModel)]="filtreDisponibiliteMainDOeuvre"
+            (change)="filtrerMainDOeuvreDisponible()"
+            class="filter-select">
+            <option value="">Toutes les disponibilités</option>
+            <option value="DISPONIBLE">✅ Disponible</option>
+            <option value="OCCUPE">🔄 Occupé</option>
+            <option value="EN_CONGE">🏖️ En congé</option>
+            <option value="ABSENT">🏥 Absent</option>
+          </select>
+          
+          <select 
+            [(ngModel)]="filtreHabilitationMainDOeuvre"
+            (change)="filtrerMainDOeuvreDisponible()"
+            class="filter-select">
+            <option value="">Toutes les habilitations</option>
+            <option *ngFor="let hab of habilitationsDisponibles" [value]="hab">{{hab}}</option>
+          </select>
+        </div>
+
+        <!-- Sélection multiple -->
+        <div *ngIf="mainDOeuvreListeFiltree.length > 0" class="selection-multiple-actions">
+          <button 
+            class="btn-primary"
+            (click)="affecterSelectionMultiple()"
+            [disabled]="selectedMainDOeuvreIds.length === 0">
+            ➕ Affecter {{selectedMainDOeuvreIds.length > 0 ? '(' + selectedMainDOeuvreIds.length + ')' : ''}} sélectionné(s)
+          </button>
+          <button 
+            class="btn-secondary"
+            (click)="selectedMainDOeuvreIds = []"
+            *ngIf="selectedMainDOeuvreIds.length > 0">
+            ✕ Tout désélectionner
+          </button>
+        </div>
+
+        <!-- Liste des membres disponibles -->
+        <div *ngIf="mainDOeuvreListeFiltree.length > 0" class="main-doeuvre-available">
+          <div *ngFor="let md of mainDOeuvreListeFiltree" 
+               class="main-doeuvre-card-available"
+               [class.selected]="isSelected(md.id)">
+            <div class="card-content">
+              <!-- Checkbox pour sélection multiple -->
+              <div class="selection-checkbox">
+                <input 
+                  type="checkbox"
+                  [checked]="isSelected(md.id)"
+                  (change)="toggleSelectionMainDOeuvre(md.id)"
+                  [attr.aria-label]="'Sélectionner ' + md.nom + ' ' + md.prenom">
+              </div>
+              <div class="card-header-main">
+                <div>
+                  <h4>{{md.nom}} {{md.prenom || ''}}</h4>
+                  <p class="id-interne">ID Interne: #{{md.id}}</p>
+                </div>
+                <span class="badge-disponibilite status-disponible">
+                  {{getDisponibiliteLabel(md.disponibilite)}}
+                </span>
+              </div>
+              
+              <div class="card-details">
+                <div class="detail-item" *ngIf="md.matricule">
+                  <strong>Matricule:</strong> {{md.matricule}}
+                </div>
+                <div class="detail-item" *ngIf="md.metier">
+                  <strong>Métier:</strong> {{md.metier}}
+                </div>
+                
+                <div class="detail-item" *ngIf="md.competences && md.competences.length > 0">
+                  <strong>Compétences:</strong>
+                  <div class="tags-list">
+                    <span *ngFor="let comp of md.competences" class="tag-competence">{{comp}}</span>
+                  </div>
+                </div>
+                
+                <div class="detail-item" *ngIf="md.habilitations && md.habilitations.length > 0">
+                  <strong>Habilitations:</strong>
+                  <div class="tags-list">
+                    <span *ngFor="let hab of md.habilitations" class="tag-habilitation">{{hab}}</span>
+                  </div>
+                </div>
+
+                <!-- Vérifications automatiques -->
+                <div class="verifications-auto">
+                  <div class="check-item" [class.valid]="md.disponibilite === 'DISPONIBLE'">
+                    <span *ngIf="md.disponibilite === 'DISPONIBLE'">✅</span>
+                    <span *ngIf="md.disponibilite !== 'DISPONIBLE'">❌</span>
+                    Disponibilité: {{getDisponibiliteLabel(md.disponibilite)}}
+                  </div>
+                  <div class="check-item valid" *ngIf="md.competences && md.competences.length > 0">
+                    ✅ Compétences vérifiées
+                  </div>
+                  <div class="check-item valid" *ngIf="md.habilitations && md.habilitations.length > 0">
+                    ✅ Habilitations vérifiées
+                  </div>
+                  <div class="check-item valid">
+                    ✅ Pas de conflit d'horaires
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-actions-main-doeuvre">
+              <button 
+                class="btn-secondary btn-calendar" 
+                (click)="showCalendarForMainDOeuvre(md)"
+                [attr.aria-label]="'Voir le calendrier de disponibilité de ' + md.nom">
+                📅 Calendrier
+              </button>
+              <button 
+                class="btn-primary btn-affecter" 
+                (click)="affecterMainDOeuvre(md.id)"
+                [disabled]="md.disponibilite !== 'DISPONIBLE'"
+                [attr.aria-label]="'Affecter ' + md.nom + ' ' + md.prenom + ' à cette intervention'">
+                ➕ Affecter
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="mainDOeuvreListeFiltree.length === 0" class="empty-main-doeuvre">
+          <div class="empty-icon">🔍</div>
+          <p>Aucune main-d'œuvre disponible correspondant aux critères</p>
+          <button class="btn-secondary" (click)="creerNouvelleFiche()">
+            ➕ Créer une nouvelle fiche
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 📋 GESTION DES TÂCHES -->
+    <section class="taches-section">
+      <div class="section-header">
+        <h2>📋 Gestion des Tâches</h2>
+        <button *ngIf="isTechnicien" class="btn-primary" (click)="showCreateTache = !showCreateTache">
+          {{showCreateTache ? '✕ Annuler' : '➕ Créer une tâche'}}
+        </button>
+      </div>
+
+      <!-- Formulaire de création de tâche (uniquement pour technicien) -->
+      <div *ngIf="showCreateTache && isTechnicien" class="create-tache-form">
+        <h3>Nouvelle tâche</h3>
+        <div class="form-group">
+          <label>Libellé *</label>
+          <input type="text" [(ngModel)]="nouvelleTache.libelle" placeholder="Ex: Réparation du système électrique">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea [(ngModel)]="nouvelleTache.description" placeholder="Description détaillée de la tâche..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Assigner immédiatement à</label>
+          <select [(ngModel)]="nouvelleTache.mainDOeuvreId">
+            <option [value]="undefined">Non assignée (assigner plus tard)</option>
+            <option *ngFor="let md of mainDOeuvreAffectee" [value]="md.id">
+              {{md.nom}} {{md.prenom || ''}}
+            </option>
+          </select>
+        </div>
+        <button class="btn-success" (click)="creerTache()">💾 Créer la tâche</button>
+      </div>
+
+      <!-- Liste des tâches -->
+      <div class="taches-list">
+        <div *ngIf="taches.length === 0" class="empty-taches">
+          <p>📭 Aucune tâche créée pour cette intervention</p>
+          <p class="hint">Créez des tâches pour diviser le travail et assigner chaque tâche à une main-d'œuvre spécifique.</p>
+        </div>
+
+        <div *ngFor="let tache of taches" class="tache-card" [class]="getEtatTacheClass(tache.etat)">
+          <div class="tache-header">
+            <div class="tache-title">
+              <span class="tache-ordre">#{{tache.ordre || tache.id}}</span>
+              <h3>{{tache.libelle}}</h3>
+            </div>
+            <span class="badge-etat" [class]="getEtatTacheClass(tache.etat)">
+              {{getEtatTacheLabel(tache.etat)}}
+            </span>
+          </div>
+
+          <div class="tache-body" *ngIf="tache.description">
+            <p>{{tache.description}}</p>
+          </div>
+
+          <div class="tache-info">
+            <div class="info-item">
+              <strong>Assignée à:</strong>
+              <span>{{getMainDOeuvreName(tache.mainDOeuvreId)}}</span>
+            </div>
+            <div class="info-item" *ngIf="tache.dateDebut">
+              <strong>Débutée le:</strong>
+              <span>{{tache.dateDebut | date:'dd/MM/yyyy HH:mm'}}</span>
+            </div>
+            <div class="info-item" *ngIf="tache.dateFin">
+              <strong>Terminée le:</strong>
+              <span>{{tache.dateFin | date:'dd/MM/yyyy HH:mm'}}</span>
+            </div>
+            <div class="info-item" *ngIf="tache.tempsPasseMinutes">
+              <strong>Temps passé:</strong>
+              <span>{{tache.tempsPasseMinutes}} minutes</span>
+            </div>
+            <div class="info-item" *ngIf="tache.commentaireMainDOeuvre">
+              <strong>Commentaire main-d'œuvre:</strong>
+              <p>{{tache.commentaireMainDOeuvre}}</p>
+            </div>
+            <div class="info-item" *ngIf="tache.commentaireTechnicien">
+              <strong>Commentaire technicien:</strong>
+              <p>{{tache.commentaireTechnicien}}</p>
+            </div>
+          </div>
+
+          <div class="tache-actions">
+            <!-- Assigner si non assignée (uniquement pour technicien) -->
+            <div *ngIf="!tache.mainDOeuvreId && isTechnicien" class="assign-action">
+              <label>Assigner à:</label>
+              <select 
+                *ngIf="mainDOeuvreAffectee.length > 0"
+                [value]="getSelectedMainDOeuvre(tache.id) || ''"
+                (change)="setSelectedMainDOeuvre(tache.id, +$any($event.target).value || undefined)">
+                <option value="">Sélectionner...</option>
+                <option *ngFor="let md of mainDOeuvreAffectee" [value]="md.id">
+                  {{md.nom}} {{md.prenom || ''}}
+                </option>
+              </select>
+              <p *ngIf="mainDOeuvreAffectee.length === 0" class="warning-text">
+                ⚠️ Aucune main-d'œuvre affectée à cette intervention. Veuillez d'abord affecter une main-d'œuvre dans la section ci-dessus.
+              </p>
+              <button 
+                *ngIf="mainDOeuvreAffectee.length > 0"
+                class="btn-primary btn-small" 
+                (click)="assignerTache(tache)"
+                [disabled]="!getSelectedMainDOeuvre(tache.id)">
+                Assigner
+              </button>
+            </div>
+
+            <!-- Vérifier si terminée (uniquement pour technicien) -->
+            <button 
+              *ngIf="tache.etat === 'TERMINEE' && !tache.verifiee && isTechnicien" 
+              class="btn-success"
+              (click)="ouvrirVerification(tache)">
+              ✓ Vérifier
+            </button>
+
+            <!-- Réassigner si à refaire (uniquement pour technicien) -->
+            <div *ngIf="tache.etat === 'A_FAIRE' && tache.verifiee === false && tache.mainDOeuvreId && isTechnicien" class="reassign-action">
+              <p class="warning-text">⚠️ Tâche à refaire</p>
+              <button class="btn-secondary btn-small" (click)="assignerTache(tache, tache.mainDOeuvreId!)">
+                Réassigner
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal de vérification -->
+      <div *ngIf="selectedTacheForVerify" class="modal-verification">
+        <div class="modal-content">
+          <h3>Vérifier la tâche: {{selectedTacheForVerify.libelle}}</h3>
+          <div class="form-group">
+            <label>
+              <input type="radio" [(ngModel)]="verificationValidee" [value]="true">
+              ✅ Valider la tâche
+            </label>
+            <label>
+              <input type="radio" [(ngModel)]="verificationValidee" [value]="false">
+              ❌ Demander à refaire
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Commentaire</label>
+            <textarea [(ngModel)]="verificationComment" placeholder="Commentaire de vérification..."></textarea>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-secondary" (click)="selectedTacheForVerify = null">Annuler</button>
+            <button class="btn-success" (click)="verifierTache()">Valider</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bouton terminer intervention (uniquement pour technicien) -->
+      <div class="terminer-intervention-section" *ngIf="peutTerminerIntervention() && isTechnicien">
+        <div class="info-box">
+          <p>✅ Toutes les tâches sont vérifiées. Vous pouvez maintenant terminer l'intervention.</p>
+        </div>
+        <button class="btn-success btn-large" (click)="terminerIntervention()">
+          ✅ Terminer l'intervention
+        </button>
+      </div>
+    </section>
+
+    <!-- Photos et commentaires (uniquement pour technicien) -->
+    <section class="photos-section" *ngIf="isTechnicien">
+      <h2>Photos</h2>
+      <input type="file" 
+             multiple 
+             accept="image/*" 
+             (change)="onFileSelected($event)">
+      <button class="btn-primary" (click)="ajouterPhotos()">Ajouter photos</button>
+    </section>
+
+    <section class="commentaires-section" *ngIf="isTechnicien">
+      <h2>Commentaires</h2>
+      <div *ngIf="intervention.commentaire" class="commentaire-existant">
+        <p>{{intervention.commentaire}}</p>
+      </div>
+      <textarea [(ngModel)]="nouveauCommentaire" 
+                placeholder="Ajouter un commentaire..."></textarea>
+      <button class="btn-primary" (click)="ajouterCommentaire()">Ajouter</button>
+    </section>
+  </div>
+</div>
+

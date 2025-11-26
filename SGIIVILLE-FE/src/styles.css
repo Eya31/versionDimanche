@@ -1,1 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Import des variables CSS pour le design system technicien */
+@import url('./app/styles/technicien-variables.css');

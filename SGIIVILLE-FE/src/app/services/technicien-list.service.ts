@@ -9,7 +9,7 @@ import { Technicien } from '../models/technicien.model';
   providedIn: 'root'
 })
 export class TechnicienListService {
-  private apiUrl = `${environment.apiUrl}/api/chef/techniciens`; // BON CHEMIN
+  private apiUrl = `${environment.apiUrl}/chef/techniciens`; // Correction: environment.apiUrl contient déjà /api
 
   constructor(private http: HttpClient) {}
 

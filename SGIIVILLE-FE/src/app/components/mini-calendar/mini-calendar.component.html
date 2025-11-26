@@ -1,0 +1,85 @@
+<!-- ============================================
+     MINI CALENDRIER - COMPOSANT RÉUTILISABLE
+     ============================================ -->
+
+<div class="mini-calendar">
+  <!-- HEADER -->
+  <div class="calendar-header">
+    <button class="nav-btn" (click)="previousMonth()" aria-label="Mois précédent">‹</button>
+    <h3 class="month-year">{{ getMonthYear() }}</h3>
+    <button class="nav-btn" (click)="nextMonth()" aria-label="Mois suivant">›</button>
+    <button class="today-btn" (click)="goToToday()">Aujourd'hui</button>
+  </div>
+
+  <!-- JOURS DE LA SEMAINE -->
+  <div class="weekdays">
+    <div *ngFor="let day of weekDays" class="weekday">{{ day }}</div>
+  </div>
+
+  <!-- GRILLE DU CALENDRIER -->
+  <div class="calendar-grid">
+    <div 
+      *ngFor="let day of calendarDays" 
+      class="day-cell"
+      [class.other-month]="!day.isCurrentMonth"
+      [class.today]="day.isToday"
+      [class.selected]="day.isSelected"
+      [class.has-interventions]="day.interventions.length > 0"
+      (click)="selectDate(day)">
+      
+      <div class="day-number">{{ day.date.getDate() }}</div>
+      
+      <!-- INDICATEURS D'INTERVENTIONS -->
+      <div class="intervention-indicators" *ngIf="day.interventions.length > 0">
+        <div 
+          *ngFor="let intervention of day.interventions.slice(0, 3)"
+          class="indicator-dot"
+          [style.background-color]="getPriorityColor(intervention.priorite)"
+          [title]="'Intervention #' + intervention.id + ' - ' + (intervention.priorite || 'Normale')"
+          (click)="selectIntervention(intervention, $event)">
+        </div>
+        <div 
+          *ngIf="day.interventions.length > 3" 
+          class="more-indicator"
+          [title]="'+' + (day.interventions.length - 3) + ' autres'">
+          +{{ day.interventions.length - 3 }}
+        </div>
+      </div>
+
+      <!-- TOOLTIP AU SURVOL -->
+      <div class="day-tooltip" *ngIf="day.interventions.length > 0">
+        <div class="tooltip-content">
+          <strong>{{ day.interventions.length }} intervention(s)</strong>
+          <div *ngFor="let intervention of day.interventions.slice(0, 5)" class="tooltip-item">
+            <span class="tooltip-dot" [style.background-color]="getPriorityColor(intervention.priorite)"></span>
+            <span>#{{ intervention.id }} - {{ intervention.priorite || 'Normale' }}</span>
+          </div>
+          <div *ngIf="day.interventions.length > 5" class="tooltip-more">
+            +{{ day.interventions.length - 5 }} autres
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LÉGENDE -->
+  <div class="legend">
+    <div class="legend-item">
+      <span class="legend-dot" style="background-color: #F44336;"></span>
+      <span>Urgente</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-dot" style="background-color: #FF9800;"></span>
+      <span>Haute</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-dot" style="background-color: #2196F3;"></span>
+      <span>Moyenne</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-dot" style="background-color: #4CAF50;"></span>
+      <span>Basse</span>
+    </div>
+  </div>
+</div>
+

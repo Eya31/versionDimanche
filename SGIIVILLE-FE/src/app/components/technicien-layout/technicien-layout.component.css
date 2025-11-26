@@ -1,0 +1,430 @@
+/* ============================================
+   LAYOUT COMMUN TECHNICIEN - DESIGN SYSTEM
+   ============================================ */
+
+:host {
+  --primary-50: #E3F2FD;
+  --primary-100: #BBDEFB;
+  --primary-500: #2196F3;
+  --primary-600: #1976D2;
+  --primary-700: #1565C0;
+  --secondary-500: #FF9800;
+  --success-500: #4CAF50;
+  --error-500: #F44336;
+  --warning-500: #FFC107;
+  --neutral-50: #FAFAFA;
+  --neutral-100: #F5F5F5;
+  --neutral-200: #EEEEEE;
+  --neutral-300: #E0E0E0;
+  --neutral-500: #9E9E9E;
+  --neutral-700: #616161;
+  --neutral-900: #212121;
+  --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.technicien-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: var(--font-family);
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.technicien-header {
+  background: white;
+  box-shadow: var(--shadow-lg);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 3px solid var(--primary-500);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.role-badge {
+  padding: 4px 12px;
+  background: var(--primary-500);
+  color: white;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+
+.main-nav {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--neutral-700);
+  font-weight: 500;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.nav-item:hover {
+  background: var(--primary-50);
+  color: var(--primary-600);
+}
+
+.nav-item.active {
+  background: var(--primary-500);
+  color: white;
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: var(--primary-700);
+  border-radius: 2px 2px 0 0;
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+}
+
+.nav-label {
+  font-size: 0.9375rem;
+}
+
+/* ============================================
+   HEADER RIGHT
+   ============================================ */
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* ============================================
+   NOTIFICATIONS
+   ============================================ */
+
+.notification-container {
+  position: relative;
+}
+
+.notification-bell {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-bell:hover {
+  background: var(--neutral-100);
+}
+
+.notification-bell.has-unread {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.bell-icon {
+  font-size: 1.5rem;
+}
+
+.badge-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--error-500);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+  border: 2px solid white;
+}
+
+.notifications-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: 400px;
+  max-width: 90vw;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  z-index: 1001;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 2px solid var(--neutral-200);
+}
+
+.dropdown-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--neutral-900);
+}
+
+.unread-count {
+  font-size: 0.875rem;
+  color: var(--primary-600);
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--neutral-500);
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.close-btn:hover {
+  background: var(--neutral-100);
+  color: var(--neutral-900);
+}
+
+.notifications-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.empty-notifications {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--neutral-500);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.5;
+}
+
+.notification-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--neutral-200);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.notification-item:hover {
+  background: var(--neutral-50);
+}
+
+.notification-item.unread {
+  background: var(--primary-50);
+  border-left: 4px solid var(--primary-500);
+}
+
+.notif-icon {
+  position: relative;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.unread-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: var(--error-500);
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.notif-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-message {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9375rem;
+  color: var(--neutral-900);
+  line-height: 1.4;
+}
+
+.notif-time {
+  font-size: 0.75rem;
+  color: var(--neutral-500);
+}
+
+/* ============================================
+   USER INFO
+   ============================================ */
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-name {
+  font-weight: 500;
+  color: var(--neutral-900);
+  font-size: 0.9375rem;
+}
+
+.btn-logout {
+  padding: 0.5rem 1rem;
+  background: var(--error-500);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-size: 0.875rem;
+}
+
+.btn-logout:hover {
+  background: var(--error-600, #E53935);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   CONTENU PRINCIPAL
+   ============================================ */
+
+.technicien-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .technicien-header {
+    flex-wrap: wrap;
+    padding: 1rem;
+  }
+
+  .main-nav {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--neutral-200);
+  }
+
+  .nav-label {
+    display: none;
+  }
+
+  .nav-item {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .notifications-dropdown {
+    width: calc(100vw - 2rem);
+    right: -1rem;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .technicien-content {
+    padding: 1rem;
+  }
+}
+

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Interventions xmlns="http://example.com/gestion-interventions">
-                                                                        
+                                                                                                                                            
 
     
     
@@ -10,8 +10,42 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <Intervention>
-                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -20,7 +54,24 @@
         
         
         <id>1</id>
-                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -29,7 +80,24 @@
         
         
         <priorite>PLANIFIEE</priorite>
-                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -38,7 +106,24 @@
         
         
         <etat>EN_ATTENTE</etat>
-                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -47,7 +132,24 @@
         
         
         <datePlanifiee>2025-11-28</datePlanifiee>
-                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -56,7 +158,24 @@
         
         
         <budget>800.00</budget>
-                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -65,7 +184,24 @@
         
         
         <technicienId>0</technicienId>
-                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -74,7 +210,24 @@
         
         
         <demandeId>9</demandeId>
-                                                                    
+                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -83,7 +236,1872 @@
     
     
     </Intervention>
-                                
+                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>2</id>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <demandeId>15</demandeId>
+                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                                                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>3</id>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <demandeId>19</demandeId>
+                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>4</id>
+                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <demandeId>20</demandeId>
+                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>5</id>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <demandeId>18</demandeId>
+                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>6</id>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <demandeId>17</demandeId>
+                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>7</id>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <demandeId>16</demandeId>
+                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>8</id>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <demandeId>21</demandeId>
+                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>9</id>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-28</datePlanifiee>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <demandeId>22</demandeId>
+                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>10</id>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>EN_ATTENTE</etat>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-29</datePlanifiee>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <technicienId>0</technicienId>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <demandeId>23</demandeId>
+                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                                                                
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Intervention>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>11</id>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>EN_COURS</etat>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-11-22</datePlanifiee>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateDebut>2025-11-22T12:02:51.674497100</dateDebut>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <budget>500</budget>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <technicienId>17</technicienId>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <demandeId>24</demandeId>
+                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Intervention>
+                                                    
+    
+    
+    
+    
+    
+                
+
+
+
+
     
     
     
@@ -99,7 +2117,7 @@
         
         
         
-        <id>2</id>
+        <id>12</id>
                                                                 
         
         
@@ -115,7 +2133,7 @@
         
         
         
-        <etat>EN_ATTENTE</etat>
+        <etat>EN_COURS</etat>
                                                                 
         
         
@@ -123,7 +2141,7 @@
         
         
         
-        <datePlanifiee>2025-11-28</datePlanifiee>
+        <datePlanifiee>2025-11-22</datePlanifiee>
                                                                 
         
         
@@ -131,7 +2149,7 @@
         
         
         
-        <budget>800.00</budget>
+        <dateDebut>2025-11-22T12:27:32.083776200</dateDebut>
                                                                 
         
         
@@ -139,7 +2157,7 @@
         
         
         
-        <technicienId>0</technicienId>
+        <budget>500</budget>
                                                                 
         
         
@@ -147,7 +2165,15 @@
         
         
         
-        <demandeId>15</demandeId>
+        <technicienId>17</technicienId>
+                                                                
+        
+        
+        
+        
+        
+        
+        <demandeId>25</demandeId>
                                                             
     
     
@@ -158,261 +2184,28 @@
     </Intervention>
                             
     
+
     
+
     
+
     
+
     
+
     
+
     <Intervention>
-                                                        
-        
-        
-        
-        
-        
-        <id>3</id>
-                                                        
-        
-        
-        
-        
-        
-        <priorite>PLANIFIEE</priorite>
-                                                        
-        
-        
-        
-        
-        
-        <etat>EN_ATTENTE</etat>
-                                                        
-        
-        
-        
-        
-        
-        <datePlanifiee>2025-11-28</datePlanifiee>
-                                                        
-        
-        
-        
-        
-        
-        <budget>800.00</budget>
-                                                        
-        
-        
-        
-        
-        
-        <technicienId>0</technicienId>
-                                                        
-        
-        
-        
-        
-        
-        <demandeId>19</demandeId>
-                                                    
-    
-    
-    
-    
-    
-    </Intervention>
-                        
-    
-    
-    
-    
-    
-    <Intervention>
-                                                
-        
-        
-        
-        
-        <id>4</id>
-                                                
-        
-        
-        
-        
-        <priorite>PLANIFIEE</priorite>
-                                                
-        
-        
-        
-        
-        <etat>EN_ATTENTE</etat>
-                                                
-        
-        
-        
-        
-        <datePlanifiee>2025-11-28</datePlanifiee>
-                                                
-        
-        
-        
-        
-        <budget>800.00</budget>
-                                                
-        
-        
-        
-        
-        <technicienId>0</technicienId>
-                                                
-        
-        
-        
-        
-        <demandeId>20</demandeId>
-                                            
-    
-    
-    
-    
-    </Intervention>
-                    
-    
-    
-    
-    
-    <Intervention>
-                                        
-        
-        
-        
-        <id>5</id>
-                                        
-        
-        
-        
-        <priorite>PLANIFIEE</priorite>
-                                        
-        
-        
-        
-        <etat>EN_ATTENTE</etat>
-                                        
-        
-        
-        
-        <datePlanifiee>2025-11-28</datePlanifiee>
-                                        
-        
-        
-        
-        <budget>800.00</budget>
-                                        
-        
-        
-        
-        <technicienId>0</technicienId>
-                                        
-        
-        
-        
-        <demandeId>18</demandeId>
-                                    
-    
-    
-    
-    </Intervention>
-                
-    
-    
-    
-    <Intervention>
-                                
-        
-        
-        <id>6</id>
-                                
-        
-        
-        <priorite>PLANIFIEE</priorite>
-                                
-        
-        
-        <etat>EN_ATTENTE</etat>
-                                
-        
-        
-        <datePlanifiee>2025-11-28</datePlanifiee>
-                                
-        
-        
-        <budget>800.00</budget>
-                                
-        
-        
-        <technicienId>0</technicienId>
-                                
-        
-        
-        <demandeId>17</demandeId>
-                            
-    
-    
-    </Intervention>
-            
-    
-    
-    <Intervention>
-                        
-        
-        <id>7</id>
-                        
-        
-        <priorite>PLANIFIEE</priorite>
-                        
-        
-        <etat>EN_ATTENTE</etat>
-                        
-        
-        <datePlanifiee>2025-11-28</datePlanifiee>
-                        
-        
-        <budget>800.00</budget>
-                        
-        
-        <technicienId>0</technicienId>
-                        
-        
-        <demandeId>16</demandeId>
-                    
-    
-    </Intervention>
-        
-    
-    <Intervention>
-                
-        <id>8</id>
-                
-        <priorite>PLANIFIEE</priorite>
-                
-        <etat>EN_ATTENTE</etat>
-                
-        <datePlanifiee>2025-11-28</datePlanifiee>
-                
-        <budget>800.00</budget>
-                
-        <technicienId>0</technicienId>
-                
-        <demandeId>21</demandeId>
-            
-    </Intervention>
-    
-    <Intervention>
-        <id>9</id>
+        <id>13</id>
         <priorite>PLANIFIEE</priorite>
         <etat>EN_ATTENTE</etat>
-        <datePlanifiee>2025-11-28</datePlanifiee>
-        <budget>800.00</budget>
-        <technicienId>0</technicienId>
-        <demandeId>22</demandeId>
+        <datePlanifiee>2025-11-22</datePlanifiee>
+        <budget>500</budget>
+        <technicienId>17</technicienId>
+        <demandeId>26</demandeId>
+        <mainDOeuvreIds>
+            <id>3</id>
+            <id>2</id>
+        </mainDOeuvreIds>
     </Intervention>
 </Interventions>

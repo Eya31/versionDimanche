@@ -44,7 +44,7 @@ export class DemandeService {
   }
 
   /** --------------------------------------------
-   * PLANIFIER UNE INTERVENTION
+   * PLANIFIER UNE INTERVENTION (SIMPLE)
    * priorite = 'PLANIFIEE' | 'URGENTE'
    * --------------------------------------------- */
   planifierIntervention(demandeId: number): Observable<any> {
@@ -56,6 +56,19 @@ export class DemandeService {
     })
   );
 }
+
+  /** --------------------------------------------
+   * PLANIFIER UNE INTERVENTION COMPLÈTE
+   * Avec technicien, ressources, détails
+   * --------------------------------------------- */
+  planifierInterventionComplete(request: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/planifier-complete`, request).pipe(
+      catchError(error => {
+        console.error('Erreur API planification complète:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 
   /** --------------------------------------------
    * UPLOAD DE PHOTOS POUR UNE DEMANDE EXISTANTE

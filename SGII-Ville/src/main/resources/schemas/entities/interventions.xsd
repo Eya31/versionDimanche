@@ -5,15 +5,50 @@
            elementFormDefault="qualified">
 
   <xs:include schemaLocation="../common/typesBase.xsd"/>
+  <xs:include schemaLocation="../common/geo.xsd"/>
 
-  <!-- Intervention -->
+  <!-- Intervention (1 Demande -> 0..1 Intervention) -->
   <xs:complexType name="InterventionType">
     <xs:sequence>
       <xs:element name="id" type="xs:int"/>
+      <xs:element name="demandeId" type="xs:int"/>
+      <xs:element name="technicienId" type="xs:int" minOccurs="0"/>
+      <xs:element name="chefServiceId" type="xs:int" minOccurs="0"/>
       <xs:element name="priorite" type="tns:PrioriteType"/>
       <xs:element name="etat" type="tns:EtatInterventionType"/>
       <xs:element name="datePlanifiee" type="xs:date"/>
+      <xs:element name="dateDebut" type="xs:date" minOccurs="0"/>
+      <xs:element name="dateFin" type="xs:date" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:element name="budget" type="xs:decimal"/>
+      <xs:element name="localisation" type="tns:GeoPointType" minOccurs="0"/>
+      
+      <!-- Relation * Intervention -> * Equipements -->
+      <xs:element name="equipementIds" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="equipementId" type="xs:int" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <!-- Relation * Intervention -> * RessourcesMaterielles -->
+      <xs:element name="ressourceIds" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ressourceId" type="xs:int" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <!-- Relation * Intervention -> * MainDOeuvre -->
+      <xs:element name="ouvrierIds" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ouvrierId" type="xs:int" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
 

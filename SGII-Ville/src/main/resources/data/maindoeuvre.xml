@@ -1,3 +1,435 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <MainDOeuvre xmlns="http://example.com/gestion-interventions">
+                                                                
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <MainDOeuvre>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>1</id>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>salh</nom>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <prenom>ali</prenom>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <matricule>00000</matricule>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <cin>00000000</cin>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>55555555555555</telephone>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>salah@gmail.com</email>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <metier>electricien</metier>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <disponibilite>ARCHIVE</disponibilite>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <active>false</active>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <competences>
+                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Électricité</competence>
+                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Hydraulique</competence>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </competences>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <conges>
+                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <conge>2025-11-23</conge>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </conges>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <absences>
+                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <absence>2025-11-19</absence>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </absences>
+                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </MainDOeuvre>
+                                                        
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                                        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <MainDOeuvre>
+                        
+        
+        <id>3</id>
+                        
+        
+        <nom>foulen</nom>
+                        
+        
+        <prenom>ben falten</prenom>
+                        
+        
+        <matricule>00000</matricule>
+                        
+        
+        <cin>00000000</cin>
+                        
+        
+        <telephone>55555555555555</telephone>
+                        
+        
+        <email>foulen@gmail.com</email>
+                        
+        
+        <metier>electricien</metier>
+                        
+        
+        <disponibilite>DISPONIBLE</disponibilite>
+                        
+        
+        <active>true</active>
+                        
+        
+        <historiqueInterventions>
+                                    
+            
+            <interventionId>13</interventionId>
+                                
+        
+        </historiqueInterventions>
+                    
+    
+    </MainDOeuvre>
+        
+    
+
+    <MainDOeuvre>
+        <id>2</id>
+        <nom>salh</nom>
+        <prenom>ali</prenom>
+        <matricule>00000</matricule>
+        <cin>00000000</cin>
+        <telephone>55555555555555</telephone>
+        <email>salh@gmail.com</email>
+        <metier>electricien</metier>
+        <disponibilite>OCCUPE</disponibilite>
+        <active>true</active>
+        <habilitations>
+            <habilitation>Électrique</habilitation>
+        </habilitations>
+        <historiqueInterventions>
+            <interventionId>13</interventionId>
+        </historiqueInterventions>
+    </MainDOeuvre>
 </MainDOeuvre>

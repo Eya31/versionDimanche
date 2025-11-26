@@ -1,11 +1,71 @@
 <div class="chef-container">
-
-  <!-- Header Moderne -->
-  <header class="header">
-    <div class="header-content">
-      <h1>🎯 Espace Chef de Service</h1>
-      <p class="subtitle">Gestion intelligente des interventions urbaines • Tunis 2025</p>
+  
+  <!-- Sidebar Menu pour Actions Rapides -->
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+    <button class="sidebar-toggle" (click)="toggleSidebar()">
+      {{ sidebarCollapsed ? '☰' : '✕' }}
+    </button>
+    
+    <div class="sidebar-content" *ngIf="!sidebarCollapsed">
+      <h3 ></h3>
+      
+      <nav class="sidebar-nav">
+        <button class="sidebar-item" (click)="refreshAll()">
+          <span class="sidebar-icon">↻</span>
+          <span class="sidebar-label">Actualiser</span>
+        </button>
+        
+        <button class="sidebar-item" (click)="openMapModal()">
+          <span class="sidebar-icon">📍</span>
+          <span class="sidebar-label">Carte demandes</span>
+          <span class="sidebar-badge">{{ demandesPendantes }}</span>
+        </button>
+        
+        <button class="sidebar-item" (click)="openMapInterventionsModal()">
+          <span class="sidebar-icon">🌍</span>
+          <span class="sidebar-label">Carte interventions</span>
+          <span class="sidebar-badge">{{ interventionsEnCoursCount }}</span>
+        </button>
+        
+        <button class="sidebar-item" (click)="openTechniciensModal()">
+          <span class="sidebar-icon">👤</span>
+          <span class="sidebar-label">Techniciens</span>
+          <span class="sidebar-badge">{{ techniciens.length }}</span>
+        </button>
+        
+        <button class="sidebar-item" (click)="openEquipementsModal()">
+          <span class="sidebar-icon">⚙️</span>
+          <span class="sidebar-label">Équipements</span>
+          <span class="sidebar-badge">{{ equipements.length }}</span>
+        </button>
+        
+        <button class="sidebar-item" (click)="openInterventionsModal()">
+          <span class="sidebar-icon">⚡</span>
+          <span class="sidebar-label">Interventions</span>
+          <span class="sidebar-badge">{{ interventions.length }}</span>
+        </button>
+        
+        <button class="sidebar-item" (click)="openRessourcesModal()">
+          <span class="sidebar-icon">📊</span>
+          <span class="sidebar-label">Matériels</span>
+        </button>
+        
+        <button class="sidebar-item" (click)="exportReport()">
+          <span class="sidebar-icon">⬇️</span>
+          <span class="sidebar-label">Exporter</span>
+        </button>
+      </nav>
     </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content" [class.sidebar-open]="sidebarCollapsed">
+    <!-- Header Moderne -->
+    <header class="header">
+      <div class="header-content">
+        <h1>🎯 Espace Chef de Service</h1>
+        <p class="subtitle">Gestion intelligente des interventions urbaines • Tunis 2025</p>
+      </div>
     
     <!-- Icône notifications -->
     <div class="notification-bell" (click)="toggleNotificationsDropdown()">
@@ -71,57 +131,26 @@
     </div>
   </div>
 
-  <!-- Section Filtres Modernisée -->
-  <div class="filters-section">
-    <h3>📊 Filtrer les demandes</h3>
-    <div class="filter-buttons">
-      <button [class.active]="filtreActif === 'TOUS'" (click)="filtrerDemandes('TOUS')" class="filter-btn">
-        📋 Toutes ({{ demandes.length }})
-      </button>
-      <button [class.active]="filtreActif === 'NON_TRAITEES'" (click)="filtrerDemandes('NON_TRAITEES')" class="filter-btn">
-        ⏳ Non traitées ({{ demandesPendantes }})
-      </button>
-      <button [class.active]="filtreActif === 'TRAITEES'" (click)="filtrerDemandes('TRAITEES')" class="filter-btn">
-        ✅ Traitées ({{ demandesTraitees }})
-      </button>
+    <!-- Section Filtres Modernisée -->
+    <div class="filters-section">
+      <h3>📊 Filtrer les demandes</h3>
+      <div class="filter-buttons">
+        <button [class.active]="filtreActif === 'TOUS'" (click)="filtrerDemandes('TOUS')" class="filter-btn">
+          📋 Toutes ({{ demandes.length }})
+        </button>
+        <button [class.active]="filtreActif === 'NON_TRAITEES'" (click)="filtrerDemandes('NON_TRAITEES')" class="filter-btn">
+          ⏳ Non traitées ({{ demandesPendantes }})
+        </button>
+        <button [class.active]="filtreActif === 'TRAITEES'" (click)="filtrerDemandes('TRAITEES')" class="filter-btn">
+          ✅ Traitées ({{ demandesTraitees }})
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- Actions Rapides Organisées -->
-  <div class="quick-actions">
-    <h3>⚡ Actions rapides</h3>
-    <div class="actions-grid">
-      <button class="action-btn primary" (click)="refreshAll()">
-        🔄 Actualiser
-      </button>
-      <button class="action-btn danger" (click)="openMapModal()">
-        🗺️ Carte des demandes ({{ demandesPendantes }})
-      </button>
-      <button class="action-btn info" (click)="openMapInterventionsModal()">
-        🗺️ Carte interventions ({{ interventionsEnCoursCount }})
-      </button>
-      <button class="action-btn warning" (click)="openTechniciensModal()">
-        👷 Techniciens ({{ techniciens.length }})
-      </button>
-      <button class="action-btn success" (click)="openEquipementsModal()">
-        🛠️ Équipements ({{ equipements.length }})
-      </button>
-      <button class="action-btn info" (click)="openInterventionsModal()">
-        🔧 Interventions ({{ interventions.length }})
-      </button>
-      <button class="action-btn warning" (click)="openRessourcesModal()">
-        📦 Matériels
-      </button>
-      <button class="action-btn secondary" (click)="exportReport()">
-        📥 Exporter
-      </button>
-    </div>
-  </div>
-
-  <!-- Tableau des Demandes Modernisé -->
-  <section class="section">
-    <h3>📋 Demandes citoyennes <span style="color: #667eea; font-weight: 700;">({{ demandesFiltrees.length }})</span></h3>
-    <div class="table-container">
+      <!-- Tableau des Demandes Modernisé -->
+    <section class="section">
+      <h3>📋 Demandes citoyennes <span style="color: #667eea; font-weight: 700;">({{ demandesFiltrees.length }})</span></h3>
+      <div class="table-container">
       <table class="modern-table">
         <thead>
           <tr>
@@ -178,7 +207,8 @@
         </tbody>
       </table>
     </div>
-  </section>
+    </section>
+  </div><!-- Fin main-content -->
 
   <!-- MODAL TECHNICIENS -->
   <div class="modal-overlay" *ngIf="showTechniciensModal" (click)="closeModal()">
@@ -215,6 +245,119 @@
           <p>Aucun technicien trouvé</p>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL PLANIFICATION COMPLÈTE -->
+  <div class="modal-overlay" *ngIf="showPlanificationModal && selectedDemande" (click)="closePlanificationModal()">
+    <div class="modal-content planification-modal" (click)="$event.stopPropagation()" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+      <button class="close-btn" (click)="closePlanificationModal()">×</button>
+      <h2>📅 Planifier l'Intervention - Demande #{{selectedDemande.id}}</h2>
+      
+      <form>
+        <!-- Sélection Technicien -->
+        <div class="form-section">
+          <label><strong>👷 Technicien *</strong></label>
+          <select [(ngModel)]="planificationData.technicienId" name="technicienId" required>
+            <option value="">-- Sélectionner un technicien --</option>
+            <option *ngFor="let tech of techniciensDisponibles" [value]="tech.id">
+              {{tech.nom}} - {{tech.email}} 
+              <span *ngIf="tech.competences?.length">({{tech.competences.join(', ')}})</span>
+            </option>
+          </select>
+        </div>
+
+        <!-- Date et Heure -->
+        <div class="form-grid">
+          <div class="form-section">
+            <label><strong>📅 Date prévue *</strong></label>
+            <input type="date" [(ngModel)]="planificationData.datePlanifiee" name="datePlanifiee" required>
+          </div>
+          <div class="form-section">
+            <label><strong>🕐 Heure début</strong></label>
+            <input type="time" [(ngModel)]="planificationData.heureDebut" name="heureDebut">
+          </div>
+          <div class="form-section">
+            <label><strong>🕐 Heure fin</strong></label>
+            <input type="time" [(ngModel)]="planificationData.heureFin" name="heureFin">
+          </div>
+          <div class="form-section">
+            <label><strong>⏱️ Durée (minutes)</strong></label>
+            <input type="number" [(ngModel)]="planificationData.dureeMinutes" name="dureeMinutes" min="15" step="15">
+          </div>
+        </div>
+
+        <!-- Priorité et Budget -->
+        <div class="form-grid">
+          <div class="form-section">
+            <label><strong>⚡ Priorité *</strong></label>
+            <select [(ngModel)]="planificationData.priorite" name="priorite" required>
+              <option value="NORMALE">🟢 Normale</option>
+              <option value="URGENTE">🟡 Urgente</option>
+              <option value="CRITIQUE">🔴 Critique</option>
+              <option value="PLANIFIEE">📅 Planifiée</option>
+            </select>
+          </div>
+          <div class="form-section">
+            <label><strong>💰 Budget (DT) *</strong></label>
+            <input type="number" [(ngModel)]="planificationData.budget" name="budget" min="0" step="0.01" required>
+          </div>
+        </div>
+
+        <!-- Type et Description -->
+        <div class="form-section">
+          <label><strong>🏷️ Type d'intervention</strong></label>
+          <input type="text" [(ngModel)]="planificationData.typeIntervention" name="typeIntervention" 
+                 placeholder="Ex: Éclairage, Eau, Route...">
+        </div>
+
+        <div class="form-section">
+          <label><strong>📝 Description</strong></label>
+          <textarea [(ngModel)]="planificationData.description" name="description" rows="3"
+                    placeholder="Description de l'intervention..."></textarea>
+        </div>
+
+        <!-- Équipements -->
+        <div class="form-section">
+          <label><strong>🛠️ Équipements nécessaires</strong></label>
+          <div class="checkbox-list">
+            <label *ngFor="let eq of equipements" class="checkbox-item">
+              <input type="checkbox" 
+                     [checked]="planificationData.equipementIds.includes(eq.id)"
+                     (change)="toggleEquipement(eq.id)">
+              <span>{{eq.type}} - {{eq.etat}}</span>
+            </label>
+            <p *ngIf="equipements.length === 0" class="text-muted">Aucun équipement disponible</p>
+          </div>
+        </div>
+
+        <!-- Ressources -->
+        <div class="form-section">
+          <label><strong>📦 Ressources matérielles</strong></label>
+          <div class="checkbox-list">
+            <label *ngFor="let res of ressources" class="checkbox-item">
+              <input type="checkbox" 
+                     [checked]="planificationData.ressourceIds.includes(res.id)"
+                     (change)="toggleRessource(res.id)">
+              <span>{{res.designation}} (Stock: {{res.quantiteEnStock}})</span>
+            </label>
+            <p *ngIf="ressources.length === 0" class="text-muted">Aucune ressource disponible</p>
+          </div>
+        </div>
+
+        <!-- Remarques -->
+        <div class="form-section">
+          <label><strong>💬 Remarques / Instructions</strong></label>
+          <textarea [(ngModel)]="planificationData.remarques" name="remarques" rows="3"
+                    placeholder="Instructions spéciales, remarques..."></textarea>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button type="button" class="action-btn secondary" (click)="closePlanificationModal()">Annuler</button>
+          <button type="button" class="action-btn primary large" (click)="validerPlanification()">✅ Valider la Planification</button>
+        </div>
+      </form>
     </div>
   </div>
 

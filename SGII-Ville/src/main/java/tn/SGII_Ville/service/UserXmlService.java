@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
 
 import tn.SGII_Ville.entities.Administrateur;
+import tn.SGII_Ville.entities.AgentMainDOeuvre;
 import tn.SGII_Ville.entities.ChefDeService;
 import tn.SGII_Ville.entities.Citoyen;
 import tn.SGII_Ville.entities.Technicien;
@@ -226,6 +227,28 @@ public class UserXmlService {
                 yield new ChefDeService(id, nom, email, motDePasse, departement);
             }
             case "Administrateur" -> new Administrateur(id, nom, email, motDePasse);
+            case "AgentMainDOeuvre" -> {
+                String prenom = xmlService.getElementTextContent(userElement, "prenom");
+                String matricule = xmlService.getElementTextContent(userElement, "matricule");
+                String cin = xmlService.getElementTextContent(userElement, "cin");
+                String telephone = xmlService.getElementTextContent(userElement, "telephone");
+                String metier = xmlService.getElementTextContent(userElement, "metier");
+                List<String> competences = parseCompetences(userElement);
+                int mainDOeuvreId = 0;
+                try {
+                    String mainDOeuvreIdStr = xmlService.getElementTextContent(userElement, "mainDOeuvreId");
+                    if (mainDOeuvreIdStr != null && !mainDOeuvreIdStr.isEmpty()) {
+                        mainDOeuvreId = Integer.parseInt(mainDOeuvreIdStr);
+                    }
+                } catch (Exception e) {
+                    // Ignorer si non présent
+                }
+                AgentMainDOeuvre agent = new AgentMainDOeuvre(id, nom, email, motDePasse, prenom, matricule, cin, telephone);
+                agent.setMetier(metier);
+                agent.setCompetences(competences);
+                agent.setMainDOeuvreId(mainDOeuvreId);
+                yield agent;
+            }
             default -> throw new IllegalArgumentException("Type d'utilisateur inconnu: " + tagName);
         };
     }
@@ -261,7 +284,26 @@ public class UserXmlService {
         else if (utilisateur instanceof Administrateur) {
             userElement = xmlService.createElement(doc, "Administrateur");
             addBaseUserFields(doc, userElement, utilisateur);
-        } 
+        }
+        else if (utilisateur instanceof AgentMainDOeuvre agent) {
+            userElement = xmlService.createElement(doc, "AgentMainDOeuvre");
+            addBaseUserFields(doc, userElement, utilisateur);
+            xmlService.addTextElement(doc, userElement, "prenom", agent.getPrenom());
+            xmlService.addTextElement(doc, userElement, "matricule", agent.getMatricule());
+            xmlService.addTextElement(doc, userElement, "cin", agent.getCin());
+            xmlService.addTextElement(doc, userElement, "telephone", agent.getTelephone());
+            xmlService.addTextElement(doc, userElement, "metier", agent.getMetier());
+            xmlService.addTextElement(doc, userElement, "mainDOeuvreId", String.valueOf(agent.getMainDOeuvreId()));
+            
+            // Compétences
+            if (agent.getCompetences() != null && !agent.getCompetences().isEmpty()) {
+                Element competencesEl = doc.createElementNS(xmlService.getNamespaceUri(), "competences");
+                for (String comp : agent.getCompetences()) {
+                    xmlService.addTextElement(doc, competencesEl, "competence", comp);
+                }
+                userElement.appendChild(competencesEl);
+            }
+        }
         else {
             throw new IllegalArgumentException("Type d'utilisateur non supporté");
         }
@@ -281,18 +323,37 @@ public class UserXmlService {
     }
 
     /**
-     * Parse les compétences d'un technicien
+     * Parse les compétences d'un technicien depuis utilisateurs.xml
      */
     private List<String> parseCompetences(Element userElement) {
         List<String> competences = new ArrayList<>();
-        NodeList competenceNodes = userElement.getElementsByTagNameNS(
-            xmlService.getNamespaceUri(), "competences"
-        );
-        
-        for (int i = 0; i < competenceNodes.getLength(); i++) {
-            competences.add(competenceNodes.item(i).getTextContent());
+        try {
+            // Chercher l'élément <competences> qui contient les compétences
+            NodeList competencesContainers = userElement.getElementsByTagNameNS(
+                xmlService.getNamespaceUri(), "competences"
+            );
+            
+            if (competencesContainers.getLength() > 0) {
+                Element competencesContainer = (Element) competencesContainers.item(0);
+                
+                // Parcourir les enfants de <competences> pour trouver les éléments <competences> individuels
+                NodeList children = competencesContainer.getChildNodes();
+                for (int i = 0; i < children.getLength(); i++) {
+                    Node child = children.item(i);
+                    if (child.getNodeType() == Node.ELEMENT_NODE) {
+                        Element compElement = (Element) child;
+                        if ("competences".equals(compElement.getLocalName())) {
+                            String competence = compElement.getTextContent().trim();
+                            if (!competence.isEmpty()) {
+                                competences.add(competence);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        
         return competences;
     }
 
@@ -328,38 +389,37 @@ public class UserXmlService {
         return passwordEncoder.encode(rawPassword);
     }
     /**
- * Récupère TOUS les techniciens depuis techniciens.xml
- */
-public List<Technicien> findAllTechniciensFromXml() {
-    List<Technicien> techniciens = new ArrayList<>();
-    try {
-        Document doc = xmlService.loadXmlDocument("Techniciens"); // Grâce au mapping ci-dessus
-        Element root = doc.getDocumentElement();
+     * Récupère TOUS les techniciens depuis utilisateurs.xml (dynamique)
+     */
+    public List<Technicien> findAllTechniciensFromXml() {
+        List<Technicien> techniciens = new ArrayList<>();
+        try {
+            // Lire depuis utilisateurs.xml au lieu de techniciens.xml
+            Document doc = xmlService.loadXmlDocument("Utilisateurs");
+            Element root = doc.getDocumentElement();
+            
+            if (root == null) return techniciens;
 
-        NodeList nodes = root.getElementsByTagNameNS("http://example.com/gestion-interventions", "Technicien");
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Element el = (Element) nodes.item(i);
-
-            int id = Integer.parseInt(xmlService.getElementTextContent(el, "id"));
-            String nom = xmlService.getElementTextContent(el, "nom");
-            String email = xmlService.getElementTextContent(el, "email");
-
-            List<String> competences = new ArrayList<>();
-            NodeList compNodes = el.getElementsByTagNameNS("http://example.com/gestion-interventions", "competences");
-            for (int j = 0; j < compNodes.getLength(); j++) {
-                competences.add(compNodes.item(j).getTextContent().trim());
+            // Parcourir tous les éléments utilisateurs
+            NodeList children = root.getChildNodes();
+            
+            for (int i = 0; i < children.getLength(); i++) {
+                Node child = children.item(i);
+                if (child.getNodeType() == Node.ELEMENT_NODE) {
+                    Element userElement = (Element) child;
+                    
+                    // Vérifier si c'est un Technicien
+                    if ("Technicien".equals(userElement.getLocalName())) {
+                        Utilisateur user = parseUtilisateur(userElement);
+                        if (user instanceof Technicien) {
+                            techniciens.add((Technicien) user);
+                        }
+                    }
+                }
             }
-
-            boolean disponible = "true".equalsIgnoreCase(
-                xmlService.getElementTextContent(el, "disponibilite")
-            );
-
-            Technicien tech = new Technicien(id, nom, email, null, competences, disponible);
-            techniciens.add(tech);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return techniciens;
     }
-    return techniciens;
-}
 }

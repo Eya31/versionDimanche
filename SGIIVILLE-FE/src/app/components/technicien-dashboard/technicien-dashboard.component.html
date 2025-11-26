@@ -1,26 +1,263 @@
-<div class="technicien-dashboard">
-  <header>
-    <h1>Mes Interventions</h1>
-    <button class="btn-logout" (click)="logout()">Déconnexion</button>
-  </header>
+<!-- ============================================
+     DASHBOARD TECHNICIEN - DESIGN REFONDU
+     ============================================ -->
 
-  <div class="interventions-grid">
-    <div *ngFor="let intervention of interventions" class="intervention-card">
-      <h3>Intervention #{{intervention.id}}</h3>
-      <p><strong>État:</strong> {{intervention.etat}}</p>
-      <p><strong>Priorité:</strong> {{intervention.priorite}}</p>
-      <p><strong>Date:</strong> {{intervention.datePlanifiee}}</p>
-      <p><strong>Budget:</strong> {{intervention.budget}} DT</p>
-      <button *ngIf="intervention.etat === 'EN_COURS'" 
-              class="btn-success" 
-              (click)="terminer(intervention.id)">
-        Marquer comme Terminé
+<div class="technicien-dashboard">
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <h1>📊 Tableau de Bord</h1>
+      <p class="page-subtitle">Gérez vos interventions en temps réel</p>
+    </div>
+    <div class="header-actions">
+      <button 
+        class="btn-view-toggle" 
+        (click)="toggleView()"
+        [attr.aria-label]="'Basculer entre vue liste et calendrier'">
+        <span *ngIf="viewMode === 'list'">📅 Vue Calendrier</span>
+        <span *ngIf="viewMode === 'calendar'">📋 Vue Liste</span>
       </button>
-      <span *ngIf="intervention.etat === 'TERMINEE'" class="badge-completed">✓ Terminée</span>
+      <button 
+        class="btn-refresh" 
+        (click)="actualiser()"
+        [attr.aria-label]="'Actualiser'">
+        🔄 Actualiser
+      </button>
+    </div>
+  </div>
+
+  <!-- STATS CARDS - HIÉRARCHIE VISUELLE AMÉLIORÉE -->
+  <div class="stats-cards-container">
+    <div class="stat-card stat-en-attente" *ngIf="stats.enAttente > 0">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <p class="stat-value">{{ stats.enAttente }}</p>
+        <p class="stat-label">En Attente</p>
+      </div>
+      <div class="stat-trend">Nouvelles</div>
     </div>
     
-    <div *ngIf="interventions.length === 0" class="empty-state">
-      <p>Aucune intervention assignée pour le moment</p>
+    <div class="stat-card stat-en-cours" *ngIf="stats.enCours > 0">
+      <div class="stat-icon">🔧</div>
+      <div class="stat-content">
+        <p class="stat-value">{{ stats.enCours }}</p>
+        <p class="stat-label">En Cours</p>
+      </div>
+      <div class="stat-trend">Active</div>
+    </div>
+    
+    <div class="stat-card stat-terminee" *ngIf="stats.terminees > 0">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <p class="stat-value">{{ stats.terminees }}</p>
+        <p class="stat-label">Terminées</p>
+      </div>
+      <div class="stat-trend">Complétées</div>
+    </div>
+    
+    <div class="stat-card stat-suspendue" *ngIf="stats.suspendues > 0">
+      <div class="stat-icon">⏸️</div>
+      <div class="stat-content">
+        <p class="stat-value">{{ stats.suspendues }}</p>
+        <p class="stat-label">Suspendues</p>
+      </div>
+      <div class="stat-trend">En pause</div>
+    </div>
+  </div>
+
+  <!-- VUE CALENDRIER -->
+  <div *ngIf="viewMode === 'calendar'" class="calendar-section">
+    <app-mini-calendar
+      [interventions]="interventions"
+      [selectedDate]="selectedCalendarDate"
+      (dateSelected)="onDateSelected($event)"
+      (interventionClicked)="onInterventionClicked($event)">
+    </app-mini-calendar>
+    
+    <!-- INTERVENTIONS DU JOUR SÉLECTIONNÉ -->
+    <div *ngIf="selectedCalendarDate" class="selected-date-interventions">
+      <h3>Interventions du {{ selectedCalendarDate | date:'dd/MM/yyyy' }}</h3>
+      <div class="interventions-list-compact">
+        <div 
+          *ngFor="let intervention of interventionsFiltrees" 
+          class="intervention-item-compact"
+          (click)="voirDetails(intervention.id)">
+          <span class="priority-dot" [style.background-color]="getPrioriteColor(intervention.priorite)"></span>
+          <span class="intervention-id">#{{ intervention.id }}</span>
+          <span class="intervention-desc">{{ intervention.description || 'Sans description' }}</span>
+          <span class="intervention-priority">{{ getPrioriteLabel(intervention.priorite) }}</span>
+        </div>
+        <div *ngIf="interventionsFiltrees.length === 0" class="no-interventions">
+          Aucune intervention pour cette date
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTRES ET RECHERCHE - DESIGN AMÉLIORÉ -->
+  <div class="filters-section" *ngIf="viewMode === 'list'">
+    <div class="section-title">
+      <h2>🔍 Recherche et Filtres</h2>
+      <span class="results-count" *ngIf="interventionsFiltrees.length > 0">
+        {{ interventionsFiltrees.length }} résultat(s)
+      </span>
+    </div>
+    
+    <div class="filters-grid">
+      <div class="search-wrapper">
+        <input 
+          type="text" 
+          [(ngModel)]="recherche" 
+          (input)="appliquerFiltres()"
+          placeholder="Rechercher par description, ID, type..."
+          class="search-input"
+          [attr.aria-label]="'Rechercher une intervention'">
+        <span class="search-icon">🔍</span>
+      </div>
+      
+      <select 
+        [(ngModel)]="filtreEtat" 
+        (change)="loadMyInterventions()"
+        class="filter-select"
+        [attr.aria-label]="'Filtrer par état'">
+        <option value="">Tous les états</option>
+        <option value="EN_ATTENTE">⏳ En Attente</option>
+        <option value="EN_COURS">🔧 En Cours</option>
+        <option value="SUSPENDUE">⏸️ Suspendue</option>
+        <option value="TERMINEE">✅ Terminée</option>
+        <option value="REPORTEE">📅 Reportée</option>
+      </select>
+      
+      <select 
+        [(ngModel)]="filtrePriorite" 
+        (change)="loadMyInterventions()"
+        class="filter-select"
+        [attr.aria-label]="'Filtrer par priorité'">
+        <option value="">Toutes les priorités</option>
+        <option value="URGENTE">🔴 Urgente</option>
+        <option value="CRITIQUE">🔴 Critique</option>
+        <option value="HAUTE">🟠 Haute</option>
+        <option value="MOYENNE">🟡 Moyenne</option>
+        <option value="PLANIFIEE">🟡 Planifiée</option>
+        <option value="BASSE">⚪ Basse</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- LISTE DES INTERVENTIONS - DESIGN AMÉLIORÉ -->
+  <div class="interventions-container" *ngIf="viewMode === 'list'">
+    <div 
+      *ngFor="let intervention of interventionsFiltrees; trackBy: trackByInterventionId" 
+      class="intervention-card"
+      [class]="'priority-' + getPrioriteClass(intervention.priorite)">
+      
+      <!-- PRIORITY INDICATOR -->
+      <div class="priority-indicator" [style.background-color]="getPrioriteColor(intervention.priorite)"></div>
+      
+      <!-- CARD HEADER -->
+      <div class="card-header">
+        <div class="card-title-section">
+          <h3>Intervention #{{ intervention.id }}</h3>
+          <p *ngIf="intervention.typeIntervention" class="card-subtitle">
+            {{ intervention.typeIntervention }}
+          </p>
+        </div>
+        <span class="badge" [class]="'badge-' + intervention.etat.toLowerCase().replace('_', '-')">
+          {{ getEtatLabel(intervention.etat) }}
+        </span>
+      </div>
+
+      <!-- CARD BODY -->
+      <div class="card-body">
+        <p *ngIf="intervention.description" class="description">
+          {{ intervention.description }}
+        </p>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-icon">🎯</span>
+            <div class="info-content">
+              <span class="info-label">Priorité</span>
+              <span class="info-value" [style.color]="getPrioriteColor(intervention.priorite)">
+                {{ getPrioriteLabel(intervention.priorite) }}
+              </span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-icon">📅</span>
+            <div class="info-content">
+              <span class="info-label">Date prévue</span>
+              <span class="info-value">{{ intervention.datePlanifiee | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item" *ngIf="intervention.dateDebut">
+            <span class="info-icon">⏰</span>
+            <div class="info-content">
+              <span class="info-label">Début</span>
+              <span class="info-value">{{ intervention.dateDebut | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item" *ngIf="intervention.tempsPasseMinutes">
+            <span class="info-icon">⏱️</span>
+            <div class="info-content">
+              <span class="info-label">Temps passé</span>
+              <span class="info-value">{{ formatTemps(intervention.tempsPasseMinutes) }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-icon">💰</span>
+            <div class="info-content">
+              <span class="info-label">Budget</span>
+              <span class="info-value">{{ intervention.budget | number:'1.2-2' }} DT</span>
+            </div>
+          </div>
+
+          <div class="info-item" *ngIf="intervention.mainDOeuvreIds && intervention.mainDOeuvreIds.length > 0">
+            <span class="info-icon">👷</span>
+            <div class="info-content">
+              <span class="info-label">Main-d'œuvre</span>
+              <span class="info-value">{{ intervention.mainDOeuvreIds.length }} personne(s)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD ACTIONS -->
+      <div class="card-actions">
+        <button 
+          class="btn-primary" 
+          (click)="voirDetails(intervention.id)"
+          [attr.aria-label]="'Voir les détails de l\'intervention ' + intervention.id">
+          <span>📋</span>
+          <span>Détails</span>
+        </button>
+        
+        <button 
+          *ngIf="intervention.etat === 'EN_ATTENTE'" 
+          class="btn-success" 
+          (click)="confirmerReception(intervention.id)"
+          [attr.aria-label]="'Confirmer la réception de l\'intervention ' + intervention.id">
+          <span>✓</span>
+          <span>Confirmer</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- EMPTY STATE -->
+    <div *ngIf="interventionsFiltrees.length === 0 && !loading" class="empty-state">
+      <div class="empty-icon">📭</div>
+      <h3>Aucune intervention trouvée</h3>
+      <p>Modifiez vos filtres ou attendez de nouvelles assignations</p>
+    </div>
+
+    <!-- LOADING STATE -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Chargement des interventions...</p>
     </div>
   </div>
 </div>

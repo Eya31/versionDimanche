@@ -1,7 +1,76 @@
+@import 'leaflet/dist/leaflet.css';
+
 .admin-dashboard { padding: 20px; }
 header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; position: relative; }
 .header-actions { display: flex; align-items: center; gap: 20px; }
-.actions { margin: 20px 0; display: flex; gap: 10px; }
+.actions { 
+  margin: 20px 0; 
+  display: flex; 
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* BOUTONS CRÉATION */
+.btn-create {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-create::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-create:hover::before {
+  left: 100%;
+}
+
+.btn-create:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-create:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+}
+
+.btn-create .btn-icon {
+  font-size: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* BOUTON ANNULER */
+.btn-cancel {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.btn-cancel:hover {
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+}
+
 .btn-primary { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
 .btn-success { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
 .btn-danger { background: #dc3545; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; }
@@ -14,10 +83,316 @@ header { display: flex; justify-content: space-between; align-items: center; mar
 .competences-list { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { background: #007bff; color: white; padding: 5px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; }
 .chip button { background: none; border: none; color: white; cursor: pointer; font-size: 18px; }
+/* USERS LIST SECTION */
+.users-list {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  margin-top: 30px;
+}
+
+.users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid;
+  border-image: linear-gradient(90deg, #667eea, #764ba2) 1;
+}
+
+.users-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 26px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.users-count {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* TABLE WRAPPER */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+}
+
+.modern-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.modern-table thead th {
+  padding: 18px 20px;
+  text-align: left;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
+}
+
+.modern-table thead th:first-child {
+  border-top-left-radius: 12px;
+}
+
+.modern-table thead th:last-child {
+  border-top-right-radius: 12px;
+}
+
+.modern-table tbody tr.user-row {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modern-table tbody tr.user-row:hover {
+  background: linear-gradient(90deg, #f8f9ff 0%, #fff 100%);
+  transform: translateX(5px);
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.15);
+}
+
+.modern-table tbody tr.user-row:last-child {
+  border-bottom: none;
+}
+
+.modern-table tbody td {
+  padding: 16px 20px;
+  color: #34495e;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.user-id {
+  color: #667eea;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.user-email {
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+/* ROLE BADGES */
+.role-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.role-badge.admin {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+}
+
+.role-badge.chef {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+}
+
+.role-badge.technicien {
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  color: white;
+}
+
+.role-badge.citoyen {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  color: white;
+}
+
+.role-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* DELETE BUTTON */
+.btn-delete {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(231, 76, 60, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-delete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+  background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+}
+
+.btn-delete:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
+}
+
+/* EMPTY STATE */
+.no-data {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  opacity: 0.3;
+}
+
+.empty-state p {
+  font-size: 18px;
+  color: #95a5a6;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* OLD TABLE STYLES (BACKUP) */
 table { width: 100%; border-collapse: collapse; margin-top: 20px; }
 th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
 th { background: #f8f9fa; font-weight: bold; }
-.role-badge { background: #17a2b8; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; }
+
+/* CARTE INTERVENTIONS EN COURS */
+.interventions-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.interventions-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #667eea;
+}
+
+.interventions-card .card-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.interventions-card .total-count {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Légende de la carte */
+.map-legend {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.legend-marker {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.legend-marker.en-cours {
+  background: #2196F3;
+}
+
+.legend-marker.en-attente {
+  background: #FF9800;
+}
+
+/* Carte Leaflet */
+.interventions-map {
+  height: 500px;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 2px solid #e9ecef;
+}
+
+
+
+.no-interventions {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.no-interventions .empty-icon {
+  font-size: 64px;
+  margin-bottom: 15px;
+  opacity: 0.3;
+}
+
+.no-interventions p {
+  font-size: 18px;
+  color: #adb5bd;
+  font-weight: 500;
+}
 
 /* NOTIFICATIONS */
 .notification-bell {
