@@ -1,0 +1,89 @@
+.logs-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header h1 {
+  margin: 0 0 2rem 0;
+  color: #2c3e50;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.filters input,
+.filters select {
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.filters input {
+  flex: 1;
+  max-width: 400px;
+}
+
+.loading, .empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6c757d;
+}
+
+.logs-list {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.log-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-left: 4px solid;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 0.5rem;
+}
+
+.log-item.log-info {
+  border-left-color: #17a2b8;
+  background: #d1ecf1;
+}
+
+.log-item.log-warning {
+  border-left-color: #ffc107;
+  background: #fff3cd;
+}
+
+.log-item.log-error {
+  border-left-color: #dc3545;
+  background: #f8d7da;
+}
+
+.log-level {
+  font-weight: 600;
+  min-width: 80px;
+  font-size: 0.875rem;
+}
+
+.log-content {
+  flex: 1;
+}
+
+.log-message {
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.log-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+

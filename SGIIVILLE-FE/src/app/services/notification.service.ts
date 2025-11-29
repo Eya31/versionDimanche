@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, interval } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, interval, of } from 'rxjs';
+import { switchMap, startWith } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface Notification {
@@ -41,18 +41,22 @@ export class NotificationService {
 
   /**
    * Polling des notifications toutes les 30 secondes
+   * Commence immédiatement avec un premier appel
    */
   pollNotifications(userId: number): Observable<Notification[]> {
     return interval(30000).pipe(
+      startWith(0), // Commencer immédiatement
       switchMap(() => this.getNotificationsByUser(userId))
     );
   }
 
   /**
    * Polling du compteur de notifications non lues toutes les 15 secondes
+   * Commence immédiatement avec un premier appel
    */
   pollUnreadCount(userId: number): Observable<{ unreadCount: number }> {
     return interval(15000).pipe(
+      startWith(0), // Commencer immédiatement
       switchMap(() => this.getUnreadCount(userId))
     );
   }

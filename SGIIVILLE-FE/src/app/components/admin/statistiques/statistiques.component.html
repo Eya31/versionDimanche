@@ -1,0 +1,115 @@
+<div class="statistiques-container">
+  <div class="header">
+    <h1>📊 Statistiques & KPIs du système</h1>
+    <button class="btn btn-primary" (click)="refresh()" [disabled]="loading">
+      🔄 Actualiser
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des statistiques...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    <!-- KPIs -->
+    <div class="kpis-grid">
+      <div class="kpi-card" *ngFor="let kpi of kpis" [style.border-left-color]="kpi.color">
+        <div class="kpi-icon">{{ kpi.icon }}</div>
+        <div class="kpi-content">
+          <h3>{{ kpi.title }}</h3>
+          <div class="kpi-value" [style.color]="kpi.color">{{ kpi.value }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="charts-grid">
+      <!-- Interventions par état -->
+      <div class="chart-card">
+        <h2>Interventions par état</h2>
+        <div class="chart-content">
+          <div class="bar-chart">
+            <div 
+              class="bar-item" 
+              *ngFor="let stat of interventionsStats"
+              [style.background-color]="stat.color"
+            >
+              <div class="bar-label">{{ stat.label }}</div>
+              <div class="bar-wrapper">
+                <div 
+                  class="bar" 
+                  [style.height.%]="calculateBarHeight(stat.value, getMaxValue(interventionsStats))"
+                ></div>
+                <span class="bar-value">{{ stat.value }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interventions par mois -->
+      <div class="chart-card">
+        <h2>Interventions par mois (7 derniers mois)</h2>
+        <div class="chart-content">
+          <div class="bar-chart">
+            <div 
+              class="bar-item" 
+              *ngFor="let stat of interventionsParMois"
+            >
+              <div class="bar-label">{{ stat.label }}</div>
+              <div class="bar-wrapper">
+                <div 
+                  class="bar" 
+                  [style.background-color]="stat.color"
+                  [style.height.%]="calculateBarHeight(stat.value, getMaxValue(interventionsParMois))"
+                ></div>
+                <span class="bar-value">{{ stat.value }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Utilisateurs par rôle -->
+      <div class="chart-card">
+        <h2>Répartition des utilisateurs</h2>
+        <div class="chart-content">
+          <div class="pie-chart">
+            <div 
+              class="pie-item" 
+              *ngFor="let stat of usersStats"
+            >
+              <div class="pie-color" [style.background-color]="stat.color"></div>
+              <span class="pie-label">{{ stat.label }}</span>
+              <span class="pie-value">{{ stat.value }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance -->
+      <div class="chart-card">
+        <h2>Performance du système</h2>
+        <div class="chart-content">
+          <div class="performance-stats">
+            <div class="perf-item">
+              <span class="perf-label">Taux de complétion</span>
+              <div class="perf-bar">
+                <div 
+                  class="perf-fill" 
+                  [style.width.%]="performanceStats.tauxCompletion"
+                ></div>
+              </div>
+              <span class="perf-value">{{ performanceStats.tauxCompletion }}%</span>
+            </div>
+            <div class="perf-item">
+              <span class="perf-label">Interventions urgentes</span>
+              <span class="perf-value-large">{{ performanceStats.interventionsUrgentes }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

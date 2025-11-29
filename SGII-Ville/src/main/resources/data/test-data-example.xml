@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Exemple de données pour tester le système de planification d'intervention -->
+
+<SystemeGestionInterventions xmlns="http://example.com/gestion-interventions">
+
+  <!-- Exemple de Techniciens avec compétences -->
+  <Utilisateurs>
+    <Technicien>
+      <id>101</id>
+      <nom>Jean Dupont</nom>
+      <email>jean.dupont@sgii.fr</email>
+      <motDePasse>password123</motDePasse>
+      <role>TECHNICIEN</role>
+      <competences>Électricien</competences>
+      <competences>Installation</competences>
+      <disponibilite>true</disponibilite>
+    </Technicien>
+    
+    <Technicien>
+      <id>102</id>
+      <nom>Marie Martin</nom>
+      <email>marie.martin@sgii.fr</email>
+      <motDePasse>password123</motDePasse>
+      <role>TECHNICIEN</role>
+      <competences>Électricien</competences>
+      <competences>Maintenance</competences>
+      <disponibilite>true</disponibilite>
+    </Technicien>
+    
+    <Technicien>
+      <id>103</id>
+      <nom>Pierre Dubois</nom>
+      <email>pierre.dubois@sgii.fr</email>
+      <motDePasse>password123</motDePasse>
+      <role>TECHNICIEN</role>
+      <competences>Plombier</competences>
+      <disponibilite>true</disponibilite>
+    </Technicien>
+    
+    <Technicien>
+      <id>104</id>
+      <nom>Sophie Bernard</nom>
+      <email>sophie.bernard@sgii.fr</email>
+      <motDePasse>password123</motDePasse>
+      <role>TECHNICIEN</role>
+      <competences>Maçon</competences>
+      <competences>Travaux publics</competences>
+      <disponibilite>false</disponibilite>
+    </Technicien>
+  </Utilisateurs>
+
+  <!-- Exemple d'Équipements avec disponibilités -->
+  <Equipements>
+    <Equipement>
+      <id>201</id>
+      <nom>Camion Grue 1</nom>
+      <type>Camion</type>
+      <etat>fonctionnel</etat>
+      <fournisseurId>1</fournisseurId>
+      <valeurAchat>50000</valeurAchat>
+      <localisation>
+        <latitude>48.8566</latitude>
+        <longitude>2.3522</longitude>
+      </localisation>
+      <dateAchat>2023-01-15</dateAchat>
+      <disponible>true</disponible>
+      <indisponibilites>
+        <!-- Pas d'indisponibilité -->
+      </indisponibilites>
+    </Equipement>
+    
+    <Equipement>
+      <id>202</id>
+      <nom>Tractopelle A</nom>
+      <type>Tractopelle</type>
+      <etat>fonctionnel</etat>
+      <fournisseurId>1</fournisseurId>
+      <valeurAchat>75000</valeurAchat>
+      <localisation>
+        <latitude>48.8566</latitude>
+        <longitude>2.3522</longitude>
+      </localisation>
+      <dateAchat>2022-06-20</dateAchat>
+      <disponible>true</disponible>
+      <indisponibilites>
+        <periode>
+          <debut>2025-12-10T00:00:00</debut>
+          <fin>2025-12-15T23:59:59</fin>
+        </periode>
+      </indisponibilites>
+    </Equipement>
+    
+    <Equipement>
+      <id>203</id>
+      <nom>Nacelle B</nom>
+      <type>Nacelle</type>
+      <etat>en_panne</etat>
+      <fournisseurId>2</fournisseurId>
+      <valeurAchat>30000</valeurAchat>
+      <localisation>
+        <latitude>48.8566</latitude>
+        <longitude>2.3522</longitude>
+      </localisation>
+      <dateAchat>2021-03-10</dateAchat>
+      <disponible>false</disponible>
+      <indisponibilites/>
+    </Equipement>
+    
+    <Equipement>
+      <id>204</id>
+      <nom>Camion Benne 2</nom>
+      <type>Camion</type>
+      <etat>fonctionnel</etat>
+      <fournisseurId>1</fournisseurId>
+      <valeurAchat>45000</valeurAchat>
+      <localisation>
+        <latitude>48.8566</latitude>
+        <longitude>2.3522</longitude>
+      </localisation>
+      <dateAchat>2023-09-01</dateAchat>
+      <disponible>true</disponible>
+      <indisponibilites/>
+    </Equipement>
+  </Equipements>
+
+  <!-- Exemple de Ressources Matérielles -->
+  <RessourcesMaterielles>
+    <RessourceMaterielle>
+      <id>301</id>
+      <designation>Câble électrique</designation>
+      <quantiteEnStock>500</quantiteEnStock>
+      <valeurAchat>5.50</valeurAchat>
+      <fournisseurId>1</fournisseurId>
+      <unite>mètre</unite>
+    </RessourceMaterielle>
+    
+    <RessourceMaterielle>
+      <id>302</id>
+      <designation>Tuyau PVC</designation>
+      <quantiteEnStock>200</quantiteEnStock>
+      <valeurAchat>8.75</valeurAchat>
+      <fournisseurId>2</fournisseurId>
+      <unite>mètre</unite>
+    </RessourceMaterielle>
+    
+    <RessourceMaterielle>
+      <id>303</id>
+      <designation>Ciment</designation>
+      <quantiteEnStock>50</quantiteEnStock>
+      <valeurAchat>15.00</valeurAchat>
+      <fournisseurId>1</fournisseurId>
+      <unite>sac</unite>
+    </RessourceMaterielle>
+    
+    <RessourceMaterielle>
+      <id>304</id>
+      <designation>Peinture blanche</designation>
+      <quantiteEnStock>5</quantiteEnStock>
+      <valeurAchat>25.00</valeurAchat>
+      <fournisseurId>3</fournisseurId>
+      <unite>litre</unite>
+    </RessourceMaterielle>
+    
+    <RessourceMaterielle>
+      <id>305</id>
+      <designation>Lampadaire LED</designation>
+      <quantiteEnStock>15</quantiteEnStock>
+      <valeurAchat>150.00</valeurAchat>
+      <fournisseurId>1</fournisseurId>
+      <unite>unité</unite>
+    </RessourceMaterielle>
+  </RessourcesMaterielles>
+
+</SystemeGestionInterventions>

@@ -207,21 +207,44 @@ public class InterventionXmlService {
                 i.setDateFin(java.time.LocalDate.parse(dateFinStr));
             }
 
-            // Charger mainDOeuvreIds
-            List<Integer> mainDOeuvreIds = new ArrayList<>();
-            NodeList mainDOeuvreNodes = el.getElementsByTagNameNS(xmlService.getNamespaceUri(), "mainDOeuvreIds");
-            if (mainDOeuvreNodes.getLength() > 0) {
-                Element mainDOeuvreEl = (Element) mainDOeuvreNodes.item(0);
-                NodeList idNodes = mainDOeuvreEl.getElementsByTagNameNS(xmlService.getNamespaceUri(), "id");
+            // Charger ouvrierIds (mainDOeuvreIds dans XML)
+            List<Integer> ouvrierIds = new ArrayList<>();
+            // Essayer d'abord avec ouvrierIds (nom dans le XML)
+            NodeList ouvrierNodes = el.getElementsByTagNameNS(xmlService.getNamespaceUri(), "ouvrierIds");
+            if (ouvrierNodes.getLength() > 0) {
+                Element ouvrierEl = (Element) ouvrierNodes.item(0);
+                NodeList idNodes = ouvrierEl.getElementsByTagNameNS(xmlService.getNamespaceUri(), "ouvrierId");
                 for (int j = 0; j < idNodes.getLength(); j++) {
                     String idStr = idNodes.item(j).getTextContent();
                     if (idStr != null && !idStr.isEmpty()) {
-                        mainDOeuvreIds.add(Integer.parseInt(idStr));
+                        try {
+                            ouvrierIds.add(Integer.parseInt(idStr));
+                        } catch (NumberFormatException e) {
+                            logger.warn("ID ouvrier invalide: {}", idStr);
+                        }
                     }
                 }
             }
-            i.setOuvrierIds(mainDOeuvreIds);
-            logger.debug("Intervention {} - mainDOeuvreIds chargés: {}", i.getId(), mainDOeuvreIds);
+            // Si pas trouvé, essayer avec mainDOeuvreIds (compatibilité)
+            if (ouvrierIds.isEmpty()) {
+                NodeList mainDOeuvreNodes = el.getElementsByTagNameNS(xmlService.getNamespaceUri(), "mainDOeuvreIds");
+                if (mainDOeuvreNodes.getLength() > 0) {
+                    Element mainDOeuvreEl = (Element) mainDOeuvreNodes.item(0);
+                    NodeList idNodes = mainDOeuvreEl.getElementsByTagNameNS(xmlService.getNamespaceUri(), "id");
+                    for (int j = 0; j < idNodes.getLength(); j++) {
+                        String idStr = idNodes.item(j).getTextContent();
+                        if (idStr != null && !idStr.isEmpty()) {
+                            try {
+                                ouvrierIds.add(Integer.parseInt(idStr));
+                            } catch (NumberFormatException e) {
+                                logger.warn("ID main-d'œuvre invalide: {}", idStr);
+                            }
+                        }
+                    }
+                }
+            }
+            i.setOuvrierIds(ouvrierIds);
+            logger.debug("Intervention {} - ouvrierIds chargés: {}", i.getId(), ouvrierIds);
 
             // Charger photoIds
             List<Integer> photoIds = new ArrayList<>();

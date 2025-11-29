@@ -123,8 +123,11 @@ public class MainDOeuvreController {
 
             // Vérifier que l'agent est affecté à cette intervention
             int mainDOeuvreId = agent.getMainDOeuvreId();
-            if (intervention.getOuvrierIds() == null || 
-                !intervention.getOuvrierIds().contains(mainDOeuvreId)) {
+            // S'assurer que ouvrierIds est initialisé
+            if (intervention.getOuvrierIds() == null) {
+                intervention.setOuvrierIds(new ArrayList<>());
+            }
+            if (!intervention.getOuvrierIds().contains(mainDOeuvreId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 

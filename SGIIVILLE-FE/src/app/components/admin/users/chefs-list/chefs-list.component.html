@@ -1,0 +1,49 @@
+<div class="chefs-container">
+  <div class="header">
+    <h1>👔 Liste des chefs de service</h1>
+    <a routerLink="/admin/users/add" class="btn btn-primary">
+      ➕ Ajouter un chef de service
+    </a>
+  </div>
+
+  <div class="filters">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (input)="applyFilters()"
+      placeholder="Rechercher par nom, email ou département..."
+      class="search-input"
+    />
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des chefs de service...</p>
+  </div>
+
+  <div *ngIf="!loading && chefsFiltres.length === 0" class="empty-state">
+    <p>Aucun chef de service trouvé</p>
+  </div>
+
+  <div *ngIf="!loading && chefsFiltres.length > 0" class="chefs-list">
+    <div class="chef-card" *ngFor="let chef of chefsFiltres">
+      <div class="chef-info">
+        <div class="chef-header">
+          <h3>{{ chef.nom }}</h3>
+          <span class="chef-id">ID: #{{ chef.id }}</span>
+        </div>
+        <div class="chef-details">
+          <p><strong>Email:</strong> {{ chef.email }}</p>
+          <p><strong>Département:</strong> {{ chef.departement || 'Non spécifié' }}</p>
+        </div>
+      </div>
+      <div class="chef-actions">
+        <a [routerLink]="['/admin/users', chef.id, 'edit']" class="btn btn-sm btn-primary">
+          ✏️ Modifier
+        </a>
+        <button class="btn btn-sm btn-danger" (click)="deleteChef(chef)">
+          🗑️ Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

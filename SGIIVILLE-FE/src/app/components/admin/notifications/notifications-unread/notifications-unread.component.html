@@ -1,0 +1,46 @@
+<div class="notifications-container">
+  <div class="header">
+    <h1>🔔 Notifications non lues</h1>
+    <div class="header-actions">
+      <button class="btn btn-secondary" (click)="markAllAsRead()" [disabled]="notifications.length === 0">
+        Marquer tout comme lu
+      </button>
+      <button class="btn btn-primary" (click)="refresh()" [disabled]="loading">
+        🔄 Actualiser
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des notifications...</p>
+  </div>
+
+  <div *ngIf="!loading && notifications.length === 0" class="empty-state">
+    <div class="empty-icon">📭</div>
+    <h2>Aucune notification non lue</h2>
+    <p>Toutes vos notifications ont été lues.</p>
+    <a routerLink="/admin/notifications/history" class="btn btn-primary">Voir l'historique</a>
+  </div>
+
+  <div *ngIf="!loading && notifications.length > 0" class="notifications-list">
+    <div class="notifications-count">
+      <strong>{{ notifications.length }}</strong> notification{{ notifications.length > 1 ? 's' : '' }} non lue{{ notifications.length > 1 ? 's' : '' }}
+    </div>
+
+    <div class="notification-item" *ngFor="let notification of notifications">
+      <div class="notification-content">
+        <div class="notification-icon">🔔</div>
+        <div class="notification-body">
+          <p class="notification-message">{{ notification.message }}</p>
+          <span class="notification-date">{{ formatDate(notification.createdAt) }}</span>
+        </div>
+      </div>
+      <div class="notification-actions">
+        <button class="btn btn-sm btn-primary" (click)="markAsRead(notification)">
+          Marquer comme lu
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

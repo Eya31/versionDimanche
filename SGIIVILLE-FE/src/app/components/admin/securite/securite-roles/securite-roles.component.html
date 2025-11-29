@@ -1,0 +1,37 @@
+<div class="roles-container">
+  <div class="header">
+    <h1>🎭 Droits & rôles</h1>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des rôles...</p>
+  </div>
+
+  <div *ngIf="!loading" class="roles-list">
+    <div class="role-card" *ngFor="let role of roles">
+      <div class="role-header">
+        <div>
+          <h3>{{ role.name }}</h3>
+          <p class="role-description">{{ role.description }}</p>
+        </div>
+        <div class="role-stats">
+          <span class="user-count">{{ role.userCount }} utilisateur{{ role.userCount > 1 ? 's' : '' }}</span>
+        </div>
+      </div>
+      <div class="role-permissions">
+        <strong>Permissions :</strong>
+        <div class="permissions-list">
+          <span class="permission-badge" *ngFor="let perm of role.permissions">
+            {{ perm === '*' ? 'Toutes les permissions' : perm }}
+          </span>
+        </div>
+      </div>
+      <div class="role-actions">
+        <button class="btn btn-primary" (click)="editRole(role)">
+          Modifier
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

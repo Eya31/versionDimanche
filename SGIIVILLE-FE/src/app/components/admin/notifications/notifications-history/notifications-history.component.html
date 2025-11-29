@@ -1,0 +1,108 @@
+<div class="notifications-history-container">
+  <div class="header">
+    <h1>📜 Historique des notifications</h1>
+    <button class="btn btn-primary" (click)="loadAllNotifications()" [disabled]="loading">
+      🔄 Actualiser
+    </button>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filters">
+    <div class="filter-group">
+      <label>État :</label>
+      <select [(ngModel)]="filterRead" (change)="applyFilters()">
+        <option value="all">Toutes</option>
+        <option value="read">Lues</option>
+        <option value="unread">Non lues</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Recherche :</label>
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="applyFilters()"
+        placeholder="Rechercher dans les messages..."
+      />
+    </div>
+
+    <button class="btn btn-secondary" (click)="resetFilters()">
+      Réinitialiser
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des notifications...</p>
+  </div>
+
+  <div *ngIf="!loading && filteredNotifications.length === 0" class="empty-state">
+    <div class="empty-icon">📭</div>
+    <h2>Aucune notification trouvée</h2>
+    <p>Aucune notification ne correspond à vos critères de recherche.</p>
+  </div>
+
+  <div *ngIf="!loading && filteredNotifications.length > 0" class="notifications-section">
+    <div class="notifications-count">
+      <strong>{{ filteredNotifications.length }}</strong> notification{{ filteredNotifications.length > 1 ? 's' : '' }} trouvée{{ filteredNotifications.length > 1 ? 's' : '' }}
+    </div>
+
+    <div class="notifications-list">
+      <div 
+        class="notification-item" 
+        [class.read]="notification.readable"
+        [class.unread]="!notification.readable"
+        *ngFor="let notification of paginatedNotifications"
+      >
+        <div class="notification-content">
+          <div class="notification-icon" [class.unread-icon]="!notification.readable">
+            {{ notification.readable ? '✓' : '🔔' }}
+          </div>
+          <div class="notification-body">
+            <p class="notification-message">{{ notification.message }}</p>
+            <div class="notification-meta">
+              <span class="notification-date">{{ formatDate(notification.createdAt) }}</span>
+              <span class="notification-relative">{{ getRelativeTime(notification.createdAt) }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="notification-actions" *ngIf="!notification.readable">
+          <button class="btn btn-sm btn-primary" (click)="markAsRead(notification)">
+            Marquer comme lu
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button 
+        class="btn btn-sm" 
+        (click)="previousPage()" 
+        [disabled]="currentPage === 1"
+      >
+        ← Précédent
+      </button>
+      
+      <div class="page-numbers">
+        <button
+          *ngFor="let page of getPageNumbers()"
+          class="btn btn-sm"
+          [class.active]="page === currentPage"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      </div>
+
+      <button 
+        class="btn btn-sm" 
+        (click)="nextPage()" 
+        [disabled]="currentPage === totalPages"
+      >
+        Suivant →
+      </button>
+    </div>
+  </div>
+</div>
+

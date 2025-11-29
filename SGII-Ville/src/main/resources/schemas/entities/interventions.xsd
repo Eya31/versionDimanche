@@ -7,6 +7,30 @@
   <xs:include schemaLocation="../common/typesBase.xsd"/>
   <xs:include schemaLocation="../common/geo.xsd"/>
 
+  <!-- Exigence de Compétence pour Intervention -->
+  <xs:complexType name="CompetenceRequiseType">
+    <xs:sequence>
+      <xs:element name="competence" type="xs:string"/>
+      <xs:element name="nombreTechniciens" type="xs:int" default="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Exigence de Matériel pour Intervention -->
+  <xs:complexType name="MaterielRequisType">
+    <xs:sequence>
+      <xs:element name="designation" type="xs:string"/>
+      <xs:element name="quantiteRequise" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Exigence d'Équipement pour Intervention -->
+  <xs:complexType name="EquipementRequisType">
+    <xs:sequence>
+      <xs:element name="type" type="xs:string"/>
+      <xs:element name="quantiteRequise" type="xs:int" default="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <!-- Intervention (1 Demande -> 0..1 Intervention) -->
   <xs:complexType name="InterventionType">
     <xs:sequence>
@@ -22,6 +46,31 @@
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:element name="budget" type="xs:decimal"/>
       <xs:element name="localisation" type="tns:GeoPointType" minOccurs="0"/>
+      
+      <!-- Exigences définies lors de la planification -->
+      <xs:element name="competencesRequises" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="competence" type="tns:CompetenceRequiseType" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="materielsRequis" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="materiel" type="tns:MaterielRequisType" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="equipementsRequis" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="equipement" type="tns:EquipementRequisType" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       
       <!-- Relation * Intervention -> * Equipements -->
       <xs:element name="equipementIds" minOccurs="0">

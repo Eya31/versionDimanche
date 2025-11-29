@@ -6,6 +6,24 @@ import { filter } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService, Notification } from '../../services/notification.service';
 
+interface MenuItem {
+  title: string;
+  icon: string;
+  route?: string;
+  exact?: boolean;
+  badge?: string;
+  action?: string;
+  expanded?: boolean;
+  submenu?: SubMenuItem[];
+}
+
+interface SubMenuItem {
+  title: string;
+  icon: string;
+  route: string;
+  badge?: string;
+}
+
 @Component({
   selector: 'app-technicien-layout',
   standalone: true,
@@ -14,13 +32,49 @@ import { NotificationService, Notification } from '../../services/notification.s
   styleUrls: ['./technicien-layout.component.css']
 })
 export class TechnicienLayoutComponent implements OnInit, OnDestroy {
+  sidebarCollapsed = false;
   currentUser: any = null;
+  unreadCount = 0;
   currentRoute = '';
+  pageTitle = 'Tableau de bord';
   showNotificationsDropdown = false;
   notifications: Notification[] = [];
-  unreadCount = 0;
   private unreadCountSubscription?: Subscription;
+  private routeSubscription?: Subscription;
   private notificationsSubscription?: Subscription;
+
+  menuItems: MenuItem[] = [
+    {
+      title: 'Tableau de bord',
+      icon: '📊',
+      route: '/technicien',
+      exact: true
+    },
+    {
+      title: 'Interventions',
+      icon: '🧭',
+      expanded: false,
+      submenu: [
+        { title: 'Mes interventions', icon: '📋', route: '/technicien' },
+        { title: 'Interventions en cours', icon: '🟢', route: '/technicien' }
+      ]
+    },
+    {
+      title: 'Main d\'œuvre',
+      icon: '🛠️',
+      route: '/technicien/main-doeuvre'
+    },
+    {
+      title: 'Mon profil',
+      icon: '👤',
+      route: '/technicien/profil'
+    },
+    {
+      title: 'Déconnexion',
+      icon: '🚪',
+      action: 'logout'
+    }
+  ];
 
   constructor(
     private authService: AuthService,
@@ -29,25 +83,62 @@ export class TechnicienLayoutComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.currentUser = this.authService.currentUserValue;
-    
-    // Suivre la route actuelle
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: any) => {
-        this.currentRoute = event.url;
-      });
-    
-    this.currentRoute = this.router.url;
-    
-    // Charger les notifications
+    this.loadCurrentUser();
     this.loadNotifications();
     this.startNotificationPolling();
+    this.trackRoute();
+    this.setupClickOutside();
+  }
+
+  setupClickOutside(): void {
+    // Fermer le dropdown si on clique en dehors
+    document.addEventListener('click', (event: any) => {
+      if (this.showNotificationsDropdown) {
+        const target = event.target as HTMLElement;
+        if (!target.closest('.notification-container')) {
+          this.showNotificationsDropdown = false;
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.unreadCountSubscription?.unsubscribe();
+    this.routeSubscription?.unsubscribe();
     this.notificationsSubscription?.unsubscribe();
+  }
+
+  trackRoute(): void {
+    this.currentRoute = this.router.url;
+    this.updatePageTitle();
+    
+    this.routeSubscription = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.currentRoute = event.url;
+        this.updatePageTitle();
+      });
+  }
+
+  updatePageTitle(): void {
+    if (this.currentRoute.includes('/profil')) {
+      this.pageTitle = 'Mon Profil';
+    } else if (this.currentRoute.includes('/main-doeuvre')) {
+      this.pageTitle = 'Gestion Main d\'Œuvre';
+    } else if (this.currentRoute.includes('/intervention/')) {
+      this.pageTitle = 'Détails Intervention';
+    } else {
+      this.pageTitle = 'Tableau de bord';
+    }
+  }
+
+  loadCurrentUser(): void {
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.currentUser = {
+        nom: localStorage.getItem('userName') || 'Technicien'
+      };
+    }
   }
 
   loadNotifications(): void {
@@ -56,12 +147,17 @@ export class TechnicienLayoutComponent implements OnInit, OnDestroy {
 
     this.notificationService.getNotificationsByUser(userId).subscribe({
       next: (data) => {
-        this.notifications = data.sort((a, b) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        this.unreadCount = this.notifications.filter(n => !n.readable).length;
+        this.notifications = (data || []).sort((a, b) => {
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+          return dateB - dateA;
+        });
+        this.updateUnreadCount();
       },
-      error: (err) => console.error('Erreur chargement notifications:', err)
+      error: (err) => {
+        console.error('Erreur chargement notifications:', err);
+        this.notifications = [];
+      }
     });
   }
 
@@ -69,16 +165,38 @@ export class TechnicienLayoutComponent implements OnInit, OnDestroy {
     const userId = this.authService.getUserId();
     if (!userId) return;
 
-    // Polling du compteur toutes les 15 secondes
+    // Charger immédiatement le compteur de notifications non lues
+    this.notificationService.getUnreadCount(userId).subscribe({
+      next: (data) => {
+        this.unreadCount = data.unreadCount || 0;
+      },
+      error: (err) => console.error('Erreur chargement compteur notifications:', err)
+    });
+
+    // Polling du compteur de notifications non lues toutes les 15 secondes
     this.unreadCountSubscription = this.notificationService.pollUnreadCount(userId).subscribe({
       next: (data) => {
-        this.unreadCount = data.unreadCount;
-        if (data.unreadCount > 0) {
-          this.loadNotifications(); // Recharger si nouvelles notifications
-        }
+        this.unreadCount = data.unreadCount || 0;
       },
       error: (err) => console.error('Erreur polling notifications:', err)
     });
+
+    // Polling des notifications toutes les 30 secondes
+    this.notificationsSubscription = this.notificationService.pollNotifications(userId).subscribe({
+      next: (data) => {
+        this.notifications = (data || []).sort((a, b) => {
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+          return dateB - dateA;
+        });
+        this.updateUnreadCount();
+      },
+      error: (err) => console.error('Erreur polling notifications:', err)
+    });
+  }
+
+  updateUnreadCount(): void {
+    this.unreadCount = this.notifications.filter(n => !n.readable).length;
   }
 
   toggleNotificationsDropdown(): void {
@@ -90,20 +208,20 @@ export class TechnicienLayoutComponent implements OnInit, OnDestroy {
 
   markAsRead(notification: Notification): void {
     if (notification.readable) return;
-    
+
     this.notificationService.markAsRead(notification.idNotification).subscribe({
       next: () => {
         notification.readable = true;
-        this.unreadCount = Math.max(0, this.unreadCount - 1);
+        this.updateUnreadCount();
       },
-      error: (err) => console.error('Erreur marquer comme lu:', err)
+      error: (err) => console.error('Erreur marquer notification comme lue:', err)
     });
   }
 
-  formatNotificationDate(date: string): string {
+  formatNotificationDate(dateString: string): string {
+    const date = new Date(dateString);
     const now = new Date();
-    const notifDate = new Date(date);
-    const diffMs = now.getTime() - notifDate.getTime();
+    const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
@@ -112,18 +230,36 @@ export class TechnicienLayoutComponent implements OnInit, OnDestroy {
     if (diffMins < 60) return `Il y a ${diffMins} min`;
     if (diffHours < 24) return `Il y a ${diffHours}h`;
     if (diffDays < 7) return `Il y a ${diffDays}j`;
-    return notifDate.toLocaleDateString('fr-FR');
+    
+    return date.toLocaleDateString('fr-FR', { 
+      day: 'numeric', 
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
-  logout(): void {
-    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-      this.authService.logout();
-      this.router.navigate(['/login']);
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
+  toggleSubmenu(item: MenuItem): void {
+    item.expanded = !item.expanded;
+  }
+
+  getBadgeValue(badgeKey: string): number {
+    if (badgeKey === 'unreadCount') {
+      return this.unreadCount;
+    }
+    return 0;
+  }
+
+  handleAction(action: string): void {
+    if (action === 'logout') {
+      if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+        this.authService.logout();
+        this.router.navigate(['/login']);
+      }
     }
   }
-
-  isActiveRoute(route: string): boolean {
-    return this.currentRoute.includes(route);
-  }
 }
-

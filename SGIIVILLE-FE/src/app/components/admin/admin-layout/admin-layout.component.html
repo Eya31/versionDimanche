@@ -1,0 +1,67 @@
+<div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" [class.collapsed]="sidebarCollapsed">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="icon">🎯</span>
+                <h3 *ngIf="!sidebarCollapsed">Admin SGII</h3>
+            </div>
+            <button class="toggle-btn" (click)="toggleSidebar()">
+                {{ sidebarCollapsed ? '☰' : '✕' }}
+            </button>
+        </div>
+
+        <nav class="sidebar-nav" *ngIf="!sidebarCollapsed">
+            <div *ngFor="let item of menuItems" class="menu-item">
+                <!-- Item simple (sans sous-menu) -->
+                <div *ngIf="!item.submenu && !item.action" class="nav-item" [routerLink]="item.route"
+                    routerLinkActive="active" [routerLinkActiveOptions]="{exact: item.exact || false}">
+                    <span class="icon">{{ item.icon }}</span>
+                    <span class="label">{{ item.title }}</span>
+                    <span *ngIf="item.badge" class="badge">{{ getBadgeValue(item.badge) }}</span>
+                </div>
+
+                <!-- Item avec action (déconnexion) -->
+                <div *ngIf="item.action" class="nav-item logout-item" (click)="handleAction(item.action)">
+                    <span class="icon">{{ item.icon }}</span>
+                    <span class="label">{{ item.title }}</span>
+                </div>
+
+                <!-- Item avec sous-menu -->
+                <div *ngIf="item.submenu" class="nav-item-group">
+                    <div class="nav-item-header" (click)="toggleSubmenu(item)">
+                        <span class="icon">{{ item.icon }}</span>
+                        <span class="label">{{ item.title }}</span>
+                        <span *ngIf="item.badge && !item.expanded" class="badge">{{ getBadgeValue(item.badge) }}</span>
+                        <span class="expand-icon">{{ item.expanded ? '▼' : '▶' }}</span>
+                    </div>
+
+                    <div class="submenu" *ngIf="item.expanded">
+                        <div *ngFor="let sub of item.submenu" class="submenu-item" [routerLink]="sub.route"
+                            routerLinkActive="active">
+                            <span class="icon">{{ sub.icon }}</span>
+                            <span class="label">{{ sub.title }}</span>
+                            <span *ngIf="sub.badge" class="badge badge-small">{{ getBadgeValue(sub.badge) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- User Profile -->
+        <div class="sidebar-footer" *ngIf="!sidebarCollapsed">
+            <div class="user-profile">
+                <div class="avatar">👤</div>
+                <div class="user-info">
+                    <div class="user-name">{{ currentUser?.nom || 'Admin' }}</div>
+                    <div class="user-role">Administrateur</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-content" [class.sidebar-collapsed]="sidebarCollapsed">
+        <router-outlet></router-outlet>
+    </main>
+</div>

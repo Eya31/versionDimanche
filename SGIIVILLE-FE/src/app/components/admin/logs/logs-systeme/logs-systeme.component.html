@@ -1,0 +1,42 @@
+<div class="logs-container">
+  <div class="header">
+    <h1>💻 Logs système</h1>
+  </div>
+
+  <div class="filters">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (input)="applyFilters()"
+      placeholder="Rechercher..."
+    />
+    <select [(ngModel)]="filterLevel" (change)="applyFilters()">
+      <option value="all">Tous les niveaux</option>
+      <option value="info">Info</option>
+      <option value="warning">Avertissement</option>
+      <option value="error">Erreur</option>
+    </select>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des logs...</p>
+  </div>
+
+  <div *ngIf="!loading && filteredLogs.length === 0" class="empty-state">
+    <p>Aucun log système trouvé</p>
+  </div>
+
+  <div *ngIf="!loading && filteredLogs.length > 0" class="logs-list">
+    <div class="log-item" [class]="'log-' + log.level" *ngFor="let log of filteredLogs">
+      <div class="log-level">{{ log.level.toUpperCase() }}</div>
+      <div class="log-content">
+        <div class="log-message">{{ log.message }}</div>
+        <div class="log-meta">
+          <span class="log-component">{{ log.component }}</span>
+          <span class="log-time">{{ log.timestamp | date:'short' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

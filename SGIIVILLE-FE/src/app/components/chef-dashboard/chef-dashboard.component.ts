@@ -13,12 +13,13 @@ import { Technicien } from '../../models/technicien.model';
 import { TechnicienListService } from '../../services/technicien-list.service';
 import { NotificationService, Notification } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
+import { InterventionPlanificationComponent } from '../intervention-planification/intervention-planification.component';
 import * as L from 'leaflet';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-chef-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, InterventionPlanificationComponent],
   templateUrl: './chef-dashboard.component.html',
   styleUrls: ['./chef-dashboard.component.css']
 })
@@ -478,6 +479,19 @@ loadTechniciens(): void {
       mainDOeuvreIds: [],
       remarques: ''
     };
+  }
+
+  onPlanificationComplete(result: any): void {
+    console.log('Planification complétée:', result);
+    
+    if (result.success) {
+      alert('✅ Planification enregistrée avec succès! Intervention #' + result.interventionId + ' créée.');
+      this.closePlanificationModal();
+      this.loadDemandes();
+      this.loadInterventions();
+    } else {
+      alert('❌ Erreur lors de la planification');
+    }
   }
 
   toggleEquipement(id: number): void {

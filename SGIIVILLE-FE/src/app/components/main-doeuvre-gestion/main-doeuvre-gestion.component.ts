@@ -76,9 +76,12 @@ export class MainDOeuvreGestionComponent implements OnInit {
     if (this.filtreCompetence) filters.competence = this.filtreCompetence;
     if (this.filtreDisponibilite) filters.disponibilite = this.filtreDisponibilite;
 
-    this.mainDOeuvreService.getAll(filters).subscribe({
+    // Utiliser l'endpoint technicien (pas admin) car on est dans l'interface technicien
+    this.mainDOeuvreService.getAll(filters, false).subscribe({
       next: (data) => {
-        this.mainDOeuvreListe = data || [];
+        // Dédupliquer par ID pour éviter les doublons
+        const uniqueData = this.deduplicateById(data || []);
+        this.mainDOeuvreListe = uniqueData;
         this.appliquerFiltres();
       },
       error: (err) => {
@@ -88,6 +91,20 @@ export class MainDOeuvreGestionComponent implements OnInit {
         alert('Erreur lors du chargement des fiches. Vérifiez votre connexion.');
       }
     });
+  }
+
+  deduplicateById(data: MainDOeuvre[]): MainDOeuvre[] {
+    const seen = new Map<number, MainDOeuvre>();
+    data.forEach(item => {
+      if (item.id && !seen.has(item.id)) {
+        seen.set(item.id, item);
+      }
+    });
+    return Array.from(seen.values());
+  }
+
+  trackByMainDOeuvreId(index: number, item: MainDOeuvre): number {
+    return item.id || index;
   }
 
   appliquerFiltres(): void {
@@ -154,7 +171,8 @@ export class MainDOeuvreGestionComponent implements OnInit {
     }
 
     if (this.isCreating) {
-      this.mainDOeuvreService.create(this.nouveauMainDOeuvre).subscribe({
+      // Utiliser l'endpoint technicien (pas admin) car on est dans l'interface technicien
+      this.mainDOeuvreService.create(this.nouveauMainDOeuvre, false).subscribe({
         next: (response: any) => {
           // Le backend retourne maintenant un objet avec mainDOeuvre, userId, defaultPassword, message
           const mainDOeuvre = response.mainDOeuvre || response;
@@ -162,7 +180,7 @@ export class MainDOeuvreGestionComponent implements OnInit {
           const defaultPassword = response.defaultPassword;
           
           let message = '✅ Fiche et compte utilisateur créés avec succès !\n\n';
-          message += '📋 Fiche Main-d\'Œuvre:\n';
+          message += '📋 Fiche Main d\'Œuvre:\n';
           message += '   • ID: #' + mainDOeuvre.id + '\n';
           message += '   • Nom: ' + mainDOeuvre.nom + ' ' + (mainDOeuvre.prenom || '') + '\n\n';
           
@@ -177,7 +195,30 @@ export class MainDOeuvreGestionComponent implements OnInit {
           
           alert(message);
           this.isCreating = false;
-          this.loadMainDOeuvre();
+          this.nouveauMainDOeuvre = {
+            id: 0,
+            nom: '',
+            prenom: '',
+            matricule: '',
+            cin: '',
+            telephone: '',
+            email: '',
+            metier: '',
+            competences: [],
+            habilitations: [],
+            habilitationsExpiration: {},
+            disponibilite: 'DISPONIBLE',
+            active: true,
+            horairesTravail: {},
+            conges: [],
+            absences: [],
+            historiqueInterventionIds: []
+          };
+          this.nouvellesHabilitations = [];
+          // Attendre un peu avant de recharger pour laisser le temps au backend de sauvegarder
+          setTimeout(() => {
+            this.loadMainDOeuvre();
+          }, 500);
         },
         error: (err) => {
           console.error('Erreur création fiche:', err);

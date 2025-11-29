@@ -1,5 +1,7 @@
 package tn.SGII_Ville.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/technicien")
 @CrossOrigin(origins = "http://localhost:4200")
 public class TechnicienController {
+
+    private static final Logger logger = LoggerFactory.getLogger(TechnicienController.class);
 
     @Autowired
     private InterventionXmlService interventionService;
@@ -115,6 +119,11 @@ public class TechnicienController {
             
             if (intervention.getTechnicienId() != technicienId) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            // S'assurer que ouvrierIds est initialisé
+            if (intervention.getOuvrierIds() == null) {
+                intervention.setOuvrierIds(new ArrayList<>());
             }
 
             return ResponseEntity.ok(intervention);
@@ -595,6 +604,19 @@ public class TechnicienController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
+            // Vérifier que la requête contient des IDs
+            if (request.getOuvrierIds() == null || request.getOuvrierIds().isEmpty()) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("erreurs", List.of("Aucun agent de main-d'œuvre spécifié"));
+                response.put("avertissements", new ArrayList<>());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            // Initialiser ouvrierIds si null
+            if (intervention.getOuvrierIds() == null) {
+                intervention.setOuvrierIds(new ArrayList<>());
+            }
+
             // Charger toutes les interventions pour vérifier les conflits
             List<Intervention> toutesInterventions = interventionService.getAllInterventions();
             List<String> toutesErreurs = new ArrayList<>();
@@ -625,6 +647,10 @@ public class TechnicienController {
 
             // Affecter les agents (éviter les doublons)
             for (Integer mainDOeuvreId : request.getOuvrierIds()) {
+                // S'assurer que la liste n'est pas null
+                if (intervention.getOuvrierIds() == null) {
+                    intervention.setOuvrierIds(new ArrayList<>());
+                }
                 if (!intervention.getOuvrierIds().contains(mainDOeuvreId)) {
                     intervention.getOuvrierIds().add(mainDOeuvreId);
                 }
@@ -654,7 +680,11 @@ public class TechnicienController {
 
             // Recharger l'intervention depuis la base pour s'assurer d'avoir les données à jour
             Intervention updatedIntervention = interventionService.findById(id);
-            System.out.println("Intervention mise à jour, mainDOeuvreIds: " + updatedIntervention.getOuvrierIds());
+            // S'assurer que ouvrierIds est initialisé
+            if (updatedIntervention.getOuvrierIds() == null) {
+                updatedIntervention.setOuvrierIds(new ArrayList<>());
+            }
+            logger.info("Intervention {} mise à jour, ouvrierIds: {}", id, updatedIntervention.getOuvrierIds());
             return ResponseEntity.ok(updatedIntervention);
 
         } catch (Exception e) {
@@ -677,6 +707,11 @@ public class TechnicienController {
             
             if (intervention == null || intervention.getTechnicienId() != technicienId) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            // S'assurer que ouvrierIds est initialisé
+            if (intervention.getOuvrierIds() == null) {
+                intervention.setOuvrierIds(new ArrayList<>());
             }
 
             intervention.getOuvrierIds().removeIf(mid -> mid == mainDOeuvreId);
@@ -702,10 +737,18 @@ public class TechnicienController {
             notificationService.notifierChefService(intervention.getChefServiceId(), 
                 "Main-d'œuvre désaffectée de l'intervention #" + id);
 
-            return ResponseEntity.ok(interventionService.findById(id));
+            // Recharger l'intervention mise à jour
+            Intervention updatedIntervention = interventionService.findById(id);
+            // S'assurer que ouvrierIds est initialisé
+            if (updatedIntervention.getOuvrierIds() == null) {
+                updatedIntervention.setOuvrierIds(new ArrayList<>());
+            }
+            logger.info("Intervention {} - main-d'œuvre {} désaffectée, ouvrierIds restants: {}", 
+                id, mainDOeuvreId, updatedIntervention.getOuvrierIds());
+            return ResponseEntity.ok(updatedIntervention);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur lors de la désaffectation de main-d'œuvre {} de l'intervention {}", mainDOeuvreId, id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

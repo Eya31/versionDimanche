@@ -248,11 +248,24 @@
     </div>
   </div>
 
-  <!-- MODAL PLANIFICATION COMPLÈTE -->
+  <!-- MODAL PLANIFICATION AVEC NOUVEAU COMPOSANT -->
   <div class="modal-overlay" *ngIf="showPlanificationModal && selectedDemande" (click)="closePlanificationModal()">
+    <div class="modal-content planification-modal" (click)="$event.stopPropagation()" style="max-width: 1200px; max-height: 95vh; overflow-y: auto;">
+      <button class="close-btn" (click)="closePlanificationModal()">×</button>
+      
+      <app-intervention-planification
+        [demandeId]="selectedDemande.id"
+        (planificationComplete)="onPlanificationComplete($event)"
+        (cancelled)="closePlanificationModal()">
+      </app-intervention-planification>
+    </div>
+  </div>
+
+  <!-- ANCIEN MODAL PLANIFICATION (à supprimer plus tard) -->
+  <div class="modal-overlay" *ngIf="false" (click)="closePlanificationModal()">
     <div class="modal-content planification-modal" (click)="$event.stopPropagation()" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
       <button class="close-btn" (click)="closePlanificationModal()">×</button>
-      <h2>📅 Planifier l'Intervention - Demande #{{selectedDemande.id}}</h2>
+      <h2>📅 Planifier l'Intervention - Demande #{{selectedDemande?.id}}</h2>
 
       <form>
         <!-- Sélection Technicien -->

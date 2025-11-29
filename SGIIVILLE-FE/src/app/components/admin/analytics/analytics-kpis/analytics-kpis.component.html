@@ -1,0 +1,251 @@
+<div class="analytics-container">
+  <div class="header">
+    <h1>📈 Analytics & KPIs</h1>
+    <div class="header-actions">
+      <select [(ngModel)]="selectedPeriod" (ngModelChange)="onPeriodChange()" class="period-select">
+        <option value="7j">7 derniers jours</option>
+        <option value="30j">30 derniers jours</option>
+        <option value="90j">3 derniers mois</option>
+        <option value="12m">12 derniers mois</option>
+      </select>
+      <button class="btn btn-primary" (click)="refresh()" [disabled]="loading">
+        🔄 Actualiser
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>⏳ Chargement des données...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    <!-- KPIs Principaux -->
+    <div class="kpis-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon">🧭</div>
+        <div class="kpi-content">
+          <h3>Total Interventions</h3>
+          <div class="kpi-value">{{ totalInterventions }}</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-content">
+          <h3>Interventions Terminées</h3>
+          <div class="kpi-value">{{ interventionsTerminees }}</div>
+          <div class="kpi-subvalue">
+            {{ totalInterventions > 0 ? Math.round((interventionsTerminees / totalInterventions) * 100) : 0 }}%
+          </div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">⏱️</div>
+        <div class="kpi-content">
+          <h3>Durée Moyenne</h3>
+          <div class="kpi-value">{{ formatDuree(dureeMoyenneGlobale) }}</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">👷</div>
+        <div class="kpi-content">
+          <h3>Techniciens Actifs</h3>
+          <div class="kpi-value">{{ techniciensActifs }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="charts-grid">
+      <!-- 1. Interventions par type -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2>📊 Interventions par Type</h2>
+        </div>
+        <div class="chart-content">
+          <div class="bar-chart vertical">
+            <div 
+              class="bar-item" 
+              *ngFor="let stat of interventionsParType"
+            >
+              <div class="bar-wrapper">
+                <div 
+                  class="bar" 
+                  [style.background-color]="stat.color"
+                  [style.height.%]="calculateBarHeight(stat.value, getMaxValue(interventionsParType))"
+                ></div>
+                <span class="bar-value">{{ stat.value }}</span>
+              </div>
+              <div class="bar-label">{{ stat.label }}</div>
+              <div class="bar-percentage">{{ stat.percentage }}%</div>
+            </div>
+          </div>
+          <div class="chart-legend" *ngIf="interventionsParType.length > 0">
+            <div class="legend-item" *ngFor="let stat of interventionsParType">
+              <span class="legend-color" [style.background-color]="stat.color"></span>
+              <span class="legend-label">{{ stat.label }}: {{ stat.value }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Durée moyenne résolution -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2>⏱️ Durée Moyenne de Résolution</h2>
+        </div>
+        <div class="chart-content">
+          <div class="duration-display">
+            <div class="duration-value">{{ formatDuree(dureeMoyenneResolution) }}</div>
+            <div class="duration-label">Temps moyen pour résoudre une intervention</div>
+            <div class="duration-breakdown" *ngIf="dureeMoyenneResolution > 0">
+              <div class="breakdown-item">
+                <span class="breakdown-label">Heures:</span>
+                <span class="breakdown-value">{{ Math.floor(dureeMoyenneResolution) }}h</span>
+              </div>
+              <div class="breakdown-item">
+                <span class="breakdown-label">Minutes:</span>
+                <span class="breakdown-value">{{ Math.round((dureeMoyenneResolution % 1) * 60) }}min</span>
+              </div>
+            </div>
+          </div>
+          <div class="duration-chart">
+            <div class="duration-bar">
+              <div 
+                class="duration-fill" 
+                [style.width.%]="Math.min((dureeMoyenneResolution / 48) * 100, 100)"
+                [style.background-color]="dureeMoyenneResolution > 24 ? '#ef4444' : dureeMoyenneResolution > 12 ? '#f59e0b' : '#10b981'"
+              ></div>
+            </div>
+            <div class="duration-scale">
+              <span>0h</span>
+              <span>12h</span>
+              <span>24h</span>
+              <span>48h+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Performance techniciens -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2>🏆 Performance des Techniciens</h2>
+        </div>
+        <div class="chart-content">
+          <div class="performance-list">
+            <div 
+              class="performance-item" 
+              *ngFor="let perf of performanceTechniciens"
+            >
+              <div class="perf-header">
+                <div class="perf-name">{{ perf.nom }}</div>
+                <div class="perf-score" [style.color]="getPerformanceColor(perf.score)">
+                  Score: {{ perf.score }}
+                </div>
+              </div>
+              <div class="perf-stats">
+                <div class="perf-stat">
+                  <span class="stat-label">Terminées:</span>
+                  <span class="stat-value">{{ perf.interventionsTerminees }}</span>
+                </div>
+                <div class="perf-stat">
+                  <span class="stat-label">Durée moy.:</span>
+                  <span class="stat-value">{{ formatDuree(perf.dureeMoyenne) }}</span>
+                </div>
+                <div class="perf-stat">
+                  <span class="stat-label">Taux réussite:</span>
+                  <span class="stat-value">{{ perf.tauxReussite }}%</span>
+                </div>
+              </div>
+              <div class="perf-bar">
+                <div 
+                  class="perf-fill" 
+                  [style.width.%]="(perf.score / getMaxPerformance()) * 100"
+                  [style.background-color]="getPerformanceColor(perf.score)"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="empty-state" *ngIf="performanceTechniciens.length === 0">
+            <p>📭 Aucune donnée de performance disponible</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Charges par service -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2>📦 Charges par Service</h2>
+        </div>
+        <div class="chart-content">
+          <div class="charge-chart">
+            <div 
+              class="charge-item" 
+              *ngFor="let charge of chargesParService"
+            >
+              <div class="charge-header">
+                <div class="charge-name">{{ charge.serviceName }}</div>
+                <div class="charge-value" [style.color]="getChargeColor(charge.charge, getMaxCharge())">
+                  {{ charge.charge.toFixed(1) }} h
+                </div>
+              </div>
+              <div class="charge-bar">
+                <div 
+                  class="charge-fill" 
+                  [style.width.%]="(charge.charge / getMaxCharge()) * 100"
+                  [style.background-color]="getChargeColor(charge.charge, getMaxCharge())"
+                ></div>
+              </div>
+              <div class="charge-details">
+                <span>{{ charge.interventions }} interventions</span>
+                <span>•</span>
+                <span>Durée moy.: {{ formatDuree(charge.dureeMoyenne) }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="empty-state" *ngIf="chargesParService.length === 0">
+            <p>📭 Aucune charge de service disponible</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Evolution mensuelle -->
+      <div class="chart-card full-width">
+        <div class="chart-header">
+          <h2>📈 Évolution Mensuelle</h2>
+        </div>
+        <div class="chart-content">
+          <div class="line-chart">
+            <div class="chart-bars">
+              <div 
+                class="chart-bar-item" 
+                *ngFor="let stat of evolutionMensuelle"
+              >
+                <div class="bar-wrapper">
+                  <div 
+                    class="bar" 
+                    [style.background-color]="stat.color"
+                    [style.height.%]="calculateBarHeight(stat.value, getMaxValue(evolutionMensuelle))"
+                  ></div>
+                  <span class="bar-value">{{ stat.value }}</span>
+                </div>
+                <div class="bar-label">{{ stat.label }}</div>
+              </div>
+            </div>
+            <div class="chart-line" *ngIf="evolutionMensuelle.length > 1">
+              <svg class="line-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <polyline
+                  [attr.points]="getLinePoints()"
+                  fill="none"
+                  stroke="#3b82f6"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

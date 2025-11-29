@@ -1,0 +1,397 @@
+<div class="planification-container">
+  <!-- Étape 1: Définir les exigences -->
+  <div *ngIf="etapeActuelle === 'exigences'" class="etape-exigences">
+    <h2>📋 Définir les exigences de l'intervention</h2>
+    
+    <!-- Compétences requises -->
+    <div class="section-exigences">
+      <h3>👨‍🔧 Compétences des techniciens requises</h3>
+      
+      <div class="ajout-exigence">
+        <select 
+          [(ngModel)]="nouvelleCompetence.competence" 
+          class="form-control"
+        >
+          <option value="">-- Sélectionner une compétence --</option>
+          <option *ngFor="let comp of listeCompetencesDisponibles" [value]="comp">
+            {{ comp }}
+          </option>
+        </select>
+        <input 
+          type="number" 
+          [(ngModel)]="nouvelleCompetence.nombreTechniciens" 
+          min="1"
+          placeholder="Nombre"
+          class="form-control nombre-input"
+        />
+        <button (click)="ajouterCompetence()" class="btn btn-primary">
+          + Ajouter
+        </button>
+      </div>
+
+      <div class="liste-exigences">
+        <div *ngFor="let comp of competencesRequises; let i = index" class="exigence-item">
+          <span>{{ comp.competence }} ({{ comp.nombreTechniciens }} technicien(s))</span>
+          <button (click)="supprimerCompetence(i)" class="btn-supprimer">×</button>
+        </div>
+        <div *ngIf="competencesRequises.length === 0" class="empty-state">
+          Aucune compétence ajoutée
+        </div>
+      </div>
+    </div>
+
+    <!-- Matériels requis -->
+    <div class="section-exigences">
+      <h3>🔧 Matériels requis</h3>
+      
+      <div class="ajout-exigence">
+        <select 
+          [(ngModel)]="nouveauMateriel.designation" 
+          class="form-control"
+        >
+          <option value="">-- Sélectionner un matériel --</option>
+          <option *ngFor="let mat of listeMaterielsDisponibles" [value]="mat.designation">
+            {{ mat.designation }} (Stock: {{ mat.quantiteEnStock }})
+          </option>
+        </select>
+        <input 
+          type="number" 
+          [(ngModel)]="nouveauMateriel.quantiteRequise" 
+          min="1"
+          placeholder="Quantité"
+          class="form-control nombre-input"
+        />
+        <button (click)="ajouterMateriel()" class="btn btn-primary">
+          + Ajouter
+        </button>
+      </div>
+
+      <div class="liste-exigences">
+        <div *ngFor="let mat of materielsRequis; let i = index" class="exigence-item">
+          <span>{{ mat.designation }} ({{ mat.quantiteRequise }} unité(s))</span>
+          <button (click)="supprimerMateriel(i)" class="btn-supprimer">×</button>
+        </div>
+        <div *ngIf="materielsRequis.length === 0" class="empty-state">
+          Aucun matériel ajouté
+        </div>
+      </div>
+    </div>
+
+    <!-- Équipements requis -->
+    <div class="section-exigences">
+      <h3>🚜 Équipements requis</h3>
+      
+      <div class="ajout-exigence">
+        <select 
+          [(ngModel)]="nouvelEquipement.type" 
+          class="form-control"
+        >
+          <option value="">-- Sélectionner un type d'équipement --</option>
+          <option *ngFor="let type of listeEquipementsDisponibles" [value]="type">
+            {{ type }}
+          </option>
+        </select>
+        <input 
+          type="number" 
+          [(ngModel)]="nouvelEquipement.quantiteRequise" 
+          min="1"
+          placeholder="Quantité"
+          class="form-control nombre-input"
+        />
+        <button (click)="ajouterEquipement()" class="btn btn-primary">
+          + Ajouter
+        </button>
+      </div>
+
+      <div class="liste-exigences">
+        <div *ngFor="let eq of equipementsRequis; let i = index" class="exigence-item">
+          <span>{{ eq.type }} ({{ eq.quantiteRequise }} équipement(s))</span>
+          <button (click)="supprimerEquipement(i)" class="btn-supprimer">×</button>
+        </div>
+        <div *ngIf="equipementsRequis.length === 0" class="empty-state">
+          Aucun équipement ajouté
+        </div>
+      </div>
+    </div>
+
+    <!-- Période de recherche -->
+    <div class="section-periode">
+      <h3>📅 Période de recherche</h3>
+      <div class="periode-inputs">
+        <div class="form-group">
+          <label>Date de début</label>
+          <input type="date" [(ngModel)]="dateDebut" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Date de fin</label>
+          <input type="date" [(ngModel)]="dateFin" class="form-control" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button (click)="annuler()" class="btn btn-secondary">Annuler</button>
+      <button 
+        (click)="validerDates()" 
+        class="btn btn-primary"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">🔍 Rechercher les dates disponibles</span>
+        <span *ngIf="isLoading">⏳ Recherche en cours...</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Étape 2: Calendrier avec validation -->
+  <div *ngIf="etapeActuelle === 'calendrier'" class="etape-calendrier">
+    <h2>📆 Sélectionner une date d'intervention</h2>
+
+    <!-- Statistiques -->
+    <div class="stats-dates">
+      <div class="stat-item vert">
+        <span class="stat-number">{{ nombreDatesVertes }}</span>
+        <span class="stat-label">Dates disponibles</span>
+      </div>
+      <div class="stat-item jaune">
+        <span class="stat-number">{{ nombreDatesJaunes }}</span>
+        <span class="stat-label">Dates partielles</span>
+      </div>
+      <div class="stat-item rouge">
+        <span class="stat-number">{{ nombreDatesRouges }}</span>
+        <span class="stat-label">Dates indisponibles</span>
+      </div>
+    </div>
+
+    <!-- Légende -->
+    <div class="legende">
+      <div class="legende-item">
+        <span class="color-box vert"></span>
+        <span>Toutes les ressources disponibles</span>
+      </div>
+      <div class="legende-item">
+        <span class="color-box jaune"></span>
+        <span>Techniciens et équipements OK, matériel insuffisant</span>
+      </div>
+      <div class="legende-item">
+        <span class="color-box rouge"></span>
+        <span>Ressources manquantes</span>
+      </div>
+    </div>
+
+    <!-- Calendrier -->
+    <div class="calendrier-container">
+      <div *ngFor="let mois of calendrierMois" class="mois-calendrier">
+        <h3 class="mois-titre">{{ mois.nom }}</h3>
+        
+        <div class="calendrier-table">
+          <!-- En-tête des jours de la semaine -->
+          <div class="calendrier-header">
+            <div *ngFor="let jour of joursSemaine" class="jour-header">
+              {{ jour }}
+            </div>
+          </div>
+          
+          <!-- Semaines -->
+          <div *ngFor="let semaine of mois.semaines" class="calendrier-semaine">
+            <div 
+              *ngFor="let jour of semaine" 
+              class="calendrier-jour"
+              [class.vide]="jour.vide"
+              [class.disponible]="jour.status === 'VERT'"
+              [class.partiel]="jour.status === 'JAUNE'"
+              [class.indisponible]="jour.status === 'ROUGE'"
+              [class.hors-periode]="!jour.status"
+              (click)="!jour.vide && jour.status && selectionnerDate(jour.date, jour.status)"
+            >
+              <div class="jour-numero" *ngIf="!jour.vide">
+                {{ jour.numero }}
+              </div>
+              <div class="jour-indicateur" *ngIf="!jour.vide && jour.status">
+                <span class="cercle" [class.vert]="jour.status === 'VERT'" 
+                                      [class.jaune]="jour.status === 'JAUNE'" 
+                                      [class.rouge]="jour.status === 'ROUGE'"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button (click)="retourEtape()" class="btn btn-secondary">← Retour</button>
+    </div>
+  </div>
+
+  <!-- Étape 3: Sélection des ressources -->
+  <div *ngIf="etapeActuelle === 'selection'" class="etape-selection">
+    <h2>🎯 Sélectionner les ressources pour le {{ formatDate(dateSelectionnee!) }}</h2>
+
+    <div class="selection-container">
+      <!-- Sélection des techniciens -->
+      <div class="section-selection">
+        <h3>👨‍🔧 Sélectionner les techniciens</h3>
+        <p class="info-requise">{{ competencesRequises.length }} compétence(s) requise(s)</p>
+        
+        <div class="liste-ressources">
+          <div 
+            *ngFor="let tech of techniciensDisponibles" 
+            class="ressource-item"
+            [class.selected]="techniciensSelectionnes.includes(tech.id)"
+            (click)="toggleTechnicien(tech.id)"
+          >
+            <div class="ressource-info">
+              <div class="ressource-nom">{{ tech.nom }}</div>
+              <div class="ressource-details">
+                📧 {{ tech.email }}
+              </div>
+              <div class="ressource-competences">
+                <span *ngFor="let comp of tech.competences" class="badge-competence">
+                  {{ comp }}
+                </span>
+              </div>
+            </div>
+            <div class="ressource-action">
+              <span *ngIf="techniciensSelectionnes.includes(tech.id)" class="check-icon">✓</span>
+            </div>
+          </div>
+          <div *ngIf="techniciensDisponibles.length === 0" class="empty-state">
+            Aucun technicien disponible pour cette date
+          </div>
+        </div>
+      </div>
+
+      <!-- Sélection des équipements -->
+      <div class="section-selection">
+        <h3>🚜 Sélectionner les équipements</h3>
+        <p class="info-requise">{{ equipementsRequis.length }} type(s) d'équipement requis</p>
+        
+        <div class="liste-ressources">
+          <div 
+            *ngFor="let eq of equipementsDisponibles" 
+            class="ressource-item"
+            [class.selected]="equipementsSelectionnes.includes(eq.id)"
+            (click)="toggleEquipement(eq.id)"
+          >
+            <div class="ressource-info">
+              <div class="ressource-nom">{{ eq.nom }}</div>
+              <div class="ressource-details">
+                🏷️ Type: {{ eq.type }} | ⚙️ État: {{ eq.etat }}
+              </div>
+            </div>
+            <div class="ressource-action">
+              <span *ngIf="equipementsSelectionnes.includes(eq.id)" class="check-icon">✓</span>
+            </div>
+          </div>
+          <div *ngIf="equipementsDisponibles.length === 0" class="empty-state">
+            Aucun équipement disponible
+          </div>
+        </div>
+      </div>
+
+      <!-- Sélection des matériels -->
+      <div class="section-selection">
+        <h3>🔧 Définir les quantités de matériels</h3>
+        <p class="info-requise">{{ materielsRequis.length }} matériel(aux) requis</p>
+        
+        <div class="liste-ressources">
+          <div *ngFor="let mat of materielsDisponibles" class="ressource-item materiel">
+            <div class="ressource-info">
+              <div class="ressource-nom">{{ mat.designation }}</div>
+              <div class="ressource-details">
+                📦 Stock disponible: {{ mat.quantiteEnStock }} {{ mat.unite || 'unité(s)' }}
+              </div>
+              <div class="ressource-details">
+                ✅ Requis: {{ getQuantiteRequise(mat.designation) }}
+              </div>
+            </div>
+            <div class="ressource-action">
+              <input 
+                type="number" 
+                [value]="getQuantiteSelectionnee(mat.id)"
+                (input)="setQuantiteMateriel(mat.id, +$any($event.target).value)"
+                [max]="mat.quantiteEnStock"
+                [min]="0"
+                class="quantite-input"
+                placeholder="Quantité"
+              />
+            </div>
+          </div>
+          <div *ngIf="materielsDisponibles.length === 0" class="empty-state">
+            Aucun matériel disponible en stock suffisant
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button (click)="retourEtape()" class="btn btn-secondary">← Retour au calendrier</button>
+      <button 
+        (click)="validerSelections()" 
+        class="btn btn-primary"
+        [disabled]="!selectionsValides()"
+      >
+        Valider les sélections →
+      </button>
+    </div>
+  </div>
+
+  <!-- Étape 4: Confirmation -->
+  <div *ngIf="etapeActuelle === 'confirmation'" class="etape-confirmation">
+    <h2>✅ Confirmer la planification</h2>
+
+    <div class="confirmation-details">
+      <div class="detail-section">
+        <h3>📅 Date sélectionnée</h3>
+        <p class="date-selected">{{ formatDate(dateSelectionnee!) }}</p>
+      </div>
+
+      <div class="detail-section">
+        <h3>📋 Récapitulatif des exigences</h3>
+        
+        <div class="recap-item" *ngIf="competencesRequises.length > 0">
+          <strong>Compétences :</strong>
+          <ul>
+            <li *ngFor="let comp of competencesRequises">
+              {{ comp.competence }} ({{ comp.nombreTechniciens }} technicien(s))
+            </li>
+          </ul>
+        </div>
+
+        <div class="recap-item" *ngIf="materielsRequis.length > 0">
+          <strong>Matériels :</strong>
+          <ul>
+            <li *ngFor="let mat of materielsRequis">
+              {{ mat.designation }} ({{ mat.quantiteRequise }} unité(s))
+            </li>
+          </ul>
+        </div>
+
+        <div class="recap-item" *ngIf="equipementsRequis.length > 0">
+          <strong>Équipements :</strong>
+          <ul>
+            <li *ngFor="let eq of equipementsRequis">
+              {{ eq.type }} ({{ eq.quantiteRequise }} équipement(s))
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="validation-status">
+        <div class="status-badge success">
+          ✅ Cette date remplit toutes les conditions
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button (click)="retourEtape()" class="btn btn-secondary">← Retour</button>
+      <button (click)="confirmerPlanification()" class="btn btn-success">
+        ✅ Confirmer la planification
+      </button>
+    </div>
+  </div>
+</div>

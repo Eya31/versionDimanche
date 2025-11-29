@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 export interface Utilisateur {
   id: number;
   nom: string;
+  prenom?: string;
   email: string;
   role: string;
 }
@@ -21,6 +22,10 @@ export class UtilisateurService {
 
   getUtilisateurById(id: number): Observable<Utilisateur> {
     return this.http.get<Utilisateur>(`${this.baseUrl}/${id}`);
+  }
+
+  getUserById(id: number): Observable<Utilisateur> {
+    return this.getUtilisateurById(id);
   }
 
   createUtilisateur(utilisateur: Utilisateur): Observable<Utilisateur> {

@@ -1,0 +1,157 @@
+<div class="admin-overview">
+    <!-- Header -->
+    <header class="overview-header">
+        <div class="header-content">
+            <h1>🎯 Dashboard Administrateur</h1>
+            <p class="subtitle">Système de Gestion Intelligente des Interventions Ville • Tunis 2025</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-refresh" (click)="refreshData()">
+                <span class="icon">↻</span>
+                Actualiser
+            </button>
+        </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+        <div *ngFor="let kpi of kpis" class="kpi-card" [style.border-left]="'4px solid ' + kpi.color"
+            [routerLink]="kpi.route" [class.clickable]="kpi.route">
+            <div class="kpi-icon" [style.background]="kpi.color + '20'">
+                <span [style.color]="kpi.color">{{ kpi.icon }}</span>
+            </div>
+            <div class="kpi-content">
+                <h3 class="kpi-value">{{ kpi.value }}</h3>
+                <p class="kpi-title">{{ kpi.title }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts & Lists Row -->
+    <div class="content-grid">
+        <!-- Left Column: Charts -->
+        <div class="chart-section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>📈 Interventions des 7 derniers jours</h2>
+                </div>
+                <div class="card-body">
+                    <div class="chart-placeholder" *ngIf="!chartData.length">
+                        <p>Chargement des données...</p>
+                    </div>
+                    <div class="simple-line-chart" *ngIf="chartData.length">
+                        <div class="chart-bars">
+                            <div *ngFor="let data of chartData" class="chart-bar-item">
+                                <div class="bar-container">
+                                    <div class="bar" [style.height]="calculateBarHeight(data.count) + '%'"
+                                        [title]="data.count + ' interventions'">
+                                    </div>
+                                </div>
+                                <span class="bar-label">{{ data.label }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>🎯 Répartition par état</h2>
+                </div>
+                <div class="card-body">
+                    <div class="stats-list">
+                        <div class="stat-item" *ngFor="let stat of statsParEtat">
+                            <div class="stat-label">
+                                <span class="stat-color" [style.background]="stat.color"></span>
+                                <span>{{ stat.label }}</span>
+                            </div>
+                            <div class="stat-value">{{ stat.count }}</div>
+                            <div class="stat-bar">
+                                <div class="stat-bar-fill" [style.width]="stat.percentage + '%'"
+                                    [style.background]="stat.color"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Lists -->
+        <div class="lists-section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>🆕 Dernières interventions</h2>
+                    <a [routerLink]="['/admin/interventions/liste']" class="view-all">Voir tout →</a>
+                </div>
+                <div class="card-body">
+                    <div class="list-empty" *ngIf="!recentInterventions.length">
+                        <div class="empty-icon">📋</div>
+                        <p>Aucune intervention récente</p>
+                    </div>
+                    <div class="item-list" *ngIf="recentInterventions.length">
+                        <div class="list-item" *ngFor="let intervention of recentInterventions">
+                            <div class="item-icon">🔧</div>
+                            <div class="item-content">
+                                <div class="item-title">#{{ intervention.id }} - {{ intervention.description |
+                                    slice:0:40 }}...</div>
+                                <div class="item-meta">
+                                    <span class="badge" [ngClass]="getEtatClass(intervention.etat)">{{ intervention.etat
+                                        }}</span>
+                                    <span class="item-date">{{ intervention.datePlanifiee | date:'dd/MM/yyyy' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>👥 Derniers utilisateurs</h2>
+                    <a [routerLink]="['/admin/users']" class="view-all">Voir tout →</a>
+                </div>
+                <div class="card-body">
+                    <div class="list-empty" *ngIf="!recentUsers.length">
+                        <div class="empty-icon">👤</div>
+                        <p>Aucun utilisateur récent</p>
+                    </div>
+                    <div class="item-list" *ngIf="recentUsers.length">
+                        <div class="list-item" *ngFor="let user of recentUsers">
+                            <div class="item-icon">{{ getRoleIcon(user.role) }}</div>
+                            <div class="item-content">
+                                <div class="item-title">{{ user.nom }}</div>
+                                <div class="item-meta">
+                                    <span class="badge" [ngClass]="getRoleClass(user.role)">{{ user.role }}</span>
+                                    <span class="item-email">{{ user.email }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2>⚡ Actions rapides</h2>
+        <div class="action-grid">
+            <button class="action-btn" [routerLink]="['/admin/users/add']">
+                <span class="action-icon">✨</span>
+                <span class="action-label">Ajouter un utilisateur</span>
+            </button>
+            <button class="action-btn" [routerLink]="['/admin/interventions/carte']">
+                <span class="action-icon">📍</span>
+                <span class="action-label">Voir carte interventions</span>
+            </button>
+            <button class="action-btn" [routerLink]="['/admin/statistiques']">
+                <span class="action-icon">📊</span>
+                <span class="action-label">Statistiques globales</span>
+            </button>
+            <button class="action-btn" [routerLink]="['/admin/systeme/backup']">
+                <span class="action-icon">💾</span>
+                <span class="action-label">Sauvegarder système</span>
+            </button>
+        </div>
+    </div>
+</div>

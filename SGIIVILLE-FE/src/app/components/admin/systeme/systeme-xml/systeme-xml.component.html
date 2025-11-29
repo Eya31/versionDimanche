@@ -1,0 +1,38 @@
+<div class="xml-container">
+  <div class="header">
+    <h1>📁 Gestion des fichiers XML</h1>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des fichiers...</p>
+  </div>
+
+  <div *ngIf="!loading" class="xml-files">
+    <div class="files-list">
+      <div class="file-item" *ngFor="let file of xmlFiles">
+        <div class="file-info">
+          <div class="file-icon">📄</div>
+          <div class="file-details">
+            <div class="file-name">{{ file.name }}</div>
+            <div class="file-meta">
+              <span>Taille: {{ file.size }}</span>
+              <span>Modifié: {{ file.lastModified | date:'short' }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="file-actions">
+          <button class="btn btn-sm btn-primary" (click)="validateXml(file.name)">
+            Valider
+          </button>
+          <button class="btn btn-sm btn-secondary" (click)="exportXml(file.name)">
+            Exporter
+          </button>
+          <button class="btn btn-sm btn-info" (click)="importXml(file.name)">
+            Importer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

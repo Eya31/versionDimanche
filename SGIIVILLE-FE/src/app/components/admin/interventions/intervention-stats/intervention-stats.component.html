@@ -1,0 +1,122 @@
+<div class="stats-container">
+  <div class="header">
+    <h1>📊 Statistiques & KPIs des interventions</h1>
+    <button class="btn btn-primary" (click)="refresh()" [disabled]="loading">
+      🔄 Actualiser
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des statistiques...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    <!-- KPIs -->
+    <div class="kpis-grid">
+      <div class="kpi-card" *ngFor="let kpi of kpis" [style.border-left-color]="kpi.color">
+        <div class="kpi-icon">{{ kpi.icon }}</div>
+        <div class="kpi-content">
+          <h3>{{ kpi.title }}</h3>
+          <div class="kpi-value" [style.color]="kpi.color">{{ kpi.value }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="charts-grid">
+      <!-- Stats par état -->
+      <div class="chart-card">
+        <h2>Répartition par état</h2>
+        <div class="chart-content">
+          <div class="bar-chart">
+            <div 
+              class="bar-item" 
+              *ngFor="let stat of statsParEtat"
+            >
+              <div class="bar-label">{{ stat.label }}</div>
+              <div class="bar-wrapper">
+                <div 
+                  class="bar" 
+                  [style.background-color]="stat.color"
+                  [style.height.%]="calculateBarHeight(stat.count, getMaxValue(statsParEtat))"
+                ></div>
+                <span class="bar-value">{{ stat.count }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats par priorité -->
+      <div class="chart-card">
+        <h2>Répartition par priorité</h2>
+        <div class="chart-content">
+          <div class="bar-chart">
+            <div 
+              class="bar-item" 
+              *ngFor="let stat of statsParPriorite"
+            >
+              <div class="bar-label">{{ stat.label }}</div>
+              <div class="bar-wrapper">
+                <div 
+                  class="bar" 
+                  [style.background-color]="stat.color"
+                  [style.height.%]="calculateBarHeight(stat.count, getMaxValue(statsParPriorite))"
+                ></div>
+                <span class="bar-value">{{ stat.count }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats par mois -->
+      <div class="chart-card">
+        <h2>Évolution sur 7 mois</h2>
+        <div class="chart-content">
+          <div class="bar-chart">
+            <div 
+              class="bar-item" 
+              *ngFor="let stat of statsParMois"
+            >
+              <div class="bar-label">{{ stat.label }}</div>
+              <div class="bar-wrapper">
+                <div 
+                  class="bar" 
+                  [style.background-color]="stat.color"
+                  [style.height.%]="calculateBarHeight(stat.count, getMaxValue(statsParMois))"
+                ></div>
+                <span class="bar-value">{{ stat.count }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertes -->
+    <div class="alerts-grid">
+      <div class="alert-card" *ngIf="interventionsUrgentes.length > 0">
+        <h3>🚨 Interventions urgentes ({{ interventionsUrgentes.length }})</h3>
+        <div class="alert-list">
+          <div class="alert-item" *ngFor="let intervention of interventionsUrgentes">
+            <span class="alert-id">#{{ intervention.id }}</span>
+            <span class="alert-text">{{ intervention.description || 'Sans description' }}</span>
+            <a [routerLink]="['/admin/interventions', intervention.id]" class="alert-link">Voir →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert-card" *ngIf="interventionsEnRetard.length > 0">
+        <h3>⏰ Interventions en retard ({{ interventionsEnRetard.length }})</h3>
+        <div class="alert-list">
+          <div class="alert-item" *ngFor="let intervention of interventionsEnRetard">
+            <span class="alert-id">#{{ intervention.id }}</span>
+            <span class="alert-text">{{ intervention.description || 'Sans description' }}</span>
+            <a [routerLink]="['/admin/interventions', intervention.id]" class="alert-link">Voir →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

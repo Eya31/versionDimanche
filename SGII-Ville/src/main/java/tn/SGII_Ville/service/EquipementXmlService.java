@@ -120,6 +120,12 @@ public class EquipementXmlService {
 
     public Equipement save(Equipement equipement) {
         try {
+            // Si l'équipement a déjà un ID, faire un update
+            if (equipement.getId() != null && equipement.getId() > 0) {
+                return update(equipement.getId(), equipement);
+            }
+            
+            // Sinon créer un nouvel équipement
             Document doc = xmlService.loadXmlDocument("Equipements");
             Element root = doc.getDocumentElement();
 
@@ -208,6 +214,32 @@ public class EquipementXmlService {
                     if (equipement.getDisponible() != null) {
                         updateElementTextContent(el, "disponible", String.valueOf(equipement.getDisponible()));
                     }
+                    
+                    // Indisponibilités
+                    if (equipement.getIndisponibilites() != null) {
+                        // Supprimer l'ancien élément indisponibilites
+                        NodeList indispoNodes = el.getElementsByTagNameNS(xmlService.getNamespaceUri(), "indisponibilites");
+                        if (indispoNodes.getLength() > 0) {
+                            el.removeChild(indispoNodes.item(0));
+                        }
+                        
+                        // Créer le nouvel élément
+                        Element indisponibilitesEl = doc.createElementNS(xmlService.getNamespaceUri(), "indisponibilites");
+                        for (Object indispo : equipement.getIndisponibilites()) {
+                            if (indispo instanceof String) {
+                                // Format simple : dates comme strings
+                                xmlService.addTextElement(doc, indisponibilitesEl, "date", (String) indispo);
+                            } else if (indispo instanceof PeriodeIndisponibilite) {
+                                // Format période
+                                PeriodeIndisponibilite periode = (PeriodeIndisponibilite) indispo;
+                                Element periodeEl = doc.createElementNS(xmlService.getNamespaceUri(), "periode");
+                                xmlService.addTextElement(doc, periodeEl, "debut", periode.getDebut());
+                                xmlService.addTextElement(doc, periodeEl, "fin", periode.getFin());
+                                indisponibilitesEl.appendChild(periodeEl);
+                            }
+                        }
+                        el.appendChild(indisponibilitesEl);
+                    }
 
                     xmlService.saveXmlDocument(doc, "Equipements");
                     return equipement;
@@ -247,5 +279,44 @@ public class EquipementXmlService {
 
     private int generateNewId(Document doc) {
         return xmlService.generateNewId(doc, "Equipements");
+    }
+
+    /**
+     * Ajoute une date d'indisponibilité à un équipement
+     */
+    public void ajouterDateIndisponibilite(int equipementId, String date) {
+        try {
+            Document doc = xmlService.loadXmlDocument("Equipements");
+            NodeList nodes = doc.getElementsByTagNameNS(xmlService.getNamespaceUri(), "Equipement");
+            
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Element el = (Element) nodes.item(i);
+                if (Integer.parseInt(xmlService.getElementTextContent(el, "id")) == equipementId) {
+                    
+                    // Chercher ou créer l'élément indisponibilites
+                    Element indisponibilitesEl;
+                    NodeList indispoNodes = el.getElementsByTagNameNS(xmlService.getNamespaceUri(), "indisponibilites");
+                    
+                    if (indispoNodes.getLength() > 0) {
+                        indisponibilitesEl = (Element) indispoNodes.item(0);
+                    } else {
+                        indisponibilitesEl = doc.createElementNS(xmlService.getNamespaceUri(), "indisponibilites");
+                        el.appendChild(indisponibilitesEl);
+                    }
+                    
+                    // Ajouter la nouvelle période
+                    Element periodeEl = doc.createElementNS(xmlService.getNamespaceUri(), "periode");
+                    xmlService.addTextElement(doc, periodeEl, "debut", date);
+                    xmlService.addTextElement(doc, periodeEl, "fin", date);
+                    indisponibilitesEl.appendChild(periodeEl);
+                    
+                    xmlService.saveXmlDocument(doc, "Equipements");
+                    return;
+                }
+            }
+            throw new RuntimeException("Équipement non trouvé: " + equipementId);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de l'ajout de date d'indisponibilité", e);
+        }
     }
 }

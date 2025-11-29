@@ -1,0 +1,732 @@
+.planification-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h2 {
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+h3 {
+  color: #34495e;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Étape Exigences */
+.etape-exigences {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.section-exigences {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.ajout-exigence {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.ajout-exigence .form-control {
+  flex: 1;
+}
+
+.ajout-exigence .nombre-input {
+  width: 100px;
+}
+
+.liste-exigences {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exigence-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: white;
+  border-radius: 6px;
+  border-left: 4px solid #3498db;
+}
+
+.exigence-item span {
+  flex: 1;
+  font-size: 14px;
+}
+
+.btn-supprimer {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-supprimer:hover {
+  background: #c0392b;
+  transform: scale(1.1);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: #95a5a6;
+  font-style: italic;
+}
+
+.section-periode {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #e8f4f8;
+  border-radius: 8px;
+}
+
+.periode-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.form-control {
+  padding: 10px 15px;
+  border: 1px solid #dce4ec;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+/* Étape Calendrier */
+.etape-calendrier {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.stats-dates {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-item {
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-item.vert {
+  background: #d4edda;
+  border: 2px solid #28a745;
+}
+
+.stat-item.jaune {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+}
+
+.stat-item.rouge {
+  background: #f8d7da;
+  border: 2px solid #dc3545;
+}
+
+.stat-number {
+  display: block;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  display: block;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.legende {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.legende-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+
+.color-box.vert {
+  background: #28a745;
+}
+
+.color-box.jaune {
+  background: #ffc107;
+}
+
+.color-box.rouge {
+  background: #dc3545;
+}
+
+.calendrier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.date-card {
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.date-card.date-vert {
+  background: #d4edda;
+  border-color: #28a745;
+}
+
+.date-card.date-vert:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+}
+
+.date-card.date-jaune {
+  background: #fff3cd;
+  border-color: #ffc107;
+}
+
+.date-card.date-jaune:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(255, 193, 7, 0.3);
+}
+
+.date-card.date-rouge {
+  background: #f8d7da;
+  border-color: #dc3545;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.date-header {
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+.date-status {
+  font-size: 32px;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.date-details {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+  padding: 10px 0;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.detail-item {
+  font-size: 14px;
+  color: #dc3545;
+}
+
+.detail-item.ok {
+  color: #28a745;
+}
+
+.date-message {
+  font-size: 13px;
+  text-align: center;
+  margin-top: 10px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Étape Sélection */
+.etape-selection {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.selection-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.section-selection {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.info-requise {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.liste-ressources {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ressource-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #dee2e6;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ressource-item:hover {
+  border-color: #3498db;
+  transform: translateX(5px);
+}
+
+.ressource-item.selected {
+  border-color: #28a745;
+  background: #d4edda;
+}
+
+.ressource-item.materiel {
+  cursor: default;
+}
+
+.ressource-item.materiel:hover {
+  transform: none;
+}
+
+.ressource-info {
+  flex: 1;
+}
+
+.ressource-nom {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.ressource-details {
+  font-size: 13px;
+  color: #6c757d;
+  margin-bottom: 3px;
+}
+
+.ressource-competences {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.badge-competence {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #e3f2fd;
+  color: #1976d2;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ressource-action {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+}
+
+.check-icon {
+  width: 32px;
+  height: 32px;
+  background: #28a745;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.quantite-input {
+  width: 100px;
+  padding: 8px 12px;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.quantite-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+/* Étape Confirmation */
+.etape-confirmation {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.confirmation-details {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.detail-section {
+  margin-bottom: 25px;
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.date-selected {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+  padding: 15px;
+  background: white;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.recap-item {
+  margin-bottom: 15px;
+}
+
+.recap-item strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #2c3e50;
+}
+
+.recap-item ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.recap-item li {
+  margin-bottom: 5px;
+  color: #495057;
+}
+
+.validation-status {
+  margin-top: 20px;
+}
+
+.status-badge {
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.status-badge.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.btn-secondary {
+  background: #95a5a6;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #7f8c8d;
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* Calendrier Mensuel */
+.calendrier-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.mois-calendrier {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.mois-titre {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-transform: capitalize;
+}
+
+.calendrier-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.calendrier-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.jour-header {
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #6c757d;
+  padding: 10px 5px;
+}
+
+.calendrier-semaine {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.calendrier-jour {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  position: relative;
+  min-height: 70px;
+}
+
+.calendrier-jour.vide {
+  background: transparent;
+  cursor: default;
+}
+
+.calendrier-jour.hors-periode {
+  background: #f8f9fa;
+  color: #adb5bd;
+  cursor: default;
+}
+
+.calendrier-jour.disponible {
+  background: #d4edda;
+  border-color: #28a745;
+}
+
+.calendrier-jour.disponible:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.calendrier-jour.partiel {
+  background: #fff3cd;
+  border-color: #ffc107;
+}
+
+.calendrier-jour.partiel:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+.calendrier-jour.indisponible {
+  background: #f8d7da;
+  border-color: #dc3545;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.jour-numero {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.jour-indicateur {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cercle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.cercle.vert {
+  background: #28a745;
+}
+
+.cercle.jaune {
+  background: #ffc107;
+}
+
+.cercle.rouge {
+  background: #dc3545;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .planification-container {
+    padding: 15px;
+  }
+
+  .periode-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-dates {
+    grid-template-columns: 1fr;
+  }
+
+  .calendrier-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .legende {
+    flex-direction: column;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .calendrier-jour {
+    min-height: 50px;
+    padding: 5px;
+  }
+
+  .jour-numero {
+    font-size: 14px;
+  }
+
+  .cercle {
+    width: 10px;
+    height: 10px;
+  }
+}

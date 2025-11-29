@@ -1,0 +1,329 @@
+<div class="demandes-materiel-container">
+  <div class="header">
+    <h1>📦 Gestion des Demandes de Matériel</h1>
+    <div class="stats-cards">
+      <div class="stat-card">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-info">
+          <div class="stat-value">{{ getDemandesEnAttenteCount() }}</div>
+          <div class="stat-label">Demandes en attente</div>
+        </div>
+      </div>
+      <div class="stat-card acceptee">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <div class="stat-value">{{ getAccepteesCount() }}</div>
+          <div class="stat-label">Acceptées</div>
+        </div>
+      </div>
+      <div class="stat-card refusee">
+        <div class="stat-icon">❌</div>
+        <div class="stat-info">
+          <div class="stat-value">{{ getRefuseesCount() }}</div>
+          <div class="stat-label">Refusées</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'en-attente'"
+      (click)="switchTab('en-attente')">
+      ⏳ Demandes en attente
+      <span class="badge" *ngIf="getDemandesEnAttenteCount() > 0">
+        {{ getDemandesEnAttenteCount() }}
+      </span>
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'historique'"
+      (click)="switchTab('historique')">
+      📋 Historique
+    </button>
+  </div>
+
+  <div class="filters" *ngIf="activeTab === 'historique'">
+    <div class="search-box">
+      <input 
+        type="text" 
+        placeholder="🔍 Rechercher une demande..." 
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilters()"
+        class="search-input">
+    </div>
+    <div class="filter-buttons">
+      <button 
+        class="filter-btn" 
+        [class.active]="filterEtat === 'TOUS'"
+        (click)="filterEtat = 'TOUS'; applyFilters()">
+        Tous
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="filterEtat === 'EN_ATTENTE_ADMIN'"
+        (click)="filterEtat = 'EN_ATTENTE_ADMIN'; applyFilters()">
+        En attente
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="filterEtat === 'ACCEPTEE'"
+        (click)="filterEtat = 'ACCEPTEE'; applyFilters()">
+        Acceptées
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="filterEtat === 'REFUSEE'"
+        (click)="filterEtat = 'REFUSEE'; applyFilters()">
+        Refusées
+      </button>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <div class="demandes-list" *ngIf="!loading">
+      <div class="demande-card" *ngFor="let demande of demandesFiltrees" [ngClass]="getEtatClass(demande.etat)">
+        <div class="card-header">
+          <div class="header-left">
+            <h3>{{ demande.designation }}</h3>
+            <span class="type-badge">{{ getTypeLabel(demande.typeDemande) }}</span>
+          </div>
+          <span class="etat-badge" [ngClass]="getEtatClass(demande.etat)">
+            {{ getEtatLabel(demande.etat) }}
+          </span>
+        </div>
+        
+        <div class="card-body">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Demandeur:</span>
+              <span class="value">{{ getChefName(demande.chefId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Priorité:</span>
+              <span class="value badge" [ngClass]="getPrioriteClass('NORMALE')">
+                {{ getPrioriteLabel('NORMALE') }}
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="label">Quantité:</span>
+              <span class="value">{{ demande.quantite }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Budget:</span>
+              <span class="value">{{ demande.budget | number:'1.0-2' }} TND</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Date demande:</span>
+              <span class="value">{{ formatDate(demande.dateDemande) }}</span>
+            </div>
+          </div>
+          
+          <div class="justification" *ngIf="demande.justification">
+            <span class="label">Justification:</span>
+            <p>{{ demande.justification }}</p>
+          </div>
+
+          <div class="motif-refus" *ngIf="demande.motifRefus">
+            <span class="label">Motif de refus:</span>
+            <p>{{ demande.motifRefus }}</p>
+          </div>
+        </div>
+
+        <div class="card-actions" *ngIf="demande.etat === 'EN_ATTENTE_ADMIN'">
+          <button class="btn btn-success" (click)="accepterDemande(demande)">
+            ✅ Accepter
+          </button>
+          <button class="btn btn-danger" (click)="ouvrirRefusModal(demande)">
+            ❌ Refuser
+          </button>
+          <button class="btn btn-info" (click)="voirDetails(demande)">
+            👁️ Détails
+          </button>
+        </div>
+
+        <div class="card-actions" *ngIf="demande.etat !== 'EN_ATTENTE_ADMIN'">
+          <button class="btn btn-info" (click)="voirDetails(demande)">
+            👁️ Voir détails
+          </button>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="demandesFiltrees.length === 0">
+        <p>📭 Aucune demande trouvée</p>
+      </div>
+    </div>
+
+    <div class="loading" *ngIf="loading">
+      <p>⏳ Chargement...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Détails -->
+<div class="modal-overlay" *ngIf="showModal" (click)="fermerModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>📋 Détails de la demande</h2>
+      <button class="close-btn" (click)="fermerModal()">×</button>
+    </div>
+    <div class="modal-body" *ngIf="selectedDemande">
+      <div class="detail-section">
+        <h3>Informations générales</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="label">ID:</span>
+            <span class="value">{{ selectedDemande.id }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Désignation:</span>
+            <span class="value">{{ selectedDemande.designation }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Type:</span>
+            <span class="value">{{ getTypeLabel(selectedDemande.typeDemande) }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Quantité:</span>
+            <span class="value">{{ selectedDemande.quantite }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Budget:</span>
+            <span class="value">{{ selectedDemande.budget | number:'1.0-2' }} TND</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">État:</span>
+            <span class="value badge" [ngClass]="getEtatClass(selectedDemande.etat)">
+              {{ getEtatLabel(selectedDemande.etat) }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>👷 Informations sur le Demandeur</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="label">Nom complet:</span>
+            <span class="value">{{ getChefName(selectedDemande.chefId) }}</span>
+          </div>
+          <div class="detail-item" *ngIf="getChefInfo(selectedDemande.chefId)?.email">
+            <span class="label">Email:</span>
+            <span class="value">{{ getChefInfo(selectedDemande.chefId)?.email }}</span>
+          </div>
+          <div class="detail-item" *ngIf="getChefInfo(selectedDemande.chefId)?.role">
+            <span class="label">Rôle:</span>
+            <span class="value">{{ getChefInfo(selectedDemande.chefId)?.role }}</span>
+          </div>
+          <div class="detail-item" *ngIf="getChefInfo(selectedDemande.chefId)?.service">
+            <span class="label">Service/Équipe:</span>
+            <span class="value">{{ getChefInfo(selectedDemande.chefId)?.service }}</span>
+          </div>
+        </div>
+        <div class="historique-demandeur" *ngIf="getHistoriqueDemandeur(selectedDemande.chefId).length > 0">
+          <h4>Historique des demandes précédentes</h4>
+          <div class="historique-list">
+            <div class="historique-item" *ngFor="let histDemande of getHistoriqueDemandeur(selectedDemande.chefId).slice(0, 5)">
+              <span class="hist-date">{{ formatDate(histDemande.dateDemande) }}</span>
+              <span class="hist-designation">{{ histDemande.designation }}</span>
+              <span class="hist-etat badge" [ngClass]="getEtatClass(histDemande.etat)">
+                {{ getEtatLabel(histDemande.etat) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section" *ngIf="getInterventionInfo(selectedDemande.chefId)">
+        <h3>🔧 Informations sur l'Intervention Associée</h3>
+        <div class="detail-grid" *ngIf="getInterventionInfo(selectedDemande.chefId) as intervention">
+          <div class="detail-item">
+            <span class="label">Numéro intervention:</span>
+            <span class="value">#{{ intervention.id }}</span>
+          </div>
+          <div class="detail-item" *ngIf="intervention.typeIntervention">
+            <span class="label">Type:</span>
+            <span class="value">{{ intervention.typeIntervention }}</span>
+          </div>
+          <div class="detail-item" *ngIf="intervention.priorite">
+            <span class="label">Priorité:</span>
+            <span class="value badge" [ngClass]="getPrioriteClass(intervention.priorite)">
+              {{ getPrioriteLabel(intervention.priorite) }}
+            </span>
+          </div>
+          <div class="detail-item" *ngIf="intervention.etat">
+            <span class="label">État:</span>
+            <span class="value">{{ intervention.etat }}</span>
+          </div>
+          <div class="detail-item" *ngIf="intervention.datePlanifiee">
+            <span class="label">Date prévue:</span>
+            <span class="value">{{ formatDate(intervention.datePlanifiee) }}</span>
+          </div>
+          <div class="detail-item" *ngIf="intervention.description">
+            <span class="label">Description:</span>
+            <span class="value">{{ intervention.description }}</span>
+          </div>
+          <div class="detail-item" *ngIf="intervention.localisation">
+            <span class="label">Localisation:</span>
+            <span class="value">
+              {{ intervention.localisation.latitude }}, {{ intervention.localisation.longitude }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section" *ngIf="selectedDemande.justification">
+        <h3>Justification</h3>
+        <p>{{ selectedDemande.justification }}</p>
+      </div>
+
+      <div class="detail-section" *ngIf="selectedDemande.motifRefus">
+        <h3>Motif de refus</h3>
+        <p class="motif-refus-text">{{ selectedDemande.motifRefus }}</p>
+      </div>
+
+      <div class="detail-section">
+        <h3>Dates</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="label">Date demande:</span>
+            <span class="value">{{ formatDate(selectedDemande.dateDemande) }}</span>
+          </div>
+          <div class="detail-item" *ngIf="selectedDemande.dateTraitement">
+            <span class="label">Date traitement:</span>
+            <span class="value">{{ formatDate(selectedDemande.dateTraitement) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Refus -->
+<div class="modal-overlay" *ngIf="showRefusModal" (click)="fermerRefusModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>❌ Refuser la demande</h2>
+      <button class="close-btn" (click)="fermerRefusModal()">×</button>
+    </div>
+    <div class="modal-body" *ngIf="demandeARefuser">
+      <p><strong>{{ demandeARefuser.designation }}</strong></p>
+      <p class="info-text">Veuillez indiquer le motif de refus :</p>
+      <textarea 
+        [(ngModel)]="motifRefus"
+        placeholder="Motif de refus..."
+        class="refus-textarea"
+        rows="5"></textarea>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="fermerRefusModal()">
+          Annuler
+        </button>
+        <button class="btn btn-danger" (click)="refuserDemande()" [disabled]="!motifRefus.trim()">
+          Confirmer le refus
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

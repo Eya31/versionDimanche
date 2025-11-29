@@ -1,29 +1,215 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Demandes xmlns="http://example.com/gestion-interventions">
-            
+                            
+    
+    
+    
+    
     
     <!-- Demandes vides - Prêt pour de nouvelles instances -->
+                        
+    
+    
+    
+    
+    
+    <Demande>
+                                                
         
+        
+        
+        
+        <id>1</id>
+                                                
+        
+        
+        
+        
+        <description>fce fvefdv efvev</description>
+                                                
+        
+        
+        
+        
+        <dateSoumission>2025-11-26</dateSoumission>
+                                                
+        
+        
+        
+        
+        <etat>TRAITEE</etat>
+                                                
+        
+        
+        
+        
+        <category>Eau &amp; Assainissement</category>
+                                                
+        
+        
+        
+        
+        <subCategory>rerf</subCategory>
+                                                
+        
+        
+        
+        
+        <priority>HIGH</priority>
+                                                
+        
+        
+        
+        
+        <contactEmail/>
+                                                
+        
+        
+        
+        
+        <citoyenId>1</citoyenId>
+                                                
+        
+        
+        
+        
+        <localisation>
+                                                                        
+            
+            
+            
+            
+            <latitude>34.709618</latitude>
+                                                                        
+            
+            
+            
+            
+            <longitude>10.680781</longitude>
+                                                                        
+            
+            
+            
+            
+            <address/>
+                                                                    
+        
+        
+        
+        
+        </localisation>
+                                                
+        
+        
+        
+        
+        <photoIds>
+                                                                        
+            
+            
+            
+            
+            <photoId>1</photoId>
+                                                                    
+        
+        
+        
+        
+        </photoIds>
+                                            
+    
+    
+    
+    
+    </Demande>
+                    
+
+    
+    
+    
+    <Demande>
+                                
+        
+        
+        <id>2</id>
+                                
+        
+        
+        <description>fdsd dfgfdg fdgdfgdfgdf</description>
+                                
+        
+        
+        <dateSoumission>2025-11-29</dateSoumission>
+                                
+        
+        
+        <etat>TRAITEE</etat>
+                                
+        
+        
+        <category>Éclairage public</category>
+                                
+        
+        
+        <subCategory/>
+                                
+        
+        
+        <priority>MEDIUM</priority>
+                                
+        
+        
+        <contactEmail/>
+                                
+        
+        
+        <citoyenId>9</citoyenId>
+                                
+        
+        
+        <localisation>
+                                                
+            
+            
+            <latitude>34.709618</latitude>
+                                                
+            
+            
+            <longitude>10.680781</longitude>
+                                                
+            
+            
+            <address/>
+                                            
+        
+        
+        </localisation>
+                            
+    
+    
+    </Demande>
+            
+
     
     <Demande>
                 
-        <id>1</id>
+        <id>3</id>
                 
-        <description>fce fvefdv efvev</description>
+        <description>xcvxvx fvdfvdf vdsfvdfv</description>
                 
-        <dateSoumission>2025-11-26</dateSoumission>
+        <dateSoumission>2025-11-29</dateSoumission>
                 
         <etat>TRAITEE</etat>
                 
         <category>Eau &amp; Assainissement</category>
                 
-        <subCategory>rerf</subCategory>
+        <subCategory/>
                 
-        <priority>HIGH</priority>
+        <priority>MEDIUM</priority>
                 
         <contactEmail/>
                 
-        <citoyenId>1</citoyenId>
+        <citoyenId>9</citoyenId>
                 
         <localisation>
                         
@@ -34,12 +220,6 @@
             <address/>
                     
         </localisation>
-                
-        <photoIds>
-                        
-            <photoId>1</photoId>
-                    
-        </photoIds>
             
     </Demande>
     

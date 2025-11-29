@@ -1,0 +1,76 @@
+<div class="intervention-detail-container">
+  <div class="header">
+    <h1>🧭 Détails de l'intervention</h1>
+    <button class="btn btn-secondary" (click)="goBack()">← Retour</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement de l'intervention...</p>
+  </div>
+
+  <div *ngIf="!loading && !intervention" class="empty-state">
+    <p>Intervention non trouvée</p>
+  </div>
+
+  <div *ngIf="!loading && intervention" class="intervention-detail">
+    <div class="detail-header">
+      <div class="intervention-id">Intervention #{{ intervention.id }}</div>
+      <div class="intervention-badges">
+        <span class="badge" [ngClass]="getEtatClass(intervention.etat)">
+          {{ intervention.etat }}
+        </span>
+        <span class="badge" [ngClass]="getPrioriteClass(intervention.priorite)">
+          {{ intervention.priorite }}
+        </span>
+      </div>
+    </div>
+
+    <div class="detail-sections">
+      <div class="detail-section">
+        <h3>📋 Description</h3>
+        <p>{{ intervention.description || 'Aucune description' }}</p>
+      </div>
+
+      <div class="detail-section">
+        <h3>📅 Dates</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Date planifiée</label>
+            <span>{{ intervention.datePlanifiee | date:'full' }}</span>
+          </div>
+          <div class="detail-item" *ngIf="intervention.dateDebut">
+            <label>Date de début</label>
+            <span>{{ intervention.dateDebut | date:'full' }}</span>
+          </div>
+          <div class="detail-item" *ngIf="intervention.dateFin">
+            <label>Date de fin</label>
+            <span>{{ intervention.dateFin | date:'full' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>💰 Budget</h3>
+        <p class="budget">{{ intervention.budget }} DT</p>
+      </div>
+
+      <div class="detail-section" *ngIf="intervention.technicienId">
+        <h3>👤 Technicien assigné</h3>
+        <p>ID: {{ intervention.technicienId }}</p>
+      </div>
+
+      <div class="detail-section" *ngIf="intervention.localisation">
+        <h3>📍 Localisation</h3>
+        <p>
+          Latitude: {{ intervention.localisation.latitude }}, 
+          Longitude: {{ intervention.localisation.longitude }}
+        </p>
+      </div>
+
+      <div class="detail-section" *ngIf="intervention.commentaire">
+        <h3>💬 Commentaire</h3>
+        <p>{{ intervention.commentaire }}</p>
+      </div>
+    </div>
+  </div>
+</div>

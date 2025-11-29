@@ -1,4 +1,31 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Taches xmlns="http://example.com/gestion-interventions">
+                    
+    
+    
+    
     <!-- Tâches vides - Prêt pour de nouvelles instances -->
+                
+    
+
+    
+
+    
+
+    <Tache>
+        <id>1</id>
+        <interventionId>1</interventionId>
+        <libelle>testttttttttttttttttttttttttt00000</libelle>
+        <description>hhhhhhh</description>
+        <mainDOeuvreId>2</mainDOeuvreId>
+        <etat>VERIFIEE</etat>
+        <dateCreation>2025-11-28T23:01:35.749707300</dateCreation>
+        <dateDebut>2025-11-28T23:04:32.410020300</dateDebut>
+        <dateFin>2025-11-28T23:04:53.195928600</dateFin>
+        <dateVerification>2025-11-28T23:05:30.001553200</dateVerification>
+        <commentaireMainDOeuvre/>
+        <commentaireTechnicien/>
+        <ordre>1</ordre>
+        <verifiee>true</verifiee>
+    </Tache>
 </Taches>

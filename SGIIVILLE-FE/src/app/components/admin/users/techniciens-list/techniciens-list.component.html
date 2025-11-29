@@ -1,0 +1,49 @@
+<div class="techniciens-container">
+  <div class="header">
+    <h1>🧑‍🔧 Liste des techniciens</h1>
+    <a routerLink="/admin/users/add" class="btn btn-primary">
+      ➕ Ajouter un technicien
+    </a>
+  </div>
+
+  <div class="filters">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (input)="applyFilters()"
+      placeholder="Rechercher par nom, email ou compétence..."
+      class="search-input"
+    />
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des techniciens...</p>
+  </div>
+
+  <div *ngIf="!loading && techniciensFiltres.length === 0" class="empty-state">
+    <p>Aucun technicien trouvé</p>
+  </div>
+
+  <div *ngIf="!loading && techniciensFiltres.length > 0" class="techniciens-list">
+    <div class="technicien-card" *ngFor="let technicien of techniciensFiltres">
+      <div class="technicien-info">
+        <div class="technicien-header">
+          <h3>{{ technicien.nom }}</h3>
+          <span class="technicien-id">ID: #{{ technicien.id }}</span>
+        </div>
+        <div class="technicien-details">
+          <p><strong>Email:</strong> {{ technicien.email }}</p>
+          <p><strong>Compétences:</strong> {{ getCompetencesString(technicien.competences) }}</p>
+        </div>
+      </div>
+      <div class="technicien-actions">
+        <a [routerLink]="['/admin/users', technicien.id, 'edit']" class="btn btn-sm btn-primary">
+          ✏️ Modifier
+        </a>
+        <button class="btn btn-sm btn-danger" (click)="deleteTechnicien(technicien)">
+          🗑️ Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

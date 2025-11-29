@@ -1,0 +1,123 @@
+<div class="users-list-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1>👥 Gestion des Utilisateurs</h1>
+            <p class="subtitle">Liste complète de tous les utilisateurs du système</p>
+        </div>
+        <div class="header-actions">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Rechercher par nom, email..." [(ngModel)]="searchTerm"
+                    (input)="applyFilters()">
+            </div>
+            <button class="btn-add" [routerLink]="['/admin/users/add']">
+                <span class="icon">✨</span>
+                Nouveau utilisateur
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats rapides -->
+    <div class="quick-stats">
+        <div class="stat-card" [routerLink]="['/admin/users/techniciens']">
+            <span class="stat-icon">🧑‍🔧</span>
+            <div class="stat-info">
+                <div class="stat-value">{{ countByRole('TECHNICIEN') }}</div>
+                <div class="stat-label">Techniciens</div>
+            </div>
+        </div>
+        <div class="stat-card" [routerLink]="['/admin/users/chefs']">
+            <span class="stat-icon">👔</span>
+            <div class="stat-info">
+                <div class="stat-value">{{ countByRole('CHEF_SERVICE') }}</div>
+                <div class="stat-label">Chefs de service</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">👤</span>
+            <div class="stat-info">
+                <div class="stat-value">{{ countByRole('CITOYEN') }}</div>
+                <div class="stat-label">Citoyens</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">📊</span>
+            <div class="stat-info">
+                <div class="stat-value">{{ usersFiltres.length }}</div>
+                <div class="stat-label">Total affiché</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="filters-section">
+        <h3>🔍 Filtrer par rôle</h3>
+        <div class="filter-buttons">
+            <button class="filter-btn" [class.active]="filtreRole === ''" (click)="filterByRole('')">
+                📋 Tous ({{ users.length }})
+            </button>
+            <button class="filter-btn" [class.active]="filtreRole === 'TECHNICIEN'"
+                (click)="filterByRole('TECHNICIEN')">
+                🧑‍🔧 Techniciens ({{ countByRole('TECHNICIEN') }})
+            </button>
+            <button class="filter-btn" [class.active]="filtreRole === 'CHEF_SERVICE'"
+                (click)="filterByRole('CHEF_SERVICE')">
+                👔 Chefs ({{ countByRole('CHEF_SERVICE') }})
+            </button>
+            <button class="filter-btn" [class.active]="filtreRole === 'CITOYEN'" (click)="filterByRole('CITOYEN')">
+                👤 Citoyens ({{ countByRole('CITOYEN') }})
+            </button>
+            <button class="filter-btn" [class.active]="filtreRole === 'ADMINISTRATEUR'"
+                (click)="filterByRole('ADMINISTRATEUR')">
+                👑 Admins ({{ countByRole('ADMINISTRATEUR') }})
+            </button>
+        </div>
+    </div>
+
+    <!-- Tableau -->
+    <div class="table-card">
+        <div class="table-container">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>📌 ID</th>
+                        <th>👤 Nom</th>
+                        <th>📧 Email</th>
+                        <th>🏷️ Rôle</th>
+                        <th>⚙️ Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of usersFiltres" class="table-row">
+                        <td><strong class="user-id">#{{ user.id }}</strong></td>
+                        <td class="user-name">{{ user.nom }}</td>
+                        <td class="user-email">{{ user.email }}</td>
+                        <td>
+                            <span class="badge" [ngClass]="getRoleClass(user.role)">
+                                {{ getRoleLabel(user.role) }}
+                            </span>
+                        </td>
+                        <td class="actions-cell">
+                            <button class="btn-action btn-edit" [routerLink]="['/admin/users', user.id, 'edit']"
+                                title="Modifier">
+                                ✏️
+                            </button>
+                            <button class="btn-action btn-delete" (click)="deleteUser(user)" title="Supprimer">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="usersFiltres.length === 0">
+                        <td colspan="5" class="no-data">
+                            <div class="empty-state">
+                                <div class="empty-icon">👥</div>
+                                <p>Aucun utilisateur trouvé</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

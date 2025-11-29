@@ -1,0 +1,42 @@
+<div class="logs-container">
+  <div class="header">
+    <h1>📝 Logs d'audit administrateur</h1>
+  </div>
+
+  <div class="filters">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (input)="applyFilters()"
+      placeholder="Rechercher..."
+    />
+    <select [(ngModel)]="filterEntity" (change)="applyFilters()">
+      <option value="all">Toutes les entités</option>
+      <option value="user">Utilisateurs</option>
+      <option value="intervention">Interventions</option>
+      <option value="demande">Demandes</option>
+    </select>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des logs...</p>
+  </div>
+
+  <div *ngIf="!loading && filteredLogs.length === 0" class="empty-state">
+    <p>Aucun log d'audit trouvé</p>
+  </div>
+
+  <div *ngIf="!loading && filteredLogs.length > 0" class="logs-list">
+    <div class="log-item" *ngFor="let log of filteredLogs">
+      <div class="log-content">
+        <div class="log-header">
+          <span class="log-user">{{ log.userName }}</span>
+          <span class="log-time">{{ log.timestamp | date:'short' }}</span>
+        </div>
+        <div class="log-action">{{ log.action }} - {{ log.entity }} #{{ log.entityId }}</div>
+        <div class="log-details">{{ log.details }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+

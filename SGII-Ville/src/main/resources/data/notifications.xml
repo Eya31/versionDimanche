@@ -1,29 +1,1416 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Notifications xmlns="http://example.com/gestion-interventions">
-            
+                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     <!-- Notifications vides - Prêt pour de nouvelles instances -->
+                                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>1</idNotification>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>&#128295; Nouvelle intervention #1 assignée pour la demande #1. Veuillez consulter vos interventions.</message>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-26T02:37:03.236873</createdAt>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>2</idNotification>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>✅ Votre demande #1 a été acceptée ! Intervention #1 en cours.</message>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-26T02:37:03.238938</createdAt>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>1</userId>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>3</idNotification>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Nouvelle main-d'œuvre créée : salh ali - Email: salh@gmail.com - Mot de passe par défaut: 00000</message>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T22:40:11.7869502</createdAt>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>4</idNotification>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Nouvelle main-d'œuvre créée : foulen ben falten - Email: foulen@gmail.com - Mot de passe par défaut: 00000</message>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T22:48:41.3873872</createdAt>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>true</readable>
+                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>5</idNotification>
+                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Main-d'œuvre affectée à l'intervention #1</message>
+                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T22:58:42.8787391</createdAt>
+                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>6</idNotification>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Nouvelle tâche créée pour l'intervention #1 : testttttttttttttttttttttttttt00000</message>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:01:35.7576666</createdAt>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                        
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>7</idNotification>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>La main-d'œuvre foulen ben falten a commencé la tâche "testttttttttttttttttttttttttt00000" (Intervention #1)</message>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:04:32.4174961</createdAt>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>8</idNotification>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Tâche "testttttttttttttttttttttttttt00000" commencée par foulen ben falten</message>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:04:32.4199628</createdAt>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>9</idNotification>
+                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>La main-d'œuvre foulen ben falten a terminé la tâche "testttttttttttttttttttttttttt00000" (Intervention #1). Veuillez vérifier.</message>
+                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:04:53.200036</createdAt>
+                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>10</idNotification>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Tâche "testttttttttttttttttttttttttt00000" terminée par foulen ben falten (Intervention #1)</message>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:04:53.2010452</createdAt>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>11</idNotification>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <message>Votre tâche "testttttttttttttttttttttttttt00000" a été vérifiée et validée par le technicien.</message>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:05:30.0075536</createdAt>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <userId>7</userId>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                
+        
+        
+        
+        
+        
+        
+        <idNotification>12</idNotification>
+                                                                
+        
+        
+        
+        
+        
+        
+        <message>Tâche "testttttttttttttttttttttttttt00000" vérifiée (Intervention #1)</message>
+                                                                
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:05:30.0130744</createdAt>
+                                                                
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                            
+    
+    
+    
+    
+    
+    
+    </Notification>
+                            
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                        
+        
+        
+        
+        
+        
+        <idNotification>13</idNotification>
+                                                        
+        
+        
+        
+        
+        
+        <message>Intervention #1 terminée et vérifiée par le technicien</message>
+                                                        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:05:41.3992909</createdAt>
+                                                        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                    
+    
+    
+    
+    
+    
+    </Notification>
+                        
+    
+    
+    
+    
+    
+    <Notification>
+                                                
+        
+        
+        
+        
+        <idNotification>14</idNotification>
+                                                
+        
+        
+        
+        
+        <message>Votre demande #1 a été traitée avec succès ! Intervention #1 terminée.</message>
+                                                
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:05:41.3992909</createdAt>
+                                                
+        
+        
+        
+        
+        <userId>1</userId>
+                                                
+        
+        
+        
+        
+        <readable>false</readable>
+                                            
+    
+    
+    
+    
+    </Notification>
+                    
+    
+    
+    
+    
+    <Notification>
+                                        
+        
+        
+        
+        <idNotification>15</idNotification>
+                                        
+        
+        
+        
+        <message>Nouvelle main-d'œuvre créée : ahmed ahmed - Email: ahmed@gmail.com - Mot de passe par défaut: 00000</message>
+                                        
+        
+        
+        
+        <createdAt>2025-11-28T23:31:23.8705676</createdAt>
+                                        
+        
+        
+        
+        <userId>4</userId>
+                                        
+        
+        
+        
+        <readable>false</readable>
+                                    
+    
+    
+    
+    </Notification>
+                
+    
+    
+    
+    <Notification>
+                                
+        
+        
+        <idNotification>16</idNotification>
+                                
+        
+        
+        <message>Main-d'œuvre affectée à l'intervention #1</message>
+                                
+        
+        
+        <createdAt>2025-11-28T23:40:57.8588561</createdAt>
+                                
+        
+        
+        <userId>0</userId>
+                                
+        
+        
+        <readable>false</readable>
+                            
+    
+    
+    </Notification>
+            
+    
+    
+    <Notification>
+                        
+        
+        <idNotification>17</idNotification>
+                        
+        
+        <message>✅ Votre demande #2 a été acceptée ! Intervention #2 en cours.</message>
+                        
+        
+        <createdAt>2025-11-29T15:25:26.97664</createdAt>
+                        
+        
+        <userId>9</userId>
+                        
+        
+        <readable>false</readable>
+                    
+    
+    </Notification>
         
     
     <Notification>
                 
-        <idNotification>1</idNotification>
+        <idNotification>18</idNotification>
                 
-        <message>&#128295; Nouvelle intervention #1 assignée pour la demande #1. Veuillez consulter vos interventions.</message>
+        <message>✅ Votre demande #3 a été acceptée ! Intervention #3 en cours.</message>
                 
-        <createdAt>2025-11-26T02:37:03.236873</createdAt>
+        <createdAt>2025-11-29T15:49:49.955456</createdAt>
                 
-        <userId>4</userId>
+        <userId>9</userId>
                 
         <readable>false</readable>
             
     </Notification>
     
     <Notification>
-        <idNotification>2</idNotification>
-        <message>✅ Votre demande #1 a été acceptée ! Intervention #1 en cours.</message>
-        <createdAt>2025-11-26T02:37:03.238938</createdAt>
-        <userId>1</userId>
+        <idNotification>19</idNotification>
+        <message>Main-d'œuvre désaffectée de l'intervention #1</message>
+        <createdAt>2025-11-29T15:52:09.054619</createdAt>
+        <userId>0</userId>
         <readable>false</readable>
     </Notification>
 </Notifications>

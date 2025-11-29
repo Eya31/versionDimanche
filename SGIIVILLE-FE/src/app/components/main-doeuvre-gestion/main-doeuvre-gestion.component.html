@@ -1,17 +1,17 @@
 <!-- ============================================
-     GESTION MAIN-D'ŒUVRE - T6 COMPLET
+     GESTION MAIN D'ŒUVRE - INTERFACE HARMONISÉE
      ============================================ -->
 
 <div class="main-doeuvre-gestion">
   <!-- HEADER -->
   <header class="gestion-header">
-    <div>
-      <h1>👷 Gestion des Fiches de Main-d'Œuvre</h1>
-      <p style="margin: var(--space-2) 0 0 0; color: var(--neutral-700); font-size: var(--body-normal);">
-        Créer et gérer les fiches de main-d'œuvre avec comptes utilisateurs. Les agents peuvent se connecter pour consulter leurs interventions.
+    <div class="header-content">
+      <h1>🛠️ Gestion des Fiches de Main d'Œuvre</h1>
+      <p class="header-description">
+        Créez et gérez les fiches de main d'œuvre avec comptes utilisateurs. Les agents peuvent se connecter pour consulter leurs interventions.
       </p>
     </div>
-    <div>
+    <div class="header-actions">
       <button class="btn-primary" (click)="creerNouveau()" [attr.aria-label]="'Créer une nouvelle fiche'">
         ➕ Nouvelle Fiche
       </button>
@@ -62,14 +62,16 @@
 
   <!-- Formulaire création/édition -->
   <div *ngIf="isCreating || isEditing" class="form-modal">
-    <h2>{{isCreating ? '➕ Nouvelle Fiche de Main-d\'Œuvre' : '✏️ Modifier Fiche'}}</h2>
-    <p class="form-description" *ngIf="isCreating">
-      Créez une fiche de main-d'œuvre avec un compte utilisateur. L'agent pourra se connecter 
-      pour consulter ses interventions. <strong>L'email est obligatoire</strong> pour créer le compte.
-    </p>
-    <p class="form-description" *ngIf="isEditing">
-      Modifiez les informations de la fiche de main-d'œuvre.
-    </p>
+    <div class="form-header">
+      <h2>{{isCreating ? '➕ Nouvelle Fiche de Main d\'Œuvre' : '✏️ Modifier Fiche'}}</h2>
+      <p class="form-description" *ngIf="isCreating">
+        Créez une fiche de main d'œuvre avec un compte utilisateur. L'agent pourra se connecter 
+        pour consulter ses interventions. <strong>L'email est obligatoire</strong> pour créer le compte.
+      </p>
+      <p class="form-description" *ngIf="isEditing">
+        Modifiez les informations de la fiche de main d'œuvre.
+      </p>
+    </div>
     
     <form (ngSubmit)="sauvegarder()">
       <div class="form-grid">
@@ -290,7 +292,7 @@
 
   <!-- Liste des fiches -->
   <div class="main-doeuvre-list">
-    <div *ngFor="let md of mainDOeuvreFiltree" class="main-doeuvre-card">
+    <div *ngFor="let md of mainDOeuvreFiltree; trackBy: trackByMainDOeuvreId" class="main-doeuvre-card">
       <!-- Card Header -->
       <div class="card-header">
         <div class="header-left-with-photo">
@@ -354,10 +356,12 @@
         </div>
 
         <!-- Email -->
-        <div *ngIf="md.email" class="info-item-card">
-          <strong>Email:</strong>
-          <span>{{md.email}}</span>
-          <span class="badge-compte" style="margin-left: 0.5rem; background: var(--success-500); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">
+        <div *ngIf="md.email" class="info-item-card email-with-badge">
+          <div class="email-content">
+            <strong>Email:</strong>
+            <span>{{md.email}}</span>
+          </div>
+          <span class="badge-compte">
             ✓ Compte créé
           </span>
         </div>
@@ -414,12 +418,12 @@
 
     <!-- Empty State -->
     <div *ngIf="mainDOeuvreFiltree.length === 0" class="empty-state">
-      <div style="font-size: 4rem; margin-bottom: var(--space-4); opacity: 0.5;">👷</div>
-      <p>Aucune fiche de main-d'œuvre trouvée</p>
-      <p style="font-size: var(--body-small); color: var(--neutral-500); margin-top: var(--space-2);">
-        Créez votre première fiche ou modifiez vos filtres de recherche
+      <div class="empty-icon">👷</div>
+      <h3>Aucune fiche de main d'œuvre trouvée</h3>
+      <p class="empty-message">
+        Créez votre première fiche ou modifiez vos filtres de recherche.
       </p>
-      <button class="btn-primary" (click)="creerNouveau()" style="margin-top: var(--space-4);">
+      <button class="btn-primary" (click)="creerNouveau()">
         ➕ Créer une fiche
       </button>
     </div>

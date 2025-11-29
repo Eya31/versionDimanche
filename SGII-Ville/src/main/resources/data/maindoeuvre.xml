@@ -1,4 +1,291 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <MainDOeuvre xmlns="http://example.com/gestion-interventions">
+                                    
+    
+    
+    
+    
+    
+    
+    
     <!-- Main d'oeuvre vide - Prêt pour de nouvelles instances -->
+                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <MainDOeuvre>
+                                                
+        
+        
+        
+        
+        <id>1</id>
+                                                
+        
+        
+        
+        
+        <nom>salh</nom>
+                                                
+        
+        
+        
+        
+        <prenom>ali</prenom>
+                                                
+        
+        
+        
+        
+        <matricule>00000</matricule>
+                                                
+        
+        
+        
+        
+        <cin>00000000</cin>
+                                                
+        
+        
+        
+        
+        <telephone>00000000</telephone>
+                                                
+        
+        
+        
+        
+        <email>salh@gmail.com</email>
+                                                
+        
+        
+        
+        
+        <metier>electricien</metier>
+                                                
+        
+        
+        
+        
+        <disponibilite>ARCHIVE</disponibilite>
+                                                
+        
+        
+        
+        
+        <active>false</active>
+                                                
+        
+        
+        
+        
+        <competences>
+                                                                        
+            
+            
+            
+            
+            <competence>Électricité</competence>
+                                                                        
+            
+            
+            
+            
+            <competence>Hydraulique</competence>
+                                                                        
+            
+            
+            
+            
+            <competence>Plomberie</competence>
+                                                                        
+            
+            
+            
+            
+            <competence>Maçonnerie</competence>
+                                                                        
+            
+            
+            
+            
+            <competence>Électricité</competence>
+                                                                        
+            
+            
+            
+            
+            <competence>Mécanique</competence>
+                                                                    
+        
+        
+        
+        
+        </competences>
+                                                
+        
+        
+        
+        
+        <habilitations>
+                                                                        
+            
+            
+            
+            
+            <habilitation>Électrique</habilitation>
+                                                                        
+            
+            
+            
+            
+            <habilitation>CACES</habilitation>
+                                                                        
+            
+            
+            
+            
+            <habilitation>Électrique</habilitation>
+                                                                        
+            
+            
+            
+            
+            <habilitation>Habilitation H0</habilitation>
+                                                                    
+        
+        
+        
+        
+        </habilitations>
+                                            
+    
+    
+    
+    
+    </MainDOeuvre>
+                    
+    
+    
+    
+        
+    
+
+    
+    
+    <MainDOeuvre>
+                        
+        
+        <id>3</id>
+                        
+        
+        <nom>ahmed</nom>
+                        
+        
+        <prenom>ahmed</prenom>
+                        
+        
+        <matricule>00000</matricule>
+                        
+        
+        <cin>00000000</cin>
+                        
+        
+        <telephone>00000000</telephone>
+                        
+        
+        <email>ahmed@gmail.com</email>
+                        
+        
+        <metier>electricien</metier>
+                        
+        
+        <disponibilite>OCCUPE</disponibilite>
+                        
+        
+        <active>true</active>
+                        
+        
+        <competences>
+                                    
+            
+            <competence>Hydraulique</competence>
+                                    
+            
+            <competence>Mécanique</competence>
+                                    
+            
+            <competence>Plomberie</competence>
+                                
+        
+        </competences>
+                        
+        
+        <habilitations>
+                                    
+            
+            <habilitation>CACES</habilitation>
+                                    
+            
+            <habilitation>Électrique</habilitation>
+                                
+        
+        </habilitations>
+                        
+        
+        <historiqueInterventions>
+                                    
+            
+            <interventionId>1</interventionId>
+                                
+        
+        </historiqueInterventions>
+                    
+    
+    </MainDOeuvre>
+        
+    
+
+    <MainDOeuvre>
+        <id>2</id>
+        <nom>foulen</nom>
+        <prenom>ben falten</prenom>
+        <matricule>00000</matricule>
+        <cin>00000000</cin>
+        <telephone>00000000</telephone>
+        <email>foulen@gmail.com</email>
+        <metier>electricien</metier>
+        <disponibilite>OCCUPE</disponibilite>
+        <active>true</active>
+        <competences>
+            <competence>Électricité</competence>
+            <competence>Mécanique</competence>
+            <competence>Électricité</competence>
+            <competence>Hydraulique</competence>
+            <competence>Plomberie</competence>
+            <competence>Maçonnerie</competence>
+            <competence>Électricité</competence>
+            <competence>Mécanique</competence>
+        </competences>
+        <habilitations>
+            <habilitation>Électrique</habilitation>
+            <habilitation>Habilitation H0</habilitation>
+            <habilitation>Électrique</habilitation>
+            <habilitation>CACES</habilitation>
+            <habilitation>Électrique</habilitation>
+            <habilitation>Habilitation H0</habilitation>
+        </habilitations>
+        <historiqueInterventions>
+            <interventionId>1</interventionId>
+            <interventionId>3</interventionId>
+        </historiqueInterventions>
+    </MainDOeuvre>
 </MainDOeuvre>

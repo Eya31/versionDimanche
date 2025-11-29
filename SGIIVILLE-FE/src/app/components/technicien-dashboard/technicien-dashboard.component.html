@@ -1,12 +1,11 @@
 <!-- ============================================
-     DASHBOARD TECHNICIEN - DESIGN REFONDU
+     DASHBOARD TECHNICIEN - DESIGN HARMONISÉ
      ============================================ -->
 
 <div class="technicien-dashboard">
   <!-- PAGE HEADER -->
   <div class="page-header">
     <div>
-      <h1>📊 Tableau de Bord</h1>
       <p class="page-subtitle">Gérez vos interventions en temps réel</p>
     </div>
     <div class="header-actions">
@@ -219,7 +218,7 @@
           <div class="info-item" *ngIf="intervention.mainDOeuvreIds && intervention.mainDOeuvreIds.length > 0">
             <span class="info-icon">👷</span>
             <div class="info-content">
-              <span class="info-label">Main-d'œuvre</span>
+              <span class="info-label">Main d'œuvre</span>
               <span class="info-value">{{ intervention.mainDOeuvreIds.length }} personne(s)</span>
             </div>
           </div>
@@ -251,7 +250,7 @@
     <div *ngIf="interventionsFiltrees.length === 0 && !loading" class="empty-state">
       <div class="empty-icon">📭</div>
       <h3>Aucune intervention trouvée</h3>
-      <p>Modifiez vos filtres ou attendez de nouvelles assignations</p>
+      <p>Modifiez vos filtres ou attendez de nouvelles assignations.</p>
     </div>
 
     <!-- LOADING STATE -->

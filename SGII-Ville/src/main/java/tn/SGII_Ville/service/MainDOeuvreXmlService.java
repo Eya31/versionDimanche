@@ -26,22 +26,55 @@ public class MainDOeuvreXmlService {
         List<MainDOeuvre> list = new ArrayList<>();
         try {
             Document doc = xmlService.loadXmlDocument("MainDOeuvre");
-            NodeList nodes = doc.getElementsByTagNameNS(xmlService.getNamespaceUri(), "MainDOeuvre");
+            if (doc == null) {
+                logger.warn("Document XML MainDOeuvre est null");
+                return list;
+            }
+            
+            Element root = doc.getDocumentElement();
+            if (root == null) {
+                logger.warn("Document XML MainDOeuvre n'a pas d'élément racine");
+                return list;
+            }
+            
+            NodeList nodes = root.getElementsByTagNameNS(xmlService.getNamespaceUri(), "MainDOeuvre");
+            if (nodes == null) {
+                logger.warn("NodeList est null");
+                return list;
+            }
 
             for (int i = 0; i < nodes.getLength(); i++) {
-                Element el = (Element) nodes.item(i);
-                list.add(parseMainDOeuvre(el));
+                try {
+                    Node node = nodes.item(i);
+                    if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+                        Element el = (Element) node;
+                        MainDOeuvre md = parseMainDOeuvre(el);
+                        if (md != null) {
+                            list.add(md);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.warn("Erreur lors du parsing d'un élément MainDOeuvre à l'index {}", i, e);
+                    // Continuer avec les autres éléments
+                }
             }
         } catch (Exception e) {
             logger.error("Erreur lors du chargement de la main-d'œuvre", e);
+            // Retourner une liste vide au lieu de propager l'exception
         }
         return list;
     }
 
     public List<MainDOeuvre> findActive() {
-        return findAll().stream()
-                .filter(m -> m.isActive() && !"ARCHIVE".equals(m.getDisponibilite()) && !"DESACTIVE".equals(m.getDisponibilite()))
-                .collect(Collectors.toList());
+        try {
+            List<MainDOeuvre> all = findAll();
+            return all.stream()
+                    .filter(m -> m != null && m.isActive() && !"ARCHIVE".equals(m.getDisponibilite()) && !"DESACTIVE".equals(m.getDisponibilite()))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.warn("Erreur lors de la recherche de main-d'œuvre active", e);
+            return new ArrayList<>();
+        }
     }
 
     public MainDOeuvre findById(int id) {

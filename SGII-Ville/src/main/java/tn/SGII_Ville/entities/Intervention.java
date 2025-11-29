@@ -1,8 +1,12 @@
 package tn.SGII_Ville.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import tn.SGII_Ville.model.enums.EtatInterventionType;
 import tn.SGII_Ville.model.enums.PrioriteType;
 import tn.SGII_Ville.common.PointGeo;
+import tn.SGII_Ville.dto.CompetenceRequise;
+import tn.SGII_Ville.dto.MaterielRequis;
+import tn.SGII_Ville.dto.EquipementRequis;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,6 +38,11 @@ public class Intervention {
     private LocalDate dateFin; // Changé de LocalDateTime à LocalDate pour conformité XSD
     private BigDecimal budget;
     private PointGeo localisation; // Optionnel
+    
+    // Exigences définies lors de la planification
+    private List<CompetenceRequise> competencesRequises = new ArrayList<>();
+    private List<MaterielRequis> materielsRequis = new ArrayList<>();
+    private List<EquipementRequis> equipementsRequis = new ArrayList<>();
     
     // Relations many-to-many via collections d'IDs
     private List<Integer> equipementIds = new ArrayList<>(); // * Intervention <-> * Equipements
@@ -85,7 +94,10 @@ public class Intervention {
     public PointGeo getLocalisation() { return localisation; }
     public void setLocalisation(PointGeo localisation) { this.localisation = localisation; }
 
+    @JsonProperty("mainDOeuvreIds")
     public List<Integer> getOuvrierIds() { return ouvrierIds; }
+    
+    @JsonProperty("mainDOeuvreIds")
     public void setOuvrierIds(List<Integer> ouvrierIds) { 
         this.ouvrierIds = ouvrierIds != null ? ouvrierIds : new ArrayList<>(); 
     }
@@ -111,6 +123,21 @@ public class Intervention {
 
     public String getSignatureElectronique() { return signatureElectronique; }
     public void setSignatureElectronique(String signatureElectronique) { this.signatureElectronique = signatureElectronique; }
+
+    public List<CompetenceRequise> getCompetencesRequises() { return competencesRequises; }
+    public void setCompetencesRequises(List<CompetenceRequise> competencesRequises) { 
+        this.competencesRequises = competencesRequises != null ? competencesRequises : new ArrayList<>(); 
+    }
+
+    public List<MaterielRequis> getMaterielsRequis() { return materielsRequis; }
+    public void setMaterielsRequis(List<MaterielRequis> materielsRequis) { 
+        this.materielsRequis = materielsRequis != null ? materielsRequis : new ArrayList<>(); 
+    }
+
+    public List<EquipementRequis> getEquipementsRequis() { return equipementsRequis; }
+    public void setEquipementsRequis(List<EquipementRequis> equipementsRequis) { 
+        this.equipementsRequis = equipementsRequis != null ? equipementsRequis : new ArrayList<>(); 
+    }
 
     @Override
     public String toString() {

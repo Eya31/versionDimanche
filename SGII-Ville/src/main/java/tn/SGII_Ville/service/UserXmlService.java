@@ -269,8 +269,16 @@ public class UserXmlService {
             userElement = xmlService.createElement(doc, "Technicien");
             addBaseUserFields(doc, userElement, utilisateur);
             
-            for (String competence : technicien.getCompetences()) {
-                xmlService.addTextElement(doc, userElement, "competences", competence);
+            System.out.println("🔍 DEBUG UserXmlService - Compétences du technicien: " + technicien.getCompetences());
+            System.out.println("🔍 DEBUG UserXmlService - Nombre de compétences: " + (technicien.getCompetences() != null ? technicien.getCompetences().size() : 0));
+            
+            if (technicien.getCompetences() != null && !technicien.getCompetences().isEmpty()) {
+                for (String competence : technicien.getCompetences()) {
+                    System.out.println("🔍 DEBUG UserXmlService - Ajout compétence: " + competence);
+                    xmlService.addTextElement(doc, userElement, "competences", competence);
+                }
+            } else {
+                System.out.println("⚠️ WARNING - Liste de compétences vide ou null!");
             }
             
             xmlService.addTextElement(doc, userElement, "disponibilite", 
@@ -328,29 +336,39 @@ public class UserXmlService {
     private List<String> parseCompetences(Element userElement) {
         List<String> competences = new ArrayList<>();
         try {
-            // Chercher l'élément <competences> qui contient les compétences
-            NodeList competencesContainers = userElement.getElementsByTagNameNS(
+            NodeList competencesNodes = userElement.getElementsByTagNameNS(
                 xmlService.getNamespaceUri(), "competences"
             );
             
-            if (competencesContainers.getLength() > 0) {
-                Element competencesContainer = (Element) competencesContainers.item(0);
-                
-                // Parcourir les enfants de <competences> pour trouver les éléments <competences> individuels
-                NodeList children = competencesContainer.getChildNodes();
-                for (int i = 0; i < children.getLength(); i++) {
-                    Node child = children.item(i);
-                    if (child.getNodeType() == Node.ELEMENT_NODE) {
-                        Element compElement = (Element) child;
-                        if ("competences".equals(compElement.getLocalName())) {
-                            String competence = compElement.getTextContent().trim();
+            // Cas 1: Plusieurs éléments <competences> directement (Technicien)
+            if (competencesNodes.getLength() > 0) {
+                for (int i = 0; i < competencesNodes.getLength(); i++) {
+                    Element compElement = (Element) competencesNodes.item(i);
+                    
+                    // Vérifier si c'est un conteneur avec des enfants <competence>
+                    NodeList children = compElement.getElementsByTagNameNS(
+                        xmlService.getNamespaceUri(), "competence"
+                    );
+                    
+                    if (children.getLength() > 0) {
+                        // Cas 2: Conteneur <competences> avec des enfants <competence> (AgentMainDOeuvre)
+                        for (int j = 0; j < children.getLength(); j++) {
+                            String competence = children.item(j).getTextContent().trim();
                             if (!competence.isEmpty()) {
                                 competences.add(competence);
                             }
                         }
+                    } else {
+                        // Cas 1: Élément <competences> simple avec texte direct (Technicien)
+                        String competence = compElement.getTextContent().trim();
+                        if (!competence.isEmpty()) {
+                            competences.add(competence);
+                        }
                     }
                 }
             }
+            
+            System.out.println("🔍 DEBUG parseCompetences - Compétences parsées: " + competences);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -421,5 +439,53 @@ public class UserXmlService {
             e.printStackTrace();
         }
         return techniciens;
+    }
+
+    /**
+     * Marque un technicien comme indisponible pour une date donnée
+     */
+    public void marquerTechnicienIndisponible(Long technicienId, String dateIntervention) {
+        try {
+            Document doc = xmlService.loadXmlDocument("Utilisateurs");
+            Element root = doc.getDocumentElement();
+            
+            if (root == null) {
+                throw new RuntimeException("Document Utilisateurs vide");
+            }
+
+            NodeList children = root.getChildNodes();
+            boolean found = false;
+            
+            for (int i = 0; i < children.getLength(); i++) {
+                Node child = children.item(i);
+                if (child.getNodeType() == Node.ELEMENT_NODE) {
+                    Element userElement = (Element) child;
+                    
+                    if ("Technicien".equals(userElement.getLocalName())) {
+                        String idStr = xmlService.getElementTextContent(userElement, "id");
+                        if (idStr != null && Long.parseLong(idStr) == technicienId) {
+                            // Mettre disponibilite à false
+                            Element dispElement = (Element) userElement.getElementsByTagNameNS(
+                                xmlService.getNamespaceUri(), "disponibilite").item(0);
+                            
+                            if (dispElement != null) {
+                                dispElement.setTextContent("false");
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (!found) {
+                throw new RuntimeException("Technicien non trouvé: " + technicienId);
+            }
+            
+            xmlService.saveXmlDocument(doc, "Utilisateurs");
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors du marquage du technicien comme indisponible", e);
+        }
     }
 }

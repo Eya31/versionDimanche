@@ -1,0 +1,228 @@
+<div class="user-form-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1>✨ Créer un Utilisateur</h1>
+            <p class="subtitle">Ajouter un nouvel utilisateur au système</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-back" [routerLink]="['/admin/users']">
+                <span class="icon">←</span>
+                Retour à la liste
+            </button>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <!-- Sélection du rôle -->
+        <div class="role-selection">
+            <h3>🏷️ Sélectionner le type d'utilisateur</h3>
+            <div class="role-buttons">
+                <button class="role-btn" [class.active]="selectedRole === 'TECHNICIEN'"
+                    (click)="selectRole('TECHNICIEN')">
+                    <span class="role-icon">🧑‍🔧</span>
+                    <span class="role-label">Technicien</span>
+                </button>
+                <button class="role-btn" [class.active]="selectedRole === 'CHEF_SERVICE'"
+                    (click)="selectRole('CHEF_SERVICE')">
+                    <span class="role-icon">👔</span>
+                    <span class="role-label">Chef de service</span>
+                </button>
+                <button class="role-btn" [class.active]="selectedRole === 'CITOYEN'" (click)="selectRole('CITOYEN')">
+                    <span class="role-icon">👤</span>
+                    <span class="role-label">Citoyen</span>
+                </button>
+                <button class="role-btn" [class.active]="selectedRole === 'ADMINISTRATEUR'"
+                    (click)="selectRole('ADMINISTRATEUR')">
+                    <span class="role-icon">👑</span>
+                    <span class="role-label">Administrateur</span>
+                </button>
+                <button class="role-btn" [class.active]="selectedRole === 'MAIN_DOEUVRE'"
+                    (click)="selectRole('MAIN_DOEUVRE')">
+                    <span class="role-icon">🛠️</span>
+                    <span class="role-label">Main d'œuvre</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Formulaire -->
+        <form *ngIf="selectedRole" class="user-form" (ngSubmit)="onSubmit()">
+            <div class="form-section">
+                <h3>📝 Informations de base</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nom">Nom <span class="required">*</span></label>
+                        <input type="text" id="nom" [(ngModel)]="formData.nom" name="nom"
+                            placeholder="Ex: Ben Ali" required>
+                    </div>
+
+                    <div class="form-group" *ngIf="selectedRole === 'MAIN_DOEUVRE'">
+                        <label for="prenom">Prénom</label>
+                        <input type="text" id="prenom" [(ngModel)]="formData.prenom" name="prenom"
+                            placeholder="Ex: Ahmed">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input type="email" id="email" [(ngModel)]="formData.email" name="email"
+                            placeholder="Ex: ahmed@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="motDePasse">Mot de passe <span class="required">*</span></label>
+                        <input type="password" id="motDePasse" [(ngModel)]="formData.motDePasse" name="motDePasse"
+                            placeholder="Minimum 8 caractères" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirmer mot de passe <span class="required">*</span></label>
+                        <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword"
+                            placeholder="Retaper le mot de passe" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Champs spécifiques TECHNICIEN -->
+            <div class="form-section" *ngIf="selectedRole === 'TECHNICIEN'">
+                <h3>🔧 Informations Technicien</h3>
+
+                <div class="form-group">
+                    <label>Compétences</label>
+                    <div class="competences-input">
+                        <input type="text" [(ngModel)]="competenceInput" [ngModelOptions]="{standalone: true}"
+                            placeholder="Ex: Plomberie" (keyup.enter)="addCompetence()">
+                        <button type="button" class="btn-add-competence" (click)="addCompetence()">
+                            ➕ Ajouter
+                        </button>
+                    </div>
+                    <div class="competences-list">
+                        <span *ngFor="let comp of formData.competences" class="competence-tag">
+                            {{ comp }}
+                            <button type="button" (click)="removeCompetence(comp)">✕</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Champs spécifiques CHEF_SERVICE -->
+            <div class="form-section" *ngIf="selectedRole === 'CHEF_SERVICE'">
+                <h3>👔 Informations Chef de Service</h3>
+
+                <div class="form-group">
+                    <label for="departement">Département <span class="required">*</span></label>
+                    <input type="text" id="departement" [(ngModel)]="formData.departement" name="departement"
+                        placeholder="Ex: Voirie et Réseaux" required>
+                </div>
+            </div>
+
+            <!-- Champs spécifiques MAIN_DOEUVRE -->
+            <div class="form-section" *ngIf="selectedRole === 'MAIN_DOEUVRE'">
+                <h3>🛠️ Informations Main d'Œuvre</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cin">CIN <span class="required">*</span></label>
+                        <input type="text" id="cin" [(ngModel)]="formData.cin" name="cin"
+                            placeholder="Ex: 12345678" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telephone">Téléphone <span class="required">*</span></label>
+                        <input type="tel" id="telephone" [(ngModel)]="formData.telephone" name="telephone"
+                            placeholder="Ex: +216 12 345 678" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="matricule">Matricule</label>
+                        <input type="text" id="matricule" [(ngModel)]="formData.matricule" name="matricule"
+                            placeholder="Ex: MAT001">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="metier">Métier</label>
+                        <input type="text" id="metier" [(ngModel)]="formData.metier" name="metier"
+                            placeholder="Ex: Plombier, Électricien">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Compétences <span class="required">*</span></label>
+                    <div class="competences-input">
+                        <input type="text" [(ngModel)]="competenceInput" [ngModelOptions]="{standalone: true}"
+                            placeholder="Ex: Plomberie" (keyup.enter)="addCompetence()">
+                        <button type="button" class="btn-add-competence" (click)="addCompetence()">
+                            ➕ Ajouter
+                        </button>
+                    </div>
+                    <div class="competences-list">
+                        <span *ngFor="let comp of formData.competences" class="competence-tag">
+                            {{ comp }}
+                            <button type="button" (click)="removeCompetence(comp)">✕</button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Habilitations</label>
+                    <div class="habilitation-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nom habilitation</label>
+                                <input type="text" [(ngModel)]="habilitationInput.nom" [ngModelOptions]="{standalone: true}"
+                                    placeholder="Ex: CACES, Électricité">
+                            </div>
+                            <div class="form-group">
+                                <label>Numéro certificat</label>
+                                <input type="text" [(ngModel)]="habilitationInput.numeroCertificat" [ngModelOptions]="{standalone: true}"
+                                    placeholder="Ex: CERT123">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Date d'obtention</label>
+                                <input type="date" [(ngModel)]="habilitationInput.dateObtention" [ngModelOptions]="{standalone: true}">
+                            </div>
+                            <div class="form-group">
+                                <label>Date d'expiration</label>
+                                <input type="date" [(ngModel)]="habilitationInput.dateExpiration" [ngModelOptions]="{standalone: true}">
+                            </div>
+                        </div>
+                        <button type="button" class="btn-add-competence" (click)="addHabilitation()">
+                            ➕ Ajouter habilitation
+                        </button>
+                    </div>
+                    <div class="habilitations-list" *ngIf="formData.habilitations.length > 0">
+                        <div class="habilitation-item" *ngFor="let hab of formData.habilitations; let i = index">
+                            <div class="habilitation-info">
+                                <strong>{{ hab.nom }}</strong>
+                                <span *ngIf="hab.numeroCertificat"> - Cert: {{ hab.numeroCertificat }}</span>
+                                <span *ngIf="hab.dateExpiration"> - Expire: {{ hab.dateExpiration }}</span>
+                            </div>
+                            <button type="button" class="btn-remove" (click)="removeHabilitation(i)">✕</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Boutons -->
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" [routerLink]="['/admin/users']">
+                    ✕ Annuler
+                </button>
+                <button type="submit" class="btn-submit" [disabled]="!isFormValid()">
+                    ✅ Créer l'utilisateur
+                </button>
+            </div>
+        </form>
+
+        <!-- Message si pas de rôle sélectionné -->
+        <div class="no-role-selected" *ngIf="!selectedRole">
+            <div class="empty-icon">🎯</div>
+            <p>Veuillez sélectionner un type d'utilisateur pour commencer</p>
+        </div>
+    </div>
+</div>

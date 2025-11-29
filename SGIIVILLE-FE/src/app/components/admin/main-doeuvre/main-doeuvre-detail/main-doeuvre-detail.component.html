@@ -1,0 +1,100 @@
+<div class="detail-container">
+  <div class="header">
+    <h1>📝 Détails de la main d'œuvre</h1>
+    <button class="btn btn-secondary" (click)="goBack()">← Retour</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des informations...</p>
+  </div>
+
+  <div *ngIf="!loading && !agent" class="empty-state">
+    <p>Agent non trouvé</p>
+  </div>
+
+  <div *ngIf="!loading && agent" class="agent-detail">
+    <div class="detail-header">
+      <div class="agent-name">
+        <h2>{{ agent.nom }} {{ agent.prenom || '' }}</h2>
+        <span class="agent-id">ID: #{{ agent.id }}</span>
+      </div>
+      <div class="agent-status">
+        <span class="badge" [ngClass]="getDisponibiliteClass(agent.disponibilite)">
+          {{ getDisponibiliteLabel(agent.disponibilite) }}
+        </span>
+      </div>
+    </div>
+
+    <div class="detail-sections">
+      <div class="detail-section">
+        <h3>📋 Informations personnelles</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>CIN</label>
+            <span>{{ agent.cin }}</span>
+          </div>
+          <div class="detail-item" *ngIf="agent.matricule">
+            <label>Matricule</label>
+            <span>{{ agent.matricule }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Téléphone</label>
+            <span>{{ agent.telephone }}</span>
+          </div>
+          <div class="detail-item" *ngIf="agent.email">
+            <label>Email</label>
+            <span>{{ agent.email }}</span>
+          </div>
+          <div class="detail-item" *ngIf="agent.metier">
+            <label>Métier</label>
+            <span>{{ agent.metier }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>🔧 Compétences</h3>
+        <p>{{ getCompetencesString(agent.competences) }}</p>
+      </div>
+
+      <div class="detail-section" *ngIf="agent.habilitations && agent.habilitations.length > 0">
+        <h3>📜 Habilitations</h3>
+        <div class="habilitations-list">
+          <div class="habilitation-item" *ngFor="let hab of agent.habilitations">
+            <strong>{{ hab }}</strong>
+            <span *ngIf="agent.habilitationsExpiration && agent.habilitationsExpiration[hab]">
+              - Expire: {{ agent.habilitationsExpiration[hab] | date:'short' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>📊 Historique des interventions</h3>
+        <div *ngIf="loadingHistorique" class="loading">
+          <p>Chargement de l'historique...</p>
+        </div>
+        <div *ngIf="!loadingHistorique && historique.length === 0" class="empty-state">
+          <p>Aucune intervention dans l'historique</p>
+        </div>
+        <div *ngIf="!loadingHistorique && historique.length > 0" class="historique-list">
+          <div class="historique-item" *ngFor="let item of historique">
+            <div class="historique-header">
+              <span class="historique-id">Intervention #{{ item.interventionId }}</span>
+              <span class="historique-etat">{{ item.etat }}</span>
+            </div>
+            <p class="historique-description">{{ item.description }}</p>
+            <div class="historique-meta">
+              <span>Début: {{ item.dateDebut | date:'short' }}</span>
+              <span *ngIf="item.dateFin">Fin: {{ item.dateFin | date:'short' }}</span>
+              <span>Temps passé: {{ item.tempsPasseMinutes }} min</span>
+            </div>
+            <div *ngIf="item.competencesUtilisees.length > 0" class="historique-competences">
+              <strong>Compétences utilisées:</strong> {{ item.competencesUtilisees.join(', ') }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

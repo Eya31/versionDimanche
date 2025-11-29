@@ -1,0 +1,38 @@
+<div class="sessions-container">
+  <div class="header">
+    <h1>🟢 Sessions actives</h1>
+    <button class="btn btn-danger" (click)="terminateAllSessions()" [disabled]="sessions.length === 0">
+      Terminer toutes les sessions
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des sessions...</p>
+  </div>
+
+  <div *ngIf="!loading && sessions.length === 0" class="empty-state">
+    <p>Aucune session active</p>
+  </div>
+
+  <div *ngIf="!loading && sessions.length > 0" class="sessions-list">
+    <div class="session-item" *ngFor="let session of sessions">
+      <div class="session-info">
+        <div class="session-user">
+          <strong>{{ session.userName }}</strong>
+          <span class="session-status" [class.active]="session.active">
+            {{ session.active ? '🟢 Actif' : '⚫ Inactif' }}
+          </span>
+        </div>
+        <div class="session-details">
+          <span>IP: {{ session.ipAddress }}</span>
+          <span>Connexion: {{ session.loginTime | date:'short' }}</span>
+          <span>Dernière activité: {{ session.lastActivity | date:'short' }}</span>
+        </div>
+      </div>
+      <button class="btn btn-sm btn-danger" (click)="terminateSession(session)">
+        Terminer
+      </button>
+    </div>
+  </div>
+</div>
+

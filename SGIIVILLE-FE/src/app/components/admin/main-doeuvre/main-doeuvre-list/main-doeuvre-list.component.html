@@ -1,0 +1,82 @@
+<div class="main-doeuvre-container">
+  <div class="header">
+    <h1>🟡 Liste de la main d'œuvre</h1>
+    <a routerLink="/admin/main-doeuvre/add" class="btn btn-primary">
+      ➕ Ajouter main d'œuvre
+    </a>
+  </div>
+
+  <div class="filters">
+    <div class="filter-group">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="applyFilters()"
+        placeholder="Rechercher par nom, CIN, téléphone..."
+        class="search-input"
+      />
+    </div>
+    <div class="filter-group">
+      <label>Disponibilité :</label>
+      <select [(ngModel)]="filtreDisponibilite" (change)="applyFilters()">
+        <option value="all">Toutes</option>
+        <option value="DISPONIBLE">Disponible</option>
+        <option value="OCCUPE">Occupé</option>
+        <option value="EN_CONGE">En congé</option>
+        <option value="ABSENT">Absent</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <input 
+        type="text" 
+        [(ngModel)]="filtreCompetence" 
+        (input)="applyFilters()"
+        placeholder="Filtrer par compétence..."
+        class="search-input"
+      />
+    </div>
+    <button class="btn btn-secondary" (click)="resetFilters()">
+      Réinitialiser
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement de la main d'œuvre...</p>
+  </div>
+
+  <div *ngIf="!loading && mainDoeuvreFiltres.length === 0" class="empty-state">
+    <p>Aucune main d'œuvre trouvée</p>
+  </div>
+
+  <div *ngIf="!loading && mainDoeuvreFiltres.length > 0" class="main-doeuvre-list">
+    <div class="main-doeuvre-card" *ngFor="let agent of mainDoeuvreFiltres">
+      <div class="agent-info">
+        <div class="agent-header">
+          <h3>{{ agent.nom }} {{ agent.prenom || '' }}</h3>
+          <span class="agent-id">ID: #{{ agent.id }}</span>
+        </div>
+        <div class="agent-details">
+          <p><strong>CIN:</strong> {{ agent.cin }}</p>
+          <p><strong>Téléphone:</strong> {{ agent.telephone }}</p>
+          <p *ngIf="agent.email"><strong>Email:</strong> {{ agent.email }}</p>
+          <p><strong>Métier:</strong> {{ agent.metier || 'Non spécifié' }}</p>
+          <p><strong>Compétences:</strong> {{ getCompetencesString(agent.competences) }}</p>
+          <p>
+            <strong>Disponibilité:</strong>
+            <span class="badge" [ngClass]="getDisponibiliteClass(agent.disponibilite)">
+              {{ getDisponibiliteLabel(agent.disponibilite) }}
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="agent-actions">
+        <a [routerLink]="['/admin/main-doeuvre', agent.id]" class="btn btn-sm btn-primary">
+          👁️ Voir détails
+        </a>
+        <button class="btn btn-sm btn-danger" (click)="deleteMainDoeuvre(agent)">
+          🗑️ Archiver
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

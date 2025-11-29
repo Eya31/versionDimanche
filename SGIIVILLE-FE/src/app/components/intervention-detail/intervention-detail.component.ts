@@ -407,7 +407,7 @@ export class InterventionDetailComponent implements OnInit {
         if (!this.intervention) return;
         
         const request = {
-          mainDOeuvreIds: [mainDOeuvreId],
+          ouvrierIds: [mainDOeuvreId],
           interventionId: this.intervention.id
         };
         
@@ -486,19 +486,30 @@ export class InterventionDetailComponent implements OnInit {
     if (confirm(`Désaffecter ${nomMembre} de cette intervention ?\n\nLa disponibilité sera remise à "Disponible" et une notification sera envoyée au chef de service.`)) {
       this.technicienService.desaffecterMainDOeuvre(this.intervention.id, mainDOeuvreId).subscribe({
         next: (updatedIntervention) => {
+          console.log('✅ Réponse désaffectation reçue:', updatedIntervention);
+          console.log('✅ mainDOeuvreIds dans réponse:', updatedIntervention?.mainDOeuvreIds);
           alert('✅ Main-d\'œuvre désaffectée avec succès');
+          
           // Retirer immédiatement de la liste
           this.mainDOeuvreAffectee = this.mainDOeuvreAffectee.filter(md => md.id !== mainDOeuvreId);
+          
           // Mettre à jour l'intervention avec les nouvelles données
           if (updatedIntervention) {
             this.intervention = updatedIntervention;
             if (updatedIntervention.mainDOeuvreIds && updatedIntervention.mainDOeuvreIds.length > 0) {
               // Recharger pour s'assurer que tout est à jour
+              console.log('📋 Rechargement des main-d\'œuvre affectées après désaffectation, IDs:', updatedIntervention.mainDOeuvreIds);
               this.loadMainDOeuvreAffectee(updatedIntervention.mainDOeuvreIds);
+            } else {
+              // Aucune main-d'œuvre restante
+              this.mainDOeuvreAffectee = [];
+              this.cdr.detectChanges();
             }
           } else {
             // Recharger l'intervention si elle n'est pas retournée
-            this.loadIntervention(this.intervention!.id);
+            setTimeout(() => {
+              this.loadIntervention(this.intervention!.id);
+            }, 300);
           }
           this.loadMainDOeuvre(); // Recharger pour mettre à jour les disponibilités
         },
@@ -544,16 +555,32 @@ export class InterventionDetailComponent implements OnInit {
     if (!this.intervention) return;
 
     const request = {
-      mainDOeuvreIds: this.selectedMainDOeuvreIds,
+      ouvrierIds: this.selectedMainDOeuvreIds,
       interventionId: this.intervention.id
     };
 
     this.technicienService.affecterMainDOeuvre(this.intervention.id, request).subscribe({
-      next: () => {
+      next: (updatedIntervention) => {
+        console.log('✅ Réponse affectation multiple reçue:', updatedIntervention);
+        console.log('✅ mainDOeuvreIds dans réponse:', updatedIntervention?.mainDOeuvreIds);
         alert(`✅ ${this.selectedMainDOeuvreIds.length} agent(s) affecté(s) avec succès !\n\nUne notification a été envoyée au chef de service.`);
         this.selectedMainDOeuvreIds = [];
-        this.loadIntervention(this.intervention!.id);
-        this.loadMainDOeuvre();
+        
+        // Mettre à jour immédiatement avec les données reçues
+        if (updatedIntervention) {
+          this.intervention = updatedIntervention;
+          if (updatedIntervention.mainDOeuvreIds && updatedIntervention.mainDOeuvreIds.length > 0) {
+            console.log('📋 Chargement immédiat des main-d\'œuvre affectées, IDs:', updatedIntervention.mainDOeuvreIds);
+            this.loadMainDOeuvreAffectee(updatedIntervention.mainDOeuvreIds);
+          }
+        }
+        
+        // Recharger complètement l'intervention après un court délai
+        setTimeout(() => {
+          this.loadIntervention(this.intervention!.id);
+        }, 300);
+        
+        this.loadMainDOeuvre(); // Recharger pour mettre à jour les disponibilités
       },
       error: (err) => {
         console.error('Erreur affectation multiple:', err);
@@ -563,6 +590,8 @@ export class InterventionDetailComponent implements OnInit {
           err.error.erreurs.forEach((erreur: string) => {
             errorMessage += `  • ${erreur}\n`;
           });
+        } else if (err.error?.message) {
+          errorMessage += ': ' + err.error.message;
         }
         alert(errorMessage);
       }

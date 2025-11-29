@@ -1,0 +1,305 @@
+<div class="materiel-stocks-container">
+  <div class="header">
+    <h1>🛠️ Matériel & Stocks</h1>
+    <div class="stats-cards">
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-info">
+          <div class="stat-value">{{ getTotalRessources() }}</div>
+          <div class="stat-label">Ressources en stock</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔧</div>
+        <div class="stat-info">
+          <div class="stat-value">{{ getEquipementsDisponibles() }}/{{ equipements.length }}</div>
+          <div class="stat-label">Équipements disponibles</div>
+        </div>
+      </div>
+      <div class="stat-card alert-card" [class.has-alerts]="getAlertCount() > 0">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-info">
+          <div class="stat-value">{{ getAlertCount() }}</div>
+          <div class="stat-label">Alertes stock</div>
+          <div class="stat-detail" *ngIf="getCritiqueCount() > 0">
+            {{ getCritiqueCount() }} critique(s)
+          </div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
+          <div class="stat-value">{{ getTotalValeurStock() | number:'1.0-0' }} TND</div>
+          <div class="stat-label">Valeur totale</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'liste'"
+      (click)="switchTab('liste')">
+      📋 Liste matériel
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'alertes'"
+      (click)="switchTab('alertes')">
+      ⚠️ Alertes stock faible
+      <span class="badge" *ngIf="getAlertCount() > 0">{{ getAlertCount() }}</span>
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'mouvements'"
+      (click)="switchTab('mouvements')">
+      📊 Tableau des mouvements
+    </button>
+  </div>
+
+  <!-- Onglet Liste Matériel -->
+  <div class="tab-content" *ngIf="activeTab === 'liste'">
+    <div class="filters">
+      <div class="search-box">
+        <input 
+          type="text" 
+          placeholder="🔍 Rechercher un matériel (nom, référence, catégorie)..." 
+          [(ngModel)]="searchTerm"
+          class="search-input">
+      </div>
+      <div class="filter-group">
+        <select [(ngModel)]="filterType" class="filter-select">
+          <option value="TOUS">Tous les types</option>
+          <option value="EQUIPEMENT">Équipements</option>
+          <option value="RESSOURCE">Ressources</option>
+        </select>
+        <select [(ngModel)]="filterCategorie" class="filter-select">
+          <option value="TOUS">Toutes les catégories</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+        <select [(ngModel)]="filterEtat" class="filter-select">
+          <option value="TOUS">Tous les états</option>
+          <option *ngFor="let etat of etats" [value]="etat">{{ etat }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="materiel-table-container" *ngIf="!loading">
+      <table class="materiel-table">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Nom du matériel</th>
+            <th>Catégorie</th>
+            <th>Référence / Code</th>
+            <th>État</th>
+            <th>Quantité totale</th>
+            <th>Quantité affectée</th>
+            <th>Quantité disponible</th>
+            <th>Description</th>
+            <th>Seuil min.</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let materiel of filteredMateriel" 
+              [class.alert-faible]="materiel.seuilMinimum && materiel.quantiteDisponible < materiel.seuilMinimum"
+              [class.alert-critique]="materiel.quantiteDisponible === 0">
+            <td>
+              <span class="type-badge" [class.equipement]="materiel.type === 'EQUIPEMENT'">
+                {{ materiel.type === 'EQUIPEMENT' ? '🔧' : '📦' }}
+              </span>
+            </td>
+            <td class="nom-cell">
+              <strong>{{ materiel.nom }}</strong>
+              <span class="badge-alert" *ngIf="materiel.seuilMinimum && materiel.quantiteDisponible < materiel.seuilMinimum">
+                ⚠️
+              </span>
+            </td>
+            <td>{{ materiel.categorie }}</td>
+            <td class="reference-cell">{{ materiel.reference }}</td>
+            <td>
+              <span class="etat-badge" [ngClass]="'etat-' + materiel.etat.toLowerCase().replace('_', '-')">
+                {{ materiel.etat }}
+              </span>
+            </td>
+            <td class="quantite-cell">
+              <span class="quantite-totale">{{ materiel.quantiteTotale }}</span>
+              <span class="unite" *ngIf="materiel.unite">{{ materiel.unite }}</span>
+            </td>
+            <td class="quantite-cell">
+              <span class="quantite-affectee">{{ materiel.quantiteAffectee }}</span>
+            </td>
+            <td class="quantite-cell">
+              <span class="quantite-disponible" 
+                    [class.faible]="materiel.seuilMinimum && materiel.quantiteDisponible < materiel.seuilMinimum"
+                    [class.critique]="materiel.quantiteDisponible === 0">
+                {{ materiel.quantiteDisponible }}
+              </span>
+            </td>
+            <td class="description-cell">{{ materiel.description || '-' }}</td>
+            <td class="seuil-cell">
+              <span class="seuil-value">{{ materiel.seuilMinimum || '-' }}</span>
+              <button class="btn-icon" (click)="configurerSeuil(materiel)" title="Configurer le seuil">
+                ⚙️
+              </button>
+            </td>
+            <td class="actions-cell">
+              <button class="btn-small btn-info" title="Voir détails">👁️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="empty-state" *ngIf="filteredMateriel.length === 0">
+        <p>📭 Aucun matériel trouvé</p>
+      </div>
+    </div>
+
+    <div class="loading" *ngIf="loading">
+      <p>⏳ Chargement...</p>
+    </div>
+  </div>
+
+  <!-- Onglet Alertes -->
+  <div class="tab-content" *ngIf="activeTab === 'alertes'">
+    <div class="alerts-summary">
+      <div class="summary-card critique">
+        <div class="summary-icon">🔴</div>
+        <div class="summary-info">
+          <div class="summary-value">{{ getCritiqueCount() }}</div>
+          <div class="summary-label">Alertes critiques</div>
+        </div>
+      </div>
+      <div class="summary-card faible">
+        <div class="summary-icon">🟡</div>
+        <div class="summary-info">
+          <div class="summary-value">{{ getFaibleCount() }}</div>
+          <div class="summary-label">Stock faible</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alerts-list" *ngIf="stockAlerts.length > 0">
+      <div class="alert-card" *ngFor="let alert of stockAlerts" [ngClass]="getAlertClass(alert.niveau)">
+        <div class="alert-icon">
+          <span *ngIf="alert.niveau === 'CRITIQUE'">🔴</span>
+          <span *ngIf="alert.niveau === 'FAIBLE'">🟡</span>
+        </div>
+        <div class="alert-content">
+          <div class="alert-header">
+            <h3>{{ alert.designation }}</h3>
+            <span class="alert-type">{{ alert.type }}</span>
+          </div>
+          <div class="alert-details">
+            <div class="detail-item">
+              <span class="label">Quantité totale:</span>
+              <span class="value">{{ alert.quantiteActuelle }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Quantité disponible:</span>
+              <span class="value highlight">{{ alert.quantiteDisponible }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Seuil minimum:</span>
+              <span class="value">{{ alert.seuilMinimum }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Niveau:</span>
+              <span class="value badge" [ngClass]="getAlertClass(alert.niveau)">
+                {{ alert.niveau }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="stockAlerts.length === 0">
+      <p>✅ Aucune alerte - Tous les stocks sont normaux</p>
+    </div>
+  </div>
+
+  <!-- Onglet Mouvements -->
+  <div class="tab-content" *ngIf="activeTab === 'mouvements'">
+    <div class="mouvements-table-container">
+      <table class="mouvements-table">
+        <thead>
+          <tr>
+            <th>Date et heure</th>
+            <th>Type</th>
+            <th>Désignation</th>
+            <th>Mouvement</th>
+            <th>Quantité</th>
+            <th>Avant</th>
+            <th>Après</th>
+            <th>Utilisateur</th>
+            <th>Raison / Intervention</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mouvement of mouvements" [ngClass]="getMouvementClass(mouvement.mouvement)">
+            <td>{{ mouvement.date | date:'short' }}</td>
+            <td>
+              <span class="type-badge" [class.equipement]="mouvement.type === 'EQUIPEMENT'">
+                {{ mouvement.type === 'EQUIPEMENT' ? '🔧' : '📦' }}
+              </span>
+            </td>
+            <td><strong>{{ mouvement.designation }}</strong></td>
+            <td>
+              <span class="mouvement-badge" [ngClass]="getMouvementClass(mouvement.mouvement)">
+                {{ mouvement.mouvement }}
+              </span>
+            </td>
+            <td class="quantite-cell">{{ mouvement.quantite }}</td>
+            <td class="quantite-cell">{{ mouvement.quantiteAvant }}</td>
+            <td class="quantite-cell">{{ mouvement.quantiteApres }}</td>
+            <td>{{ mouvement.utilisateur || '-' }}</td>
+            <td>
+              <span *ngIf="mouvement.interventionId" class="intervention-ref">
+                Intervention #{{ mouvement.interventionId }}
+              </span>
+              <span *ngIf="mouvement.raison && !mouvement.interventionId">{{ mouvement.raison }}</span>
+              <span *ngIf="!mouvement.raison && !mouvement.interventionId">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="empty-state" *ngIf="mouvements.length === 0">
+        <p>📭 Aucun mouvement enregistré</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Configuration Seuil -->
+<div class="modal-overlay" *ngIf="showSeuilModal" (click)="fermerSeuilModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>⚙️ Configurer le seuil minimum</h2>
+      <button class="close-btn" (click)="fermerSeuilModal()">×</button>
+    </div>
+    <div class="modal-body" *ngIf="selectedMaterielForSeuil">
+      <p><strong>{{ selectedMaterielForSeuil.nom }}</strong></p>
+      <p class="info-text">Définir le seuil minimum pour générer une alerte :</p>
+      <div class="seuil-input-group">
+        <label>Seuil minimum:</label>
+        <input 
+          type="number" 
+          [(ngModel)]="nouveauSeuil"
+          min="0"
+          class="seuil-input">
+        <span class="unite" *ngIf="selectedMaterielForSeuil.unite">{{ selectedMaterielForSeuil.unite }}</span>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="fermerSeuilModal()">
+          Annuler
+        </button>
+        <button class="btn btn-primary" (click)="sauvegarderSeuil()">
+          Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

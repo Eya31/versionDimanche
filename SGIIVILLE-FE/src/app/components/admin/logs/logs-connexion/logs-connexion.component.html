@@ -1,0 +1,54 @@
+<div class="logs-container">
+  <div class="header">
+    <h1>🔐 Logs de connexion</h1>
+    <button class="btn btn-primary" (click)="exportLogs()">
+      Exporter
+    </button>
+  </div>
+
+  <div class="filters">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (input)="applyFilters()"
+      placeholder="Rechercher par utilisateur ou IP..."
+    />
+    <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+      <option value="all">Tous les statuts</option>
+      <option value="success">Succès</option>
+      <option value="failed">Échec</option>
+    </select>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des logs...</p>
+  </div>
+
+  <div *ngIf="!loading" class="logs-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Date/Heure</th>
+          <th>Utilisateur</th>
+          <th>Action</th>
+          <th>Adresse IP</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of paginatedLogs">
+          <td>{{ log.timestamp | date:'short' }}</td>
+          <td>{{ log.userName }}</td>
+          <td>{{ log.action }}</td>
+          <td>{{ log.ipAddress }}</td>
+          <td>
+            <span class="status-badge" [class.success]="log.status === 'success'" [class.failed]="log.status === 'failed'">
+              {{ log.status === 'success' ? '✓ Succès' : '✗ Échec' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

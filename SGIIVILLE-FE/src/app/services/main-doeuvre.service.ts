@@ -14,31 +14,53 @@ import {
 })
 export class MainDOeuvreService {
   private apiUrl = `${environment.apiUrl}/technicien/main-doeuvre`;
+  private adminApiUrl = `${environment.apiUrl}/admin/main-doeuvre`;
 
   constructor(private http: HttpClient) {}
 
-  getAll(filters?: { competence?: string; disponibilite?: string }): Observable<MainDOeuvre[]> {
+  /**
+   * Récupère toutes les fiches de main-d'œuvre
+   * Utilise l'endpoint admin si disponible, sinon l'endpoint technicien
+   */
+  getAll(filters?: { competence?: string; disponibilite?: string }, useAdmin: boolean = false): Observable<MainDOeuvre[]> {
     let params = new HttpParams();
     if (filters?.competence) params = params.set('competence', filters.competence);
     if (filters?.disponibilite) params = params.set('disponibilite', filters.disponibilite);
-    return this.http.get<MainDOeuvre[]>(this.apiUrl, { params });
+    const url = useAdmin ? this.adminApiUrl : this.apiUrl;
+    return this.http.get<MainDOeuvre[]>(url, { params });
   }
 
-  getById(id: number): Observable<MainDOeuvre> {
-    return this.http.get<MainDOeuvre>(`${this.apiUrl}/${id}`);
+  /**
+   * Récupère une fiche de main-d'œuvre par ID
+   */
+  getById(id: number, useAdmin: boolean = false): Observable<MainDOeuvre> {
+    const url = useAdmin ? this.adminApiUrl : this.apiUrl;
+    return this.http.get<MainDOeuvre>(`${url}/${id}`);
   }
 
-  create(mainDOeuvre: CreateMainDOeuvreRequest | MainDOeuvre): Observable<any> {
+  /**
+   * Crée une nouvelle fiche de main-d'œuvre
+   */
+  create(mainDOeuvre: CreateMainDOeuvreRequest | MainDOeuvre, useAdmin: boolean = false): Observable<any> {
+    const url = useAdmin ? this.adminApiUrl : this.apiUrl;
     // Le backend retourne maintenant un objet avec mainDOeuvre, userId, defaultPassword, message
-    return this.http.post<any>(this.apiUrl, mainDOeuvre);
+    return this.http.post<any>(url, mainDOeuvre);
   }
 
-  update(id: number, mainDOeuvre: MainDOeuvre): Observable<MainDOeuvre> {
-    return this.http.put<MainDOeuvre>(`${this.apiUrl}/${id}`, mainDOeuvre);
+  /**
+   * Met à jour une fiche de main-d'œuvre
+   */
+  update(id: number, mainDOeuvre: MainDOeuvre, useAdmin: boolean = false): Observable<MainDOeuvre> {
+    const url = useAdmin ? this.adminApiUrl : this.apiUrl;
+    return this.http.put<MainDOeuvre>(`${url}/${id}`, mainDOeuvre);
   }
 
-  archiver(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  /**
+   * Archive une fiche de main-d'œuvre
+   */
+  archiver(id: number, useAdmin: boolean = false): Observable<void> {
+    const url = useAdmin ? this.adminApiUrl : this.apiUrl;
+    return this.http.delete<void>(`${url}/${id}`);
   }
 
   /**

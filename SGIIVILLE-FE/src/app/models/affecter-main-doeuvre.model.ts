@@ -1,5 +1,5 @@
 export interface AffecterMainDOeuvreRequest {
-  mainDOeuvreIds: number[];
-  interventionId: number;
+  ouvrierIds: number[];
+  interventionId?: number;
 }
 

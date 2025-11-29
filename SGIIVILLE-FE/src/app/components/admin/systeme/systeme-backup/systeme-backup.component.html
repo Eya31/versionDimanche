@@ -1,0 +1,67 @@
+<div class="backup-container">
+  <div class="header">
+    <h1>💾 Sauvegardes du système</h1>
+    <button class="btn btn-primary" (click)="createBackup()" [disabled]="creating">
+      {{ creating ? 'Création...' : 'Créer une sauvegarde' }}
+    </button>
+  </div>
+
+  <div class="backup-config">
+    <h2>Configuration des sauvegardes automatiques</h2>
+    <div class="config-form">
+      <div class="form-group">
+        <label>
+          <input type="checkbox" [(ngModel)]="backupConfig.autoBackup" />
+          Activer les sauvegardes automatiques
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Fréquence</label>
+        <select [(ngModel)]="backupConfig.backupFrequency">
+          <option value="daily">Quotidienne</option>
+          <option value="weekly">Hebdomadaire</option>
+          <option value="monthly">Mensuelle</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Rétention (jours)</label>
+        <input type="number" [(ngModel)]="backupConfig.retentionDays" />
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des sauvegardes...</p>
+  </div>
+
+  <div *ngIf="!loading" class="backups-list">
+    <h2>Historique des sauvegardes</h2>
+    <div class="backup-item" *ngFor="let backup of backups">
+      <div class="backup-info">
+        <div class="backup-icon">💾</div>
+        <div class="backup-details">
+          <div class="backup-date">{{ backup.date | date:'full' }}</div>
+          <div class="backup-meta">
+            <span>Taille: {{ backup.size }}</span>
+            <span>Type: {{ backup.type }}</span>
+            <span class="backup-status" [class.completed]="backup.status === 'completed'">
+              {{ backup.status === 'completed' ? '✓ Complétée' : 'En cours...' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="backup-actions">
+        <button class="btn btn-sm btn-primary" (click)="restoreBackup(backup)">
+          Restaurer
+        </button>
+        <button class="btn btn-sm btn-secondary" (click)="downloadBackup(backup)">
+          Télécharger
+        </button>
+        <button class="btn btn-sm btn-danger" (click)="deleteBackup(backup)">
+          Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,63 @@
+<div class="carte-container">
+  <div class="header">
+    <h1>📍 Carte des interventions</h1>
+    <button class="btn btn-primary" (click)="loadInterventions()" [disabled]="loading">
+      🔄 Actualiser
+    </button>
+  </div>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label>État :</label>
+      <select [(ngModel)]="filtreEtat" (change)="applyFilters()">
+        <option value="all">Tous les états</option>
+        <option value="EN_ATTENTE">En attente</option>
+        <option value="EN_COURS">En cours</option>
+        <option value="TERMINEE">Terminée</option>
+        <option value="SUSPENDUE">Suspendue</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Priorité :</label>
+      <select [(ngModel)]="filtrePriorite" (change)="applyFilters()">
+        <option value="all">Toutes les priorités</option>
+        <option value="URGENTE">Urgente</option>
+        <option value="CRITIQUE">Critique</option>
+        <option value="NORMALE">Normale</option>
+        <option value="PLANIFIEE">Planifiée</option>
+      </select>
+    </div>
+
+    <button class="btn btn-secondary" (click)="resetFilters()">
+      Réinitialiser
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des interventions...</p>
+  </div>
+
+  <div class="map-wrapper">
+    <div id="interventionMap" class="map"></div>
+    <div class="map-legend">
+      <h3>Légende</h3>
+      <div class="legend-item">
+        <span class="legend-color" style="background: #10b981;"></span>
+        <span>En cours</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background: #f59e0b;"></span>
+        <span>En attente</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background: #3b82f6;"></span>
+        <span>Terminée</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background: #ef4444;"></span>
+        <span>Suspendue</span>
+      </div>
+    </div>
+  </div>
+</div>

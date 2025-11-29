@@ -1,0 +1,219 @@
+<div class="intervention-liste-container">
+    <!-- Header avec recherche -->
+    <div class="page-header">
+        <div class="header-left">
+            <h1>📋 Liste des Interventions</h1>
+            <p class="subtitle">Gestion et suivi de toutes les interventions</p>
+        </div>
+        <div class="header-actions">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Rechercher par ID, description..." [(ngModel)]="searchTerm"
+                    (input)="applyFilters()">
+            </div>
+            <button class="btn-refresh" (click)="loadInterventions()">
+                <span class="icon">↻</span>
+                Actualiser
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats rapides -->
+    <div class="quick-stats">
+        <div class="stat-card">
+            <span class="stat-icon">🟢</span>
+            <div class="stat-info">
+                <div class="stat-value">{{ statsEnCours }}</div>
+                <div class="stat-label">En cours</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">🟠</span>
+            <div class="stat-info">
+                <div class="stat-value">{{ statsEnAttente }}</div>
+                <div class="stat-label">En attente</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">✅</span>
+            <div class="stat-info">
+                <div class="stat-value">{{ statsTerminee }}</div>
+                <div class="stat-label">Terminées</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">📊</span>
+            <div class="stat-info">
+                <div class="stat-value">{{ interventionsFiltrees.length }}/{{ interventions.length }}</div>
+                <div class="stat-label">Affichées</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="filters-section">
+        <h3>🔍 Filtres</h3>
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label>État</label>
+                <select [(ngModel)]="filtreEtat" (change)="applyFilters()">
+                    <option value="">Tous les états</option>
+                    <option value="EN_COURS">En cours</option>
+                    <option value="EN_ATTENTE">En attente</option>
+                    <option value="TERMINEE">Terminée</option>
+                    <option value="ANNULEE">Annulée</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Priorité</label>
+                <select [(ngModel)]="filtrePriorite" (change)="applyFilters()">
+                    <option value="">Toutes les priorités</option>
+                    <option value="URGENTE">Urgente</option>
+                    <option value="CRITIQUE">Critique</option>
+                    <option value="NORMALE">Normale</option>
+                    <option value="PLANIFIEE">Planifiée</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Date de</label>
+                <input type="date" [(ngModel)]="dateDebut" (change)="applyFilters()">
+            </div>
+
+            <div class="filter-group">
+                <label>Date à</label>
+                <input type="date" [(ngModel)]="dateFin" (change)="applyFilters()">
+            </div>
+
+            <div class="filter-group">
+                <button class="btn-reset" (click)="resetFilters()">
+                    <span class="icon">✕</span>
+                    Réinitialiser
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableau des interventions -->
+    <div class="table-card">
+        <div class="table-container">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th (click)="sortBy('id')" class="sortable">
+                            📌 ID
+                            <span class="sort-indicator" *ngIf="sortColumn === 'id'">
+                                {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                            </span>
+                        </th>
+                        <th>📝 Description</th>
+                        <th (click)="sortBy('etat')" class="sortable">
+                            🏷️ État
+                            <span class="sort-indicator" *ngIf="sortColumn === 'etat'">
+                                {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                            </span>
+                        </th>
+                        <th (click)="sortBy('priorite')" class="sortable">
+                            ⚡ Priorité
+                            <span class="sort-indicator" *ngIf="sortColumn === 'priorite'">
+                                {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                            </span>
+                        </th>
+                        <th (click)="sortBy('datePlanifiee')" class="sortable">
+                            📅 Date planifiée
+                            <span class="sort-indicator" *ngIf="sortColumn === 'datePlanifiee'">
+                                {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                            </span>
+                        </th>
+                        <th>👤 Technicien</th>
+                        <th>💰 Budget</th>
+                        <th>⚙️ Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let intervention of paginatedInterventions" class="table-row">
+                        <td><strong class="intervention-id">#{{ intervention.id }}</strong></td>
+                        <td class="description-cell">
+                            <div class="description-text">
+                                {{ intervention.description ? (intervention.description | slice:0:60) + (intervention.description.length > 60 ? '...' : '') : 'Aucune description' }}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge" [ngClass]="getEtatClass(intervention.etat)">
+                                {{ intervention.etat }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge" [ngClass]="getPrioriteClass(intervention.priorite)">
+                                {{ intervention.priorite }}
+                            </span>
+                        </td>
+                        <td>{{ intervention.datePlanifiee | date:'dd/MM/yyyy' }}</td>
+                        <td>
+                            <span *ngIf="intervention.technicienId" class="technicien-info">
+                                <span class="tech-icon">🧑‍🔧</span> #{{ intervention.technicienId }}
+                            </span>
+                            <span *ngIf="!intervention.technicienId" class="text-muted">Non assigné</span>
+                        </td>
+                        <td><strong class="budget-value">{{ intervention.budget || 0 }} DT</strong></td>
+                        <td class="actions-cell">
+                            <button class="btn-action btn-view" [routerLink]="['/admin/interventions', intervention.id]"
+                                title="Voir détails">
+                                👁️
+                            </button>
+                            <button class="btn-action btn-map" (click)="viewOnMap(intervention)"
+                                *ngIf="intervention.localisation" title="Voir sur carte">
+                                📍
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="interventionsFiltrees.length === 0">
+                        <td colspan="8" class="no-data">
+                            <div class="empty-state">
+                                <div class="empty-icon">📭</div>
+                                <p>Aucune intervention trouvée</p>
+                                <button class="btn-reset-small" (click)="resetFilters()">Réinitialiser les
+                                    filtres</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" *ngIf="interventionsFiltrees.length > itemsPerPage">
+            <div class="pagination-info">
+                Affichage de {{ getStartIndex() + 1 }} à {{ getEndIndex() }} sur {{ interventionsFiltrees.length }}
+                interventions
+            </div>
+            <div class="pagination-controls">
+                <button class="btn-page" (click)="previousPage()" [disabled]="currentPage === 1">
+                    ◀ Précédent
+                </button>
+
+                <div class="page-numbers">
+                    <button *ngFor="let page of getPageNumbers()" class="btn-page-number"
+                        [class.active]="page === currentPage" (click)="goToPage(page)">
+                        {{ page }}
+                    </button>
+                </div>
+
+                <button class="btn-page" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                    Suivant ▶
+                </button>
+            </div>
+            <div class="items-per-page">
+                <label>Par page:</label>
+                <select [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
+                    <option [value]="10">10</option>
+                    <option [value]="25">25</option>
+                    <option [value]="50">50</option>
+                    <option [value]="100">100</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
