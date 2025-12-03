@@ -25,35 +25,47 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials)
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials, { headers })
       .pipe(
         tap(response => {
-          localStorage.setItem('token', response.token);
-          const user: User = {
-            id: response.userId,
-            nom: response.nom,
-            email: response.email,
-            role: response.role
-          };
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          this.currentUserSubject.next(user);
+          if (response && response.token) {
+            localStorage.setItem('token', response.token);
+            const user: User = {
+              id: response.userId,
+              nom: response.nom,
+              email: response.email,
+              role: response.role
+            };
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            this.currentUserSubject.next(user);
+          }
         })
       );
   }
 
   register(request: RegisterRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/register`, request)
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post<LoginResponse>(`${this.apiUrl}/register`, request, { headers })
       .pipe(
         tap(response => {
-          localStorage.setItem('token', response.token);
-          const user: User = {
-            id: response.userId,
-            nom: response.nom,
-            email: response.email,
-            role: response.role
-          };
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          this.currentUserSubject.next(user);
+          if (response && response.token) {
+            localStorage.setItem('token', response.token);
+            const user: User = {
+              id: response.userId,
+              nom: response.nom,
+              email: response.email,
+              role: response.role
+            };
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            this.currentUserSubject.next(user);
+          }
         })
       );
   }
@@ -65,11 +77,17 @@ export class AuthService {
   }
 
   forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email }, { headers });
   }
 
   resetPassword(token: string, newPassword: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reset-password`, { token, newPassword });
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http.post(`${this.apiUrl}/reset-password`, { token, newPassword }, { headers });
   }
 
   getToken(): string | null {
@@ -77,7 +95,8 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    return !!token;
   }
 
   hasRole(role: string): boolean {
@@ -88,5 +107,33 @@ export class AuthService {
   getUserId(): number | null {
     const user = this.currentUserValue;
     return user ? user.id : null;
+  }
+
+  // Méthode pour valider le token
+  validateToken(): Observable<any> {
+    const token = this.getToken();
+    if (!token) {
+      throw new Error('No token found');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get(`${this.apiUrl}/validate`, { headers });
+  }
+
+  // Méthode pour récupérer les informations de l'utilisateur connecté
+  getCurrentUser(): Observable<any> {
+    const token = this.getToken();
+    if (!token) {
+      throw new Error('No token found');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get(`${this.apiUrl}/me`, { headers });
   }
 }

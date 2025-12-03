@@ -35,4 +35,8 @@ export interface RegisterRequest {
   adresse?: string;
   telephone?: string;
   departement?: string;
+  prenom?: string;      // Pour MAIN_DOEUVRE
+  matricule?: string;   // Pour MAIN_DOEUVRE
+  cin?: string;         // Pour MAIN_DOEUVRE
+  metier?: string;      // Pour MAIN_DOEUVRE
 }

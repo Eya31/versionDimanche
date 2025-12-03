@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="http://example.com/gestion-interventions" 
+           xmlns:tns="http://example.com/gestion-interventions" 
+           elementFormDefault="qualified">
+
+  <xs:include schemaLocation="../common/typesBase.xsd"/>
+
+  <!-- État de la tâche -->
+  <xs:simpleType name="EtatTacheType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="A_FAIRE"/>
+      <xs:enumeration value="EN_COURS"/>
+      <xs:enumeration value="TERMINEE"/>
+      <xs:enumeration value="VERIFIEE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Type Tache -->
+  <xs:complexType name="TacheType">
+    <xs:sequence>
+      <xs:element name="id" type="xs:int"/>
+      <xs:element name="interventionId" type="xs:int"/>
+      <xs:element name="libelle" type="xs:string"/>
+      <xs:element name="description" type="xs:string"/>
+      <xs:element name="mainDOeuvreId" type="xs:int"/>
+      <xs:element name="etat" type="tns:EtatTacheType"/>
+      <xs:element name="dateCreation" type="xs:dateTime"/>
+      <xs:element name="dateDebut" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="dateFin" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="dateVerification" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="commentaireMainDOeuvre" type="xs:string" minOccurs="0"/>
+      <xs:element name="commentaireTechnicien" type="xs:string" minOccurs="0"/>
+      <xs:element name="ordre" type="xs:int"/>
+      <xs:element name="verifiee" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

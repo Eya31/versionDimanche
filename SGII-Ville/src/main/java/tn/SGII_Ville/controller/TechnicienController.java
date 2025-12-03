@@ -1094,6 +1094,23 @@ public class TechnicienController {
 
             Tache saved = tacheService.save(tache);
 
+            // Si la tâche est validée, remettre immédiatement la main-d'œuvre en DISPONIBLE
+            // Même si d'autres tâches de l'intervention ne sont pas terminées
+            if (request.isValidee() && tache.getMainDOeuvreId() != null) {
+                try {
+                    MainDOeuvre mainDOeuvre = mainDOeuvreService.findById(tache.getMainDOeuvreId());
+                    if (mainDOeuvre != null && !"DISPONIBLE".equals(mainDOeuvre.getDisponibilite())) {
+                        mainDOeuvre.setDisponibilite("DISPONIBLE");
+                        mainDOeuvreService.save(mainDOeuvre);
+                        logger.info("Main-d'œuvre #{} remise en DISPONIBLE car sa tâche \"{}\" a été vérifiée", 
+                                tache.getMainDOeuvreId(), tache.getLibelle());
+                    }
+                } catch (Exception e) {
+                    logger.error("Erreur lors de la mise à jour du statut de la main-d'œuvre", e);
+                    // Ne pas bloquer la vérification de la tâche en cas d'erreur
+                }
+            }
+
             // Notification à la main-d'œuvre
             if (tache.getMainDOeuvreId() != null) {
                 if (request.isValidee()) {

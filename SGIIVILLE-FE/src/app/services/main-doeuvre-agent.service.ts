@@ -50,4 +50,3 @@ export class MainDOeuvreAgentService {
     return this.http.get<StatistiquesMainDOeuvre>(`${this.apiUrl}/statistiques`);
   }
 }
-

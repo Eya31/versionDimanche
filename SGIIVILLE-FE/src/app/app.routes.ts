@@ -6,12 +6,21 @@ import { DemandeListComponent } from './components/demande-list/demande-list.com
 import { InterventionListComponent } from './components/intervention-list/intervention-list.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { ChefDashboardComponent } from './components/chef-dashboard/chef-dashboard.component';        // ← déjà là
-import { TechnicienDashboardComponent } from './components/technicien-dashboard/technicien-dashboard.component';
+// Technicien components moved to technicien folder
 import { CitoyenDashboardComponent } from './components/citoyen-dashboard/citoyen-dashboard.component';
+import { VisiteurHomeComponent } from './components/visiteur/visiteur-home/visiteur-home.component';
 import { authGuard, roleGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  // ROUTES PUBLIQUES (Interface Visiteur)
+  { path: '', component: VisiteurHomeComponent },
+  { path: 'demandes-terminees', loadComponent: () => import('./components/visiteur/demandes-terminees/demandes-terminees.component').then(m => m.DemandesTermineesComponent) },
+  { path: 'demande/:id', loadComponent: () => import('./components/visiteur/demande-detail-public/demande-detail-public.component').then(m => m.DemandeDetailPublicComponent) },
+  { path: 'faq', loadComponent: () => import('./components/visiteur/faq/faq.component').then(m => m.FaqComponent) },
+  { path: 'about', loadComponent: () => import('./components/visiteur/about/about.component').then(m => m.AboutComponent) },
+  { path: 'municipalite-inscription', loadComponent: () => import('./components/visiteur/municipalite-inscription/municipalite-inscription.component').then(m => m.MunicipaliteInscriptionComponent) },
+  
+  // ROUTES AUTHENTIFICATION
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'intervention-list', component: ChefDashboardComponent, canActivate: [authGuard] },
@@ -156,17 +165,17 @@ export const routes: Routes = [
   // ROUTES TECHNICIEN AVEC LAYOUT COMMUN
   {
     path: 'technicien',
-    loadComponent: () => import('./components/technicien-layout/technicien-layout.component').then(m => m.TechnicienLayoutComponent),
+    loadComponent: () => import('./components/technicien/technicien-layout/technicien-layout.component').then(m => m.TechnicienLayoutComponent),
     canActivate: [authGuard, roleGuard(['TECHNICIEN'])],
     children: [
       {
         path: '',
-        loadComponent: () => import('./components/technicien-dashboard/technicien-dashboard.component').then(m => m.TechnicienDashboardComponent)
+        loadComponent: () => import('./components/technicien/technicien-dashboard/technicien-dashboard.component').then(m => m.TechnicienDashboardComponent)
       },
       // T2 - Tableau de Bord du Technicien
       {
         path: 'dashboard',
-        loadComponent: () => import('./components/technicien-dashboard/technicien-dashboard.component').then(m => m.TechnicienDashboardComponent)
+        loadComponent: () => import('./components/technicien/technicien-dashboard/technicien-dashboard.component').then(m => m.TechnicienDashboardComponent)
       },
       {
         path: 'T2',
@@ -176,23 +185,38 @@ export const routes: Routes = [
       // T3 - Gestion d'une Intervention
       {
         path: 'intervention/:id',
-        loadComponent: () => import('./components/intervention-detail/intervention-detail.component').then(m => m.InterventionDetailComponent)
+        loadComponent: () => import('./components/technicien/interventions/intervention-detail.component').then(m => m.InterventionDetailComponent)
       },
       {
         path: 'T3/:id',
-        loadComponent: () => import('./components/intervention-detail/intervention-detail.component').then(m => m.InterventionDetailComponent)
+        loadComponent: () => import('./components/technicien/interventions/intervention-detail.component').then(m => m.InterventionDetailComponent)
       },
       {
         path: 'intervention/:id/rapport',
-        loadComponent: () => import('./components/rapport-final/rapport-final.component').then(m => m.RapportFinalComponent)
+        loadComponent: () => import('./components/technicien/interventions/rapport-final.component').then(m => m.RapportFinalComponent)
       },
       {
         path: 'profil',
-        loadComponent: () => import('./components/technicien-profil/technicien-profil.component').then(m => m.TechnicienProfilComponent)
+        loadComponent: () => import('./components/technicien/technicien-profil/technicien-profil.component').then(m => m.TechnicienProfilComponent)
       },
       {
         path: 'main-doeuvre',
-        loadComponent: () => import('./components/main-doeuvre-gestion/main-doeuvre-gestion.component').then(m => m.MainDOeuvreGestionComponent)
+        loadComponent: () => import('./components/technicien/main-doeuvre/main-doeuvre-gestion.component').then(m => m.MainDOeuvreGestionComponent)
+      },
+      // Mes interventions
+      {
+        path: 'interventions',
+        loadComponent: () => import('./components/technicien/interventions/interventions-liste/interventions-liste.component').then(m => m.InterventionsListeComponent)
+      },
+      // Interventions en cours
+      {
+        path: 'interventions/en-cours',
+        loadComponent: () => import('./components/technicien/interventions/interventions-en-cours/interventions-en-cours.component').then(m => m.InterventionsEnCoursComponent)
+      },
+      // Rapports finaux
+      {
+        path: 'rapports-finaux',
+        loadComponent: () => import('./components/technicien/interventions/rapports-finaux/rapports-finaux.component').then(m => m.RapportsFinauxComponent)
       }
     ]
   },
@@ -210,7 +234,7 @@ export const routes: Routes = [
   },
   {
     path: 'main-doeuvre/intervention/:id',
-    loadComponent: () => import('./components/intervention-detail/intervention-detail.component').then(m => m.InterventionDetailComponent),
+    loadComponent: () => import('./components/technicien/interventions/intervention-detail.component').then(m => m.InterventionDetailComponent),
     canActivate: [authGuard, roleGuard(['MAIN_DOEUVRE'])]
   },
 
@@ -218,5 +242,5 @@ export const routes: Routes = [
   { path: 'demandes', component: DemandeListComponent, canActivate: [authGuard] },
   { path: 'interventions', component: InterventionListComponent, canActivate: [authGuard] },
 
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/' }
 ];

@@ -133,7 +133,10 @@ export class DemandeFormComponent implements AfterViewInit, OnDestroy {
 
   // ✅ Reverse geocoding amélioré avec gestion d'erreur
   private getAddressFromLatLng(latlng: L.LatLng) {
-    this.demande.localisation.address = 'Chargement de l\'adresse...';
+    // Utiliser setTimeout pour éviter ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      this.demande.localisation.address = 'Chargement de l\'adresse...';
+    });
 
     this.http.get<any>(`http://localhost:8080/api/demandes/reverse-geocode?lat=${latlng.lat}&lon=${latlng.lng}`)
       .subscribe({

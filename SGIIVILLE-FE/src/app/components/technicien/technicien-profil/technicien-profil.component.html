@@ -1,0 +1,120 @@
+<div class="technicien-profil">
+  <header class="profil-header">
+    <h1>Mon Profil</h1>
+    <div>
+      <button class="btn-secondary" (click)="retour()">Retour</button>
+      <button class="btn-primary" (click)="toggleEdit()">
+        {{isEditing ? 'Annuler' : 'Modifier'}}
+      </button>
+    </div>
+  </header>
+
+  <div class="profil-content" *ngIf="profil">
+    <!-- Informations personnelles -->
+    <section class="profil-section">
+      <h2>Informations Personnelles</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Nom:</label>
+          <span *ngIf="!isEditing">{{profil.nom}}</span>
+          <input *ngIf="isEditing" type="text" [(ngModel)]="updateRequest.nom">
+        </div>
+        <div class="info-item">
+          <label>Prénom:</label>
+          <span *ngIf="!isEditing">{{profil.prenom || 'Non renseigné'}}</span>
+          <input *ngIf="isEditing" type="text" [(ngModel)]="updateRequest.prenom">
+        </div>
+        <div class="info-item">
+          <label>Email:</label>
+          <span *ngIf="!isEditing">{{profil.email}}</span>
+          <input *ngIf="isEditing" type="email" [(ngModel)]="updateRequest.email">
+        </div>
+        <div class="info-item">
+          <label>Téléphone:</label>
+          <span *ngIf="!isEditing">{{profil.telephone || 'Non renseigné'}}</span>
+          <input *ngIf="isEditing" type="text" [(ngModel)]="updateRequest.telephone">
+        </div>
+        <div class="info-item" *ngIf="profil.matricule">
+          <label>Matricule:</label>
+          <span>{{profil.matricule}}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compétences -->
+    <section class="profil-section">
+      <h2>Compétences</h2>
+      <div *ngIf="!isEditing" class="tags-list">
+        <span *ngFor="let comp of profil?.competences || []" class="tag">{{comp}}</span>
+        <span *ngIf="!profil?.competences || profil.competences.length === 0" class="no-data">Aucune compétence</span>
+      </div>
+      <div *ngIf="isEditing" class="tags-edit">
+        <label *ngFor="let comp of competencesDisponibles" class="checkbox-label">
+          <input type="checkbox" 
+                 [checked]="updateRequest.competences?.includes(comp)"
+                 (change)="toggleCompetence(comp)">
+          {{comp}}
+        </label>
+      </div>
+    </section>
+
+    <!-- Habilitations -->
+    <section class="profil-section">
+      <h2>Habilitations</h2>
+      <div *ngIf="!isEditing" class="tags-list">
+        <span *ngFor="let hab of profil?.habilitations || []" class="tag">{{hab}}</span>
+        <span *ngIf="!profil?.habilitations || profil.habilitations.length === 0" class="no-data">Aucune habilitation</span>
+      </div>
+      <div *ngIf="isEditing" class="tags-edit">
+        <label *ngFor="let hab of habilitationsDisponibles" class="checkbox-label">
+          <input type="checkbox" 
+                 [checked]="updateRequest.habilitations?.includes(hab)"
+                 (change)="toggleHabilitation(hab)">
+          {{hab}}
+        </label>
+      </div>
+    </section>
+
+    <!-- Statistiques -->
+    <section class="profil-section" *ngIf="statistiques">
+      <h2>Statistiques</h2>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <strong>Total Interventions:</strong>
+          <span>{{statistiques.totalInterventions}}</span>
+        </div>
+        <div class="stat-item">
+          <strong>Interventions Terminées:</strong>
+          <span>{{statistiques.interventionsTerminees}}</span>
+        </div>
+        <div class="stat-item">
+          <strong>Taux de Réussite:</strong>
+          <span>{{statistiques.tauxReussite.toFixed(1)}}%</span>
+        </div>
+        <div class="stat-item">
+          <strong>Temps Total:</strong>
+          <span>{{statistiques.tempsTotalMinutes}} minutes</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Changement de mot de passe -->
+    <section class="profil-section" *ngIf="isEditing">
+      <h2>Changer le Mot de Passe</h2>
+      <div class="password-form">
+        <input type="password" 
+               [(ngModel)]="updateRequest.ancienMotDePasse" 
+               placeholder="Ancien mot de passe">
+        <input type="password" 
+               [(ngModel)]="updateRequest.nouveauMotDePasse" 
+               placeholder="Nouveau mot de passe">
+      </div>
+    </section>
+
+    <!-- Actions -->
+    <div class="profil-actions" *ngIf="isEditing">
+      <button class="btn-success" (click)="updateProfil()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,111 @@
+<div class="municipalite-inscription-page">
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="logo">
+          <a routerLink="/"><h1>elBaladiya.tn</h1></a>
+        </div>
+        <ul class="nav-links">
+          <li><a routerLink="/" routerLinkActive="active">Accueil</a></li>
+          <li><a routerLink="/demandes-terminees" routerLinkActive="active">Demandes terminées</a></li>
+          <li><a routerLink="/faq" routerLinkActive="active">FAQ</a></li>
+          <li><a routerLink="/about" routerLinkActive="active">À propos</a></li>
+          <li><a routerLink="/login" routerLinkActive="active">Connexion</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container main-content">
+    <h1 class="page-title">Inscription Municipalité</h1>
+    <p class="page-subtitle">
+      Rejoignez elBaladiya.tn et modernisez la gestion de vos services municipaux
+    </p>
+
+    <div *ngIf="success" class="success-message">
+      <h3>✅ Demande envoyée avec succès !</h3>
+      <p>Votre demande d'inscription a été reçue. Nous vous contacterons prochainement.</p>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+      <p>{{ error }}</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" *ngIf="!success" class="inscription-form">
+      <div class="form-group">
+        <label for="nom">Nom de la municipalité *</label>
+        <input
+          type="text"
+          id="nom"
+          [(ngModel)]="demande.nom"
+          name="nom"
+          required
+          placeholder="Ex: Municipalité de Tunis"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="adresse">Adresse *</label>
+        <input
+          type="text"
+          id="adresse"
+          [(ngModel)]="demande.adresse"
+          name="adresse"
+          required
+          placeholder="Adresse complète de la municipalité"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email professionnel *</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="demande.email"
+          name="email"
+          required
+          placeholder="contact@municipalite.tn"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="numeroAdministratif">Numéro administratif *</label>
+        <input
+          type="text"
+          id="numeroAdministratif"
+          [(ngModel)]="demande.numeroAdministratif"
+          name="numeroAdministratif"
+          required
+          placeholder="Numéro d'identification administratif"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message / Justification *</label>
+        <textarea
+          id="message"
+          [(ngModel)]="demande.message"
+          name="message"
+          required
+          rows="5"
+          placeholder="Expliquez pourquoi vous souhaitez rejoindre la plateforme..."
+        ></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          <span *ngIf="!loading">Envoyer la demande</span>
+          <span *ngIf="loading">Envoi en cours...</span>
+        </button>
+        <a routerLink="/" class="btn btn-secondary">Annuler</a>
+      </div>
+    </form>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 elBaladiya.tn - Tous droits réservés</p>
+    </div>
+  </footer>
+</div>
+

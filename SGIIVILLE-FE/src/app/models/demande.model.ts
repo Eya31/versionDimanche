@@ -27,6 +27,7 @@ export interface Demande {
   priority?: string;
   contactEmail?: string;
   address?: string;
+  isAnonymous?: boolean;
 
   // Compatibilité pour anciens uploads / pièces jointes
   attachments?: any[];

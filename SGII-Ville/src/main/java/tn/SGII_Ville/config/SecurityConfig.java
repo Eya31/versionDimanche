@@ -40,31 +40,47 @@ public class SecurityConfig {
             
             // Configuration des autorisations
             .authorizeHttpRequests(auth -> auth
+                // Ressources statiques (frontend Angular)
+                .requestMatchers(
+                    "/", 
+                    "/index.html",
+                    "/assets/**",
+                    "/favicon.ico",
+                    "/*.js", 
+                    "/*.css",
+                    "/*.png", 
+                    "/*.jpg", 
+                    "/*.jpeg", 
+                    "/*.svg", 
+                    "/*.gif",
+                    "/static/**"
+                ).permitAll()
+                
                 // Endpoints publics
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/error").permitAll()
                 
                 // Endpoints ADMIN
-                .requestMatchers("/api/admin/**").hasRole("ADMINISTRATEUR")
-                .requestMatchers("/api/users/**").hasRole("ADMINISTRATEUR")
+                .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMINISTRATEUR", "ROLE_ADMIN")
+                .requestMatchers("/api/users/**").hasAnyAuthority("ROLE_ADMINISTRATEUR", "ROLE_ADMIN")
                 
                 // Endpoints DEMANDES
-                .requestMatchers("/api/demandes/**").hasAnyRole("CITOYEN", "ADMINISTRATEUR", "CHEF_SERVICE", "TECHNICIEN")
+                .requestMatchers("/api/demandes/**").hasAnyAuthority("ROLE_CITOYEN", "ROLE_ADMINISTRATEUR", "ROLE_CHEF_SERVICE", "ROLE_TECHNICIEN", "ROLE_ADMIN")
                 
                 // Endpoints INTERVENTIONS
-                .requestMatchers("/api/interventions/**").hasAnyRole("CHEF_SERVICE", "ADMINISTRATEUR", "TECHNICIEN")
+                .requestMatchers("/api/interventions/**").hasAnyAuthority("ROLE_CHEF_SERVICE", "ROLE_ADMINISTRATEUR", "ROLE_TECHNICIEN", "ROLE_ADMIN")
                 
                 // Endpoints EQUIPEMENTS et RESSOURCES
-                .requestMatchers("/api/equipements/**").hasAnyRole("CHEF_SERVICE", "ADMINISTRATEUR")
-                .requestMatchers("/api/materiels/**").hasAnyRole("CHEF_SERVICE", "ADMINISTRATEUR")
-                .requestMatchers("/api/demandes-ajout/**").hasAnyRole("CHEF_SERVICE", "ADMINISTRATEUR")
+                .requestMatchers("/api/equipements/**").hasAnyAuthority("ROLE_CHEF_SERVICE", "ROLE_ADMINISTRATEUR", "ROLE_ADMIN")
+                .requestMatchers("/api/materiels/**").hasAnyAuthority("ROLE_CHEF_SERVICE", "ROLE_ADMINISTRATEUR", "ROLE_ADMIN")
+                .requestMatchers("/api/demandes-ajout/**").hasAnyAuthority("ROLE_CHEF_SERVICE", "ROLE_ADMINISTRATEUR", "ROLE_ADMIN")
                 
-                // Endpoints TECHNICIEN
-                .requestMatchers("/api/technicien/**").hasRole("TECHNICIEN")
+                // Endpoints TECHNICIEN (accessible par admin aussi pour consultation)
+                .requestMatchers("/api/technicien/**").hasAnyAuthority("ROLE_TECHNICIEN", "ROLE_ADMINISTRATEUR", "ROLE_ADMIN", "ROLE_CHEF_SERVICE")
                 
                 // Endpoints MAIN_DOEUVRE
-                .requestMatchers("/api/main-doeuvre/**").hasRole("MAIN_DOEUVRE")
+                .requestMatchers("/api/main-doeuvre/**").hasAnyAuthority("ROLE_MAIN_DOEUVRE", "ROLE_ADMINISTRATEUR", "ROLE_ADMIN", "ROLE_CHEF_SERVICE")
                 
                 // Toutes les autres requêtes nécessitent une authentification
                 .anyRequest().authenticated()
@@ -105,7 +121,10 @@ public class SecurityConfig {
             "Authorization",
             "Content-Type",
             "Accept",
-            "X-Requested-With"
+            "X-Requested-With",
+            "Access-Control-Allow-Origin",
+            "Access-Control-Allow-Headers",
+            "Access-Control-Allow-Methods"
         ));
         
         // Exposer les headers
@@ -127,7 +146,7 @@ public class SecurityConfig {
      * Bean pour l'encodage des mots de passe
      */
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
 }

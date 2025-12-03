@@ -1,0 +1,221 @@
+<!-- ============================================
+     DASHBOARD TECHNICIEN - DESIGN HARMONISÉ
+     ============================================ -->
+
+<div class="technicien-dashboard">
+  <!-- PAGE HEADER -->
+  <header class="overview-header">
+    <div class="header-content">
+      <h1>🔧 Tableau de Bord Technicien</h1>
+      <p class="subtitle">Gestion intelligente de vos interventions • Tunis 2025</p>
+    </div>
+    <div class="header-actions">
+      <button 
+        class="btn-view-toggle" 
+        (click)="toggleView()"
+        [attr.aria-label]="'Basculer entre vue liste et calendrier'">
+        <span *ngIf="viewMode === 'list'">📅 Vue Calendrier</span>
+        <span *ngIf="viewMode === 'calendar'">📋 Vue Liste</span>
+      </button>
+      <button 
+        class="btn-refresh" 
+        (click)="actualiser()"
+        [attr.aria-label]="'Actualiser'">
+        <span class="icon">↻</span>
+        Actualiser
+      </button>
+    </div>
+  </header>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi-card" [style.border-left]="'4px solid #FFC107'" [routerLink]="['/technicien/interventions']" [class.clickable]="true">
+      <div class="kpi-icon" [style.background]="'#FFC10720'">
+        <span [style.color]="'#FFC107'">⏳</span>
+      </div>
+      <div class="kpi-content">
+        <h3 class="kpi-value">{{ stats.enAttente }}</h3>
+        <p class="kpi-title">En Attente</p>
+      </div>
+    </div>
+    
+    <div class="kpi-card" [style.border-left]="'4px solid #3b82f6'" [routerLink]="['/technicien/interventions/en-cours']" [class.clickable]="true">
+      <div class="kpi-icon" [style.background]="'#3b82f620'">
+        <span [style.color]="'#3b82f6'">🔧</span>
+      </div>
+      <div class="kpi-content">
+        <h3 class="kpi-value">{{ stats.enCours }}</h3>
+        <p class="kpi-title">En Cours</p>
+      </div>
+    </div>
+    
+    <div class="kpi-card" [style.border-left]="'4px solid #4CAF50'" [routerLink]="['/technicien/rapports-finaux']" [class.clickable]="true">
+      <div class="kpi-icon" [style.background]="'#4CAF5020'">
+        <span [style.color]="'#4CAF50'">✅</span>
+      </div>
+      <div class="kpi-content">
+        <h3 class="kpi-value">{{ stats.terminees }}</h3>
+        <p class="kpi-title">Terminées</p>
+      </div>
+    </div>
+    
+    <div class="kpi-card" [style.border-left]="'4px solid #9E9E9E'" *ngIf="stats.suspendues > 0">
+      <div class="kpi-icon" [style.background]="'#9E9E9E20'">
+        <span [style.color]="'#9E9E9E'">⏸️</span>
+      </div>
+      <div class="kpi-content">
+        <h3 class="kpi-value">{{ stats.suspendues }}</h3>
+        <p class="kpi-title">Suspendues</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VUE CALENDRIER -->
+  <div *ngIf="viewMode === 'calendar'" class="calendar-section">
+    <app-mini-calendar
+      [interventions]="interventions"
+      [selectedDate]="selectedCalendarDate"
+      (dateSelected)="onDateSelected($event)"
+      (interventionClicked)="onInterventionClicked($event)">
+    </app-mini-calendar>
+    
+    <!-- INTERVENTIONS DU JOUR SÉLECTIONNÉ -->
+    <div *ngIf="selectedCalendarDate" class="selected-date-interventions">
+      <h3>Interventions du {{ selectedCalendarDate | date:'dd/MM/yyyy' }}</h3>
+      <div class="interventions-list-compact">
+        <div 
+          *ngFor="let intervention of interventionsFiltrees" 
+          class="intervention-item-compact"
+          (click)="voirDetails(intervention.id)">
+          <span class="priority-dot" [style.background-color]="getPrioriteColor(intervention.priorite)"></span>
+          <span class="intervention-id">#{{ intervention.id }}</span>
+          <span class="intervention-desc">{{ intervention.description || 'Sans description' }}</span>
+          <span class="intervention-priority">{{ getPrioriteLabel(intervention.priorite) }}</span>
+        </div>
+        <div *ngIf="interventionsFiltrees.length === 0" class="no-interventions">
+          Aucune intervention pour cette date
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT GRID -->
+  <div class="content-grid" *ngIf="viewMode === 'list'">
+    <!-- LEFT COLUMN: FILTRES ET RECHERCHE -->
+    <div class="filters-section">
+      <div class="card">
+        <div class="card-header">
+          <h2>🔍 Recherche et Filtres</h2>
+          <span class="results-count" *ngIf="interventionsFiltrees.length > 0">
+            {{ interventionsFiltrees.length }} résultat(s)
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="filters-grid">
+            <div class="search-wrapper">
+              <input 
+                type="text" 
+                [(ngModel)]="recherche" 
+                (input)="appliquerFiltres()"
+                placeholder="Rechercher par description, ID, type..."
+                class="search-input"
+                [attr.aria-label]="'Rechercher une intervention'">
+              <span class="search-icon">🔍</span>
+            </div>
+            
+            <select 
+              [(ngModel)]="filtreEtat" 
+              (change)="loadMyInterventions()"
+              class="filter-select"
+              [attr.aria-label]="'Filtrer par état'">
+              <option value="">Tous les états</option>
+              <option value="EN_ATTENTE">⏳ En Attente</option>
+              <option value="EN_COURS">🔧 En Cours</option>
+              <option value="SUSPENDUE">⏸️ Suspendue</option>
+              <option value="TERMINEE">✅ Terminée</option>
+              <option value="REPORTEE">📅 Reportée</option>
+            </select>
+            
+            <select 
+              [(ngModel)]="filtrePriorite" 
+              (change)="loadMyInterventions()"
+              class="filter-select"
+              [attr.aria-label]="'Filtrer par priorité'">
+              <option value="">Toutes les priorités</option>
+              <option value="URGENTE">🔴 Urgente</option>
+              <option value="CRITIQUE">🔴 Critique</option>
+              <option value="HAUTE">🟠 Haute</option>
+              <option value="MOYENNE">🟡 Moyenne</option>
+              <option value="PLANIFIEE">🟡 Planifiée</option>
+              <option value="BASSE">⚪ Basse</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIONS RAPIDES -->
+      <div class="card">
+        <div class="card-header">
+          <h2>⚡ Actions Rapides</h2>
+        </div>
+        <div class="card-body">
+          <div class="action-grid">
+            <button class="action-btn" [routerLink]="['/technicien/interventions']">
+              <span class="action-icon">📋</span>
+              <span class="action-label">Mes interventions</span>
+            </button>
+            <button class="action-btn" [routerLink]="['/technicien/interventions/en-cours']">
+              <span class="action-icon">🟢</span>
+              <span class="action-label">En cours</span>
+            </button>
+            <button class="action-btn" [routerLink]="['/technicien/main-doeuvre']">
+              <span class="action-icon">👷</span>
+              <span class="action-label">Main d'œuvre</span>
+            </button>
+            <button class="action-btn" [routerLink]="['/technicien/profil']">
+              <span class="action-icon">👤</span>
+              <span class="action-label">Mon profil</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: LISTE DES INTERVENTIONS -->
+    <div class="interventions-section">
+      <div class="card">
+        <div class="card-header">
+          <h2>📋 Mes Interventions</h2>
+          <a [routerLink]="['/technicien/interventions']" class="view-all">Voir tout →</a>
+        </div>
+        <div class="card-body">
+          <div class="interventions-container-list">
+            <div 
+              *ngFor="let intervention of interventionsFiltrees.slice(0, 5); trackBy: trackByInterventionId" 
+              class="list-item"
+              (click)="voirDetails(intervention.id)">
+              <div class="item-icon">🔧</div>
+              <div class="item-content">
+                <div class="item-title">#{{ intervention.id }} - {{ (intervention.description || 'Sans description') | slice:0:40 }}{{ (intervention.description && intervention.description.length > 40) ? '...' : '' }}</div>
+                <div class="item-meta">
+                  <span class="badge" [ngClass]="getBadgeClass(intervention.etat)">{{ getEtatLabel(intervention.etat) }}</span>
+                  <span class="item-date">{{ intervention.datePlanifiee | date:'dd/MM/yyyy' }}</span>
+                  <span class="item-priority" [style.color]="getPrioriteColor(intervention.priorite)">{{ getPrioriteLabel(intervention.priorite) }}</span>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="interventionsFiltrees.length === 0 && !loading" class="list-empty">
+              <div class="empty-icon">📭</div>
+              <p>Aucune intervention trouvée</p>
+            </div>
+            <div *ngIf="loading" class="list-empty">
+              <div class="spinner-small"></div>
+              <p>Chargement...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

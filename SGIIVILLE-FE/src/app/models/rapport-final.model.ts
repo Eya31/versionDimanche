@@ -6,6 +6,8 @@ export interface RapportFinalRequest {
   problemesRencontres: string;
   photoIds: number[];
   signatureElectronique?: string;
+  commentairePersonnalise?: string;
+  analyseEtRecommandations?: string;
 }
 
 export interface RessourceUtilisee {

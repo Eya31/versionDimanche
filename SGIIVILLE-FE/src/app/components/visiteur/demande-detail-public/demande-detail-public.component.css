@@ -1,0 +1,221 @@
+.demande-detail-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.logo h1 {
+  margin: 0;
+  color: #1976d2;
+  font-size: 1.5rem;
+}
+
+.logo a {
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.main-content {
+  flex: 1;
+  padding: 3rem 0;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 2rem;
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.page-title {
+  color: #1976d2;
+  margin-bottom: 2rem;
+}
+
+.demande-detail {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.demande-detail h2 {
+  color: #333;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #1976d2;
+  padding-bottom: 0.5rem;
+}
+
+.photos-section {
+  margin-bottom: 2rem;
+}
+
+.photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.photo-item {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.photo-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.localisation-section {
+  margin-bottom: 2rem;
+}
+
+.address {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.map-placeholder {
+  background: #f5f5f5;
+  padding: 3rem;
+  text-align: center;
+  border-radius: 4px;
+  color: #999;
+}
+
+.description-section {
+  margin-bottom: 2rem;
+}
+
+.description-section p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.info-section {
+  margin-bottom: 2rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info-item strong {
+  color: #333;
+}
+
+.info-item span {
+  color: #666;
+}
+
+.intervention-section {
+  margin-bottom: 2rem;
+}
+
+.intervention-card {
+  background: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 4px;
+}
+
+.intervention-info p {
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+.rapport {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #ddd;
+}
+
+.rapport h3 {
+  color: #1976d2;
+  margin-bottom: 1rem;
+}
+
+.rapport p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.error {
+  color: #d32f2f;
+  background: #ffebee;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.footer {
+  background: #333;
+  color: white;
+  padding: 2rem 0;
+  margin-top: auto;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .photos-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,97 +1,28 @@
-<!-- ============================================
-     DASHBOARD MAIN-D'ŒUVRE - Design Expert UI/UX
-     Interface professionnelle et moderne
-     ============================================ -->
+<!-- main-doeuvre-dashboard.component.html -->
+<div class="main-doeuvre-dashboard" role="main" aria-label="Tableau de bord main d'œuvre">
 
-<div class="main-doeuvre-dashboard" role="main" aria-label="Tableau de bord main-d'œuvre">
-  
-  <!-- ========== HEADER ========== -->
+  <!-- HEADER -->
   <header class="page-header" role="banner">
     <div>
-      <h1>👷 Tableau de Bord</h1>
+      <h1>👷 Tableau de Bord Main d'Œuvre</h1>
       <p class="page-subtitle" *ngIf="profil" aria-live="polite">
         Bienvenue, <strong>{{ profil.nom }} {{ profil.prenom || '' }}</strong>
-      </p>
-      <p class="page-subtitle" *ngIf="!profil">
-        Chargement du profil...
+        <span *ngIf="profil.metier"> - {{ profil.metier }}</span>
       </p>
     </div>
     <nav class="header-actions" aria-label="Actions du header">
-      <!-- Notifications -->
-      <div class="notifications-container" (click)="$event.stopPropagation()">
-        <button 
-          type="button"
-          class="btn-notifications" 
-          [class.has-unread]="unreadCount > 0"
-          [class.active]="showNotifications"
-          (click)="toggleNotifications($event)"
-          [attr.aria-label]="'Notifications' + (unreadCount > 0 ? ': ' + unreadCount + ' non lues' : '')"
-          [attr.aria-expanded]="showNotifications">
-          <span class="notification-icon" aria-hidden="true">🔔</span>
-          <span class="notification-badge" *ngIf="unreadCount > 0" [attr.aria-label]="unreadCount + ' notifications non lues'">
-            {{ unreadCount > 99 ? '99+' : unreadCount }}
-          </span>
-        </button>
-        
-        <!-- Dropdown notifications -->
-        <div class="notifications-dropdown" 
-             *ngIf="showNotifications" 
-             (click)="$event.stopPropagation()">
-          <div class="notifications-header">
-            <h3>Notifications</h3>
-            <button 
-              type="button"
-              class="btn-mark-all-read" 
-              *ngIf="unreadCount > 0"
-              (click)="markAllAsRead()"
-              [attr.aria-label]="'Marquer toutes comme lues'">
-              Tout marquer comme lu
-            </button>
-          </div>
-          <div class="notifications-list" role="list">
-            <!-- Debug temporaire - à retirer en production -->
-            <!-- <div style="padding: 8px; background: #f0f0f0; font-size: 11px; border-bottom: 1px solid #ddd;">
-              Debug: {{ notifications.length }} notification(s) | Non lues: {{ unreadCount }}
-            </div> -->
-            
-            <ng-container *ngIf="notifications.length > 0; else noNotifications">
-              <div 
-                *ngFor="let notification of notifications; trackBy: trackByNotificationId" 
-                class="notification-item"
-                [class.unread]="!notification.readable"
-                role="listitem"
-                (click)="markAsRead(notification)"
-                [attr.aria-label]="'Notification: ' + notification.message">
-                <div class="notification-content">
-                  <p class="notification-message">{{ notification.message }}</p>
-                  <span class="notification-time">{{ formatNotificationDate(notification.createdAt) }}</span>
-                </div>
-                <span class="notification-dot" *ngIf="!notification.readable" aria-hidden="true"></span>
-              </div>
-            </ng-container>
-            
-            <ng-template #noNotifications>
-              <div class="notifications-empty">
-                <p>📭 Aucune notification</p>
-                <p class="notifications-empty-hint">Vous serez notifié lorsque de nouvelles tâches vous seront assignées.</p>
-              </div>
-            </ng-template>
-          </div>
-        </div>
-      </div>
-      
-      <button 
+      <button
         type="button"
-        class="btn-refresh" 
-        (click)="loadMyInterventions()"
-        [attr.aria-label]="'Actualiser la liste des interventions'"
+        class="btn-refresh"
+        (click)="loadMyTaches()"
+        [attr.aria-label]="'Actualiser la liste des tâches'"
         [attr.aria-busy]="loading">
         <span aria-hidden="true">🔄</span>
         <span>Actualiser</span>
       </button>
-      <button 
+      <button
         type="button"
-        class="btn-secondary" 
+        class="btn-secondary"
         (click)="deconnexion()"
         [attr.aria-label]="'Se déconnecter'">
         <span aria-hidden="true">🚪</span>
@@ -100,423 +31,526 @@
     </nav>
   </header>
 
-  <!-- ========== STATISTIQUES GLOBALES ========== -->
-  <section class="stats-section" aria-labelledby="stats-title" *ngIf="statistiques">
-    <h2 id="stats-title" class="sr-only">Statistiques globales</h2>
+  <!-- STATISTIQUES -->
+  <section class="stats-section" aria-labelledby="stats-title">
+    <h2 id="stats-title" class="sr-only">Statistiques des tâches</h2>
     <div class="stats-cards-container" role="list">
       <article class="stat-card stat-total" role="listitem">
         <div class="stat-icon" aria-hidden="true">📊</div>
         <div class="stat-content">
-          <p class="stat-value" [attr.aria-label]="'Total interventions: ' + statistiques.totalInterventions">
-            {{ statistiques.totalInterventions }}
-          </p>
-          <p class="stat-label">Total Interventions</p>
+          <p class="stat-value">{{ taches.length }}</p>
+          <p class="stat-label">Total Tâches</p>
         </div>
       </article>
-      
-      <article class="stat-card stat-terminees" role="listitem">
-        <div class="stat-icon" aria-hidden="true">✅</div>
-        <div class="stat-content">
-          <p class="stat-value" [attr.aria-label]="'Interventions terminées: ' + statistiques.interventionsTerminees">
-            {{ statistiques.interventionsTerminees }}
-          </p>
-          <p class="stat-label">Terminées</p>
-        </div>
-      </article>
-      
-      <article class="stat-card stat-taux" role="listitem">
-        <div class="stat-icon" aria-hidden="true">📈</div>
-        <div class="stat-content">
-          <p class="stat-value" [attr.aria-label]="'Taux de réussite: ' + (statistiques.tauxReussite | number:'1.0-0') + '%'">
-            {{ statistiques.tauxReussite | number:'1.0-0' }}%
-          </p>
-          <p class="stat-label">Taux de Réussite</p>
-        </div>
-      </article>
-      
-      <article class="stat-card stat-temps" role="listitem">
-        <div class="stat-icon" aria-hidden="true">⏱️</div>
-        <div class="stat-content">
-          <p class="stat-value" [attr.aria-label]="'Temps total: ' + formatTemps(statistiques.tempsTotalMinutes)">
-            {{ formatTemps(statistiques.tempsTotalMinutes) }}
-          </p>
-          <p class="stat-label">Temps Total</p>
-        </div>
-      </article>
-    </div>
-  </section>
 
-  <!-- ========== STATS PAR ÉTAT ========== -->
-  <section class="stats-section" aria-labelledby="stats-etat-title">
-    <h2 id="stats-etat-title" class="sr-only">Statistiques par état</h2>
-    <div class="stats-cards-container" role="list">
-      <article class="stat-card stat-en-attente" role="listitem" *ngIf="stats.enAttente > 0">
+      <article class="stat-card stat-a-faire" role="listitem" *ngIf="stats.aFaire > 0">
         <div class="stat-icon" aria-hidden="true">⏳</div>
         <div class="stat-content">
-          <p class="stat-value" [attr.aria-label]="'En attente: ' + stats.enAttente">
-            {{ stats.enAttente }}
-          </p>
-          <p class="stat-label">En Attente</p>
+          <p class="stat-value">{{ stats.aFaire }}</p>
+          <p class="stat-label">À Faire</p>
         </div>
       </article>
-      
+
       <article class="stat-card stat-en-cours" role="listitem" *ngIf="stats.enCours > 0">
         <div class="stat-icon" aria-hidden="true">🔧</div>
         <div class="stat-content">
-          <p class="stat-value" [attr.aria-label]="'En cours: ' + stats.enCours">
-            {{ stats.enCours }}
-          </p>
+          <p class="stat-value">{{ stats.enCours }}</p>
           <p class="stat-label">En Cours</p>
         </div>
       </article>
-      
+
       <article class="stat-card stat-terminee" role="listitem" *ngIf="stats.terminees > 0">
         <div class="stat-icon" aria-hidden="true">✅</div>
         <div class="stat-content">
-          <p class="stat-value" [attr.aria-label]="'Terminées: ' + stats.terminees">
-            {{ stats.terminees }}
-          </p>
+          <p class="stat-value">{{ stats.terminees }}</p>
           <p class="stat-label">Terminées</p>
         </div>
       </article>
-      
-      <article class="stat-card stat-suspendue" role="listitem" *ngIf="stats.suspendues > 0">
-        <div class="stat-icon" aria-hidden="true">⏸️</div>
+
+      <article class="stat-card stat-verifiee" role="listitem" *ngIf="stats.verifiees > 0">
+        <div class="stat-icon" aria-hidden="true">✔️</div>
         <div class="stat-content">
-          <p class="stat-value" [attr.aria-label]="'Suspendues: ' + stats.suspendues">
-            {{ stats.suspendues }}
-          </p>
-          <p class="stat-label">Suspendues</p>
+          <p class="stat-value">{{ stats.verifiees }}</p>
+          <p class="stat-label">Vérifiées</p>
         </div>
       </article>
     </div>
   </section>
 
-  <!-- ========== FILTRES ET RECHERCHE ========== -->
+  <!-- FILTRES -->
   <section class="filters-section" aria-labelledby="filters-title">
     <div class="section-title">
-      <h2 id="filters-title">🔍 Recherche et Filtres</h2>
+      <h2 id="filters-title">🔍 Filtres et Recherche</h2>
     </div>
     <div class="filters-grid">
       <div class="search-box">
-        <label for="search-input" class="sr-only">Rechercher une intervention</label>
-        <input 
+        <label for="search-input" class="sr-only">Rechercher une tâche</label>
+        <input
           id="search-input"
-          type="text" 
-          [(ngModel)]="recherche" 
+          type="text"
+          [(ngModel)]="recherche"
           (input)="appliquerFiltres()"
-          placeholder="Rechercher par description, ID, type..."
-          [attr.aria-label]="'Rechercher une intervention'"
+          placeholder="Rechercher par libellé, description..."
+          aria-label="Rechercher une tâche"
           autocomplete="off">
       </div>
-      
+
       <div>
         <label for="filter-etat" class="sr-only">Filtrer par état</label>
-        <select 
+        <select
           id="filter-etat"
-          [(ngModel)]="filtreEtat" 
-          (change)="loadMyInterventions()"
-          [attr.aria-label]="'Filtrer par état'">
+          [(ngModel)]="filtreEtat"
+          (change)="loadMyTaches()"
+          aria-label="Filtrer par état">
           <option value="">Tous les états</option>
-          <option value="EN_ATTENTE">⏳ En attente</option>
+          <option value="A_FAIRE">⏳ À faire</option>
           <option value="EN_COURS">🔧 En cours</option>
           <option value="TERMINEE">✅ Terminée</option>
+          <option value="VERIFIEE">✔️ Vérifiée</option>
           <option value="SUSPENDUE">⏸️ Suspendue</option>
+          <option value="REPORTEE">📅 Reportée</option>
         </select>
       </div>
     </div>
   </section>
 
-  <!-- ========== LISTE DES INTERVENTIONS ========== -->
-  <section class="interventions-section" aria-labelledby="interventions-title">
+  <!-- LISTE DES TÂCHES -->
+  <section class="taches-section" aria-labelledby="taches-title">
     <div class="section-title">
-      <h2 id="interventions-title">📋 Mes Interventions</h2>
-      <span class="count-badge" [attr.aria-label]="'Nombre d\'interventions: ' + interventionsFiltrees.length">
-        {{ interventionsFiltrees.length }} intervention(s)
+      <h2 id="taches-title">📋 Mes Tâches Assignées</h2>
+      <span class="count-badge" [attr.aria-label]="'Nombre de tâches: ' + tachesFiltrees.length">
+        {{ tachesFiltrees.length }} tâche(s)
       </span>
     </div>
 
     <!-- État de chargement -->
     <div *ngIf="loading" class="loading-state" role="status" aria-live="polite">
-      <p>Chargement des interventions...</p>
+      <p>Chargement des tâches...</p>
     </div>
 
     <!-- État vide -->
-    <div *ngIf="!loading && interventionsFiltrees.length === 0" class="empty-state" role="status">
-      <p aria-live="polite">📭 Aucune intervention trouvée</p>
+    <div *ngIf="!loading && tachesFiltrees.length === 0" class="empty-state" role="status">
+      <p aria-live="polite">📭 Aucune tâche trouvée</p>
       <p class="empty-subtitle">
         <span *ngIf="recherche || filtreEtat">
-          Aucune intervention ne correspond à vos critères de recherche.
+          Aucune tâche ne correspond à vos critères de recherche.
         </span>
         <span *ngIf="!recherche && !filtreEtat">
-          Vous n'avez pas encore d'interventions assignées.
+          Aucune tâche ne vous est actuellement assignée.
         </span>
       </p>
     </div>
 
-    <!-- Liste des interventions -->
-    <div *ngIf="!loading && interventionsFiltrees.length > 0" class="interventions-list" role="list">
-      <article 
-        *ngFor="let intervention of interventionsFiltrees; trackBy: trackByInterventionId" 
-        class="intervention-card"
+    <!-- Liste des tâches -->
+    <div *ngIf="!loading && tachesFiltrees.length > 0" class="taches-list" role="list">
+      <article
+        *ngFor="let tache of tachesFiltrees; trackBy: trackByTacheId"
+        class="tache-card"
         role="listitem"
-        [attr.aria-label]="'Intervention ' + intervention.id + ': ' + (intervention.description || 'Sans description')"
-        tabindex="0">
-        
+        [attr.aria-label]="'Tâche: ' + tache.libelle + ', État: ' + getEtatTacheLabel(tache.etat)"
+        [class]="getEtatTacheClass(tache.etat)">
+
+        <!-- En-tête de la tâche -->
         <div class="card-header">
           <div class="card-title">
-            <span class="intervention-id" aria-label="Numéro d'intervention">#{{ intervention.id }}</span>
-            <h3>{{ intervention.description || 'Sans description' }}</h3>
+            <h3>{{ tache.libelle }}</h3>
+            <span class="tache-id" aria-label="Numéro de tâche">#{{ tache.id }}</span>
           </div>
-          <div class="card-badges" role="group" aria-label="Badges d'état et priorité">
-            <span [class]="getEtatClass(intervention.etat)" class="badge" [attr.aria-label]="'État: ' + getEtatLabel(intervention.etat)">
-              {{ getEtatLabel(intervention.etat) }}
-            </span>
-            <span [class]="getPrioriteClass(intervention.priorite)" class="badge" [attr.aria-label]="'Priorité: ' + getPrioriteLabel(intervention.priorite)">
-              {{ getPrioriteLabel(intervention.priorite) }}
+          <div class="card-badges" role="group" aria-label="Badges d'état">
+            <span class="badge-etat" [attr.aria-label]="'État: ' + getEtatTacheLabel(tache.etat)">
+              {{ getEtatTacheLabel(tache.etat) }}
             </span>
           </div>
         </div>
-        
+
+        <!-- Corps de la tâche -->
         <div class="card-body">
-          <div class="info-row">
-            <div class="info-item" *ngIf="intervention.typeIntervention">
-              <strong>Type:</strong> 
-              <span>{{ intervention.typeIntervention }}</span>
-            </div>
-            <div class="info-item" *ngIf="intervention.datePlanifiee">
-              <strong>Date prévue:</strong> 
-              <time [attr.datetime]="intervention.datePlanifiee">
-                {{ intervention.datePlanifiee | date:'dd/MM/yyyy' }}
-              </time>
-            </div>
-            <div class="info-item" *ngIf="intervention.tempsPasseMinutes">
-              <strong>Temps passé:</strong> 
-              <span>{{ formatTemps(intervention.tempsPasseMinutes) }}</span>
+          <!-- Description -->
+          <div class="tache-description" *ngIf="tache.description">
+            <p>{{ tache.description }}</p>
+          </div>
+
+          <!-- Informations de l'intervention -->
+          <div class="intervention-info" *ngIf="tache.intervention">
+            <div class="info-row">
+              <div class="info-item">
+                <strong>Intervention:</strong>
+                <a (click)="voirDetailsIntervention(tache.interventionId)"
+                   class="intervention-link"
+                   [attr.aria-label]="'Voir les détails de l\'intervention ' + tache.interventionId">
+                  #{{ tache.interventionId }} - {{ tache.intervention.description || 'Sans description' }}
+                </a>
+              </div>
+              <div class="info-item" *ngIf="tache.intervention.typeIntervention">
+                <strong>Type:</strong>
+                <span>{{ tache.intervention.typeIntervention }}</span>
+              </div>
+              <div class="info-item" *ngIf="tache.intervention.priorite">
+                <strong>Priorité:</strong>
+                <span class="priorite" [class]="'priorite-' + tache.intervention.priorite.toLowerCase()">
+                  {{ tache.intervention.priorite }}
+                </span>
+              </div>
             </div>
           </div>
-          
-          <div class="info-row" *ngIf="intervention.mainDOeuvreIds && intervention.mainDOeuvreIds.length > 0">
-            <div class="info-item">
-              <strong>Agents affectés:</strong> 
-              <span>{{ intervention.mainDOeuvreIds.length }}</span>
+
+          <!-- Métadonnées de la tâche -->
+          <div class="tache-metadata">
+            <div class="metadata-item" *ngIf="tache.dateCreation">
+              <strong>Créée le:</strong>
+              <time [attr.datetime]="tache.dateCreation">{{ formatDate(tache.dateCreation) }}</time>
+            </div>
+            <div class="metadata-item" *ngIf="tache.dateDebut">
+              <strong>Débutée le:</strong>
+              <time [attr.datetime]="tache.dateDebut">{{ formatDate(tache.dateDebut) }}</time>
+            </div>
+            <div class="metadata-item" *ngIf="tache.dateFin">
+              <strong>Terminée le:</strong>
+              <time [attr.datetime]="tache.dateFin">{{ formatDate(tache.dateFin) }}</time>
+            </div>
+            <div class="metadata-item" *ngIf="tache.tempsPasseMinutes">
+              <strong>Temps passé:</strong>
+              <span>{{ formatTemps(tache.tempsPasseMinutes) }}</span>
+            </div>
+          </div>
+
+          <!-- Commentaires -->
+          <div class="commentaires-section" *ngIf="tache.commentaireMainDOeuvre">
+            <h4>📝 Mon commentaire</h4>
+            <p class="commentaire">{{ tache.commentaireMainDOeuvre }}</p>
+          </div>
+
+          <!-- Barre de progression d'état -->
+          <div class="tache-progress-bar" role="progressbar"
+               [attr.aria-valuenow]="getEtatProgress(tache.etat)"
+               aria-valuemin="0"
+               aria-valuemax="100"
+               [attr.aria-label]="'Progression de la tâche: ' + getEtatProgress(tache.etat) + '%'">
+            <div class="progress-track">
+              <div class="progress-fill" [style.width.%]="getEtatProgress(tache.etat)"></div>
+            </div>
+            <div class="progress-steps">
+              <div class="progress-step"
+                   [class.active]="isEtatActive(tache.etat, 'A_FAIRE')"
+                   [class.completed]="isEtatCompleted(tache.etat, 'A_FAIRE')">
+                <div class="step-indicator">
+                  <span class="step-number">1</span>
+                </div>
+                <span class="step-label">À faire</span>
+              </div>
+              <div class="progress-step"
+                   [class.active]="isEtatActive(tache.etat, 'EN_COURS')"
+                   [class.completed]="isEtatCompleted(tache.etat, 'EN_COURS')">
+                <div class="step-indicator">
+                  <span class="step-number">2</span>
+                </div>
+                <span class="step-label">En cours</span>
+              </div>
+              <div class="progress-step"
+                   [class.active]="isEtatActive(tache.etat, 'TERMINEE')"
+                   [class.completed]="isEtatCompleted(tache.etat, 'TERMINEE')">
+                <div class="step-indicator">
+                  <span class="step-number">3</span>
+                </div>
+                <span class="step-label">Terminée</span>
+              </div>
+              <div class="progress-step"
+                   [class.active]="isEtatActive(tache.etat, 'VERIFIEE')"
+                   [class.completed]="isEtatCompleted(tache.etat, 'VERIFIEE')">
+                <div class="step-indicator">
+                  <span class="step-number">4</span>
+                </div>
+                <span class="step-label">Vérifiée</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Tâches assignées -->
-        <div class="taches-section-card" *ngIf="getTachesForIntervention(intervention.id).length > 0" 
-             (click)="$event.stopPropagation()">
-          <h4>📋 Mes Tâches</h4>
-          <div class="taches-list-card" role="list">
-            <div 
-              *ngFor="let tache of getTachesForIntervention(intervention.id); trackBy: trackByTacheId" 
-              class="tache-item-card"
-              [class]="getEtatTacheClass(tache.etat)"
-              role="listitem"
-              [attr.aria-label]="'Tâche: ' + tache.libelle + ', État: ' + getEtatTacheLabel(tache.etat)">
-              
-              <!-- Barre de progression d'état professionnelle -->
-              <div class="tache-progress-bar" role="progressbar" 
-                   [attr.aria-valuenow]="getEtatProgress(tache.etat)"
-                   aria-valuemin="0"
-                   aria-valuemax="100"
-                   [attr.aria-label]="'Progression de la tâche: ' + getEtatProgress(tache.etat) + '%'">
-                <div class="progress-track">
-                  <div class="progress-fill" [style.width.%]="getEtatProgress(tache.etat)"></div>
-                </div>
-                <div class="progress-steps">
-                  <div class="progress-step" 
-                       [class.active]="isEtatActive(tache.etat, 'A_FAIRE')"
-                       [class.completed]="isEtatCompleted(tache.etat, 'A_FAIRE')">
-                    <div class="step-indicator">
-                      <svg *ngIf="isEtatCompleted(tache.etat, 'A_FAIRE')" class="step-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                      <span *ngIf="!isEtatCompleted(tache.etat, 'A_FAIRE')" class="step-number">1</span>
-                    </div>
-                    <span class="step-label">À faire</span>
-                  </div>
-                  <div class="progress-line" 
-                       [class.completed]="isEtatCompleted(tache.etat, 'EN_COURS')"></div>
-                  <div class="progress-step"
-                       [class.active]="isEtatActive(tache.etat, 'EN_COURS')"
-                       [class.completed]="isEtatCompleted(tache.etat, 'EN_COURS')">
-                    <div class="step-indicator">
-                      <svg *ngIf="isEtatCompleted(tache.etat, 'EN_COURS')" class="step-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                      <span *ngIf="!isEtatCompleted(tache.etat, 'EN_COURS')" class="step-number">2</span>
-                    </div>
-                    <span class="step-label">En cours</span>
-                  </div>
-                  <div class="progress-line"
-                       [class.completed]="isEtatCompleted(tache.etat, 'TERMINEE')"></div>
-                  <div class="progress-step"
-                       [class.active]="isEtatActive(tache.etat, 'TERMINEE')"
-                       [class.completed]="isEtatCompleted(tache.etat, 'TERMINEE')">
-                    <div class="step-indicator">
-                      <svg *ngIf="isEtatCompleted(tache.etat, 'TERMINEE')" class="step-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                      <span *ngIf="!isEtatCompleted(tache.etat, 'TERMINEE')" class="step-number">3</span>
-                    </div>
-                    <span class="step-label">Terminée</span>
-                  </div>
-                  <div class="progress-line"
-                       [class.completed]="isEtatCompleted(tache.etat, 'VERIFIEE')"></div>
-                  <div class="progress-step"
-                       [class.active]="isEtatActive(tache.etat, 'VERIFIEE')"
-                       [class.completed]="isEtatCompleted(tache.etat, 'VERIFIEE')">
-                    <div class="step-indicator">
-                      <svg *ngIf="isEtatCompleted(tache.etat, 'VERIFIEE')" class="step-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                      <span *ngIf="!isEtatCompleted(tache.etat, 'VERIFIEE')" class="step-number">4</span>
-                    </div>
-                    <span class="step-label">Vérifiée</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="tache-item-header">
-                <span class="tache-libelle">{{ tache.libelle }}</span>
-                <span class="badge-tache" [class]="getEtatTacheClass(tache.etat)" 
-                      [attr.aria-label]="'État de la tâche: ' + getEtatTacheLabel(tache.etat)">
-                  {{ getEtatTacheLabel(tache.etat) }}
-                </span>
-              </div>
-              
-              <div class="tache-item-description" *ngIf="tache.description">
-                <p>{{ tache.description }}</p>
-              </div>
-              
-              <div class="tache-item-actions" *ngIf="tache.etat === 'A_FAIRE' || tache.etat === 'EN_COURS'">
-                <button 
-                  *ngIf="tache.etat === 'A_FAIRE'"
-                  type="button"
-                  class="btn-commencer"
-                  (click)="commencerTache(tache)"
-                  [attr.aria-label]="'Commencer la tâche: ' + tache.libelle">
-                  <span aria-hidden="true">▶️</span>
-                  <span>Commencer</span>
-                </button>
-                <button 
-                  *ngIf="tache.etat === 'EN_COURS'"
-                  type="button"
-                  class="btn-terminer"
-                  (click)="ouvrirTerminerTache(tache)"
-                  [attr.aria-label]="'Terminer la tâche: ' + tache.libelle">
-                  <span aria-hidden="true">✅</span>
-                  <span>Terminer</span>
-                </button>
-              </div>
-            </div>
+        <!-- Actions selon l'état -->
+        <div class="card-actions">
+          <!-- État A_FAIRE -->
+          <div *ngIf="tache.etat === 'A_FAIRE'" class="actions-group">
+            <button
+              type="button"
+              class="btn-commencer"
+              (click)="commencerTache(tache)"
+              [attr.aria-label]="'Commencer la tâche: ' + tache.libelle">
+              <span aria-hidden="true">▶️</span>
+              <span>Commencer</span>
+            </button>
+            <button
+              type="button"
+              class="btn-commenter"
+              (click)="ouvrirModalCommenter(tache)"
+              [attr.aria-label]="'Ajouter un commentaire à la tâche: ' + tache.libelle">
+              <span aria-hidden="true">💬</span>
+              <span>Commenter</span>
+            </button>
+            <button
+              type="button"
+              class="btn-reporter"
+              (click)="ouvrirModalReporter(tache)"
+              [attr.aria-label]="'Reporter la tâche: ' + tache.libelle">
+              <span aria-hidden="true">📅</span>
+              <span>Reporter</span>
+            </button>
           </div>
-        </div>
-        
-        <div class="card-footer">
-          <button 
-            type="button"
-            class="btn-view-details"
-            (click)="voirDetails(intervention.id, $event); $event.stopPropagation()"
-            [attr.aria-label]="'Voir les détails de l\'intervention ' + intervention.id">
-            Voir les détails
-            <span aria-hidden="true">→</span>
-          </button>
+
+          <!-- État EN_COURS -->
+          <div *ngIf="tache.etat === 'EN_COURS'" class="actions-group">
+            <button
+              type="button"
+              class="btn-terminer"
+              (click)="ouvrirModalTerminer(tache)"
+              [attr.aria-label]="'Terminer la tâche: ' + tache.libelle">
+              <span aria-hidden="true">✅</span>
+              <span>Terminer</span>
+            </button>
+            <button
+              type="button"
+              class="btn-commenter"
+              (click)="ouvrirModalCommenter(tache)"
+              [attr.aria-label]="'Ajouter un commentaire à la tâche: ' + tache.libelle">
+              <span aria-hidden="true">💬</span>
+              <span>Commenter</span>
+            </button>
+            <button
+              type="button"
+              class="btn-suspendre"
+              (click)="ouvrirModalSuspendre(tache)"
+              [attr.aria-label]="'Suspendre la tâche: ' + tache.libelle">
+              <span aria-hidden="true">⏸️</span>
+              <span>Suspendre</span>
+            </button>
+          </div>
+
+          <!-- État TERMINEE -->
+          <div *ngIf="tache.etat === 'TERMINEE'" class="actions-group">
+            <span class="status-message">✅ En attente de vérification par le technicien</span>
+            <button
+              type="button"
+              class="btn-commenter"
+              (click)="ouvrirModalCommenter(tache)"
+              [attr.aria-label]="'Ajouter un commentaire à la tâche: ' + tache.libelle">
+              <span aria-hidden="true">💬</span>
+              <span>Commenter</span>
+            </button>
+          </div>
+
+          <!-- État VERIFIEE -->
+          <div *ngIf="tache.etat === 'VERIFIEE'" class="actions-group">
+            <span class="status-message">✔️ Tâche vérifiée et validée</span>
+          </div>
+
+          <!-- État SUSPENDUE -->
+          <div *ngIf="tache.etat === 'SUSPENDUE'" class="actions-group">
+            <button
+              type="button"
+              class="btn-reprendre"
+              (click)="reprendreTache(tache)"
+              [attr.aria-label]="'Reprendre la tâche: ' + tache.libelle">
+              <span aria-hidden="true">▶️</span>
+              <span>Reprendre</span>
+            </button>
+            <button
+              type="button"
+              class="btn-commenter"
+              (click)="ouvrirModalCommenter(tache)"
+              [attr.aria-label]="'Ajouter un commentaire à la tâche: ' + tache.libelle">
+              <span aria-hidden="true">💬</span>
+              <span>Commenter</span>
+            </button>
+          </div>
+
+          <!-- État REPORTEE -->
+          <div *ngIf="tache.etat === 'REPORTEE'" class="actions-group">
+            <span class="status-message">📅 Tâche reportée</span>
+            <button
+              type="button"
+              class="btn-reprendre"
+              (click)="commencerTache(tache)"
+              [attr.aria-label]="'Commencer la tâche: ' + tache.libelle">
+              <span aria-hidden="true">▶️</span>
+              <span>Redémarrer</span>
+            </button>
+          </div>
         </div>
       </article>
     </div>
   </section>
 
-  <!-- ========== MODAL TERMINER TÂCHE ========== -->
-  <div *ngIf="selectedTacheForTerminer" 
-       class="modal-terminer-tache"
+  <!-- ========== MODALS ========== -->
+
+  <!-- Modal Terminer Tâche -->
+  <div *ngIf="modalAction === 'terminer' && selectedTache"
+       class="modal-overlay"
        role="dialog"
-       aria-labelledby="modal-title"
+       aria-labelledby="modal-terminer-title"
        aria-modal="true"
-       (click)="selectedTacheForTerminer = null">
+       (click)="fermerModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3 id="modal-title">Terminer la tâche: {{ selectedTacheForTerminer.libelle }}</h3>
-      <form (ngSubmit)="terminerTache()" [attr.aria-label]="'Formulaire pour terminer la tâche'">
+      <h3 id="modal-terminer-title">✅ Terminer la tâche</h3>
+      <p><strong>{{ selectedTache.libelle }}</strong></p>
+
+      <form (ngSubmit)="terminerTache()">
         <div class="form-group">
-          <label for="commentaire">Commentaire (optionnel)</label>
-          <textarea 
-            id="commentaire"
-            [(ngModel)]="terminerTacheRequest.commentaire" 
+          <label for="commentaire-terminer">Commentaire (obligatoire)</label>
+          <textarea
+            id="commentaire-terminer"
+            [(ngModel)]="terminerTacheRequest.commentaire"
             name="commentaire"
-            placeholder="Ajoutez un commentaire sur le travail effectué..."
+            placeholder="Décrivez le travail effectué..."
             rows="4"
-            [attr.aria-describedby]="'commentaire-help'"></textarea>
-          <small id="commentaire-help" class="form-help">
-            Décrivez brièvement le travail effectué ou les observations importantes.
-          </small>
+            required></textarea>
         </div>
+
         <div class="form-group">
-          <label for="temps-passe">Temps passé (en minutes, optionnel)</label>
-          <input 
+          <label for="temps-passe">Temps passé (en minutes)</label>
+          <input
             id="temps-passe"
-            type="number" 
-            [(ngModel)]="terminerTacheRequest.tempsPasseMinutes" 
+            type="number"
+            [(ngModel)]="terminerTacheRequest.tempsPasseMinutes"
             name="tempsPasseMinutes"
             placeholder="Ex: 120"
-            min="0"
+            min="1"
             step="1"
-            [attr.aria-describedby]="'temps-help'">
-          <small id="temps-help" class="form-help">
-            Indiquez le temps réellement passé sur cette tâche en minutes.
-          </small>
+            required>
         </div>
+
         <div class="modal-actions">
-          <button 
+          <button
             type="button"
-            class="btn-secondary" 
-            (click)="selectedTacheForTerminer = null"
-            [attr.aria-label]="'Annuler'">
+            class="btn-secondary"
+            (click)="fermerModal()">
             Annuler
           </button>
-          <button 
+          <button
             type="submit"
-            class="btn-success" 
-            [attr.aria-label]="'Confirmer la terminaison de la tâche'">
-            <span aria-hidden="true">✅</span>
-            <span>Terminer</span>
+            class="btn-success">
+            ✅ Terminer la tâche
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Commenter -->
+  <div *ngIf="modalAction === 'commenter' && selectedTache"
+       class="modal-overlay"
+       role="dialog"
+       aria-labelledby="modal-commenter-title"
+       aria-modal="true"
+       (click)="fermerModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3 id="modal-commenter-title">💬 Ajouter un commentaire</h3>
+      <p><strong>{{ selectedTache.libelle }}</strong></p>
+
+      <form (ngSubmit)="ajouterCommentaire()">
+        <div class="form-group">
+          <label for="commentaire">Commentaire</label>
+          <textarea
+            id="commentaire"
+            [(ngModel)]="commentaireTache"
+            name="commentaire"
+            placeholder="Ajoutez vos observations..."
+            rows="4"
+            required></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="btn-secondary"
+            (click)="fermerModal()">
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="btn-primary">
+            💬 Enregistrer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Reporter -->
+  <div *ngIf="modalAction === 'reporter' && selectedTache"
+       class="modal-overlay"
+       role="dialog"
+       aria-labelledby="modal-reporter-title"
+       aria-modal="true"
+       (click)="fermerModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3 id="modal-reporter-title">📅 Reporter la tâche</h3>
+      <p><strong>{{ selectedTache.libelle }}</strong></p>
+
+      <form (ngSubmit)="reporterTache()">
+        <div class="form-group">
+          <label for="raison-report">Raison du report (obligatoire)</label>
+          <textarea
+            id="raison-report"
+            [(ngModel)]="raisonReport"
+            name="raisonReport"
+            placeholder="Expliquez pourquoi vous reportez cette tâche..."
+            rows="4"
+            required></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="btn-secondary"
+            (click)="fermerModal()">
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="btn-warning">
+            📅 Reporter
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Suspendre -->
+  <div *ngIf="modalAction === 'suspendre' && selectedTache"
+       class="modal-overlay"
+       role="dialog"
+       aria-labelledby="modal-suspendre-title"
+       aria-modal="true"
+       (click)="fermerModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3 id="modal-suspendre-title">⏸️ Suspendre la tâche</h3>
+      <p><strong>{{ selectedTache.libelle }}</strong></p>
+
+      <form (ngSubmit)="suspendreTache()">
+        <div class="form-group">
+          <label for="raison-suspension">Raison de la suspension (obligatoire)</label>
+          <textarea
+            id="raison-suspension"
+            [(ngModel)]="raisonSuspension"
+            name="raisonSuspension"
+            placeholder="Expliquez pourquoi vous suspendez cette tâche..."
+            rows="4"
+            required></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="btn-secondary"
+            (click)="fermerModal()">
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="btn-warning">
+            ⏸️ Suspendre
           </button>
         </div>
       </form>
     </div>
   </div>
 </div>
-
-<!-- Styles pour l'accessibilité (screen readers) -->
-<style>
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-  
-  .form-help {
-    display: block;
-    margin-top: var(--space-1);
-    font-size: var(--text-xs);
-    color: var(--neutral-600);
-  }
-  
-  .tache-item-description {
-    margin-bottom: var(--space-3);
-  }
-  
-  .tache-item-description p {
-    font-size: var(--text-sm);
-    color: var(--neutral-700);
-    margin: 0;
-    line-height: 1.5;
-  }
-</style>

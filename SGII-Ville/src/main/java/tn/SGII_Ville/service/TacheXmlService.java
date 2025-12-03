@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import tn.SGII_Ville.controller.MainDOeuvreController;
 import tn.SGII_Ville.entities.Tache;
 
 import java.time.LocalDateTime;
@@ -267,5 +269,69 @@ public class TacheXmlService {
         }
         return t;
     }
+    // Dans votre classe TacheXmlService existante, ajoutez cette méthode :
+
+/**
+ * Récupère l'historique des états d'une tâche
+ * Pour l'instant, retourne un historique simulé basé sur les dates de la tâche
+ */
+
+/**
+ * Récupère l'historique des états d'une tâche
+ * IMPLÉMENTATION COMPLÈTE
+ */
+public List<MainDOeuvreController.HistoriqueEtatTache> getHistoriqueByTacheId(int tacheId) {
+    List<MainDOeuvreController.HistoriqueEtatTache> historique = new ArrayList<>();
+    
+    try {
+        Tache tache = findById(tacheId);
+        if (tache != null) {
+            // Historique basé sur les dates existantes de la tâche
+            if (tache.getDateCreation() != null) {
+                MainDOeuvreController.HistoriqueEtatTache histCreation = new MainDOeuvreController.HistoriqueEtatTache();
+                histCreation.setId(1);
+                histCreation.setTacheId(tacheId);
+                histCreation.setEtat("A_FAIRE");
+                histCreation.setDateChangement(tache.getDateCreation());
+                histCreation.setCommentaire("Tâche créée");
+                historique.add(histCreation);
+            }
+            
+            if (tache.getDateDebut() != null) {
+                MainDOeuvreController.HistoriqueEtatTache histDebut = new MainDOeuvreController.HistoriqueEtatTache();
+                histDebut.setId(2);
+                histDebut.setTacheId(tacheId);
+                histDebut.setEtat("EN_COURS");
+                histDebut.setDateChangement(tache.getDateDebut());
+                histDebut.setCommentaire("Tâche commencée");
+                historique.add(histDebut);
+            }
+            
+            if (tache.getDateFin() != null) {
+                MainDOeuvreController.HistoriqueEtatTache histFin = new MainDOeuvreController.HistoriqueEtatTache();
+                histFin.setId(3);
+                histFin.setTacheId(tacheId);
+                histFin.setEtat("TERMINEE");
+                histFin.setDateChangement(tache.getDateFin());
+                histFin.setCommentaire(tache.getCommentaireMainDOeuvre());
+                historique.add(histFin);
+            }
+            
+            if (tache.getDateVerification() != null) {
+                MainDOeuvreController.HistoriqueEtatTache histVerif = new MainDOeuvreController.HistoriqueEtatTache();
+                histVerif.setId(4);
+                histVerif.setTacheId(tacheId);
+                histVerif.setEtat("VERIFIEE");
+                histVerif.setDateChangement(tache.getDateVerification());
+                histVerif.setCommentaire("Tâche vérifiée par le technicien");
+                historique.add(histVerif);
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    
+    return historique;
+}
 }
 

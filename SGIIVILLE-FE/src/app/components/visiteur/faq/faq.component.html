@@ -1,0 +1,42 @@
+<div class="faq-page">
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="logo">
+          <a routerLink="/"><h1>elBaladiya.tn</h1></a>
+        </div>
+        <ul class="nav-links">
+          <li><a routerLink="/" routerLinkActive="active">Accueil</a></li>
+          <li><a routerLink="/demandes-terminees" routerLinkActive="active">Demandes terminées</a></li>
+          <li><a routerLink="/faq" routerLinkActive="active">FAQ</a></li>
+          <li><a routerLink="/about" routerLinkActive="active">À propos</a></li>
+          <li><a routerLink="/login" routerLinkActive="active">Connexion</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container main-content">
+    <h1 class="page-title">Foire aux Questions (FAQ)</h1>
+    <p class="page-subtitle">Trouvez les réponses aux questions les plus fréquentes</p>
+
+    <div class="faq-list">
+      <div *ngFor="let faq of faqs; let i = index" class="faq-item">
+        <div class="faq-question" (click)="toggleFaq(i)">
+          <h3>{{ faq.question }}</h3>
+          <span class="toggle-icon">{{ expandedIndex === i ? '−' : '+' }}</span>
+        </div>
+        <div class="faq-answer" [class.expanded]="expandedIndex === i">
+          <p>{{ faq.answer }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 elBaladiya.tn - Tous droits réservés</p>
+    </div>
+  </footer>
+</div>
+

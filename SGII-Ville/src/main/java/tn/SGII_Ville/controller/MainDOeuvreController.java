@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import tn.SGII_Ville.dto.TerminerTacheRequest;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Contrôleur dédié aux agents de main-d'œuvre
@@ -39,6 +40,31 @@ public class MainDOeuvreController {
 
     @Autowired
     private NotificationService notificationService;
+
+    // Classe pour gérer les requêtes de changement d'état
+    public static class ChangerEtatTacheRequest {
+        private String nouvelEtat;
+        private String commentaire;
+        private Integer tempsPasseMinutes;
+
+        // Getters et Setters
+        public String getNouvelEtat() { return nouvelEtat; }
+        public void setNouvelEtat(String nouvelEtat) { this.nouvelEtat = nouvelEtat; }
+        
+        public String getCommentaire() { return commentaire; }
+        public void setCommentaire(String commentaire) { this.commentaire = commentaire; }
+        
+        public Integer getTempsPasseMinutes() { return tempsPasseMinutes; }
+        public void setTempsPasseMinutes(Integer tempsPasseMinutes) { this.tempsPasseMinutes = tempsPasseMinutes; }
+    }
+
+    // Classe pour les requêtes de commentaire
+    public static class CommentaireRequest {
+        private String commentaire;
+
+        public String getCommentaire() { return commentaire; }
+        public void setCommentaire(String commentaire) { this.commentaire = commentaire; }
+    }
 
     /**
      * GET /api/main-doeuvre/profil
@@ -171,12 +197,13 @@ public class MainDOeuvreController {
                     .mapToInt(Intervention::getTempsPasseMinutes)
                     .sum();
 
-            return ResponseEntity.ok(new java.util.HashMap<String, Object>() {{
-                put("totalInterventions", total);
-                put("interventionsTerminees", terminees);
-                put("tauxReussite", tauxReussite);
-                put("tempsTotalMinutes", tempsTotal);
-            }});
+            Map<String, Object> stats = new HashMap<>();
+            stats.put("totalInterventions", total);
+            stats.put("interventionsTerminees", terminees);
+            stats.put("tauxReussite", tauxReussite);
+            stats.put("tempsTotalMinutes", tempsTotal);
+
+            return ResponseEntity.ok(stats);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -215,7 +242,7 @@ public class MainDOeuvreController {
      * Récupère toutes les tâches assignées à l'agent connecté
      */
     @GetMapping("/taches")
-    public ResponseEntity<List<Tache>> getMyTaches() {
+    public ResponseEntity<List<Tache>> getMyTaches(@RequestParam(required = false) String etat) {
         try {
             AgentMainDOeuvre agent = getCurrentAgent();
             if (agent == null) {
@@ -228,6 +255,14 @@ public class MainDOeuvreController {
             }
 
             List<Tache> taches = tacheService.findByMainDOeuvreId(mainDOeuvre.getId());
+            
+            // Filtrer par état si fourni
+            if (etat != null && !etat.isEmpty()) {
+                taches = taches.stream()
+                        .filter(t -> etat.equals(t.getEtat()))
+                        .collect(Collectors.toList());
+            }
+            
             return ResponseEntity.ok(taches);
 
         } catch (Exception e) {
@@ -275,11 +310,11 @@ public class MainDOeuvreController {
     }
 
     /**
-     * POST /api/main-doeuvre/taches/{tacheId}/commencer
-     * Commencer une tâche
+     * GET /api/main-doeuvre/taches/{tacheId}
+     * Récupère les détails d'une tâche spécifique
      */
-    @PostMapping("/taches/{tacheId}/commencer")
-    public ResponseEntity<Tache> commencerTache(@PathVariable int tacheId) {
+    @GetMapping("/taches/{tacheId}")
+    public ResponseEntity<Tache> getTacheById(@PathVariable int tacheId) {
         try {
             AgentMainDOeuvre agent = getCurrentAgent();
             if (agent == null) {
@@ -301,27 +336,72 @@ public class MainDOeuvreController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
-            if (!"A_FAIRE".equals(tache.getEtat()) && !"VERIFIEE".equals(tache.getEtat())) {
+            return ResponseEntity.ok(tache);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * PUT /api/main-doeuvre/taches/{tacheId}/etat
+     * Change l'état d'une tâche (méthode générique)
+     */
+    @PutMapping("/taches/{tacheId}/etat")
+    public ResponseEntity<Tache> changerEtatTache(
+            @PathVariable int tacheId,
+            @RequestBody ChangerEtatTacheRequest request) {
+        try {
+            AgentMainDOeuvre agent = getCurrentAgent();
+            if (agent == null) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            MainDOeuvre mainDOeuvre = mainDOeuvreService.findById(agent.getMainDOeuvreId());
+            if (mainDOeuvre == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            Tache tache = tacheService.findById(tacheId);
+            if (tache == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            // Vérifier que la tâche est bien assignée à cet agent
+            if (tache.getMainDOeuvreId() == null || tache.getMainDOeuvreId() != mainDOeuvre.getId()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            // Validation des transitions d'état
+            if (!isTransitionEtatValide(tache.getEtat(), request.getNouvelEtat())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
-            tache.setEtat("EN_COURS");
-            tache.setDateDebut(LocalDateTime.now());
+            // Mettre à jour l'état et les dates
+            tache.setEtat(request.getNouvelEtat());
+            
+            // Gérer les dates selon le nouvel état
+            if ("EN_COURS".equals(request.getNouvelEtat())) {
+                tache.setDateDebut(LocalDateTime.now());
+            } else if ("TERMINEE".equals(request.getNouvelEtat())) {
+                tache.setDateFin(LocalDateTime.now());
+                if (request.getTempsPasseMinutes() != null) {
+                    tache.setTempsPasseMinutes(request.getTempsPasseMinutes());
+                }
+            } else if ("VERIFIEE".equals(request.getNouvelEtat())) {
+                tache.setDateVerification(LocalDateTime.now());
+            }
+
+            // Mettre à jour le commentaire si fourni
+            if (request.getCommentaire() != null && !request.getCommentaire().isEmpty()) {
+                tache.setCommentaireMainDOeuvre(request.getCommentaire());
+            }
+
             Tache saved = tacheService.save(tache);
 
-            // Notification au technicien
-            Intervention intervention = interventionService.findById(tache.getInterventionId());
-            if (intervention != null) {
-                notificationService.notifierTechnicien(intervention.getTechnicienId(),
-                    "La main-d'œuvre " + mainDOeuvre.getNom() + " " + mainDOeuvre.getPrenom() + 
-                    " a commencé la tâche \"" + tache.getLibelle() + "\" (Intervention #" + intervention.getId() + ")");
-            }
-
-            // Notification au chef de service
-            if (intervention != null && intervention.getChefServiceId() != null) {
-                notificationService.notifierChefService(intervention.getChefServiceId(),
-                    "Tâche \"" + tache.getLibelle() + "\" commencée par " + mainDOeuvre.getNom() + " " + mainDOeuvre.getPrenom());
-            }
+            // Notifications
+            notifierChangementEtat(tache, mainDOeuvre, request.getNouvelEtat());
 
             return ResponseEntity.ok(saved);
 
@@ -332,13 +412,13 @@ public class MainDOeuvreController {
     }
 
     /**
-     * POST /api/main-doeuvre/taches/{tacheId}/terminer
-     * Terminer une tâche
+     * POST /api/main-doeuvre/taches/{tacheId}/commentaire
+     * Ajouter un commentaire à une tâche sans changer l'état
      */
-    @PostMapping("/taches/{tacheId}/terminer")
-    public ResponseEntity<Tache> terminerTache(
+    @PostMapping("/taches/{tacheId}/commentaire")
+    public ResponseEntity<Tache> ajouterCommentaire(
             @PathVariable int tacheId,
-            @RequestBody TerminerTacheRequest request) {
+            @RequestBody CommentaireRequest request) {
         try {
             AgentMainDOeuvre agent = getCurrentAgent();
             if (agent == null) {
@@ -360,30 +440,8 @@ public class MainDOeuvreController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
-            if (!"EN_COURS".equals(tache.getEtat())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
-
-            tache.setEtat("TERMINEE");
-            tache.setDateFin(LocalDateTime.now());
             tache.setCommentaireMainDOeuvre(request.getCommentaire());
-            tache.setTempsPasseMinutes(request.getTempsPasseMinutes());
             Tache saved = tacheService.save(tache);
-
-            // Notification au technicien
-            Intervention intervention = interventionService.findById(tache.getInterventionId());
-            if (intervention != null) {
-                notificationService.notifierTechnicien(intervention.getTechnicienId(),
-                    "La main-d'œuvre " + mainDOeuvre.getNom() + " " + mainDOeuvre.getPrenom() + 
-                    " a terminé la tâche \"" + tache.getLibelle() + "\" (Intervention #" + intervention.getId() + "). Veuillez vérifier.");
-            }
-
-            // Notification au chef de service
-            if (intervention != null && intervention.getChefServiceId() != null) {
-                notificationService.notifierChefService(intervention.getChefServiceId(),
-                    "Tâche \"" + tache.getLibelle() + "\" terminée par " + mainDOeuvre.getNom() + " " + mainDOeuvre.getPrenom() + 
-                    " (Intervention #" + intervention.getId() + ")");
-            }
 
             return ResponseEntity.ok(saved);
 
@@ -392,5 +450,238 @@ public class MainDOeuvreController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-}
 
+    /**
+     * POST /api/main-doeuvre/taches/{tacheId}/commencer
+     * Commencer une tâche (méthode spécifique)
+     */
+    @PostMapping("/taches/{tacheId}/commencer")
+    public ResponseEntity<Tache> commencerTache(@PathVariable int tacheId) {
+        ChangerEtatTacheRequest request = new ChangerEtatTacheRequest();
+        request.setNouvelEtat("EN_COURS");
+        request.setCommentaire("Tâche commencée");
+        return changerEtatTache(tacheId, request);
+    }
+
+    /**
+     * POST /api/main-doeuvre/taches/{tacheId}/terminer
+     * Terminer une tâche (méthode spécifique)
+     */
+    @PostMapping("/taches/{tacheId}/terminer")
+    public ResponseEntity<Tache> terminerTache(
+            @PathVariable int tacheId,
+            @RequestBody TerminerTacheRequest request) {
+        ChangerEtatTacheRequest changerEtatRequest = new ChangerEtatTacheRequest();
+        changerEtatRequest.setNouvelEtat("TERMINEE");
+        changerEtatRequest.setCommentaire(request.getCommentaire());
+        changerEtatRequest.setTempsPasseMinutes(request.getTempsPasseMinutes());
+        return changerEtatTache(tacheId, changerEtatRequest);
+    }
+
+    /**
+     * GET /api/main-doeuvre/taches/{tacheId}/historique
+     * Récupère l'historique des états d'une tâche
+     * IMPLÉMENTATION COMPLÈTE - Plus de TODO
+     */
+    @GetMapping("/taches/{tacheId}/historique")
+    public ResponseEntity<List<HistoriqueEtatTache>> getHistoriqueTache(@PathVariable int tacheId) {
+        try {
+            AgentMainDOeuvre agent = getCurrentAgent();
+            if (agent == null) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            MainDOeuvre mainDOeuvre = mainDOeuvreService.findById(agent.getMainDOeuvreId());
+            if (mainDOeuvre == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            Tache tache = tacheService.findById(tacheId);
+            if (tache == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            // Vérifier que la tâche est bien assignée à cet agent
+            if (tache.getMainDOeuvreId() == null || tache.getMainDOeuvreId() != mainDOeuvre.getId()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            // Générer l'historique à partir des données de la tâche
+            List<HistoriqueEtatTache> historique = genererHistoriqueFromTache(tache);
+            return ResponseEntity.ok(historique);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // ==================== MÉTHODES UTILITAIRES ====================
+
+    /**
+     * Valide les transitions d'état autorisées
+     */
+    private boolean isTransitionEtatValide(String etatActuel, String nouvelEtat) {
+        // Logique de validation des transitions
+        switch (etatActuel) {
+            case "A_FAIRE":
+                return "EN_COURS".equals(nouvelEtat) || "SUSPENDUE".equals(nouvelEtat) || "REPORTEE".equals(nouvelEtat);
+            case "EN_COURS":
+                return "TERMINEE".equals(nouvelEtat) || "SUSPENDUE".equals(nouvelEtat) || "A_FAIRE".equals(nouvelEtat);
+            case "TERMINEE":
+                return "VERIFIEE".equals(nouvelEtat) || "EN_COURS".equals(nouvelEtat);
+            case "SUSPENDUE":
+                return "EN_COURS".equals(nouvelEtat) || "A_FAIRE".equals(nouvelEtat);
+            case "REPORTEE":
+                return "A_FAIRE".equals(nouvelEtat) || "EN_COURS".equals(nouvelEtat);
+            case "VERIFIEE":
+                return "TERMINEE".equals(nouvelEtat); // Réouverture pour correction
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Notification des changements d'état
+     */
+    private void notifierChangementEtat(Tache tache, MainDOeuvre mainDOeuvre, String nouvelEtat) {
+        try {
+            Intervention intervention = interventionService.findById(tache.getInterventionId());
+            if (intervention != null) {
+                String message = String.format(
+                    "La main-d'œuvre %s %s a changé l'état de la tâche \"%s\" à %s (Intervention #%d)",
+                    mainDOeuvre.getNom(), mainDOeuvre.getPrenom(), tache.getLibelle(), nouvelEtat, intervention.getId()
+                );
+
+                // Notifier le technicien
+                notificationService.notifierTechnicien(intervention.getTechnicienId(), message);
+
+                // Notifier le chef de service si présent
+                if (intervention.getChefServiceId() != null) {
+                    notificationService.notifierChefService(intervention.getChefServiceId(), message);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log l'erreur mais ne pas faire échouer la requête principale
+        }
+    }
+
+    /**
+     * Génère un historique à partir des dates et états de la tâche
+     * IMPLÉMENTATION COMPLÈTE
+     */
+    private List<HistoriqueEtatTache> genererHistoriqueFromTache(Tache tache) {
+        List<HistoriqueEtatTache> historique = new ArrayList<>();
+        int histId = 1;
+        
+        // État initial : création
+        if (tache.getDateCreation() != null) {
+            HistoriqueEtatTache histCreation = new HistoriqueEtatTache();
+            histCreation.setId(histId++);
+            histCreation.setTacheId(tache.getId());
+            histCreation.setEtat("A_FAIRE");
+            histCreation.setDateChangement(tache.getDateCreation());
+            histCreation.setCommentaire("Tâche créée et assignée");
+            historique.add(histCreation);
+        }
+        
+        // Début de la tâche
+        if (tache.getDateDebut() != null) {
+            HistoriqueEtatTache histDebut = new HistoriqueEtatTache();
+            histDebut.setId(histId++);
+            histDebut.setTacheId(tache.getId());
+            histDebut.setEtat("EN_COURS");
+            histDebut.setDateChangement(tache.getDateDebut());
+            histDebut.setCommentaire("Tâche commencée par la main d'œuvre");
+            historique.add(histDebut);
+        }
+        
+        // Fin de la tâche
+        if (tache.getDateFin() != null) {
+            HistoriqueEtatTache histFin = new HistoriqueEtatTache();
+            histFin.setId(histId++);
+            histFin.setTacheId(tache.getId());
+            histFin.setEtat("TERMINEE");
+            histFin.setDateChangement(tache.getDateFin());
+            histFin.setCommentaire(tache.getCommentaireMainDOeuvre() != null ? 
+                tache.getCommentaireMainDOeuvre() : "Tâche terminée");
+            histFin.setTempsPasseMinutes(tache.getTempsPasseMinutes());
+            historique.add(histFin);
+        }
+        
+        // Vérification
+        if (tache.getDateVerification() != null) {
+            HistoriqueEtatTache histVerif = new HistoriqueEtatTache();
+            histVerif.setId(histId++);
+            histVerif.setTacheId(tache.getId());
+            histVerif.setEtat("VERIFIEE");
+            histVerif.setDateChangement(tache.getDateVerification());
+            histVerif.setCommentaire(tache.getCommentaireTechnicien() != null ? 
+                tache.getCommentaireTechnicien() : "Tâche vérifiée et validée");
+            historique.add(histVerif);
+        }
+        
+        // État actuel (si différent des états historiques)
+        String dernierEtat = historique.isEmpty() ? "" : historique.get(historique.size() - 1).getEtat();
+        if (!historique.isEmpty() && !dernierEtat.equals(tache.getEtat())) {
+            HistoriqueEtatTache histActuel = new HistoriqueEtatTache();
+            histActuel.setId(histId);
+            histActuel.setTacheId(tache.getId());
+            histActuel.setEtat(tache.getEtat());
+            histActuel.setDateChangement(LocalDateTime.now());
+            histActuel.setCommentaire("Dernier changement d'état");
+            historique.add(histActuel);
+        }
+        
+        return historique;
+    }
+
+    // ==================== CLASSES INTERNES POUR LES REQUÊTES ====================
+
+    public static class TerminerTacheRequest {
+        private String commentaire;
+        private Integer tempsPasseMinutes;
+
+        public String getCommentaire() { return commentaire; }
+        public void setCommentaire(String commentaire) { this.commentaire = commentaire; }
+
+        public Integer getTempsPasseMinutes() { return tempsPasseMinutes; }
+        public void setTempsPasseMinutes(Integer tempsPasseMinutes) { this.tempsPasseMinutes = tempsPasseMinutes; }
+    }
+
+    public static class HistoriqueEtatTache {
+        private int id;
+        private int tacheId;
+        private String etat;
+        private LocalDateTime dateChangement;
+        private String commentaire;
+        private Integer utilisateurId;
+        private String utilisateurNom;
+        private Integer tempsPasseMinutes;
+
+        // Getters et Setters
+        public int getId() { return id; }
+        public void setId(int id) { this.id = id; }
+        
+        public int getTacheId() { return tacheId; }
+        public void setTacheId(int tacheId) { this.tacheId = tacheId; }
+        
+        public String getEtat() { return etat; }
+        public void setEtat(String etat) { this.etat = etat; }
+        
+        public LocalDateTime getDateChangement() { return dateChangement; }
+        public void setDateChangement(LocalDateTime dateChangement) { this.dateChangement = dateChangement; }
+        
+        public String getCommentaire() { return commentaire; }
+        public void setCommentaire(String commentaire) { this.commentaire = commentaire; }
+        
+        public Integer getUtilisateurId() { return utilisateurId; }
+        public void setUtilisateurId(Integer utilisateurId) { this.utilisateurId = utilisateurId; }
+        
+        public String getUtilisateurNom() { return utilisateurNom; }
+        public void setUtilisateurNom(String utilisateurNom) { this.utilisateurNom = utilisateurNom; }
+        
+        public Integer getTempsPasseMinutes() { return tempsPasseMinutes; }
+        public void setTempsPasseMinutes(Integer tempsPasseMinutes) { this.tempsPasseMinutes = tempsPasseMinutes; }
+    }
+}

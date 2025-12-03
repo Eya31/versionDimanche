@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import tn.SGII_Ville.dto.VerificationAffectationDTO;
 import tn.SGII_Ville.entities.Intervention;
 import tn.SGII_Ville.entities.MainDOeuvre;
+import tn.SGII_Ville.entities.Tache;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +26,9 @@ public class MainDOeuvreVerificationService {
 
     @Autowired
     private InterventionXmlService interventionService;
+
+    @Autowired
+    private TacheXmlService tacheService;
 
     /**
      * Vérifie si un agent peut être affecté à une intervention
@@ -130,8 +134,31 @@ public class MainDOeuvreVerificationService {
         // Vérifier si déjà dans cette intervention
         if (intervention.getOuvrierIds() != null && 
             intervention.getOuvrierIds().contains(mainDOeuvre.getId())) {
-            erreurs.add("L'agent est déjà affecté à cette intervention");
-            return false;
+            
+            // Si la main-d'œuvre est déjà affectée, vérifier si toutes ses tâches sont vérifiées
+            // Si toutes les tâches sont vérifiées, on permet la réaffectation à une nouvelle tâche
+            List<Tache> tachesDeLaMainDOeuvre = tacheService.findByInterventionId(intervention.getId())
+                .stream()
+                .filter(t -> t.getMainDOeuvreId() != null && t.getMainDOeuvreId() == mainDOeuvre.getId())
+                .collect(java.util.stream.Collectors.toList());
+            
+            // Vérifier si toutes les tâches sont vérifiées
+            boolean toutesTachesVerifiees = tachesDeLaMainDOeuvre.isEmpty() || 
+                tachesDeLaMainDOeuvre.stream().allMatch(t -> 
+                    "VERIFIEE".equals(t.getEtat()) || t.isVerifiee()
+                );
+            
+            if (!toutesTachesVerifiees) {
+                // Il y a au moins une tâche non vérifiée, on refuse l'affectation
+                long tachesNonVerifiees = tachesDeLaMainDOeuvre.stream()
+                    .filter(t -> !"VERIFIEE".equals(t.getEtat()) && !t.isVerifiee())
+                    .count();
+                erreurs.add("L'agent est déjà affecté à cette intervention avec " + tachesNonVerifiees + " tâche(s) non vérifiée(s)");
+                return false;
+            }
+            
+            // Toutes les tâches sont vérifiées, on permet la réaffectation
+            // Ne pas retourner d'erreur, permettre la création d'une nouvelle tâche
         }
 
         return true;

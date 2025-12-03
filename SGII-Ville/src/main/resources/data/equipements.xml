@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Equipements xmlns="http://example.com/gestion-interventions">
-                                        
+                                            
+    
     
     
     
@@ -10,7 +11,8 @@
     
     
     <!-- Equipements vides - Prêt pour de nouvelles instances -->
-                                    
+                                        
+    
     
     
     
@@ -20,7 +22,8 @@
     
     
     <Equipement>
-                                                                        
+                                                                                
+        
         
         
         
@@ -29,7 +32,8 @@
         
         
         <id>1</id>
-                                                                        
+                                                                                
+        
         
         
         
@@ -38,7 +42,8 @@
         
         
         <nom>camion</nom>
-                                                                        
+                                                                                
+        
         
         
         
@@ -47,7 +52,8 @@
         
         
         <type>vehicule</type>
-                                                                        
+                                                                                
+        
         
         
         
@@ -56,7 +62,8 @@
         
         
         <etat>FONCTIONNEL</etat>
-                                                                        
+                                                                                
+        
         
         
         
@@ -65,7 +72,8 @@
         
         
         <valeurAchat>500.0</valeurAchat>
-                                                                        
+                                                                                
+        
         
         
         
@@ -74,7 +82,8 @@
         
         
         <dateAchat>2025-11-30</dateAchat>
-                                                                        
+                                                                                
+        
         
         
         
@@ -83,7 +92,8 @@
         
         
         <disponible>true</disponible>
-                                                                        
+                                                                                
+        
         
         
         
@@ -92,7 +102,44 @@
         
         
         <indisponibilites>
-                                                                                                
+                                                                                                            
+            
+            
+            
+            
+            
+            
+            
+            <periode>
+                                                                                                                                                
+                
+                
+                
+                
+                
+                
+                
+                <debut>2025-12-19</debut>
+                                                                                                                                                
+                
+                
+                
+                
+                
+                
+                
+                <fin>2025-12-19</fin>
+                                                                                                                                            
+            
+            
+            
+            
+            
+            
+            
+            </periode>
+                                                                                                        
+            
             
             
             
@@ -138,14 +185,14 @@
                 
                 
                 
-                <debut>2025-12-19</debut>
+                <debut>2025-11-29</debut>
                                                                                                                 
                 
                 
                 
                 
                 
-                <fin>2025-12-19</fin>
+                <fin>2025-11-29</fin>
                                                                                                             
             
             
@@ -207,11 +254,11 @@
                                                                 
                 
                 
-                <debut>2025-11-29</debut>
+                <debut>2025-12-20</debut>
                                                                 
                 
                 
-                <fin>2025-11-29</fin>
+                <fin>2025-12-20</fin>
                                                             
             
             
@@ -222,10 +269,10 @@
             <periode>
                                                 
                 
-                <debut>2025-12-20</debut>
+                <debut>2025-11-29</debut>
                                                 
                 
-                <fin>2025-12-20</fin>
+                <fin>2025-11-29</fin>
                                             
             
             </periode>
@@ -240,11 +287,12 @@
             </periode>
                     
             <periode>
-                <debut>2025-11-29</debut>
-                <fin>2025-11-29</fin>
+                <debut>2025-12-01</debut>
+                <fin>2025-12-01</fin>
             </periode>
         </indisponibilites>
-                                                                    
+                                                                            
+    
     
     
     
@@ -253,7 +301,8 @@
     
     
     </Equipement>
-                                
+                                    
+
 
 
 

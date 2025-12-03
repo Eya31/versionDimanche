@@ -1,0 +1,107 @@
+<div class="demande-detail-page">
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="logo">
+          <a routerLink="/"><h1>elBaladiya.tn</h1></a>
+        </div>
+        <ul class="nav-links">
+          <li><a routerLink="/" routerLinkActive="active">Accueil</a></li>
+          <li><a routerLink="/demandes-terminees" routerLinkActive="active">Demandes terminées</a></li>
+          <li><a routerLink="/faq" routerLinkActive="active">FAQ</a></li>
+          <li><a routerLink="/about" routerLinkActive="active">À propos</a></li>
+          <li><a routerLink="/login" routerLinkActive="active">Connexion</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container main-content">
+    <a routerLink="/demandes-terminees" class="back-link">← Retour aux demandes terminées</a>
+
+    <div *ngIf="loading" class="loading">Chargement...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div *ngIf="!loading && !error && demande" class="demande-detail">
+      <h1 class="page-title">Demande résolue</h1>
+
+      <!-- PHOTOS -->
+      <div *ngIf="demande.photos && demande.photos.length > 0" class="photos-section">
+        <h2>Photos</h2>
+        <div class="photos-grid">
+          <div *ngFor="let photo of demande.photos" class="photo-item">
+            <img [src]="photo.url" [alt]="photo.nom" />
+          </div>
+        </div>
+      </div>
+
+      <!-- LOCALISATION -->
+      <div *ngIf="demande.localisation" class="localisation-section">
+        <h2>Localisation</h2>
+        <p *ngIf="demande.localisation.address" class="address">
+          <i class="icon-location"></i>
+          {{ demande.localisation.address }}
+        </p>
+        <div class="map-placeholder">
+          <p>Carte interactive (latitude: {{ demande.localisation.latitude }}, longitude: {{ demande.localisation.longitude }})</p>
+        </div>
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="description-section">
+        <h2>Description</h2>
+        <p>{{ demande.description }}</p>
+      </div>
+
+      <!-- INFORMATIONS -->
+      <div class="info-section">
+        <h2>Informations</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <strong>Date de soumission:</strong>
+            <span>{{ demande.dateSoumission | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div *ngIf="demande.category" class="info-item">
+            <strong>Catégorie:</strong>
+            <span>{{ demande.category }}</span>
+          </div>
+          <div *ngIf="demande.subCategory" class="info-item">
+            <strong>Sous-catégorie:</strong>
+            <span>{{ demande.subCategory }}</span>
+          </div>
+          <div *ngIf="demande.priority" class="info-item">
+            <strong>Priorité:</strong>
+            <span>{{ demande.priority }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERVENTION -->
+      <div *ngIf="demande.intervention" class="intervention-section">
+        <h2>Intervention réalisée</h2>
+        <div class="intervention-card">
+          <div class="intervention-info">
+            <p><strong>Type d'intervention:</strong> {{ demande.intervention.typeIntervention }}</p>
+            <p *ngIf="demande.intervention.dateDebut">
+              <strong>Date de début:</strong> {{ demande.intervention.dateDebut | date:'dd/MM/yyyy' }}
+            </p>
+            <p *ngIf="demande.intervention.dateFin">
+              <strong>Date de fin:</strong> {{ demande.intervention.dateFin | date:'dd/MM/yyyy' }}
+            </p>
+          </div>
+          <div *ngIf="demande.intervention.rapportFinal" class="rapport">
+            <h3>Rapport final</h3>
+            <p>{{ demande.intervention.rapportFinal }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 elBaladiya.tn - Tous droits réservés</p>
+    </div>
+  </footer>
+</div>
+

@@ -14,6 +14,7 @@ export interface Intervention {
   localisation?: {
     latitude: number;
     longitude: number;
+    address?: string;
   };
   mainDOeuvreIds?: number[];
   equipementIds?: number[];

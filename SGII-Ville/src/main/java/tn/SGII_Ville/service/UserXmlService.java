@@ -29,34 +29,58 @@ public class UserXmlService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     /**
+     * Génère un nouvel ID pour les utilisateurs
+     */
+    public int generateNewId() {
+        try {
+            Document doc = xmlService.loadXmlDocument("Utilisateurs");
+            return xmlService.generateNewId(doc, "Utilisateurs");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 1; // ID par défaut en cas d'erreur
+        }
+    }
+
+    /**
      * Trouve un utilisateur par email
      */
     public Optional<Utilisateur> findByEmail(String email) {
-        try {
-            Document doc = xmlService.loadXmlDocument("Utilisateurs");
-            Element utilisateursSection = doc.getDocumentElement();
-            
-            if (utilisateursSection == null) return Optional.empty();
+    try {
+        System.out.println("🔍 Recherche utilisateur par email: " + email);
+        Document doc = xmlService.loadXmlDocument("Utilisateurs");
+        Element utilisateursSection = doc.getDocumentElement();
+        
+        if (utilisateursSection == null) {
+            System.out.println("❌ Section Utilisateurs introuvable");
+            return Optional.empty();
+        }
 
-            NodeList children = utilisateursSection.getChildNodes();
-            
-            for (int i = 0; i < children.getLength(); i++) {
-                Node child = children.item(i);
-                if (child.getNodeType() == Node.ELEMENT_NODE) {
-                    Element userElement = (Element) child;
-                    String userEmail = xmlService.getElementTextContent(userElement, "email");
-                    
-                    if (email.equals(userEmail)) {
-                        return Optional.of(parseUtilisateur(userElement));
-                    }
+        NodeList children = utilisateursSection.getChildNodes();
+        System.out.println("📊 Nombre d'éléments enfants: " + children.getLength());
+        
+        for (int i = 0; i < children.getLength(); i++) {
+            Node child = children.item(i);
+            if (child.getNodeType() == Node.ELEMENT_NODE) {
+                Element userElement = (Element) child;
+                String userEmail = xmlService.getElementTextContent(userElement, "email");
+                String tagName = userElement.getLocalName();
+                
+                System.out.println("🔍 Élément: " + tagName + " - Email: " + userEmail);
+                
+                if (email.equals(userEmail)) {
+                    System.out.println("✅ Utilisateur trouvé: " + email + " (Type: " + tagName + ")");
+                    return Optional.of(parseUtilisateur(userElement));
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return Optional.empty();
+        
+        System.out.println("❌ Aucun utilisateur trouvé avec l'email: " + email);
+    } catch (Exception e) {
+        System.err.println("❌ Erreur lors de la recherche par email: " + e.getMessage());
+        e.printStackTrace();
     }
-
+    return Optional.empty();
+}
     /**
      * Trouve un utilisateur par ID
      */
@@ -126,7 +150,7 @@ public class UserXmlService {
 
             // Générer un nouvel ID si nécessaire
             if (user.getId() == 0) {
-                int newId = xmlService.generateNewId(doc, "Utilisateurs");
+                int newId = generateNewId();
                 user.setId(newId);
             }
 
@@ -200,120 +224,163 @@ public class UserXmlService {
      * Parse un élément XML en objet Utilisateur
      */
     private Utilisateur parseUtilisateur(Element userElement) {
-        String tagName = userElement.getLocalName();
-        
-        int id = Integer.parseInt(xmlService.getElementTextContent(userElement, "id"));
-        String nom = xmlService.getElementTextContent(userElement, "nom");
-        String email = xmlService.getElementTextContent(userElement, "email");
-        String motDePasse = xmlService.getElementTextContent(userElement, "motDePasse");
-        String roleStr = xmlService.getElementTextContent(userElement, "role");
-        RoleType role = RoleType.valueOf(roleStr);
+    String tagName = userElement.getLocalName();
+    
+    // CORRECTION: Normaliser les noms des éléments
+    String normalizedTagName = normalizeTagName(tagName);
+    
+    int id = Integer.parseInt(xmlService.getElementTextContent(userElement, "id"));
+    String nom = xmlService.getElementTextContent(userElement, "nom");
+    String email = xmlService.getElementTextContent(userElement, "email");
+    String motDePasse = xmlService.getElementTextContent(userElement, "motDePasse");
+    String roleStr = xmlService.getElementTextContent(userElement, "role");
+    RoleType role = RoleType.valueOf(roleStr);
 
-        return switch (tagName) {
-            case "Citoyen" -> {
-                String adresse = xmlService.getElementTextContent(userElement, "adresse");
-                String telephone = xmlService.getElementTextContent(userElement, "telephone");
-                yield new Citoyen(id, nom, email, motDePasse, adresse, telephone);
-            }
-            case "Technicien" -> {
-                List<String> competences = parseCompetences(userElement);
-                boolean disponibilite = Boolean.parseBoolean(
-                    xmlService.getElementTextContent(userElement, "disponibilite")
-                );
-                yield new Technicien(id, nom, email, motDePasse, competences, disponibilite);
-            }
-            case "ChefDeService" -> {
-                String departement = xmlService.getElementTextContent(userElement, "departement");
-                yield new ChefDeService(id, nom, email, motDePasse, departement);
-            }
-            case "Administrateur" -> new Administrateur(id, nom, email, motDePasse);
-            case "AgentMainDOeuvre" -> {
-                String prenom = xmlService.getElementTextContent(userElement, "prenom");
-                String matricule = xmlService.getElementTextContent(userElement, "matricule");
-                String cin = xmlService.getElementTextContent(userElement, "cin");
-                String telephone = xmlService.getElementTextContent(userElement, "telephone");
-                String metier = xmlService.getElementTextContent(userElement, "metier");
-                List<String> competences = parseCompetences(userElement);
-                int mainDOeuvreId = 0;
-                try {
-                    String mainDOeuvreIdStr = xmlService.getElementTextContent(userElement, "mainDOeuvreId");
-                    if (mainDOeuvreIdStr != null && !mainDOeuvreIdStr.isEmpty()) {
-                        mainDOeuvreId = Integer.parseInt(mainDOeuvreIdStr);
-                    }
-                } catch (Exception e) {
-                    // Ignorer si non présent
+    System.out.println("🔍 Parsing utilisateur - Tag: " + tagName + " -> Normalisé: " + normalizedTagName);
+    
+    return switch (normalizedTagName) {
+        case "Citoyen" -> {
+            String adresse = xmlService.getElementTextContent(userElement, "adresse");
+            String telephone = xmlService.getElementTextContent(userElement, "telephone");
+            Citoyen citoyen = new Citoyen(id, nom, email, motDePasse, adresse, telephone);
+            citoyen.setRole(role);
+            yield citoyen;
+        }
+        case "Technicien" -> {
+            List<String> competences = parseCompetences(userElement);
+            String disponibiliteStr = xmlService.getElementTextContent(userElement, "disponibilite");
+            boolean disponibilite = disponibiliteStr != null ? Boolean.parseBoolean(disponibiliteStr) : true;
+            Technicien technicien = new Technicien(id, nom, email, motDePasse, competences, disponibilite);
+            technicien.setRole(role);
+            yield technicien;
+        }
+        case "ChefDeService", "chefService" -> { // Gérer les deux cas
+            String departement = xmlService.getElementTextContent(userElement, "departement");
+            ChefDeService chef = new ChefDeService(id, nom, email, motDePasse, departement);
+            chef.setRole(role);
+            yield chef;
+        }
+        case "Administrateur", "administrateur" -> { // Gérer les deux cas
+            Administrateur admin = new Administrateur(id, nom, email, motDePasse);
+            admin.setRole(role);
+            yield admin;
+        }
+        case "AgentMainDOeuvre", "agentMainDOeuvre", "MainDOeuvre" -> { // Gérer tous les cas
+            String prenom = xmlService.getElementTextContent(userElement, "prenom");
+            String matricule = xmlService.getElementTextContent(userElement, "matricule");
+            String cin = xmlService.getElementTextContent(userElement, "cin");
+            String telephone = xmlService.getElementTextContent(userElement, "telephone");
+            String metier = xmlService.getElementTextContent(userElement, "metier");
+            List<String> competences = parseCompetences(userElement);
+            
+            int mainDOeuvreId = 0;
+            try {
+                String mainDOeuvreIdStr = xmlService.getElementTextContent(userElement, "mainDOeuvreId");
+                if (mainDOeuvreIdStr != null && !mainDOeuvreIdStr.isEmpty()) {
+                    mainDOeuvreId = Integer.parseInt(mainDOeuvreIdStr);
                 }
-                AgentMainDOeuvre agent = new AgentMainDOeuvre(id, nom, email, motDePasse, prenom, matricule, cin, telephone);
-                agent.setMetier(metier);
-                agent.setCompetences(competences);
-                agent.setMainDOeuvreId(mainDOeuvreId);
-                yield agent;
+            } catch (Exception e) {
+                // Ignorer si non présent
             }
-            default -> throw new IllegalArgumentException("Type d'utilisateur inconnu: " + tagName);
-        };
-    }
+            
+            AgentMainDOeuvre agent = new AgentMainDOeuvre(id, nom, email, motDePasse, prenom, matricule, cin, telephone);
+            agent.setMetier(metier);
+            agent.setCompetences(competences);
+            agent.setMainDOeuvreId(mainDOeuvreId);
+            agent.setRole(role);
+            yield agent;
+        }
+        default -> {
+            System.err.println("❌ Type d'utilisateur inconnu: " + tagName);
+            throw new IllegalArgumentException("Type d'utilisateur inconnu: " + tagName);
+        }
+    };
+}
 
+// Méthode pour normaliser les noms des tags
+private String normalizeTagName(String tagName) {
+    if (tagName == null) return tagName;
+    
+    return switch (tagName.toLowerCase()) {
+        case "chefservice" -> "ChefDeService";
+        case "administrateur" -> "Administrateur";
+        case "agentmaindoeuvre" -> "AgentMainDOeuvre";
+        case "maindoeuvre" -> "AgentMainDOeuvre"; // Traiter MainDOeuvre comme AgentMainDOeuvre
+        default -> tagName;
+    };
+}
     /**
      * Crée un élément XML à partir d'un objet Utilisateur
      */
-    private Element createUserElement(Document doc, Utilisateur utilisateur) {
-        Element userElement;
+    private Element createUserElement(Document doc, Utilisateur user) {
+        Element userElement = null;
         
-        if (utilisateur instanceof Citoyen citoyen) {
-            userElement = xmlService.createElement(doc, "Citoyen");
-            addBaseUserFields(doc, userElement, utilisateur);
-            xmlService.addTextElement(doc, userElement, "adresse", citoyen.getAdresse());
-            xmlService.addTextElement(doc, userElement, "telephone", citoyen.getTelephone());
-        } 
-        else if (utilisateur instanceof Technicien technicien) {
-            userElement = xmlService.createElement(doc, "Technicien");
-            addBaseUserFields(doc, userElement, utilisateur);
+        switch (user.getRole()) {
+            case CITOYEN:
+                userElement = doc.createElement("citoyen");
+                break;
+            case TECHNICIEN:
+                userElement = doc.createElement("technicien");
+                break;
+            case CHEF_SERVICE:
+                userElement = doc.createElement("chefService");
+                break;
+            case ADMINISTRATEUR:
+                userElement = doc.createElement("administrateur");
+                break;
+            case MAIN_DOEUVRE:
+                userElement = doc.createElement("agentMainDOeuvre");
+                break;
+            default:
+                throw new IllegalArgumentException("Type d'utilisateur non supporté: " + user.getRole());
+        }
+        
+        // Ajouter les éléments de base
+        addBaseUserFields(doc, userElement, user);
+        
+        // Attributs spécifiques
+        if (user instanceof Citoyen) {
+            Citoyen citoyen = (Citoyen) user;
+            xmlService.addTextElement(doc, userElement, "adresse", citoyen.getAdresse() != null ? citoyen.getAdresse() : "");
+            xmlService.addTextElement(doc, userElement, "telephone", citoyen.getTelephone() != null ? citoyen.getTelephone() : "");
+        } else if (user instanceof Technicien) {
+            Technicien technicien = (Technicien) user;
+            // Note: Technicien n'a pas de département, on ne l'ajoute pas
             
-            System.out.println("🔍 DEBUG UserXmlService - Compétences du technicien: " + technicien.getCompetences());
-            System.out.println("🔍 DEBUG UserXmlService - Nombre de compétences: " + (technicien.getCompetences() != null ? technicien.getCompetences().size() : 0));
-            
+            // Gérer les compétences
             if (technicien.getCompetences() != null && !technicien.getCompetences().isEmpty()) {
+                Element competencesElement = doc.createElement("competences");
                 for (String competence : technicien.getCompetences()) {
-                    System.out.println("🔍 DEBUG UserXmlService - Ajout compétence: " + competence);
-                    xmlService.addTextElement(doc, userElement, "competences", competence);
+                    Element competenceElement = doc.createElement("competence");
+                    competenceElement.setTextContent(competence);
+                    competencesElement.appendChild(competenceElement);
                 }
-            } else {
-                System.out.println("⚠️ WARNING - Liste de compétences vide ou null!");
+                userElement.appendChild(competencesElement);
             }
             
-            xmlService.addTextElement(doc, userElement, "disponibilite", 
-                String.valueOf(technicien.isDisponibilite()));
-        } 
-        else if (utilisateur instanceof ChefDeService chef) {
-            userElement = xmlService.createElement(doc, "ChefDeService");
-            addBaseUserFields(doc, userElement, utilisateur);
-            xmlService.addTextElement(doc, userElement, "departement", chef.getDepartement());
-        } 
-        else if (utilisateur instanceof Administrateur) {
-            userElement = xmlService.createElement(doc, "Administrateur");
-            addBaseUserFields(doc, userElement, utilisateur);
-        }
-        else if (utilisateur instanceof AgentMainDOeuvre agent) {
-            userElement = xmlService.createElement(doc, "AgentMainDOeuvre");
-            addBaseUserFields(doc, userElement, utilisateur);
-            xmlService.addTextElement(doc, userElement, "prenom", agent.getPrenom());
-            xmlService.addTextElement(doc, userElement, "matricule", agent.getMatricule());
-            xmlService.addTextElement(doc, userElement, "cin", agent.getCin());
-            xmlService.addTextElement(doc, userElement, "telephone", agent.getTelephone());
-            xmlService.addTextElement(doc, userElement, "metier", agent.getMetier());
+            xmlService.addTextElement(doc, userElement, "disponibilite", String.valueOf(technicien.isDisponibilite()));
+        } else if (user instanceof ChefDeService) {
+            ChefDeService chef = (ChefDeService) user;
+            xmlService.addTextElement(doc, userElement, "departement", chef.getDepartement() != null ? chef.getDepartement() : "");
+        } else if (user instanceof AgentMainDOeuvre) {
+            AgentMainDOeuvre agent = (AgentMainDOeuvre) user;
+            xmlService.addTextElement(doc, userElement, "prenom", agent.getPrenom() != null ? agent.getPrenom() : "");
+            xmlService.addTextElement(doc, userElement, "matricule", agent.getMatricule() != null ? agent.getMatricule() : "");
+            xmlService.addTextElement(doc, userElement, "cin", agent.getCin() != null ? agent.getCin() : "");
+            xmlService.addTextElement(doc, userElement, "telephone", agent.getTelephone() != null ? agent.getTelephone() : "");
+            xmlService.addTextElement(doc, userElement, "metier", agent.getMetier() != null ? agent.getMetier() : "");
             xmlService.addTextElement(doc, userElement, "mainDOeuvreId", String.valueOf(agent.getMainDOeuvreId()));
             
-            // Compétences
+            // Ajouter les compétences comme éléments enfants
             if (agent.getCompetences() != null && !agent.getCompetences().isEmpty()) {
-                Element competencesEl = doc.createElementNS(xmlService.getNamespaceUri(), "competences");
-                for (String comp : agent.getCompetences()) {
-                    xmlService.addTextElement(doc, competencesEl, "competence", comp);
+                Element competencesElement = doc.createElement("competences");
+                for (String competence : agent.getCompetences()) {
+                    Element competenceElement = doc.createElement("competence");
+                    competenceElement.setTextContent(competence);
+                    competencesElement.appendChild(competenceElement);
                 }
-                userElement.appendChild(competencesEl);
+                userElement.appendChild(competencesElement);
             }
-        }
-        else {
-            throw new IllegalArgumentException("Type d'utilisateur non supporté");
         }
         
         return userElement;
@@ -396,9 +463,19 @@ public class UserXmlService {
     /**
      * Vérifie le mot de passe
      */
-    public boolean checkPassword(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
-    }
+   /**
+ * Vérifie le mot de passe avec débogage
+ */
+public boolean checkPassword(String rawPassword, String encodedPassword) {
+    System.out.println("🔐 Vérification mot de passe:");
+    System.out.println("   Mot de passe fourni: " + rawPassword);
+    System.out.println("   Hash en BD: " + encodedPassword);
+    
+    boolean matches = passwordEncoder.matches(rawPassword, encodedPassword);
+    System.out.println("   Résultat: " + matches);
+    
+    return matches;
+}
 
     /**
      * Encode un mot de passe
@@ -406,6 +483,7 @@ public class UserXmlService {
     public String encodePassword(String rawPassword) {
         return passwordEncoder.encode(rawPassword);
     }
+
     /**
      * Récupère TOUS les techniciens depuis utilisateurs.xml (dynamique)
      */
@@ -488,4 +566,24 @@ public class UserXmlService {
             throw new RuntimeException("Erreur lors du marquage du technicien comme indisponible", e);
         }
     }
+    // Méthode de test temporaire
+public void testUserParsing() {
+    try {
+        String testEmail = "admin@ville.com";
+        System.out.println("🧪 TEST: Recherche de " + testEmail);
+        
+        Optional<Utilisateur> user = findByEmail(testEmail);
+        if (user.isPresent()) {
+            System.out.println("✅ TEST RÉUSSI: Utilisateur trouvé - " + user.get().getNom());
+            System.out.println("   Role: " + user.get().getRole());
+            System.out.println("   Mot de passe présent: " + (user.get().getMotDePasse() != null));
+        } else {
+            System.out.println("❌ TEST ÉCHOUÉ: Utilisateur non trouvé");
+        }
+    } catch (Exception e) {
+        System.err.println("❌ ERREUR TEST: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+    
 }

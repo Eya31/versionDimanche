@@ -260,11 +260,26 @@ public class MainDOeuvreXmlService {
     }
 
     public List<MainDOeuvre> findByDisponibilite(String disponibilite) {
-        return findAll().stream()
-                .filter(m -> disponibilite.equals(m.getDisponibilite()))
+        // Utiliser findActive() pour ne retourner que les main-d'œuvre actives
+        return findActive().stream()
+                .filter(m -> disponibilite != null && disponibilite.equals(m.getDisponibilite()))
                 .collect(Collectors.toList());
     }
-
+/**
+ * Génère un nouvel ID pour les main d'œuvre
+ */
+/**
+ * Génère un nouvel ID pour les main d'œuvre
+ */
+public int generateNewId() {
+    try {
+        Document doc = xmlService.loadXmlDocument("MainDOeuvre");
+        return xmlService.generateNewId(doc, "MainDOeuvre");
+    } catch (Exception e) {
+        e.printStackTrace();
+        return 1; // ID par défaut en cas d'erreur
+    }
+}
     private MainDOeuvre parseMainDOeuvre(Element el) {
         MainDOeuvre m = new MainDOeuvre();
         try {

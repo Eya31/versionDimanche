@@ -1,0 +1,126 @@
+<div class="interventions-en-cours-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>🟢 Interventions en Cours</h1>
+      <p class="subtitle">Gestion active de vos interventions en cours d'exécution</p>
+    </div>
+    <div class="header-actions">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" 
+               placeholder="Rechercher..." 
+               [(ngModel)]="searchTerm"
+               (input)="applyFilters()">
+      </div>
+      <button class="btn-refresh" (click)="loadInterventionsEnCours()">
+        <span class="icon">↻</span>
+        Actualiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-banner">
+    <div class="stat-item">
+      <span class="stat-icon">🔧</span>
+      <div class="stat-content">
+        <div class="stat-value">{{ totalEnCours }}</div>
+        <div class="stat-label">Intervention(s) en cours</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-icon">📋</span>
+      <div class="stat-content">
+        <div class="stat-value">{{ interventionsFiltrees.length }}</div>
+        <div class="stat-label">Affichée(s)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filters-section">
+    <h3>🔍 Filtres</h3>
+    <div class="filters-row">
+      <div class="filter-group">
+        <label>Priorité</label>
+        <select [(ngModel)]="filtrePriorite" (change)="applyFilters()">
+          <option value="">Toutes les priorités</option>
+          <option value="URGENTE">Urgente</option>
+          <option value="CRITIQUE">Critique</option>
+          <option value="NORMALE">Normale</option>
+          <option value="PLANIFIEE">Planifiée</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <button class="btn-reset" (click)="resetFilters()">
+          <span class="icon">✕</span>
+          Réinitialiser
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Liste des interventions -->
+  <div class="interventions-grid" *ngIf="!loading">
+    <div *ngIf="interventionsFiltrees.length === 0" class="empty-state">
+      <div class="empty-icon">📭</div>
+      <p>Aucune intervention en cours</p>
+      <p class="hint">Toutes vos interventions sont terminées ou en attente</p>
+    </div>
+
+    <div *ngFor="let intervention of interventionsFiltrees" class="intervention-card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="intervention-id">#{{ intervention.id }}</span>
+          <h3>{{ intervention.description || 'Sans description' }}</h3>
+        </div>
+        <div class="card-badges">
+          <span class="badge badge-success">EN_COURS</span>
+          <span class="badge" [ngClass]="getPrioriteClass(intervention.priorite)">
+            {{ intervention.priorite }}
+          </span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-label">Type:</span>
+          <span class="info-value">{{ intervention.typeIntervention || 'Non spécifié' }}</span>
+        </div>
+        <div class="info-row" *ngIf="intervention.datePlanifiee">
+          <span class="info-label">Date planifiée:</span>
+          <span class="info-value">{{ intervention.datePlanifiee | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="info-row" *ngIf="intervention.dateDebut">
+          <span class="info-label">Date début:</span>
+          <span class="info-value">{{ intervention.dateDebut | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="info-row" *ngIf="intervention.tempsPasseMinutes">
+          <span class="info-label">Temps passé:</span>
+          <span class="info-value">{{ intervention.tempsPasseMinutes }} minutes</span>
+        </div>
+        <div class="info-row" *ngIf="intervention.budget">
+          <span class="info-label">Budget:</span>
+          <span class="info-value budget-value">{{ intervention.budget }} DT</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn-view" [routerLink]="['/technicien/intervention', intervention.id]">
+          👁️ Voir détails
+        </button>
+        <button class="btn-rapport" 
+                *ngIf="intervention.etat === 'TERMINEE'"
+                [routerLink]="['/technicien/intervention', intervention.id, 'rapport']">
+          📄 Rapport
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <p>Chargement des interventions en cours...</p>
+  </div>
+</div>
+

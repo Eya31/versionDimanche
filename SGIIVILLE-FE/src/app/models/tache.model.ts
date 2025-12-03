@@ -4,7 +4,7 @@ export interface Tache {
   libelle: string;
   description?: string;
   mainDOeuvreId?: number;
-  etat: 'A_FAIRE' | 'EN_COURS' | 'TERMINEE' | 'VERIFIEE';
+  etat: 'A_FAIRE' | 'EN_COURS' | 'TERMINEE' | 'VERIFIEE' | 'SUSPENDUE' | 'REPORTEE';
   dateCreation?: string;
   dateDebut?: string;
   dateFin?: string;
@@ -14,6 +14,26 @@ export interface Tache {
   commentaireTechnicien?: string;
   ordre?: number;
   verifiee: boolean;
+
+  // Nouveaux champs
+  intervention?: {
+    id: number;
+    description?: string;
+    typeIntervention?: string;
+    priorite?: string;
+  };
+  historiqueEtats?: HistoriqueEtatTache[];
+}
+
+export interface HistoriqueEtatTache {
+  id: number;
+  tacheId: number;
+  etat: string;
+  dateChangement: string;
+  commentaire?: string;
+  utilisateurId?: number;
+  utilisateurNom?: string;
+  tempsPasseMinutes?: number;
 }
 
 export interface CreateTacheRequest {
@@ -32,8 +52,13 @@ export interface TerminerTacheRequest {
   tempsPasseMinutes?: number;
 }
 
+export interface ChangerEtatTacheRequest {
+  nouvelEtat: string;
+  commentaire?: string;
+  tempsPasseMinutes?: number;
+}
+
 export interface VerifierTacheRequest {
   commentaire?: string;
   validee: boolean;
 }
-

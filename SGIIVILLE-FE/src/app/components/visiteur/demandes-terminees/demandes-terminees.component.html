@@ -1,0 +1,94 @@
+<div class="demandes-terminees-page">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="logo">
+          <a routerLink="/"><h1>elBaladiya.tn</h1></a>
+        </div>
+        <ul class="nav-links">
+          <li><a routerLink="/" routerLinkActive="active">Accueil</a></li>
+          <li><a routerLink="/demandes-terminees" routerLinkActive="active">Demandes terminées</a></li>
+          <li><a routerLink="/faq" routerLinkActive="active">FAQ</a></li>
+          <li><a routerLink="/about" routerLinkActive="active">À propos</a></li>
+          <li><a routerLink="/login" routerLinkActive="active">Connexion</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container main-content">
+    <h1 class="page-title">Demandes citoyennes terminées</h1>
+    <p class="page-subtitle">Consultez les demandes qui ont été traitées avec succès</p>
+
+    <!-- FILTRES -->
+    <div class="filters-section">
+      <h2>Filtres</h2>
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label for="category">Catégorie</label>
+          <select id="category" [(ngModel)]="categoryFilter" (change)="applyFilters()">
+            <option value="">Toutes les catégories</option>
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="dateDebut">Date début</label>
+          <input type="date" id="dateDebut" [(ngModel)]="dateDebutFilter" (change)="applyFilters()" />
+        </div>
+        <div class="filter-group">
+          <label for="dateFin">Date fin</label>
+          <input type="date" id="dateFin" [(ngModel)]="dateFinFilter" (change)="applyFilters()" />
+        </div>
+        <div class="filter-group">
+          <button type="button" class="btn btn-secondary" (click)="clearFilters()">
+            Réinitialiser
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTE DES DEMANDES -->
+    <div *ngIf="loading" class="loading">Chargement des demandes...</div>
+    
+    <div *ngIf="!loading && demandesFiltrees.length === 0" class="no-data">
+      <p>Aucune demande terminée ne correspond à vos critères de recherche.</p>
+    </div>
+
+    <div *ngIf="!loading && demandesFiltrees.length > 0" class="demandes-list">
+      <div *ngFor="let demande of demandesFiltrees" class="demande-item">
+        <div *ngIf="demande.photos && demande.photos.length > 0" class="demande-photo">
+          <img [src]="demande.photos[0].url" [alt]="demande.photos[0].nom" />
+        </div>
+        <div class="demande-info">
+          <div class="demande-header">
+            <h3>{{ demande.category || 'Demande' }}</h3>
+            <span class="badge badge-success">Terminée</span>
+          </div>
+          <p class="demande-description">{{ demande.description }}</p>
+          <div class="demande-meta">
+            <span class="meta-item">
+              <i class="icon-calendar"></i>
+              {{ demande.dateSoumission | date:'dd/MM/yyyy' }}
+            </span>
+            <span *ngIf="demande.localisation?.address" class="meta-item">
+              <i class="icon-location"></i>
+              {{ demande.localisation?.address }}
+            </span>
+          </div>
+          <a [routerLink]="['/demande', demande.id]" class="btn btn-primary">
+            Voir détails >
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 elBaladiya.tn - Tous droits réservés</p>
+    </div>
+  </footer>
+</div>
+

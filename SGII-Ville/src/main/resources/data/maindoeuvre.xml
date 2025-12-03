@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <MainDOeuvre xmlns="http://example.com/gestion-interventions">
-                                    
+                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -9,7 +27,25 @@
     
     
     <!-- Main d'oeuvre vide - Prêt pour de nouvelles instances -->
-                                
+                                                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -22,157 +58,607 @@
     
     
     <MainDOeuvre>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <id>1</id>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <nom>salh</nom>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <prenom>ali</prenom>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <matricule>00000</matricule>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <cin>00000000</cin>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <telephone>00000000</telephone>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <email>salh@gmail.com</email>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <metier>electricien</metier>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <disponibilite>ARCHIVE</disponibilite>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <active>false</active>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <competences>
-                                                                        
+                                                                                                                                                                                                                                                                                                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
             
             <competence>Électricité</competence>
-                                                                        
+                                                                                                                                                                                                                                                                                                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
             
             <competence>Hydraulique</competence>
-                                                                        
+                                                                                                                                                                                                                                                                                                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
             
             <competence>Plomberie</competence>
-                                                                        
+                                                                                                                                                                                                                                                                                                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
             
             <competence>Maçonnerie</competence>
-                                                                        
+                                                                                                                                                                                                                                                                                                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
             
             <competence>Électricité</competence>
-                                                                        
+                                                                                                                                                                                                                                                                                                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
             
             <competence>Mécanique</competence>
-                                                                    
+                                                                                                                                                                                                                                                                                            
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         </competences>
-                                                
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         <habilitations>
-                                                                        
+                                                                                                                                                                                                                                                                                                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
             
             <habilitation>Électrique</habilitation>
-                                                                        
+                                                                                                                                                                                                                                                                                                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
             
             <habilitation>CACES</habilitation>
-                                                                        
+                                                                                                                                                                                                                                                                                                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
             
             <habilitation>Électrique</habilitation>
-                                                                        
+                                                                                                                                                                                                                                                                                                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
             
             <habilitation>Habilitation H0</habilitation>
-                                                                    
+                                                                                                                                                                                                                                                                                            
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         
         </habilitations>
-                                            
+                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
     
     </MainDOeuvre>
-                    
+                                                                                            
     
     
     
@@ -181,111 +667,2249 @@
 
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <MainDOeuvre>
-                        
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         <id>3</id>
-                        
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         <nom>ahmed</nom>
-                        
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         <prenom>ahmed</prenom>
-                        
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         <matricule>00000</matricule>
-                        
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         <cin>00000000</cin>
-                        
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         <telephone>00000000</telephone>
-                        
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         <email>ahmed@gmail.com</email>
-                        
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         <metier>electricien</metier>
-                        
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         <disponibilite>OCCUPE</disponibilite>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <active>true</active>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <competences>
+                                                                                                                                                                                                                                                            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Hydraulique</competence>
+                                                                                                                                                                                                                                                            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Mécanique</competence>
+                                                                                                                                                                                                                                                            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Plomberie</competence>
+                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </competences>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <habilitations>
+                                                                                                                                                                                                                                                            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <habilitation>CACES</habilitation>
+                                                                                                                                                                                                                                                            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <habilitation>Électrique</habilitation>
+                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </habilitations>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <historiqueInterventions>
+                                                                                                                                                                                                                                                            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <interventionId>1</interventionId>
+                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </historiqueInterventions>
+                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </MainDOeuvre>
+                                                                                
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <MainDOeuvre>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>2</id>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>foulen</nom>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <prenom>ben falten</prenom>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <matricule>00000</matricule>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <cin>00000000</cin>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>00000000</telephone>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>foulen@gmail.com</email>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <metier>electricien</metier>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <disponibilite>OCCUPE</disponibilite>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <active>true</active>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <competences>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Électricité</competence>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Mécanique</competence>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Électricité</competence>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Hydraulique</competence>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Plomberie</competence>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Maçonnerie</competence>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Électricité</competence>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Mécanique</competence>
+                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </competences>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <habilitations>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <habilitation>Électrique</habilitation>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <habilitation>Habilitation H0</habilitation>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <habilitation>Électrique</habilitation>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <habilitation>CACES</habilitation>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <habilitation>Électrique</habilitation>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <habilitation>Habilitation H0</habilitation>
+                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </habilitations>
+                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <historiqueInterventions>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <interventionId>1</interventionId>
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <interventionId>3</interventionId>
+                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </historiqueInterventions>
+                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </MainDOeuvre>
+                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <MainDOeuvre>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>4</id>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>eyaboussarsar</nom>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <prenom>eyaboussarsar@gmail.com</prenom>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <matricule>eyaboussarsar@gmail.com</matricule>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <cin>525841</cin>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>53176236</telephone>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>eyaboussarsar@gmail.com</email>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <metier>plombier</metier>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <disponibilite>LIBRE</disponibilite>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <active>true</active>
+                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </MainDOeuvre>
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <MainDOeuvre>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>5</id>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>eya boussarsar</nom>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <prenom>eyaaaaa</prenom>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <matricule>425865</matricule>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <cin>114585044</cin>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>53176236</telephone>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>eya3boussarsar@gmail.com</email>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <metier>plombier</metier>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <disponibilite>LIBRE</disponibilite>
+                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <active>true</active>
+                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </MainDOeuvre>
+                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                                        
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <MainDOeuvre>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>7</id>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <nom>omar</nom>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <prenom>omar</prenom>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <matricule>00000</matricule>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <cin>00000000</cin>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>00000000</telephone>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <email>omar@gmail.com</email>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <metier>electricien</metier>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <disponibilite>OCCUPE</disponibilite>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <active>true</active>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <competences>
+                                                                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Hydraulique</competence>
+                                                                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Électricité</competence>
+                                                                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Mécanique</competence>
+                                                                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <competence>Plomberie</competence>
+                                                                                                                                                                    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </competences>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <habilitations>
+                                                                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <habilitation>Électrique</habilitation>
+                                                                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <habilitation>CACES</habilitation>
+                                                                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <habilitation>Habilitation H0</habilitation>
+                                                                                                                                                                    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </habilitations>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <historiqueInterventions>
+                                                                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <interventionId>3</interventionId>
+                                                                                                                                                                    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        </historiqueInterventions>
+                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </MainDOeuvre>
+                                                    
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    <MainDOeuvre>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <id>8</id>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <nom>rayen</nom>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <prenom>rayen</prenom>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <matricule>00000</matricule>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <cin>00000000</cin>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <telephone>00000000</telephone>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <email>rayen@gmail.com</email>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <metier>electricien</metier>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <disponibilite>DISPONIBLE</disponibilite>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <active>true</active>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <historiqueInterventions>
+                                                                                                            
+            
+            
+            
+            
+            
+            
+            
+            <interventionId>3</interventionId>
+                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        </historiqueInterventions>
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    </MainDOeuvre>
+                                
+    
+
+    
+
+    
+    
+    
+    
+    
+                
+    
+
+    
+    
+    
+    <MainDOeuvre>
+                                
+        
+        
+        <id>6</id>
+                                
+        
+        
+        <nom>eya bousbous</nom>
+                                
+        
+        
+        <prenom>bousarsar</prenom>
+                                
+        
+        
+        <matricule>14582</matricule>
+                                
+        
+        
+        <cin>11475824</cin>
+                                
+        
+        
+        <telephone>258639741</telephone>
+                                
+        
+        
+        <email>eyabousbous@gmail.com</email>
+                                
+        
+        
+        <metier>plombier</metier>
+                                
+        
+        
+        <disponibilite>DISPONIBLE</disponibilite>
+                                
+        
+        
+        <active>false</active>
+                            
+    
+    
+    </MainDOeuvre>
+            
+    
+    
+    <MainDOeuvre>
+                        
+        
+        <id>10</id>
+                        
+        
+        <nom>eyadmk</nom>
+                        
+        
+        <prenom>eyadmk</prenom>
+                        
+        
+        <matricule>11167567</matricule>
+                        
+        
+        <cin>11167567</cin>
+                        
+        
+        <telephone>29733006</telephone>
+                        
+        
+        <email>eyadmk.ig@gmail.com</email>
+                        
+        
+        <metier>electricité</metier>
+                        
+        
+        <disponibilite>LIBRE</disponibilite>
                         
         
         <active>true</active>
-                        
-        
-        <competences>
-                                    
-            
-            <competence>Hydraulique</competence>
-                                    
-            
-            <competence>Mécanique</competence>
-                                    
-            
-            <competence>Plomberie</competence>
-                                
-        
-        </competences>
-                        
-        
-        <habilitations>
-                                    
-            
-            <habilitation>CACES</habilitation>
-                                    
-            
-            <habilitation>Électrique</habilitation>
-                                
-        
-        </habilitations>
-                        
-        
-        <historiqueInterventions>
-                                    
-            
-            <interventionId>1</interventionId>
-                                
-        
-        </historiqueInterventions>
                     
     
     </MainDOeuvre>
         
     
-
     <MainDOeuvre>
-        <id>2</id>
-        <nom>foulen</nom>
-        <prenom>ben falten</prenom>
+                
+        <id>11</id>
+                
+        <nom>agent1</nom>
+                
+        <prenom>agent1</prenom>
+                
+        <matricule>11167567</matricule>
+                
+        <cin>11167567</cin>
+                
+        <telephone>29733006</telephone>
+                
+        <email>agent1@gmail.com</email>
+                
+        <metier>electricité</metier>
+                
+        <disponibilite>LIBRE</disponibilite>
+                
+        <active>true</active>
+            
+    </MainDOeuvre>
+    
+    <MainDOeuvre>
+        <id>9</id>
+        <nom>monica</nom>
+        <prenom>monica</prenom>
         <matricule>00000</matricule>
         <cin>00000000</cin>
         <telephone>00000000</telephone>
-        <email>foulen@gmail.com</email>
+        <email>monica@gmail.com</email>
         <metier>electricien</metier>
         <disponibilite>OCCUPE</disponibilite>
         <active>true</active>
         <competences>
-            <competence>Électricité</competence>
             <competence>Mécanique</competence>
-            <competence>Électricité</competence>
             <competence>Hydraulique</competence>
-            <competence>Plomberie</competence>
-            <competence>Maçonnerie</competence>
             <competence>Électricité</competence>
-            <competence>Mécanique</competence>
         </competences>
         <habilitations>
             <habilitation>Électrique</habilitation>
-            <habilitation>Habilitation H0</habilitation>
-            <habilitation>Électrique</habilitation>
-            <habilitation>CACES</habilitation>
-            <habilitation>Électrique</habilitation>
-            <habilitation>Habilitation H0</habilitation>
+            <habilitation>Habilitation H1</habilitation>
         </habilitations>
         <historiqueInterventions>
-            <interventionId>1</interventionId>
             <interventionId>3</interventionId>
+            <interventionId>4</interventionId>
         </historiqueInterventions>
     </MainDOeuvre>
 </MainDOeuvre>

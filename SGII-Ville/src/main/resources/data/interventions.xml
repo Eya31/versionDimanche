@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Interventions xmlns="http://example.com/gestion-interventions">
-                                        
+                                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -10,7 +20,7 @@
     
     
     <!-- Interventions vides - Prêt pour de nouvelles instances -->
-                                    
+                                                                            
     
 
     
@@ -26,100 +36,355 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <Intervention>
-                                        
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         <id>2</id>
-                                        
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         <priorite>PLANIFIEE</priorite>
-                                        
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         <etat>EN_ATTENTE</etat>
-                                        
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         <datePlanifiee>2025-12-06</datePlanifiee>
-                                        
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         <budget>800.00</budget>
-                                        
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         <technicienId>0</technicienId>
-                                        
+                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
         <demandeId>2</demandeId>
-                                    
+                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
     </Intervention>
-                
+                                                        
     
     
     
         
 
     
-    <Intervention>
-                
-        <id>1</id>
-                
-        <description>fce fvefdv efvev</description>
-                
-        <typeIntervention>Eau &amp; Assainissement</typeIntervention>
-                
-        <priorite>PLANIFIEE</priorite>
-                
-        <etat>TERMINEE</etat>
-                
-        <datePlanifiee>2025-11-26</datePlanifiee>
-                
-        <dateDebut>2025-11-26</dateDebut>
-                
-        <dateFin>2025-11-28</dateFin>
-                
-        <budget>500</budget>
-                
-        <technicienId>4</technicienId>
-                
-        <demandeId>1</demandeId>
-                
-        <chefServiceId>0</chefServiceId>
-                
-        <commentaire/>
-                
-        <ouvrierIds>
-                        
-            <ouvrierId>3</ouvrierId>
+    
+    
+    
+    
+    
                     
-        </ouvrierIds>
-            
-    </Intervention>
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
     
     <Intervention>
+                                                        
+        
+        
+        
+        
+        
         <id>3</id>
+                                                        
+        
+        
+        
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                                        
+        
+        
+        
+        
+        
+        <etat>EN_COURS</etat>
+                                                        
+        
+        
+        
+        
+        
+        <datePlanifiee>2025-12-06</datePlanifiee>
+                                                        
+        
+        
+        
+        
+        
+        <budget>800.00</budget>
+                                                        
+        
+        
+        
+        
+        
+        <technicienId>4</technicienId>
+                                                        
+        
+        
+        
+        
+        
+        <demandeId>3</demandeId>
+                                                        
+        
+        
+        
+        
+        
+        <ouvrierIds>
+                                                                                    
+            
+            
+            
+            
+            
+            <ouvrierId>2</ouvrierId>
+                                                                                    
+            
+            
+            
+            
+            
+            <ouvrierId>7</ouvrierId>
+                                                                                    
+            
+            
+            
+            
+            
+            <ouvrierId>8</ouvrierId>
+                                                                                    
+            
+            
+            
+            
+            
+            <ouvrierId>9</ouvrierId>
+                                                                                
+        
+        
+        
+        
+        
+        </ouvrierIds>
+                                                    
+    
+    
+    
+    
+    
+    </Intervention>
+                        
+    
+
+    
+
+    
+    
+    
+    <Intervention>
+                                
+        
+        
+        <id>1</id>
+                                
+        
+        
+        <description>fce fvefdv efvev</description>
+                                
+        
+        
+        <typeIntervention>Eau &amp; Assainissement</typeIntervention>
+                                
+        
+        
+        <priorite>PLANIFIEE</priorite>
+                                
+        
+        
+        <etat>TERMINEE</etat>
+                                
+        
+        
+        <datePlanifiee>2025-11-26</datePlanifiee>
+                                
+        
+        
+        <dateDebut>2025-11-26</dateDebut>
+                                
+        
+        
+        <dateFin>2025-11-30</dateFin>
+                                
+        
+        
+        <budget>500</budget>
+                                
+        
+        
+        <technicienId>4</technicienId>
+                                
+        
+        
+        <demandeId>1</demandeId>
+                                
+        
+        
+        <chefServiceId>0</chefServiceId>
+                                
+        
+        
+        <commentaire/>
+                                
+        
+        
+        <ouvrierIds>
+                                                
+            
+            
+            <ouvrierId>3</ouvrierId>
+                                            
+        
+        
+        </ouvrierIds>
+                            
+    
+    
+    </Intervention>
+            
+    
+    
+    
+
+    <Intervention>
+        <id>4</id>
         <priorite>PLANIFIEE</priorite>
         <etat>EN_COURS</etat>
-        <datePlanifiee>2025-12-06</datePlanifiee>
+        <datePlanifiee>2025-12-08</datePlanifiee>
         <budget>800.00</budget>
         <technicienId>4</technicienId>
-        <demandeId>3</demandeId>
+        <demandeId>4</demandeId>
         <ouvrierIds>
-            <ouvrierId>2</ouvrierId>
+            <ouvrierId>9</ouvrierId>
         </ouvrierIds>
     </Intervention>
 </Interventions>

@@ -1,0 +1,178 @@
+<div class="rapport-final" *ngIf="intervention">
+  <header class="rapport-header">
+    <h1>📄 Rapport Final - Intervention #{{intervention.id}}</h1>
+    <button class="btn-secondary" (click)="retour()">← Retour</button>
+  </header>
+
+  <form class="rapport-form" (ngSubmit)="soumettreRapport()">
+    <!-- Résultat obtenu -->
+    <section class="form-section">
+      <h2>✅ Résultat Obtenu *</h2>
+      <textarea [(ngModel)]="rapport.resultatObtenu" 
+                name="resultatObtenu"
+                required
+                rows="5"
+                placeholder="Décrivez le résultat de l'intervention..."></textarea>
+    </section>
+
+    <!-- Temps total -->
+    <section class="form-section">
+      <h2>⏱️ Temps Total Réalisé</h2>
+      <input type="number" 
+             [(ngModel)]="rapport.tempsTotalMinutes" 
+             name="tempsTotalMinutes"
+             placeholder="Temps en minutes"
+             min="0">
+    </section>
+
+    <!-- Ressources utilisées -->
+    <section class="form-section">
+      <h2>📦 Ressources Utilisées</h2>
+      <div class="add-resource">
+        <input type="number" 
+               [(ngModel)]="nouvelleRessource.ressourceId" 
+               placeholder="ID Ressource">
+        <input type="text" 
+               [(ngModel)]="nouvelleRessource.type" 
+               placeholder="Type">
+        <input type="number" 
+               [(ngModel)]="nouvelleRessource.quantite" 
+               placeholder="Quantité"
+               step="0.01">
+        <input type="text" 
+               [(ngModel)]="nouvelleRessource.reference" 
+               placeholder="Référence">
+        <input type="text" 
+               [(ngModel)]="nouvelleRessource.numeroLot" 
+               placeholder="N° Lot">
+        <button type="button" class="btn-primary" (click)="ajouterRessource()">Ajouter</button>
+      </div>
+      <div class="resources-list">
+        <div *ngFor="let res of rapport.ressourcesUtilisees; let i = index" class="resource-item">
+          <div class="item-info">
+            <strong>Type:</strong>
+            <span>{{res.type}} - Quantité: {{res.quantite}} {{res.reference ? '- Réf: ' + res.reference : ''}} {{res.numeroLot ? '- Lot: ' + res.numeroLot : ''}}</span>
+          </div>
+          <button type="button" class="btn-danger btn-small" (click)="supprimerRessource(i)">🗑️ Supprimer</button>
+        </div>
+        <div *ngIf="rapport.ressourcesUtilisees.length === 0" class="empty-state">
+          <p>Aucune ressource ajoutée</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Équipements utilisés -->
+    <section class="form-section">
+      <h2>⚙️ Équipements Utilisés</h2>
+      <div class="add-equipement">
+        <input type="number" 
+               [(ngModel)]="nouvelEquipement.equipementId" 
+               placeholder="ID Équipement">
+        <input type="text" 
+               [(ngModel)]="nouvelEquipement.type" 
+               placeholder="Type">
+        <input type="text" 
+               [(ngModel)]="nouvelEquipement.reference" 
+               placeholder="Référence">
+        <input type="number" 
+               [(ngModel)]="nouvelEquipement.dureeUtilisationMinutes" 
+               placeholder="Durée (min)">
+        <button type="button" class="btn-primary" (click)="ajouterEquipement()">Ajouter</button>
+      </div>
+      <div class="equipements-list">
+        <div *ngFor="let eq of rapport.equipementsUtilises; let i = index" class="equipement-item">
+          <div class="item-info">
+            <strong>Type:</strong>
+            <span>{{eq.type}} - Durée: {{eq.dureeUtilisationMinutes}} min {{eq.reference ? '- Réf: ' + eq.reference : ''}}</span>
+          </div>
+          <button type="button" class="btn-danger btn-small" (click)="supprimerEquipement(i)">🗑️ Supprimer</button>
+        </div>
+        <div *ngIf="rapport.equipementsUtilises.length === 0" class="empty-state">
+          <p>Aucun équipement ajouté</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problèmes rencontrés -->
+    <section class="form-section">
+      <h2>⚠️ Problèmes Rencontrés</h2>
+      <textarea [(ngModel)]="rapport.problemesRencontres" 
+                name="problemesRencontres"
+                rows="4"
+                placeholder="Décrivez les problèmes rencontrés..."></textarea>
+    </section>
+
+    <!-- Commentaire personnalisé -->
+    <section class="form-section">
+      <h2>💬 Commentaire Personnalisé</h2>
+      <p class="section-hint">Ce commentaire sera inclus dans le rapport PDF final</p>
+      <textarea [(ngModel)]="rapport.commentairePersonnalise" 
+                name="commentairePersonnalise"
+                rows="4"
+                placeholder="Ajoutez un commentaire ou une note personnalisée qui sera inclus dans le rapport..."></textarea>
+    </section>
+
+    <!-- Analyse et Recommandations (optionnel) -->
+    <section class="form-section">
+      <h2>📊 Analyse et Recommandations (Optionnel)</h2>
+      <p class="section-hint">Section dédiée aux interventions critiques - Analyse technique et recommandations pour les futures interventions</p>
+      <textarea [(ngModel)]="rapport.analyseEtRecommandations" 
+                name="analyseEtRecommandations"
+                rows="5"
+                placeholder="Analyse technique, recommandations, retours d'expérience..."></textarea>
+    </section>
+
+    <!-- Photos -->
+    <section class="form-section">
+      <h2>📸 Preuves (Photos)</h2>
+      <input type="file" 
+             multiple 
+             accept="image/*" 
+             (change)="onFileSelected($event)">
+      <p *ngIf="selectedFiles.length > 0">{{selectedFiles.length}} fichier(s) sélectionné(s)</p>
+    </section>
+
+    <!-- Signature -->
+    <section class="form-section">
+      <h2>✍️ Signature Électronique</h2>
+      <input type="text" 
+             [(ngModel)]="rapport.signatureElectronique" 
+             name="signatureElectronique"
+             placeholder="Votre nom pour signature">
+    </section>
+
+    <!-- Aperçu des informations -->
+    <section class="form-section preview-section">
+      <h2>📋 Aperçu du Rapport</h2>
+      <div class="preview-info">
+        <div class="preview-item">
+          <strong>Intervention:</strong>
+          <span>#{{intervention.id}} - {{intervention.description || 'Sans description'}}</span>
+        </div>
+        <div class="preview-item">
+          <strong>Nombre de tâches:</strong>
+          <span>{{taches.length}}</span>
+        </div>
+        <div class="preview-item">
+          <strong>Ressources utilisées:</strong>
+          <span>{{rapport.ressourcesUtilisees.length}}</span>
+        </div>
+        <div class="preview-item">
+          <strong>Équipements utilisés:</strong>
+          <span>{{rapport.equipementsUtilises.length}}</span>
+        </div>
+      </div>
+      <button type="button" class="btn-generate-pdf" (click)="genererPDF()">
+        📄 Générer le PDF
+      </button>
+    </section>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="retour()">Annuler</button>
+      <button type="button" class="btn-preview" (click)="genererPDF()">📄 Prévisualiser PDF</button>
+      <button type="submit" class="btn-success">💾 Soumettre et Clôturer</button>
+    </div>
+  </form>
+</div>
+

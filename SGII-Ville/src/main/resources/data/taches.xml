@@ -1,31 +1,844 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Taches xmlns="http://example.com/gestion-interventions">
+                                                                                            
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                                                                            
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Tache>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>2</id>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <interventionId>3</interventionId>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <libelle>testtttttttt</libelle>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <description>29_11___2025</description>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <mainDOeuvreId>7</mainDOeuvreId>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>VERIFIEE</etat>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateCreation>2025-11-29T22:38:22.039821700</dateCreation>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateDebut>2025-11-29T22:38:57.337174500</dateDebut>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateFin>2025-11-29T22:39:20.711276900</dateFin>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateVerification>2025-11-29T22:40:13.399542200</dateVerification>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <tempsPasseMinutes>0</tempsPasseMinutes>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <commentaireTechnicien/>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <ordre>1</ordre>
+                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <verifiee>true</verifiee>
+                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Tache>
+                                                                    
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Tache>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>3</id>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <interventionId>3</interventionId>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <libelle>11_06_29_11_2025</libelle>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <mainDOeuvreId>8</mainDOeuvreId>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>VERIFIEE</etat>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateCreation>2025-11-29T23:06:13.598823500</dateCreation>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateDebut>2025-11-29T23:06:35.725383300</dateDebut>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateFin>2025-11-29T23:07:50.700911300</dateFin>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateVerification>2025-11-29T23:08:23.683382700</dateVerification>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <tempsPasseMinutes>0</tempsPasseMinutes>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <commentaireTechnicien/>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <ordre>2</ordre>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <verifiee>true</verifiee>
+                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Tache>
+                                                    
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Tache>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>4</id>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <interventionId>3</interventionId>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <libelle>11_29_29_11_2025</libelle>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <mainDOeuvreId>8</mainDOeuvreId>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>VERIFIEE</etat>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateCreation>2025-11-29T23:29:53.374604600</dateCreation>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateDebut>2025-11-29T23:30:17.656034600</dateDebut>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateFin>2025-11-29T23:31:17.049450400</dateFin>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateVerification>2025-11-29T23:31:48.152190400</dateVerification>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <tempsPasseMinutes>0</tempsPasseMinutes>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <commentaireTechnicien/>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <ordre>3</ordre>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <verifiee>true</verifiee>
+                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    </Tache>
+                                    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <Tache>
+                        
+        
+        <id>5</id>
+                        
+        
+        <interventionId>3</interventionId>
+                        
+        
+        <libelle>tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt</libelle>
+                        
+        
+        <mainDOeuvreId>9</mainDOeuvreId>
+                        
+        
+        <etat>VERIFIEE</etat>
+                        
+        
+        <dateCreation>2025-11-29T23:40:57.109074</dateCreation>
+                        
+        
+        <dateDebut>2025-11-29T23:43:17.640594900</dateDebut>
+                        
+        
+        <dateFin>2025-11-29T23:43:22.183618</dateFin>
+                        
+        
+        <dateVerification>2025-11-29T23:43:47.770373800</dateVerification>
+                        
+        
+        <tempsPasseMinutes>0</tempsPasseMinutes>
+                        
+        
+        <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
+                        
+        
+        <commentaireTechnicien/>
+                        
+        
+        <ordre>4</ordre>
+                        
+        
+        <verifiee>true</verifiee>
                     
     
+    </Tache>
+        
     
-    
-    <!-- Tâches vides - Prêt pour de nouvelles instances -->
-                
-    
-
-    
-
-    
-
     <Tache>
+                
         <id>1</id>
+                
         <interventionId>1</interventionId>
-        <libelle>testttttttttttttttttttttttttt00000</libelle>
-        <description>hhhhhhh</description>
-        <mainDOeuvreId>2</mainDOeuvreId>
+                
+        <libelle>Réparation du système électrique</libelle>
+                
+        <description>Remplacer les câbles défectueux et installer de nouveaux disjoncteurs</description>
+                
+        <mainDOeuvreId>6</mainDOeuvreId>
+                
         <etat>VERIFIEE</etat>
-        <dateCreation>2025-11-28T23:01:35.749707300</dateCreation>
-        <dateDebut>2025-11-28T23:04:32.410020300</dateDebut>
-        <dateFin>2025-11-28T23:04:53.195928600</dateFin>
-        <dateVerification>2025-11-28T23:05:30.001553200</dateVerification>
-        <commentaireMainDOeuvre/>
+                
+        <dateCreation>2025-01-15T10:00</dateCreation>
+                
+        <dateDebut>2025-01-15T14:00</dateDebut>
+                
+        <dateFin>2025-11-29T21:35:35.396831100</dateFin>
+                
+        <dateVerification>2025-11-30T01:09:45.345116900</dateVerification>
+                
+        <tempsPasseMinutes>10</tempsPasseMinutes>
+                
+        <commentaireMainDOeuvre>jdshcbjsej</commentaireMainDOeuvre>
+                
         <commentaireTechnicien/>
+                
         <ordre>1</ordre>
+                
         <verifiee>true</verifiee>
+            
+    </Tache>
+    
+    <Tache>
+        <id>6</id>
+        <interventionId>4</interventionId>
+        <libelle>rfrege ergreg</libelle>
+        <description>ergerg greger</description>
+        <mainDOeuvreId>9</mainDOeuvreId>
+        <etat>A_FAIRE</etat>
+        <dateCreation>2025-12-01T10:40:28.525773</dateCreation>
+        <ordre>1</ordre>
+        <verifiee>false</verifiee>
     </Tache>
 </Taches>

@@ -59,6 +59,25 @@ public class InterventionXmlService {
         return null;
     }
 
+    public Intervention findByDemandeId(int demandeId) {
+        try {
+            Document doc = xmlService.loadXmlDocument("Interventions");
+            NodeList nodes = doc.getElementsByTagNameNS(xmlService.getNamespaceUri(), "Intervention");
+
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Element el = (Element) nodes.item(i);
+                String demandeIdStr = xmlService.getElementTextContent(el, "demandeId");
+                if (demandeIdStr != null && Integer.parseInt(demandeIdStr) == demandeId) {
+                    return parseIntervention(el);
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error("Erreur lors de la recherche de l'intervention pour demande {}", demandeId, e);
+        }
+        return null;
+    }
+
     public Intervention planifierDemande(int demandeId) {
         try {
             logger.info("=== DÉBUT PLANIFICATION DEMANDE #{} ===", demandeId);

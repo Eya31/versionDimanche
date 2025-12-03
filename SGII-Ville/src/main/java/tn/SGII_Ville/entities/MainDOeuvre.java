@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainDOeuvre {
+import tn.SGII_Ville.model.enums.RoleType;
+
+public class MainDOeuvre extends Utilisateur{
     private int id;
     private String nom;
     private String prenom;
@@ -22,6 +24,7 @@ public class MainDOeuvre {
     private String disponibilite; // "DISPONIBLE", "OCCUPE", "CONFLIT", "EN_CONGE", "ABSENT", "HORS_HABILITATION"
     private boolean active = true;
     private String photoPath; // Nouveau: chemin vers la photo
+    private List<Intervention> historiqueInterventions; // Historique des interventions réalisées
     
     // Disponibilités (jours travaillés)
     private Map<String, String> horairesTravail = new HashMap<>(); // "LUNDI" -> "08:00-17:00"
@@ -37,15 +40,18 @@ public class MainDOeuvre {
         this.habilitations = new ArrayList<>();
     }
 
-    public MainDOeuvre(int id, String nom, String prenom, String matricule, String cin, String telephone) {
-        this();
-        this.id = id;
-        this.nom = nom;
+    public MainDOeuvre(int id, String nom, String email, String motDePasse, 
+                      String prenom, String matricule, String cin, String telephone) {
+        super(id, nom, email, motDePasse, RoleType.MAIN_DOEUVRE);
         this.prenom = prenom;
         this.matricule = matricule;
         this.cin = cin;
         this.telephone = telephone;
-        this.disponibilite = "DISPONIBLE";
+        this.disponibilite = "LIBRE";
+        this.active = true;
+        this.competences = new ArrayList<>();
+        this.habilitations = new ArrayList<>();
+        this.historiqueInterventions = new ArrayList<>();
     }
 
     // Getters et Setters

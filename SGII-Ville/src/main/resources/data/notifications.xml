@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Notifications xmlns="http://example.com/gestion-interventions">
-                                                                                    
+                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -21,6 +49,6341 @@
     
     
     <!-- Notifications vides - Prêt pour de nouvelles instances -->
+                                                                                                                                                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>1</idNotification>
+                                                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>&#128295; Nouvelle intervention #1 assignée pour la demande #1. Veuillez consulter vos interventions.</message>
+                                                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-26T02:37:03.236873</createdAt>
+                                                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>2</idNotification>
+                                                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>✅ Votre demande #1 a été acceptée ! Intervention #1 en cours.</message>
+                                                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-26T02:37:03.238938</createdAt>
+                                                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>1</userId>
+                                                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>3</idNotification>
+                                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Nouvelle main-d'œuvre créée : salh ali - Email: salh@gmail.com - Mot de passe par défaut: 00000</message>
+                                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T22:40:11.7869502</createdAt>
+                                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>4</idNotification>
+                                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Nouvelle main-d'œuvre créée : foulen ben falten - Email: foulen@gmail.com - Mot de passe par défaut: 00000</message>
+                                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T22:48:41.3873872</createdAt>
+                                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>true</readable>
+                                                                                                                                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>5</idNotification>
+                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Main-d'œuvre affectée à l'intervention #1</message>
+                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T22:58:42.8787391</createdAt>
+                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>6</idNotification>
+                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Nouvelle tâche créée pour l'intervention #1 : testttttttttttttttttttttttttt00000</message>
+                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:01:35.7576666</createdAt>
+                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                                                        
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>7</idNotification>
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>La main-d'œuvre foulen ben falten a commencé la tâche "testttttttttttttttttttttttttt00000" (Intervention #1)</message>
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:04:32.4174961</createdAt>
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>8</idNotification>
+                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Tâche "testttttttttttttttttttttttttt00000" commencée par foulen ben falten</message>
+                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:04:32.4199628</createdAt>
+                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>9</idNotification>
+                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>La main-d'œuvre foulen ben falten a terminé la tâche "testttttttttttttttttttttttttt00000" (Intervention #1). Veuillez vérifier.</message>
+                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:04:53.200036</createdAt>
+                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>10</idNotification>
+                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Tâche "testttttttttttttttttttttttttt00000" terminée par foulen ben falten (Intervention #1)</message>
+                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:04:53.2010452</createdAt>
+                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>11</idNotification>
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Votre tâche "testttttttttttttttttttttttttt00000" a été vérifiée et validée par le technicien.</message>
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:05:30.0075536</createdAt>
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>7</userId>
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>12</idNotification>
+                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Tâche "testttttttttttttttttttttttttt00000" vérifiée (Intervention #1)</message>
+                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:05:30.0130744</createdAt>
+                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>13</idNotification>
+                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Intervention #1 terminée et vérifiée par le technicien</message>
+                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:05:41.3992909</createdAt>
+                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>14</idNotification>
+                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Votre demande #1 a été traitée avec succès ! Intervention #1 terminée.</message>
+                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:05:41.3992909</createdAt>
+                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>1</userId>
+                                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>15</idNotification>
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Nouvelle main-d'œuvre créée : ahmed ahmed - Email: ahmed@gmail.com - Mot de passe par défaut: 00000</message>
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:31:23.8705676</createdAt>
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>16</idNotification>
+                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Main-d'œuvre affectée à l'intervention #1</message>
+                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-28T23:40:57.8588561</createdAt>
+                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>17</idNotification>
+                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>✅ Votre demande #2 a été acceptée ! Intervention #2 en cours.</message>
+                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-29T15:25:26.97664</createdAt>
+                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>9</userId>
+                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>18</idNotification>
+                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>✅ Votre demande #3 a été acceptée ! Intervention #3 en cours.</message>
+                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-29T15:49:49.955456</createdAt>
+                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>9</userId>
+                                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>19</idNotification>
+                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Main-d'œuvre désaffectée de l'intervention #1</message>
+                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-29T15:52:09.054619</createdAt>
+                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>20</idNotification>
+                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>La main-d'œuvre eya bousbous bousarsar a changé l'état de la tâche "Réparation du système électrique" à TERMINEE (Intervention #1)</message>
+                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-29T21:35:35.4185766</createdAt>
+                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>21</idNotification>
+                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>La main-d'œuvre eya bousbous bousarsar a changé l'état de la tâche "Réparation du système électrique" à TERMINEE (Intervention #1)</message>
+                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-29T21:35:35.4255807</createdAt>
+                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>0</userId>
+                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>22</idNotification>
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Nouvelle main-d'œuvre créée : omar omar - Email: omar@gmail.com - Mot de passe par défaut: 00000</message>
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-29T22:37:36.5745567</createdAt>
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>23</idNotification>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>La main-d'œuvre omar omar a changé l'état de la tâche "testtttttttt" à EN_COURS (Intervention #3)</message>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-29T22:38:57.3479339</createdAt>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                                
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>24</idNotification>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>La main-d'œuvre omar omar a changé l'état de la tâche "testtttttttt" à TERMINEE (Intervention #3)</message>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-29T22:39:20.7146358</createdAt>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>true</readable>
+                                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                            
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>25</idNotification>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Votre tâche "testtttttttt" a été vérifiée et validée par le technicien.</message>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-29T22:40:13.4088352</createdAt>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>36</userId>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>26</idNotification>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Nouvelle main-d'œuvre créée : rayen rayen - Email: rayen@gmail.com - Mot de passe par défaut: 00000</message>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-29T23:05:42.3525916</createdAt>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
                                                                                 
     
     
@@ -61,7 +6424,7 @@
         
         
         
-        <idNotification>1</idNotification>
+        <idNotification>27</idNotification>
                                                                                                                                                                 
         
         
@@ -81,7 +6444,7 @@
         
         
         
-        <message>&#128295; Nouvelle intervention #1 assignée pour la demande #1. Veuillez consulter vos interventions.</message>
+        <message>La main-d'œuvre rayen rayen a changé l'état de la tâche "11_06_29_11_2025" à EN_COURS (Intervention #3)</message>
                                                                                                                                                                 
         
         
@@ -101,7 +6464,7 @@
         
         
         
-        <createdAt>2025-11-26T02:37:03.236873</createdAt>
+        <createdAt>2025-11-29T23:06:35.7379971</createdAt>
                                                                                                                                                                 
         
         
@@ -200,7 +6563,7 @@
         
         
         
-        <idNotification>2</idNotification>
+        <idNotification>28</idNotification>
                                                                                                                                                         
         
         
@@ -219,7 +6582,7 @@
         
         
         
-        <message>✅ Votre demande #1 a été acceptée ! Intervention #1 en cours.</message>
+        <message>La main-d'œuvre rayen rayen a changé l'état de la tâche "11_06_29_11_2025" à TERMINEE (Intervention #3)</message>
                                                                                                                                                         
         
         
@@ -238,7 +6601,7 @@
         
         
         
-        <createdAt>2025-11-26T02:37:03.238938</createdAt>
+        <createdAt>2025-11-29T23:07:50.7049225</createdAt>
                                                                                                                                                         
         
         
@@ -257,7 +6620,7 @@
         
         
         
-        <userId>1</userId>
+        <userId>4</userId>
                                                                                                                                                         
         
         
@@ -332,7 +6695,7 @@
         
         
         
-        <idNotification>3</idNotification>
+        <idNotification>29</idNotification>
                                                                                                                                                 
         
         
@@ -350,7 +6713,7 @@
         
         
         
-        <message>Nouvelle main-d'œuvre créée : salh ali - Email: salh@gmail.com - Mot de passe par défaut: 00000</message>
+        <message>Votre tâche "11_06_29_11_2025" a été vérifiée et validée par le technicien.</message>
                                                                                                                                                 
         
         
@@ -368,7 +6731,7 @@
         
         
         
-        <createdAt>2025-11-28T22:40:11.7869502</createdAt>
+        <createdAt>2025-11-29T23:08:23.7054134</createdAt>
                                                                                                                                                 
         
         
@@ -386,7 +6749,7 @@
         
         
         
-        <userId>4</userId>
+        <userId>37</userId>
                                                                                                                                                 
         
         
@@ -457,7 +6820,7 @@
         
         
         
-        <idNotification>4</idNotification>
+        <idNotification>30</idNotification>
                                                                                                                                         
         
         
@@ -474,7 +6837,7 @@
         
         
         
-        <message>Nouvelle main-d'œuvre créée : foulen ben falten - Email: foulen@gmail.com - Mot de passe par défaut: 00000</message>
+        <message>La main-d'œuvre rayen rayen a changé l'état de la tâche "11_29_29_11_2025" à EN_COURS (Intervention #3)</message>
                                                                                                                                         
         
         
@@ -491,7 +6854,7 @@
         
         
         
-        <createdAt>2025-11-28T22:48:41.3873872</createdAt>
+        <createdAt>2025-11-29T23:30:17.6570458</createdAt>
                                                                                                                                         
         
         
@@ -525,7 +6888,7 @@
         
         
         
-        <readable>true</readable>
+        <readable>false</readable>
                                                                                                                                     
     
     
@@ -575,7 +6938,7 @@
         
         
         
-        <idNotification>5</idNotification>
+        <idNotification>31</idNotification>
                                                                                                                                 
         
         
@@ -591,7 +6954,7 @@
         
         
         
-        <message>Main-d'œuvre affectée à l'intervention #1</message>
+        <message>La main-d'œuvre rayen rayen a changé l'état de la tâche "11_29_29_11_2025" à TERMINEE (Intervention #3)</message>
                                                                                                                                 
         
         
@@ -607,7 +6970,7 @@
         
         
         
-        <createdAt>2025-11-28T22:58:42.8787391</createdAt>
+        <createdAt>2025-11-29T23:31:17.0532722</createdAt>
                                                                                                                                 
         
         
@@ -623,7 +6986,7 @@
         
         
         
-        <userId>0</userId>
+        <userId>4</userId>
                                                                                                                                 
         
         
@@ -686,7 +7049,7 @@
         
         
         
-        <idNotification>6</idNotification>
+        <idNotification>32</idNotification>
                                                                                                                         
         
         
@@ -701,7 +7064,7 @@
         
         
         
-        <message>Nouvelle tâche créée pour l'intervention #1 : testttttttttttttttttttttttttt00000</message>
+        <message>Votre tâche "11_29_29_11_2025" a été vérifiée et validée par le technicien.</message>
                                                                                                                         
         
         
@@ -716,7 +7079,7 @@
         
         
         
-        <createdAt>2025-11-28T23:01:35.7576666</createdAt>
+        <createdAt>2025-11-29T23:31:48.1693149</createdAt>
                                                                                                                         
         
         
@@ -731,7 +7094,7 @@
         
         
         
-        <userId>0</userId>
+        <userId>37</userId>
                                                                                                                         
         
         
@@ -763,7 +7126,105 @@
     
     </Notification>
                                                         
-
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Notification>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <idNotification>33</idNotification>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <message>Nouvelle main-d'œuvre créée : monica monica - Email: monica@gmail.com - Mot de passe par défaut: 00000</message>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <createdAt>2025-11-29T23:40:29.3102431</createdAt>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <userId>4</userId>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <readable>false</readable>
+                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Notification>
+                                                    
     
     
     
@@ -789,7 +7250,7 @@
         
         
         
-        <idNotification>7</idNotification>
+        <idNotification>34</idNotification>
                                                                                                         
         
         
@@ -802,7 +7263,7 @@
         
         
         
-        <message>La main-d'œuvre foulen ben falten a commencé la tâche "testttttttttttttttttttttttttt00000" (Intervention #1)</message>
+        <message>La main-d'œuvre monica monica a changé l'état de la tâche "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt" à EN_COURS (Intervention #3)</message>
                                                                                                         
         
         
@@ -815,7 +7276,7 @@
         
         
         
-        <createdAt>2025-11-28T23:04:32.4174961</createdAt>
+        <createdAt>2025-11-29T23:41:21.344367</createdAt>
                                                                                                         
         
         
@@ -879,7 +7340,7 @@
         
         
         
-        <idNotification>8</idNotification>
+        <idNotification>35</idNotification>
                                                                                                 
         
         
@@ -891,7 +7352,7 @@
         
         
         
-        <message>Tâche "testttttttttttttttttttttttttt00000" commencée par foulen ben falten</message>
+        <message>La main-d'œuvre monica monica a changé l'état de la tâche "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt" à TERMINEE (Intervention #3)</message>
                                                                                                 
         
         
@@ -903,7 +7364,7 @@
         
         
         
-        <createdAt>2025-11-28T23:04:32.4199628</createdAt>
+        <createdAt>2025-11-29T23:42:13.9870779</createdAt>
                                                                                                 
         
         
@@ -915,7 +7376,7 @@
         
         
         
-        <userId>0</userId>
+        <userId>4</userId>
                                                                                                 
         
         
@@ -962,7 +7423,7 @@
         
         
         
-        <idNotification>9</idNotification>
+        <idNotification>36</idNotification>
                                                                                         
         
         
@@ -973,7 +7434,7 @@
         
         
         
-        <message>La main-d'œuvre foulen ben falten a terminé la tâche "testttttttttttttttttttttttttt00000" (Intervention #1). Veuillez vérifier.</message>
+        <message>Votre tâche "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt" nécessite des corrections. Veuillez la refaire.</message>
                                                                                         
         
         
@@ -984,7 +7445,7 @@
         
         
         
-        <createdAt>2025-11-28T23:04:53.200036</createdAt>
+        <createdAt>2025-11-29T23:42:46.1461264</createdAt>
                                                                                         
         
         
@@ -995,7 +7456,7 @@
         
         
         
-        <userId>4</userId>
+        <userId>38</userId>
                                                                                         
         
         
@@ -1038,7 +7499,7 @@
         
         
         
-        <idNotification>10</idNotification>
+        <idNotification>37</idNotification>
                                                                                 
         
         
@@ -1048,7 +7509,7 @@
         
         
         
-        <message>Tâche "testttttttttttttttttttttttttt00000" terminée par foulen ben falten (Intervention #1)</message>
+        <message>La main-d'œuvre monica monica a changé l'état de la tâche "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt" à EN_COURS (Intervention #3)</message>
                                                                                 
         
         
@@ -1058,7 +7519,7 @@
         
         
         
-        <createdAt>2025-11-28T23:04:53.2010452</createdAt>
+        <createdAt>2025-11-29T23:43:17.645116</createdAt>
                                                                                 
         
         
@@ -1068,7 +7529,7 @@
         
         
         
-        <userId>0</userId>
+        <userId>4</userId>
                                                                                 
         
         
@@ -1107,7 +7568,7 @@
         
         
         
-        <idNotification>11</idNotification>
+        <idNotification>38</idNotification>
                                                                         
         
         
@@ -1116,7 +7577,7 @@
         
         
         
-        <message>Votre tâche "testttttttttttttttttttttttttt00000" a été vérifiée et validée par le technicien.</message>
+        <message>La main-d'œuvre monica monica a changé l'état de la tâche "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt" à TERMINEE (Intervention #3)</message>
                                                                         
         
         
@@ -1125,7 +7586,7 @@
         
         
         
-        <createdAt>2025-11-28T23:05:30.0075536</createdAt>
+        <createdAt>2025-11-29T23:43:22.1940478</createdAt>
                                                                         
         
         
@@ -1134,7 +7595,7 @@
         
         
         
-        <userId>7</userId>
+        <userId>4</userId>
                                                                         
         
         
@@ -1169,7 +7630,7 @@
         
         
         
-        <idNotification>12</idNotification>
+        <idNotification>39</idNotification>
                                                                 
         
         
@@ -1177,7 +7638,7 @@
         
         
         
-        <message>Tâche "testttttttttttttttttttttttttt00000" vérifiée (Intervention #1)</message>
+        <message>Votre tâche "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt" a été vérifiée et validée par le technicien.</message>
                                                                 
         
         
@@ -1185,7 +7646,7 @@
         
         
         
-        <createdAt>2025-11-28T23:05:30.0130744</createdAt>
+        <createdAt>2025-11-29T23:43:47.7854076</createdAt>
                                                                 
         
         
@@ -1193,7 +7654,7 @@
         
         
         
-        <userId>0</userId>
+        <userId>38</userId>
                                                                 
         
         
@@ -1224,28 +7685,28 @@
         
         
         
-        <idNotification>13</idNotification>
+        <idNotification>40</idNotification>
                                                         
         
         
         
         
         
-        <message>Intervention #1 terminée et vérifiée par le technicien</message>
+        <message>Votre tâche "Réparation du système électrique" a été vérifiée et validée par le technicien.</message>
                                                         
         
         
         
         
         
-        <createdAt>2025-11-28T23:05:41.3992909</createdAt>
+        <createdAt>2025-11-30T01:09:45.4342794</createdAt>
                                                         
         
         
         
         
         
-        <userId>0</userId>
+        <userId>35</userId>
                                                         
         
         
@@ -1272,25 +7733,25 @@
         
         
         
-        <idNotification>14</idNotification>
+        <idNotification>41</idNotification>
                                                 
         
         
         
         
-        <message>Votre demande #1 a été traitée avec succès ! Intervention #1 terminée.</message>
+        <message>Tâche "Réparation du système électrique" vérifiée (Intervention #1)</message>
                                                 
         
         
         
         
-        <createdAt>2025-11-28T23:05:41.3992909</createdAt>
+        <createdAt>2025-11-30T01:09:45.462531</createdAt>
                                                 
         
         
         
         
-        <userId>1</userId>
+        <userId>0</userId>
                                                 
         
         
@@ -1313,22 +7774,22 @@
         
         
         
-        <idNotification>15</idNotification>
+        <idNotification>42</idNotification>
                                         
         
         
         
-        <message>Nouvelle main-d'œuvre créée : ahmed ahmed - Email: ahmed@gmail.com - Mot de passe par défaut: 00000</message>
+        <message>Intervention #1 terminée et vérifiée par le technicien</message>
                                         
         
         
         
-        <createdAt>2025-11-28T23:31:23.8705676</createdAt>
+        <createdAt>2025-11-30T01:09:51.6553517</createdAt>
                                         
         
         
         
-        <userId>4</userId>
+        <userId>0</userId>
                                         
         
         
@@ -1347,19 +7808,19 @@
                                 
         
         
-        <idNotification>16</idNotification>
+        <idNotification>43</idNotification>
                                 
         
         
-        <message>Main-d'œuvre affectée à l'intervention #1</message>
+        <message>Votre demande #1 a été traitée avec succès ! Intervention #1 terminée.</message>
                                 
         
         
-        <createdAt>2025-11-28T23:40:57.8588561</createdAt>
+        <createdAt>2025-11-30T01:09:51.6890646</createdAt>
                                 
         
         
-        <userId>0</userId>
+        <userId>1</userId>
                                 
         
         
@@ -1374,16 +7835,16 @@
     <Notification>
                         
         
-        <idNotification>17</idNotification>
+        <idNotification>44</idNotification>
                         
         
-        <message>✅ Votre demande #2 a été acceptée ! Intervention #2 en cours.</message>
+        <message>Intervention #1 terminée et vérifiée par le technicien</message>
                         
         
-        <createdAt>2025-11-29T15:25:26.97664</createdAt>
+        <createdAt>2025-11-30T01:10:05.1170541</createdAt>
                         
         
-        <userId>9</userId>
+        <userId>0</userId>
                         
         
         <readable>false</readable>
@@ -1394,23 +7855,23 @@
     
     <Notification>
                 
-        <idNotification>18</idNotification>
+        <idNotification>45</idNotification>
                 
-        <message>✅ Votre demande #3 a été acceptée ! Intervention #3 en cours.</message>
+        <message>Votre demande #1 a été traitée avec succès ! Intervention #1 terminée.</message>
                 
-        <createdAt>2025-11-29T15:49:49.955456</createdAt>
+        <createdAt>2025-11-30T01:10:05.1248603</createdAt>
                 
-        <userId>9</userId>
+        <userId>1</userId>
                 
         <readable>false</readable>
             
     </Notification>
     
     <Notification>
-        <idNotification>19</idNotification>
-        <message>Main-d'œuvre désaffectée de l'intervention #1</message>
-        <createdAt>2025-11-29T15:52:09.054619</createdAt>
-        <userId>0</userId>
+        <idNotification>46</idNotification>
+        <message>✅ Votre demande #4 a été acceptée ! Intervention #4 en cours.</message>
+        <createdAt>2025-12-01T10:33:42.06416</createdAt>
+        <userId>9</userId>
         <readable>false</readable>
     </Notification>
 </Notifications>

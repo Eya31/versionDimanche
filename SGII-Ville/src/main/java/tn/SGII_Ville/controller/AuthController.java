@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000"})
 public class AuthController {
 
     @Autowired
@@ -31,9 +31,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         try {
+            System.out.println("🔐 Tentative de connexion pour: " + request.getEmail());
             LoginResponse response = authService.login(request);
+            System.out.println("✅ Connexion réussie pour: " + request.getEmail());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            System.err.println("❌ Erreur de connexion pour " + request.getEmail() + ": " + e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(createErrorResponse("Erreur d'authentification", e.getMessage()));
@@ -47,11 +50,14 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
+            System.out.println("📝 Tentative d'inscription pour: " + request.getEmail() + " - Rôle: " + request.getRole());
             LoginResponse response = authService.register(request);
+            System.out.println("✅ Inscription réussie pour: " + request.getEmail());
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(response);
         } catch (Exception e) {
+            System.err.println("❌ Erreur d'inscription pour " + request.getEmail() + ": " + e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(createErrorResponse("Erreur d'enregistrement", e.getMessage()));
