@@ -143,67 +143,17 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="metier">Métier</label>
-                        <input type="text" id="metier" [(ngModel)]="formData.metier" name="metier"
-                            placeholder="Ex: Plombier, Électricien">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Compétences <span class="required">*</span></label>
-                    <div class="competences-input">
-                        <input type="text" [(ngModel)]="competenceInput" [ngModelOptions]="{standalone: true}"
-                            placeholder="Ex: Plomberie" (keyup.enter)="addCompetence()">
-                        <button type="button" class="btn-add-competence" (click)="addCompetence()">
-                            ➕ Ajouter
-                        </button>
-                    </div>
-                    <div class="competences-list">
-                        <span *ngFor="let comp of formData.competences" class="competence-tag">
-                            {{ comp }}
-                            <button type="button" (click)="removeCompetence(comp)">✕</button>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Habilitations</label>
-                    <div class="habilitation-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Nom habilitation</label>
-                                <input type="text" [(ngModel)]="habilitationInput.nom" [ngModelOptions]="{standalone: true}"
-                                    placeholder="Ex: CACES, Électricité">
-                            </div>
-                            <div class="form-group">
-                                <label>Numéro certificat</label>
-                                <input type="text" [(ngModel)]="habilitationInput.numeroCertificat" [ngModelOptions]="{standalone: true}"
-                                    placeholder="Ex: CERT123">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Date d'obtention</label>
-                                <input type="date" [(ngModel)]="habilitationInput.dateObtention" [ngModelOptions]="{standalone: true}">
-                            </div>
-                            <div class="form-group">
-                                <label>Date d'expiration</label>
-                                <input type="date" [(ngModel)]="habilitationInput.dateExpiration" [ngModelOptions]="{standalone: true}">
-                            </div>
-                        </div>
-                        <button type="button" class="btn-add-competence" (click)="addHabilitation()">
-                            ➕ Ajouter habilitation
-                        </button>
-                    </div>
-                    <div class="habilitations-list" *ngIf="formData.habilitations.length > 0">
-                        <div class="habilitation-item" *ngFor="let hab of formData.habilitations; let i = index">
-                            <div class="habilitation-info">
-                                <strong>{{ hab.nom }}</strong>
-                                <span *ngIf="hab.numeroCertificat"> - Cert: {{ hab.numeroCertificat }}</span>
-                                <span *ngIf="hab.dateExpiration"> - Expire: {{ hab.dateExpiration }}</span>
-                            </div>
-                            <button type="button" class="btn-remove" (click)="removeHabilitation(i)">✕</button>
-                        </div>
+                        <label for="competence">Compétence <span class="required">*</span></label>
+                        <select id="competence" [(ngModel)]="formData.competence" name="competence" required>
+                          <option value="">-- Sélectionnez une compétence --</option>
+                          <option value="Électricité">Électricité</option>
+                          <option value="Hydraulique">Hydraulique</option>
+                          <option value="Mécanique">Mécanique</option>
+                          <option value="Plomberie">Plomberie</option>
+                          <option value="Maçonnerie">Maçonnerie</option>
+                          <option value="Peinture">Peinture</option>
+                          <option value="Télécom">Télécom</option>
+                        </select>
                     </div>
                 </div>
             </div>

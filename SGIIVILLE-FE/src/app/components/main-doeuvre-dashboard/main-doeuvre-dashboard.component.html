@@ -7,7 +7,7 @@
       <h1>👷 Tableau de Bord Main d'Œuvre</h1>
       <p class="page-subtitle" *ngIf="profil" aria-live="polite">
         Bienvenue, <strong>{{ profil.nom }} {{ profil.prenom || '' }}</strong>
-        <span *ngIf="profil.metier"> - {{ profil.metier }}</span>
+        <span *ngIf="profil.competence"> - {{ profil.competence }}</span>
       </p>
     </div>
     <nav class="header-actions" aria-label="Actions du header">

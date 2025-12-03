@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
 import { MainDOeuvreService } from '../../../services/main-doeuvre.service';
-import { MainDOeuvre, HabilitationDTO, HistoriqueInterventionDTO } from '../../../models/main-doeuvre.model';
+import { MainDOeuvre } from '../../../models/main-doeuvre.model';
 import { normalizeText } from '../../../utils/string.utils';
 
 @Component({
   selector: 'app-main-doeuvre-gestion',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, DatePipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './main-doeuvre-gestion.component.html',
   styleUrls: ['./main-doeuvre-gestion.component.css']
 })
@@ -24,22 +24,13 @@ export class MainDOeuvreGestionComponent implements OnInit {
   nouveauMainDOeuvre: MainDOeuvre = {
     id: 0,
     nom: '',
+    email: '',
     prenom: '',
     matricule: '',
     cin: '',
     telephone: '',
-    email: '',
-    metier: '',
-    competences: [],
-    habilitations: [],
-    habilitationsExpiration: {},
-    disponibilite: 'DISPONIBLE',
-    active: true,
-    photoPath: '',
-    horairesTravail: {},
-    conges: [],
-    absences: [],
-    historiqueInterventionIds: []
+    disponibilite: 'LIBRE',
+    competence: ''
   };
 
   filtreCompetence = '';
@@ -47,20 +38,14 @@ export class MainDOeuvreGestionComponent implements OnInit {
   recherche = '';
 
   competencesDisponibles = ['Électricité', 'Hydraulique', 'Mécanique', 'Plomberie', 'Maçonnerie', 'Peinture', 'Télécom'];
-  habilitationsDisponibles = ['Électrique', 'CACES', 'Habilitation H0', 'Habilitation H1', 'Habilitation H2', 'Travail en hauteur'];
   
-  // Gestion des habilitations avec dates
-  nouvellesHabilitations: HabilitationDTO[] = [];
-  showHistorique = false;
-  historique: HistoriqueInterventionDTO[] = [];
-  selectedMainDOeuvreForHistorique: MainDOeuvre | null = null;
+  // Les champs suivants ont été supprimés du schéma XSD :
+  // - habilitationsDisponibles
+  // - horairesTravail, conges, absences
+  // - photoPath, metier, active
+  // - historiqueInterventions
   
-  // Horaires de travail
-  joursSemaine = ['LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI', 'DIMANCHE'];
-  
-  // Congés et absences
-  nouveauConge: string = '';
-  nouvelleAbsence: string = '';
+  // Historique supprimé car historiqueInterventions n'est plus dans le schéma XSD
 
   constructor(
     private mainDOeuvreService: MainDOeuvreService,
@@ -117,8 +102,7 @@ export class MainDOeuvreGestionComponent implements OnInit {
         normalizeText(md.nom).includes(rechercheLower) ||
         normalizeText(md.prenom).includes(rechercheLower) ||
         normalizeText(md.matricule).includes(rechercheLower) ||
-        (md.competences || []).some((c: string) => normalizeText(c).includes(rechercheLower)) ||
-        normalizeText(md.metier).includes(rechercheLower);
+        normalizeText(md.competence || '').includes(rechercheLower);
       
       return matchRecherche;
     });
@@ -134,18 +118,9 @@ export class MainDOeuvreGestionComponent implements OnInit {
       cin: '',
       telephone: '',
       email: '',
-      metier: '',
-      competences: [],
-      habilitations: [],
-      habilitationsExpiration: {},
-      disponibilite: 'DISPONIBLE',
-      active: true,
-      horairesTravail: {},
-      conges: [],
-      absences: [],
-      historiqueInterventionIds: []
+      disponibilite: 'LIBRE',
+      competence: ''
     };
-    this.nouvellesHabilitations = [];
   }
 
   editer(mainDOeuvre: MainDOeuvre): void {
@@ -154,14 +129,7 @@ export class MainDOeuvreGestionComponent implements OnInit {
     this.isCreating = false;
     // Créer une copie profonde de l'objet pour éviter les modifications directes
     this.selectedMainDOeuvre = {
-      ...mainDOeuvre,
-      competences: mainDOeuvre.competences ? [...mainDOeuvre.competences] : [],
-      habilitations: mainDOeuvre.habilitations ? [...mainDOeuvre.habilitations] : [],
-      habilitationsExpiration: mainDOeuvre.habilitationsExpiration ? {...mainDOeuvre.habilitationsExpiration} : {},
-      horairesTravail: mainDOeuvre.horairesTravail ? {...mainDOeuvre.horairesTravail} : {},
-      conges: mainDOeuvre.conges ? [...mainDOeuvre.conges] : [],
-      absences: mainDOeuvre.absences ? [...mainDOeuvre.absences] : [],
-      historiqueInterventionIds: mainDOeuvre.historiqueInterventionIds ? [...mainDOeuvre.historiqueInterventionIds] : []
+      ...mainDOeuvre
     };
     this.isEditing = true;
     console.log('✅ Mode édition activé, selectedMainDOeuvre:', this.selectedMainDOeuvre);
@@ -180,8 +148,8 @@ export class MainDOeuvreGestionComponent implements OnInit {
     if (!fiche) return;
 
     // Validation champs obligatoires
-    if (!fiche.nom || !fiche.cin || !fiche.telephone) {
-      alert('⚠️ Veuillez remplir tous les champs obligatoires (Nom, CIN, Téléphone)');
+    if (!fiche.nom || !fiche.prenom || !fiche.matricule || !fiche.cin || !fiche.telephone || !fiche.competence) {
+      alert('⚠️ Veuillez remplir tous les champs obligatoires (Nom, Prénom, Matricule, CIN, Téléphone, Compétence)');
       return;
     }
 
@@ -224,18 +192,9 @@ export class MainDOeuvreGestionComponent implements OnInit {
             cin: '',
             telephone: '',
             email: '',
-            metier: '',
-            competences: [],
-            habilitations: [],
-            habilitationsExpiration: {},
-            disponibilite: 'DISPONIBLE',
-            active: true,
-            horairesTravail: {},
-            conges: [],
-            absences: [],
-            historiqueInterventionIds: []
+            disponibilite: 'LIBRE',
+            competence: ''
           };
-          this.nouvellesHabilitations = [];
           // Attendre un peu avant de recharger pour laisser le temps au backend de sauvegarder
           setTimeout(() => {
             this.loadMainDOeuvre();
@@ -282,163 +241,12 @@ export class MainDOeuvreGestionComponent implements OnInit {
     }
   }
 
-  toggleCompetence(competence: string, isNouveau: boolean = false): void {
-    const target = isNouveau ? this.nouveauMainDOeuvre : this.selectedMainDOeuvre;
-    if (!target) return;
-    
-    if (!target.competences) target.competences = [];
-    const index = target.competences.indexOf(competence);
-    if (index > -1) {
-      target.competences.splice(index, 1);
-    } else {
-      target.competences.push(competence);
-    }
-  }
+  // Les méthodes pour gérer les compétences multiples, habilitations, horaires, congés et absences
+  // ont été supprimées car elles ne font plus partie du schéma XSD
+  // MainDOeuvre a maintenant une seule compétence obligatoire
 
-  toggleHabilitation(habilitation: string, isNouveau: boolean = false): void {
-    const target = isNouveau ? this.nouveauMainDOeuvre : this.selectedMainDOeuvre;
-    if (!target || !habilitation) return;
-    
-    if (!target.habilitations) target.habilitations = [];
-    if (!target.habilitationsExpiration) target.habilitationsExpiration = {};
-    
-    const index = target.habilitations.indexOf(habilitation);
-    if (index > -1) {
-      target.habilitations.splice(index, 1);
-      delete target.habilitationsExpiration[habilitation];
-    } else {
-      target.habilitations.push(habilitation);
-      // Initialiser avec date d'expiration vide
-      target.habilitationsExpiration[habilitation] = '';
-    }
-  }
-
-  updateHabilitationExpiration(habilitation: string, dateExpiration: string, isNouveau: boolean = false): void {
-    const target = isNouveau ? this.nouveauMainDOeuvre : this.selectedMainDOeuvre;
-    if (!target || !target.habilitationsExpiration) return;
-    target.habilitationsExpiration[habilitation] = dateExpiration;
-  }
-
-  getHabilitationExpiration(habilitation: string, isNouveau: boolean = false): string {
-    const target = isNouveau ? this.nouveauMainDOeuvre : this.selectedMainDOeuvre;
-    if (!target || !target.habilitationsExpiration) return '';
-    return target.habilitationsExpiration[habilitation] || '';
-  }
-
-  isHabilitationExpiree(habilitation: string, mainDOeuvre: MainDOeuvre): boolean {
-    if (!mainDOeuvre.habilitationsExpiration || !mainDOeuvre.habilitationsExpiration[habilitation]) {
-      return false;
-    }
-    const dateExp = new Date(mainDOeuvre.habilitationsExpiration[habilitation]);
-    return dateExp < new Date();
-  }
-
-  updateHorairesTravail(jour: string, horaires: string, isNouveau: boolean = false): void {
-    const target = isNouveau ? this.nouveauMainDOeuvre : this.selectedMainDOeuvre;
-    if (!target) return;
-    if (!target.horairesTravail) target.horairesTravail = {};
-    target.horairesTravail[jour] = horaires;
-  }
-
-  getHorairesTravail(jour: string, isNouveau: boolean = false): string {
-    const target = isNouveau ? this.nouveauMainDOeuvre : this.selectedMainDOeuvre;
-    if (!target || !target.horairesTravail) return '';
-    return target.horairesTravail[jour] || '';
-  }
-
-  ajouterConge(isNouveau: boolean = false): void {
-    if (!this.nouveauConge) return;
-    const target = isNouveau ? this.nouveauMainDOeuvre : this.selectedMainDOeuvre;
-    if (!target) return;
-    if (!target.conges) target.conges = [];
-    if (!target.conges.includes(this.nouveauConge)) {
-      target.conges.push(this.nouveauConge);
-      this.nouveauConge = '';
-    }
-  }
-
-  retirerConge(date: string, isNouveau: boolean = false): void {
-    const target = isNouveau ? this.nouveauMainDOeuvre : this.selectedMainDOeuvre;
-    if (!target || !target.conges) return;
-    const index = target.conges.indexOf(date);
-    if (index > -1) {
-      target.conges.splice(index, 1);
-    }
-  }
-
-  ajouterAbsence(isNouveau: boolean = false): void {
-    if (!this.nouvelleAbsence) return;
-    const target = isNouveau ? this.nouveauMainDOeuvre : this.selectedMainDOeuvre;
-    if (!target) return;
-    if (!target.absences) target.absences = [];
-    if (!target.absences.includes(this.nouvelleAbsence)) {
-      target.absences.push(this.nouvelleAbsence);
-      this.nouvelleAbsence = '';
-    }
-  }
-
-  retirerAbsence(date: string, isNouveau: boolean = false): void {
-    const target = isNouveau ? this.nouveauMainDOeuvre : this.selectedMainDOeuvre;
-    if (!target || !target.absences) return;
-    const index = target.absences.indexOf(date);
-    if (index > -1) {
-      target.absences.splice(index, 1);
-    }
-  }
-
-  voirHistorique(mainDOeuvre: MainDOeuvre): void {
-    this.selectedMainDOeuvreForHistorique = mainDOeuvre;
-    this.showHistorique = true;
-    this.mainDOeuvreService.getHistorique(mainDOeuvre.id).subscribe({
-      next: (data: any) => {
-        this.historique = data || [];
-      },
-      error: (err: any) => {
-        console.error('Erreur chargement historique:', err);
-        this.historique = [];
-        alert('Erreur lors du chargement de l\'historique');
-      }
-    });
-  }
-
-  fermerHistorique(): void {
-    this.showHistorique = false;
-    this.selectedMainDOeuvreForHistorique = null;
-    this.historique = [];
-  }
-
-  hasHoraires(horairesTravail?: { [key: string]: string }): boolean {
-    if (!horairesTravail) return false;
-    return Object.keys(horairesTravail).length > 0;
-  }
-
-  calculerTempsTotal(): number {
-    return this.historique.reduce((total, hist) => total + (hist.tempsPasseMinutes || 0), 0);
-  }
-
-  formatTempsTotal(): string {
-    const total = this.calculerTempsTotal();
-    const heures = Math.floor(total / 60);
-    const minutes = total % 60;
-    if (heures > 0) {
-      return `${heures}h ${minutes}min`;
-    }
-    return `${minutes}min`;
-  }
-
-  formatTemps(minutes: number): string {
-    if (!minutes) return '0 min';
-    const heures = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (heures > 0) {
-      return `${heures}h ${mins}min`;
-    }
-    return `${mins}min`;
-  }
-
-  compterTerminees(): number {
-    return this.historique.filter(h => h.etat === 'TERMINEE' || h.resultat === 'Succès').length;
-  }
+  // Méthodes liées à l'historique supprimées car historiqueInterventions n'est plus dans le schéma XSD
+  // voirHistorique, fermerHistorique, calculerTempsTotal, formatTempsTotal, formatTemps, compterTerminees
 
   annuler(): void {
     this.isCreating = false;
@@ -453,31 +261,17 @@ export class MainDOeuvreGestionComponent implements OnInit {
       cin: '',
       telephone: '',
       email: '',
-      metier: '',
-      competences: [],
-      habilitations: [],
-      habilitationsExpiration: {},
-      disponibilite: 'DISPONIBLE',
-      active: true,
-      photoPath: '',
-      horairesTravail: {},
-      conges: [],
-      absences: [],
-      historiqueInterventionIds: []
+      disponibilite: 'LIBRE',
+      competence: ''
     };
   }
 
   getDisponibiliteLabel(disponibilite: string | null | undefined): string {
     if (!disponibilite) return 'Inconnu';
     switch(disponibilite.toUpperCase()) {
-      case 'DISPONIBLE': return 'Disponible';
+      case 'LIBRE': return 'Libre';
       case 'OCCUPE': return 'Occupé';
-      case 'CONFLIT': return 'Conflit d\'horaires';
-      case 'EN_CONGE': return 'En congé';
-      case 'ABSENT': return 'Absent';
-      case 'HORS_HABILITATION': return 'Hors habilitation';
       case 'ARCHIVE': return 'Archivé';
-      case 'DESACTIVE': return 'Désactivé';
       default: return disponibilite || 'Inconnu';
     }
   }
@@ -485,12 +279,8 @@ export class MainDOeuvreGestionComponent implements OnInit {
   getBadgeDisponibiliteClass(disponibilite: string | null | undefined): string {
     if (!disponibilite) return 'badge-secondary';
     switch(disponibilite.toUpperCase()) {
-      case 'DISPONIBLE': return 'badge-success';
+      case 'LIBRE': return 'badge-success';
       case 'OCCUPE': return 'badge-warning';
-      case 'CONFLIT': return 'badge-danger';
-      case 'EN_CONGE': return 'badge-warning';
-      case 'ABSENT': return 'badge-danger';
-      case 'HORS_HABILITATION': return 'badge-secondary';
       case 'ARCHIVE': return 'badge-secondary';
       case 'DESACTIVE': return 'badge-secondary';
       default: return 'badge-secondary';

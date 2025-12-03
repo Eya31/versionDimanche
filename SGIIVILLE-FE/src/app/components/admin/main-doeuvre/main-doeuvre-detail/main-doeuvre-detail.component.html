@@ -45,28 +45,12 @@
             <label>Email</label>
             <span>{{ agent.email }}</span>
           </div>
-          <div class="detail-item" *ngIf="agent.metier">
-            <label>Métier</label>
-            <span>{{ agent.metier }}</span>
-          </div>
         </div>
       </div>
 
       <div class="detail-section">
-        <h3>🔧 Compétences</h3>
-        <p>{{ getCompetencesString(agent.competences) }}</p>
-      </div>
-
-      <div class="detail-section" *ngIf="agent.habilitations && agent.habilitations.length > 0">
-        <h3>📜 Habilitations</h3>
-        <div class="habilitations-list">
-          <div class="habilitation-item" *ngFor="let hab of agent.habilitations">
-            <strong>{{ hab }}</strong>
-            <span *ngIf="agent.habilitationsExpiration && agent.habilitationsExpiration[hab]">
-              - Expire: {{ agent.habilitationsExpiration[hab] | date:'short' }}
-            </span>
-          </div>
-        </div>
+        <h3>🔧 Compétence</h3>
+        <p>{{ getCompetencesString(agent.competence) }}</p>
       </div>
 
       <div class="detail-section">

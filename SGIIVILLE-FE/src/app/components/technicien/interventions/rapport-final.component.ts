@@ -564,8 +564,7 @@ export class RapportFinalComponent implements OnInit {
         doc.setFont('helvetica', 'normal');
         const mdDetails = [
           ['Matricule:', md.matricule || 'Non spécifié'],
-          ['Métier:', md.metier || 'Non spécifié'],
-          ['Compétences mobilisées:', (md.competences && md.competences.length > 0) ? md.competences.join(', ') : 'Aucune'],
+          ['Compétence:', md.competence || 'Aucune'],
           ['Nombre de tâches:', `${entry.taches.length}`],
           ['Durée totale de travail:', this.formatDuree(entry.dureeTotale)]
         ];

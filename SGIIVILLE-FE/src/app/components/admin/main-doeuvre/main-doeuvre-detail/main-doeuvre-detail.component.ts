@@ -105,9 +105,9 @@ export class MainDoeuvreDetailComponent implements OnInit {
     return labels[disponibilite] || disponibilite;
   }
 
-  getCompetencesString(competences: string[]): string {
-    if (!competences || competences.length === 0) return 'Aucune compétence';
-    return competences.join(', ');
+  getCompetencesString(competence: string | undefined): string {
+    if (!competence) return 'Aucune compétence';
+    return competence;
   }
 
   goBack(): void {

@@ -59,8 +59,7 @@
           <p><strong>CIN:</strong> {{ agent.cin }}</p>
           <p><strong>Téléphone:</strong> {{ agent.telephone }}</p>
           <p *ngIf="agent.email"><strong>Email:</strong> {{ agent.email }}</p>
-          <p><strong>Métier:</strong> {{ agent.metier || 'Non spécifié' }}</p>
-          <p><strong>Compétences:</strong> {{ getCompetencesString(agent.competences) }}</p>
+          <p><strong>Compétence:</strong> {{ getCompetencesString(agent.competence) }}</p>
           <p>
             <strong>Disponibilité:</strong>
             <span class="badge" [ngClass]="getDisponibiliteClass(agent.disponibilite)">

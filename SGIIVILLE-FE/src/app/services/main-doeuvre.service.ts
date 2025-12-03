@@ -5,8 +5,7 @@ import { environment } from '../../environments/environment';
 import { 
   MainDOeuvre, 
   CreateMainDOeuvreRequest, 
-  VerificationAffectationDTO,
-  HistoriqueInterventionDTO 
+  VerificationAffectationDTO
 } from '../models/main-doeuvre.model';
 
 @Injectable({
@@ -75,9 +74,14 @@ export class MainDOeuvreService {
 
   /**
    * Obtenir l'historique des interventions d'un agent
+   * @deprecated HistoriqueInterventions supprimé du schéma XSD
    */
-  getHistorique(id: number): Observable<HistoriqueInterventionDTO[]> {
-    return this.http.get<HistoriqueInterventionDTO[]>(`${environment.apiUrl}/technicien/main-doeuvre/${id}/historique`);
+  getHistorique(id: number): Observable<any[]> {
+    // HistoriqueInterventions n'est plus dans le schéma XSD - retourner un tableau vide
+    return new Observable(observer => {
+      observer.next([]);
+      observer.complete();
+    });
   }
 }
 

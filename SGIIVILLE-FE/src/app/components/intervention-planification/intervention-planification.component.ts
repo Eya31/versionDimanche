@@ -28,6 +28,14 @@ export class InterventionPlanificationComponent implements OnInit {
   @Output() planificationComplete = new EventEmitter<any>();
   @Output() cancelled = new EventEmitter<void>();
 
+  // Infos d'intervention
+  intervention: any = {
+    description: '',
+    priorite: 'PLANIFIEE',
+    budget: 500,
+    dateCreation: new Date() // Date d'aujourd'hui par défaut
+  };
+
   // Exigences de l'intervention
   competencesRequises: CompetenceRequise[] = [];
   materielsRequis: MaterielRequis[] = [];
@@ -53,7 +61,7 @@ export class InterventionPlanificationComponent implements OnInit {
   validationEffectuee = false;
 
   // Étape actuelle
-  etapeActuelle: 'exigences' | 'calendrier' | 'selection' | 'confirmation' = 'exigences';
+  etapeActuelle: 'infos' | 'exigences' | 'calendrier' | 'selection' | 'confirmation' = 'infos';
 
   // Date sélectionnée
   dateSelectionnee: string | null = null;
@@ -459,7 +467,12 @@ export class InterventionPlanificationComponent implements OnInit {
       materiels: Array.from(this.materielsSelectionnes.entries()).map(([id, quantite]) => ({
         materielId: id,
         quantite: quantite
-      }))
+      })),
+      // Ajouter les infos d'intervention
+      description: this.intervention.description,
+      priorite: this.intervention.priorite,
+      dateCreation: this.intervention.dateCreation,
+      budget: this.intervention.budget
     };
 
     console.log('Planification complète:', requestPlanification);
@@ -508,6 +521,9 @@ export class InterventionPlanificationComponent implements OnInit {
   // Retour à l'étape précédente
   retourEtape(): void {
     switch (this.etapeActuelle) {
+      case 'exigences':
+        this.etapeActuelle = 'infos';
+        break;
       case 'calendrier':
         this.etapeActuelle = 'exigences';
         this.validationEffectuee = false;
@@ -579,4 +595,25 @@ export class InterventionPlanificationComponent implements OnInit {
   get nombreDatesRouges(): number {
     return this.validationResults.filter(r => r.status === 'ROUGE').length;
   }
+
+  // ====== ÉTAPE INFOS ======
+
+  /**
+   * Valide les informations d'intervention
+   */
+  infosValides(): boolean {
+    return this.intervention.description?.trim().length > 0 &&
+           this.intervention.priorite?.length > 0 &&
+           this.intervention.budget >= 0;
+  }
+
+  /**
+   * Valide et passe à l'étape exigences
+   */
+  validerInfos(): void {
+    if (this.infosValides()) {
+      this.etapeActuelle = 'exigences';
+    }
+  }
 }
+

@@ -186,11 +186,11 @@ export class InterventionDetailComponent implements OnInit {
         
         // Log de débogage : compter les main-d'œuvre DISPONIBLE
         const disponibles = this.mainDOeuvreListe.filter(md => {
-          const disp = (md.disponibilite || 'DISPONIBLE').trim().toUpperCase();
-          return disp === 'DISPONIBLE' && md.active;
+          const disp = (md.disponibilite || 'LIBRE').trim().toUpperCase();
+          return disp === 'LIBRE';
         });
-        console.log(`📊 Main-d'œuvre DISPONIBLE et actives: ${disponibles.length}`, 
-          disponibles.map(md => `${md.nom} ${md.prenom || ''} (ID: ${md.id}, disponibilite: "${md.disponibilite}", active: ${md.active})`));
+        console.log(`📊 Main-d'œuvre LIBRE: ${disponibles.length}`, 
+          disponibles.map(md => `${md.nom} ${md.prenom || ''} (ID: ${md.id}, disponibilite: "${md.disponibilite}")`));
         
         this.filtrerMainDOeuvreDisponible();
       },
@@ -205,37 +205,31 @@ export class InterventionDetailComponent implements OnInit {
   filtrerMainDOeuvreDisponible(): void {
     const rechercheLower = normalizeText(this.rechercheMainDOeuvre);
     this.mainDOeuvreListeFiltree = this.mainDOeuvreListe.filter(md => {
-      // Vérifier que la main-d'œuvre est active
-      if (!md.active) {
-        return false;
-      }
-      
       // Filtrer par recherche (sécurisé)
       const matchRecherche = !rechercheLower || 
         normalizeText(md.nom).includes(rechercheLower) ||
         normalizeText(md.prenom).includes(rechercheLower) ||
         normalizeText(md.matricule).includes(rechercheLower) ||
-        (md.competences || []).some((c: string) => normalizeText(c).includes(rechercheLower));
+        (md.competence ? normalizeText(md.competence).includes(rechercheLower) : false);
       
       // Filtrer par compétence
       const matchCompetence = !this.filtreCompetenceMainDOeuvre ||
-        (md.competences || []).includes(this.filtreCompetenceMainDOeuvre);
+        md.competence === this.filtreCompetenceMainDOeuvre;
       
       // Filtrer par disponibilité
-      // Par défaut, n'inclure QUE DISPONIBLE (pas OCCUPE, EN_CONGE, ABSENT, etc.)
+      // Par défaut, n'inclure QUE LIBRE (pas OCCUPE, ARCHIVE, etc.)
       // Normaliser la comparaison (trim + uppercase pour éviter les problèmes de casse/espaces)
-      const disponibilite = (md.disponibilite || 'DISPONIBLE').trim().toUpperCase();
+      const disponibilite = (md.disponibilite || 'LIBRE').trim().toUpperCase();
       let matchDisponibilite = true;
       if (this.filtreDisponibiliteMainDOeuvre) {
         matchDisponibilite = disponibilite === this.filtreDisponibiliteMainDOeuvre.trim().toUpperCase();
       } else {
-        // Par défaut, n'inclure QUE les main-d'œuvre avec statut DISPONIBLE
-        matchDisponibilite = disponibilite === 'DISPONIBLE';
+        // Par défaut, n'inclure QUE les main-d'œuvre avec statut LIBRE
+        matchDisponibilite = disponibilite === 'LIBRE';
       }
       
-      // Filtrer par habilitation
-      const matchHabilitation = !this.filtreHabilitationMainDOeuvre ||
-        (md.habilitations || []).includes(this.filtreHabilitationMainDOeuvre);
+      // Filtrer par habilitation (supprimé car habilitations n'existe plus dans le modèle)
+      const matchHabilitation = !this.filtreHabilitationMainDOeuvre;
       
       // Exclure ceux déjà assignés à une tâche de cette intervention
       // SAUF si la tâche est vérifiée (VERIFIEE ou verifiee === true)
@@ -249,10 +243,9 @@ export class InterventionDetailComponent implements OnInit {
       
       const result = matchRecherche && matchCompetence && matchDisponibilite && matchHabilitation && !dejaAssignee;
       
-      // Log de débogage pour les main-d'œuvre DISPONIBLE qui ne passent pas le filtre
-      if (disponibilite === 'DISPONIBLE' && !result) {
+      // Log de débogage pour les main-d'œuvre LIBRE qui ne passent pas le filtre
+      if (disponibilite === 'LIBRE' && !result) {
         const raisons = [];
-        if (!md.active) raisons.push('❌ Non active');
         if (!matchRecherche) raisons.push(`❌ Ne correspond pas à la recherche: "${this.rechercheMainDOeuvre}"`);
         if (!matchCompetence) raisons.push(`❌ Ne correspond pas à la compétence: "${this.filtreCompetenceMainDOeuvre}"`);
         if (!matchDisponibilite) raisons.push(`❌ Ne correspond pas à la disponibilité: "${this.filtreDisponibiliteMainDOeuvre}"`);
@@ -266,10 +259,9 @@ export class InterventionDetailComponent implements OnInit {
           raisons.push(`❌ Déjà assignée à ${tachesNonVerifiees.length} tâche(s) non vérifiée(s) de cette intervention`);
         }
         
-        console.log(`⚠️ Main-d'œuvre DISPONIBLE exclue: ${md.nom} ${md.prenom || ''} (ID: ${md.id})`, {
+        console.log(`⚠️ Main-d'œuvre LIBRE exclue: ${md.nom} ${md.prenom || ''} (ID: ${md.id})`, {
           raisons: raisons.length > 0 ? raisons : ['Raison inconnue'],
           details: {
-            active: md.active,
             disponibilite: md.disponibilite,
             matchRecherche,
             matchCompetence,
@@ -293,8 +285,8 @@ export class InterventionDetailComponent implements OnInit {
     });
     
     // Log détaillé pour débogage
-    const disponibles = this.mainDOeuvreListe.filter(md => (md.disponibilite || 'DISPONIBLE').trim().toUpperCase() === 'DISPONIBLE' && md.active);
-    console.log(`🔍 Filtrage: ${this.mainDOeuvreListe.length} main-d'œuvre totales → ${disponibles.length} DISPONIBLE et actives → ${this.mainDOeuvreListeFiltree.length} disponibles après filtrage`);
+    const disponibles = this.mainDOeuvreListe.filter(md => (md.disponibilite || 'LIBRE').trim().toUpperCase() === 'LIBRE');
+    console.log(`🔍 Filtrage: ${this.mainDOeuvreListe.length} main-d'œuvre totales → ${disponibles.length} LIBRE → ${this.mainDOeuvreListeFiltree.length} disponibles après filtrage`);
   }
 
   reinitialiserFiltresMainDOeuvre(): void {
@@ -912,29 +904,43 @@ export class InterventionDetailComponent implements OnInit {
   }
 
   terminerIntervention(): void {
-    if (!this.intervention) return;
-
-    // Vérifier que toutes les tâches sont vérifiées
-    const toutesVerifiees = this.taches.every(t => t.verifiee);
-    if (!toutesVerifiees) {
-      alert('⚠️ Toutes les tâches doivent être vérifiées avant de terminer l\'intervention');
+    if (!this.intervention || this.taches.length === 0) {
+      alert('⚠️ Pas de tâches dans cette intervention');
       return;
     }
 
-    if (!confirm('Êtes-vous sûr de vouloir terminer cette intervention ?\n\nToutes les tâches doivent être vérifiées.')) {
+    // Vérifier que TOUTES les tâches sont terminées ET vérifiées
+    const tachesNonTerminees = this.taches.filter(t => t.etat !== 'TERMINEE' && t.etat !== 'VERIFIEE');
+    const tachesNonVerifiees = this.taches.filter(t => !t.verifiee);
+
+    if (tachesNonTerminees.length > 0) {
+      let message = `❌ Impossible de terminer l'intervention\n\n`;
+      message += `${tachesNonTerminees.length} tâche(s) non terminée(s) :\n`;
+      tachesNonTerminees.forEach(t => {
+        message += `  • "${t.libelle}" - État: ${this.getEtatTacheLabel(t.etat)}\n`;
+      });
+      alert(message);
       return;
     }
 
-    this.tacheService.terminerIntervention(this.intervention.id).subscribe({
-      next: () => {
-        alert('✅ Intervention terminée avec succès !\n\nLe chef de service et le citoyen ont été notifiés.');
-        this.loadIntervention(this.intervention!.id);
-      },
-      error: (err: any) => {
-        console.error('Erreur terminaison intervention:', err);
-        alert('❌ Erreur lors de la terminaison: ' + (err.error?.message || err.message));
-      }
-    });
+    if (tachesNonVerifiees.length > 0) {
+      let message = `❌ Impossible de terminer l'intervention\n\n`;
+      message += `${tachesNonVerifiees.length} tâche(s) non vérifiée(s) :\n`;
+      tachesNonVerifiees.forEach(t => {
+        message += `  • "${t.libelle}"\n`;
+      });
+      message += `\nVeuillez vérifier toutes les tâches avant de terminer.`;
+      alert(message);
+      return;
+    }
+
+    // Toutes les vérifications sont OK
+    if (!confirm('✅ Toutes les tâches sont terminées et vérifiées.\n\nVoulez-vous terminer cette intervention et passer au rapport final ?')) {
+      return;
+    }
+
+    // Rediriger directement vers le rapport
+    this.router.navigate(['/technicien/intervention', this.intervention.id, 'rapport']);
   }
 
   getEtatTacheLabel(etat: string): string {
@@ -981,8 +987,36 @@ export class InterventionDetailComponent implements OnInit {
   }
 
   peutTerminerIntervention(): boolean {
+    // Il faut au moins une tâche
     if (!this.intervention || this.taches.length === 0) return false;
-    return this.taches.every(t => t.verifiee);
+    
+    // TOUTES les tâches doivent être terminées (TERMINEE ou VERIFIEE)
+    const toutesTerminees = this.taches.every(t => 
+      t.etat === 'TERMINEE' || t.etat === 'VERIFIEE'
+    );
+    
+    // TOUTES les tâches doivent être vérifiées
+    const toutesVerifiees = this.taches.every(t => t.verifiee === true);
+    
+    return toutesTerminees && toutesVerifiees;
+  }
+
+  // ===== GETTERS POUR LE TEMPLATE - RÉSUMÉ DE TÂCHES =====
+  
+  get tachesNonTerminees(): Tache[] {
+    return this.taches.filter(t => t.etat !== 'TERMINEE' && t.etat !== 'VERIFIEE');
+  }
+
+  get tachesNonVerifiees(): Tache[] {
+    return this.taches.filter(t => !t.verifiee);
+  }
+
+  get tachesTerminees(): number {
+    return this.taches.filter(t => t.etat === 'TERMINEE' || t.etat === 'VERIFIEE').length;
+  }
+
+  get tachesVerifiees(): number {
+    return this.taches.filter(t => t.verifiee).length;
   }
 
   retour(): void {

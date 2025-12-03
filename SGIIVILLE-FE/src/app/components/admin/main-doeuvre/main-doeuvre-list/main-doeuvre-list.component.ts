@@ -82,7 +82,7 @@ export class MainDoeuvreListComponent implements OnInit {
     if (this.filtreCompetence) {
       const competence = this.filtreCompetence.toLowerCase();
       filtered = filtered.filter(m =>
-        m.competences?.some(c => c.toLowerCase().includes(competence))
+        m.competence?.toLowerCase().includes(competence)
       );
     }
 
@@ -148,9 +148,9 @@ export class MainDoeuvreListComponent implements OnInit {
     return labels[disponibilite] || disponibilite;
   }
 
-  getCompetencesString(competences: string[]): string {
-    if (!competences || competences.length === 0) return 'Aucune compétence';
-    return competences.join(', ');
+  getCompetencesString(competence: string | undefined): string {
+    if (!competence) return 'Aucune compétence';
+    return competence;
   }
 
   resetFilters(): void {

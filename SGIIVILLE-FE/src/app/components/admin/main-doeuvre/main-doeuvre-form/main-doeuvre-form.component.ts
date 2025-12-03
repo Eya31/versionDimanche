@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MainDOeuvreService } from '../../../../services/main-doeuvre.service';
-import { CreateMainDOeuvreRequest, HabilitationDTO } from '../../../../models/main-doeuvre.model';
+import { CreateMainDOeuvreRequest } from '../../../../models/main-doeuvre.model';
 
 @Component({
   selector: 'app-main-doeuvre-form',
@@ -20,19 +20,10 @@ export class MainDoeuvreFormComponent implements OnInit {
     cin: '',
     telephone: '',
     email: '',
-    metier: '',
-    competences: [],
-    habilitations: [],
-    horairesTravail: {}
+    competence: ''
   };
 
-  competenceInput: string = '';
-  habilitationInput: HabilitationDTO = {
-    nom: '',
-    dateObtention: '',
-    dateExpiration: '',
-    numeroCertificat: ''
-  };
+  competencesDisponibles = ['Électricité', 'Hydraulique', 'Mécanique', 'Plomberie', 'Maçonnerie', 'Peinture', 'Télécom'];
 
   loading = false;
   saving = false;
@@ -45,50 +36,15 @@ export class MainDoeuvreFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  addCompetence(): void {
-    if (this.competenceInput.trim()) {
-      if (!this.formData.competences) {
-        this.formData.competences = [];
-      }
-      if (!this.formData.competences.includes(this.competenceInput.trim())) {
-        this.formData.competences.push(this.competenceInput.trim());
-      }
-      this.competenceInput = '';
-    }
-  }
-
-  removeCompetence(comp: string): void {
-    const index = this.formData.competences.indexOf(comp);
-    if (index > -1) {
-      this.formData.competences.splice(index, 1);
-    }
-  }
-
-  addHabilitation(): void {
-    if (this.habilitationInput.nom.trim()) {
-      if (!this.formData.habilitations) {
-        this.formData.habilitations = [];
-      }
-      this.formData.habilitations.push({ ...this.habilitationInput });
-      this.habilitationInput = {
-        nom: '',
-        dateObtention: '',
-        dateExpiration: '',
-        numeroCertificat: ''
-      };
-    }
-  }
-
-  removeHabilitation(index: number): void {
-    this.formData.habilitations.splice(index, 1);
-  }
+  // Les méthodes addCompetence, removeCompetence, addHabilitation, removeHabilitation
+  // ont été supprimées car le modèle utilise maintenant une compétence unique (string)
 
   isFormValid(): boolean {
     return !!(
       this.formData.nom &&
       this.formData.cin &&
       this.formData.telephone &&
-      this.formData.competences.length > 0
+      this.formData.competence
     );
   }
 

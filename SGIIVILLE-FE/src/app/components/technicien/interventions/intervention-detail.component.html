@@ -332,9 +332,9 @@
           <select [(ngModel)]="nouvelleTache.mainDOeuvreId" required>
             <option [value]="undefined">Sélectionner une main-d'œuvre...</option>
             <option *ngFor="let md of mainDOeuvreListeFiltree" [value]="md.id">
-              {{md.nom}} {{md.prenom || ''}} - {{md.metier || 'Sans métier'}} 
-              <span *ngIf="md.competences && md.competences.length > 0">
-                ({{md.competences.join(', ')}})
+              {{md.nom}} {{md.prenom || ''}}
+              <span *ngIf="md.competence">
+                - {{md.competence}}
               </span>
             </option>
           </select>
@@ -408,7 +408,7 @@
                 (change)="setSelectedMainDOeuvre(tache.id, +$any($event.target).value || undefined)">
                 <option value="">Sélectionner...</option>
                 <option *ngFor="let md of mainDOeuvreListeFiltree" [value]="md.id">
-                  {{md.nom}} {{md.prenom || ''}} - {{md.metier || 'Sans métier'}}
+                  {{md.nom}} {{md.prenom || ''}}<span *ngIf="md.competence"> - {{md.competence}}</span>
                 </option>
               </select>
               <p *ngIf="mainDOeuvreListeFiltree.length === 0" class="warning-text">
@@ -468,12 +468,63 @@
       </div>
 
       <!-- Bouton terminer intervention (uniquement pour technicien) -->
-      <div class="terminer-intervention-section" *ngIf="peutTerminerIntervention() && isTechnicien">
-        <div class="info-box">
-          <p>✅ Toutes les tâches sont vérifiées. Vous pouvez maintenant terminer l'intervention.</p>
+      <div class="terminer-intervention-section" *ngIf="isTechnicien">
+        <!-- État des tâches - Indicateurs visuels -->
+        <div class="taches-status-summary">
+          <h3>📋 État des Tâches</h3>
+          
+          <!-- Compteur de tâches -->
+          <div class="taches-counter">
+            <div class="counter-item" [class.ok]="taches.length > 0">
+              <span class="counter-number">{{taches.length}}</span>
+              <span class="counter-label">Tâches totales</span>
+            </div>
+            
+            <div class="counter-item" [class.ok]="tachesTerminees === taches.length && taches.length > 0">
+              <span class="counter-number">{{tachesTerminees}}</span>
+              <span class="counter-label">Tâches terminées</span>
+            </div>
+            
+            <div class="counter-item" [class.ok]="tachesVerifiees === taches.length && taches.length > 0">
+              <span class="counter-number">{{tachesVerifiees}}</span>
+              <span class="counter-label">Tâches vérifiées</span>
+            </div>
+          </div>
+
+          <!-- Détail des tâches non terminées -->
+          <div *ngIf="tachesNonTerminees.length > 0" class="alert alert-warning">
+            <strong>❌ Tâches non terminées:</strong>
+            <ul>
+              <li *ngFor="let tache of tachesNonTerminees">
+                "{{tache.libelle}}" - {{getEtatTacheLabel(tache.etat)}}
+              </li>
+            </ul>
+          </div>
+
+          <!-- Détail des tâches non vérifiées -->
+          <div *ngIf="tachesNonVerifiees.length > 0" class="alert alert-warning">
+            <strong>⚠️ Tâches non vérifiées:</strong>
+            <ul>
+              <li *ngFor="let tache of tachesNonVerifiees">
+                "{{tache.libelle}}"
+              </li>
+            </ul>
+          </div>
+
+          <!-- Message de succès -->
+          <div *ngIf="peutTerminerIntervention()" class="alert alert-success">
+            <strong>✅ Parfait!</strong> Toutes les tâches sont terminées et vérifiées. 
+            Vous pouvez maintenant terminer l'intervention et accéder au rapport final.
+          </div>
         </div>
-        <button class="btn-success btn-large" (click)="terminerIntervention()">
-          ✅ Terminer l'intervention
+
+        <!-- Bouton terminer intervention -->
+        <button 
+          class="btn-success btn-large" 
+          (click)="terminerIntervention()"
+          [disabled]="!peutTerminerIntervention()"
+          [title]="peutTerminerIntervention() ? 'Cliquez pour terminer l\'intervention et accéder au rapport final' : 'Toutes les tâches doivent être terminées et vérifiées'">
+          ✅ Terminer l'intervention et accéder au rapport
         </button>
       </div>
       </div>

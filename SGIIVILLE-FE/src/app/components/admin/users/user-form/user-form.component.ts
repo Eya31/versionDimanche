@@ -29,14 +29,13 @@ export class UserFormComponent {
     prenom: '',
     email: '',
     motDePasse: '',
-    competences: [],
+    competences: [], // Pour technicien/chef service
     departement: '',
     // Champs spécifiques main d'œuvre
     cin: '',
     telephone: '',
     matricule: '',
-    metier: '',
-    habilitations: []
+    competence: '' // Compétence unique pour main d'œuvre
   };
 
   constructor(
@@ -61,17 +60,10 @@ export class UserFormComponent {
       cin: '',
       telephone: '',
       matricule: '',
-      metier: '',
-      habilitations: []
+      competence: ''
     };
     this.confirmPassword = '';
     this.competenceInput = '';
-    this.habilitationInput = {
-      nom: '',
-      dateObtention: '',
-      dateExpiration: '',
-      numeroCertificat: ''
-    };
   }
 
   addCompetence(): void {
@@ -126,7 +118,7 @@ export class UserFormComponent {
     } else if (this.selectedRole === 'MAIN_DOEUVRE') {
       roleSpecificValid = !!this.formData.cin && 
                          !!this.formData.telephone && 
-                         (this.formData.competences.length > 0);
+                         (this.selectedRole === 'MAIN_DOEUVRE' ? !!this.formData.competence : this.formData.competences.length > 0);
     }
 
     return hasBasicInfo && passwordsMatch && roleSpecificValid;
@@ -207,9 +199,7 @@ export class UserFormComponent {
       cin: this.formData.cin,
       telephone: this.formData.telephone,
       email: this.formData.email,
-      metier: this.formData.metier || '',
-      competences: this.formData.competences || [],
-      habilitations: this.formData.habilitations || []
+      competence: this.formData.competence || ''
     };
 
     this.mainDoeuvreService.create(request, true).subscribe({

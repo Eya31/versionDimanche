@@ -52,12 +52,9 @@
         (change)="loadMainDOeuvre()"
         [attr.aria-label]="'Filtrer par disponibilité'">
         <option value="">Toutes les disponibilités</option>
-        <option value="DISPONIBLE">✅ Disponible</option>
+        <option value="LIBRE">✅ Libre</option>
         <option value="OCCUPE">🔄 Occupé</option>
-        <option value="CONFLIT">⚠️ Conflit d'horaires</option>
-        <option value="EN_CONGE">🏖️ En congé</option>
-        <option value="ABSENT">🏥 Absent</option>
-        <option value="HORS_HABILITATION">⛔ Hors habilitation</option>
+        <option value="ARCHIVE">🗄️ Archivé</option>
       </select>
     </div>
     </div>
@@ -161,18 +158,6 @@
           
           <div class="form-field">
             <label class="form-label">
-              <span class="label-text">Métier</span>
-            </label>
-            <input 
-              type="text" 
-              class="form-input"
-              [(ngModel)]="(isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.metier" 
-              name="metier"
-              placeholder="Ex: Électricien, Plombier, Maçon...">
-          </div>
-          
-          <div class="form-field">
-            <label class="form-label">
               <span class="label-text">Email</span>
               <span *ngIf="isCreating" class="required-badge">*</span>
             </label>
@@ -188,155 +173,25 @@
               Obligatoire : Un compte utilisateur sera créé avec cet email. Le mot de passe par défaut sera le matricule ou le CIN.
             </p>
           </div>
-
-          <div class="form-field">
-            <label class="form-label">
-              <span class="label-text">Photo (URL ou chemin)</span>
-            </label>
-            <input 
-              type="text" 
-              class="form-input"
-              [(ngModel)]="(isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.photoPath" 
-              name="photoPath"
-              placeholder="/photos/agent.jpg ou URL">
-            <p class="form-hint">
-              <span class="hint-icon">ℹ️</span>
-              Optionnel : Chemin vers la photo de l'agent
-            </p>
-          </div>
         </div>
       </div>
 
-      <!-- Section: Compétences -->
+      <!-- Section: Compétence (unique) -->
       <div class="form-section-wrapper">
         <div class="section-header">
           <span class="section-icon">🎯</span>
-          <h3 class="section-title">Compétences</h3>
+          <h3 class="section-title">Compétence</h3>
         </div>
-        <p class="section-description">Sélectionnez les compétences de ce membre</p>
-        <div class="checkbox-group-modern">
-          <label *ngFor="let comp of competencesDisponibles" class="checkbox-modern">
-            <input 
-              type="checkbox" 
-              [checked]="(isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.competences.includes(comp)"
-              (change)="toggleCompetence(comp, isCreating)">
-            <span class="checkbox-custom"></span>
-            <span class="checkbox-text">{{comp}}</span>
-          </label>
-        </div>
-      </div>
-
-      <!-- Section: Habilitations -->
-      <div class="form-section-wrapper">
-        <div class="section-header">
-          <span class="section-icon">🛡️</span>
-          <h3 class="section-title">Habilitations</h3>
-        </div>
-        <p class="section-description">Sélectionnez les habilitations et définissez leurs dates d'expiration</p>
-        <div class="habilitations-list-modern">
-          <div *ngFor="let hab of habilitationsDisponibles" class="habilitation-item-modern">
-            <label class="checkbox-modern">
-              <input 
-                type="checkbox" 
-                [checked]="((isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.habilitations || []).includes(hab)"
-                (change)="toggleHabilitation(hab, isCreating)">
-              <span class="checkbox-custom"></span>
-              <span class="checkbox-text">{{hab}}</span>
-            </label>
-            <div *ngIf="((isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.habilitations || []).includes(hab)" 
-                 class="habilitation-date-modern">
-              <label class="date-label">Date d'expiration</label>
-              <input 
-                type="date"
-                class="form-input date-input"
-                [value]="getHabilitationExpiration(hab, isCreating)"
-                (change)="updateHabilitationExpiration(hab, $any($event.target).value, isCreating)"
-                placeholder="Date d'expiration">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Section: Horaires de travail -->
-      <div class="form-section-wrapper">
-        <div class="section-header">
-          <span class="section-icon">⏰</span>
-          <h3 class="section-title">Horaires de Travail</h3>
-        </div>
-        <p class="section-description">Définissez les horaires de travail pour chaque jour (format: 08:00-17:00)</p>
-        <div class="horaires-grid-modern">
-          <div *ngFor="let jour of joursSemaine" class="horaire-item-modern">
-            <label class="horaire-label">{{jour}}</label>
-            <input 
-              type="text" 
-              class="form-input horaire-input"
-              [value]="getHorairesTravail(jour, isCreating)"
-              (change)="updateHorairesTravail(jour, $any($event.target).value, isCreating)"
-              placeholder="08:00-17:00"
-              pattern="\d{2}:\d{2}-\d{2}:\d{2}">
-          </div>
-        </div>
-      </div>
-
-      <!-- Section: Congés -->
-      <div class="form-section-wrapper">
-        <div class="section-header">
-          <span class="section-icon">🏖️</span>
-          <h3 class="section-title">Congés</h3>
-        </div>
-        <p class="section-description">Ajoutez les dates de congés de l'agent</p>
-        <div class="dates-list-modern">
-          <div class="date-input-group-modern">
-            <input 
-              type="date" 
-              class="form-input"
-              [(ngModel)]="nouveauConge"
-              name="nouveauConge"
-              placeholder="Date de congé">
-            <button type="button" class="btn-add-date" (click)="ajouterConge(isCreating)">
-              <span class="btn-icon">➕</span>
-              <span>Ajouter</span>
-            </button>
-          </div>
-          <div *ngIf="(isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.conges && (isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.conges!.length > 0" 
-               class="dates-tags-modern">
-            <span *ngFor="let conge of (isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.conges" 
-                  class="date-tag-modern conge">
-              <span>{{conge | date:'shortDate'}}</span>
-              <button type="button" class="btn-remove-modern" (click)="retirerConge(conge, isCreating)">✕</button>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Section: Absences -->
-      <div class="form-section-wrapper">
-        <div class="section-header">
-          <span class="section-icon">🏥</span>
-          <h3 class="section-title">Absences</h3>
-        </div>
-        <p class="section-description">Ajoutez les dates d'absences (maladie, permission, etc.)</p>
-        <div class="dates-list-modern">
-          <div class="date-input-group-modern">
-            <input 
-              type="date" 
-              class="form-input"
-              [(ngModel)]="nouvelleAbsence"
-              name="nouvelleAbsence"
-              placeholder="Date d'absence">
-            <button type="button" class="btn-add-date" (click)="ajouterAbsence(isCreating)">
-              <span class="btn-icon">➕</span>
-              <span>Ajouter</span>
-            </button>
-          </div>
-          <div *ngIf="(isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.absences && (isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.absences!.length > 0" 
-               class="dates-tags-modern">
-            <span *ngFor="let absence of (isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.absences" 
-                  class="date-tag-modern absence">
-              <span>{{absence | date:'shortDate'}}</span>
-              <button type="button" class="btn-remove-modern" (click)="retirerAbsence(absence, isCreating)">✕</button>
-            </span>
-          </div>
+        <p class="section-description">Sélectionnez la compétence principale de cet agent (obligatoire)</p>
+        <div class="form-field">
+          <select 
+            [(ngModel)]="(isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.competence" 
+            name="competence"
+            class="form-select"
+            required>
+            <option value="">-- Sélectionnez une compétence --</option>
+            <option *ngFor="let comp of competencesDisponibles" [value]="comp">{{comp}}</option>
+          </select>
         </div>
       </div>
 
@@ -352,12 +207,9 @@
             [(ngModel)]="(isCreating ? nouveauMainDOeuvre : selectedMainDOeuvre)!.disponibilite" 
             name="disponibilite"
             class="form-select">
-            <option value="DISPONIBLE">✅ Disponible</option>
+            <option value="LIBRE">✅ Libre</option>
             <option value="OCCUPE">🔄 Occupé</option>
-            <option value="CONFLIT">⚠️ Conflit d'horaires</option>
-            <option value="EN_CONGE">🏖️ En congé</option>
-            <option value="ABSENT">🏥 Absent</option>
-            <option value="HORS_HABILITATION">⛔ Hors habilitation</option>
+            <option value="ARCHIVE">🗄️ Archivé</option>
           </select>
         </div>
       </div>
@@ -378,18 +230,15 @@
 
   <!-- Liste des fiches -->
   <div class="main-doeuvre-list">
-    <div *ngFor="let md of mainDOeuvreFiltree; trackBy: trackByMainDOeuvreId" class="main-doeuvre-card" [class.archived]="!md.active">
+    <div *ngFor="let md of mainDOeuvreFiltree; trackBy: trackByMainDOeuvreId" class="main-doeuvre-card" [class.archived]="md.disponibilite === 'ARCHIVE'">
       <!-- Card Header -->
       <div class="card-header">
         <div class="header-left-with-photo">
           <div class="agent-photo-wrapper">
-            <div *ngIf="md.photoPath" class="agent-photo">
-              <img [src]="md.photoPath" [alt]="md.nom + ' ' + md.prenom" onerror="this.style.display='none'">
-            </div>
-            <div *ngIf="!md.photoPath" class="agent-photo-placeholder">
+            <div class="agent-photo-placeholder">
               <span>{{(md.nom || 'A')[0]}}{{md.prenom ? (md.prenom[0] || '') : ''}}</span>
             </div>
-            <div class="status-indicator" [ngClass]="'status-' + (md.disponibilite || 'DISPONIBLE').toLowerCase()"></div>
+            <div class="status-indicator" [ngClass]="'status-' + (md.disponibilite || 'LIBRE').toLowerCase()"></div>
           </div>
           <div class="agent-info-header">
             <h3>{{md.nom}} {{md.prenom || ''}}</h3>
@@ -425,14 +274,6 @@
                 <span>{{md.telephone}}</span>
               </div>
             </div>
-            
-            <div class="info-item-card" *ngIf="md.metier">
-              <div class="info-icon">🔧</div>
-              <div class="info-content">
-                <strong>Métier</strong>
-                <span>{{md.metier}}</span>
-              </div>
-            </div>
 
             <div class="info-item-card" *ngIf="md.email">
               <div class="info-icon">📧</div>
@@ -445,78 +286,18 @@
           </div>
         </div>
         
-        <!-- Compétences -->
-        <div *ngIf="md.competences && md.competences.length > 0" class="info-section">
-          <h4 class="section-title">🎯 Compétences</h4>
+        <!-- Compétence -->
+        <div *ngIf="md.competence" class="info-section">
+          <h4 class="section-title">🎯 Compétence</h4>
           <div class="tags-list">
-            <span *ngFor="let comp of md.competences" class="tag tag-competence">
+            <span class="tag tag-competence">
               <span class="tag-icon">✓</span>
-              {{comp}}
-            </span>
-          </div>
-        </div>
-        
-        <!-- Habilitations avec dates d'expiration -->
-        <div *ngIf="md.habilitations && md.habilitations.length > 0" class="info-section">
-          <h4 class="section-title">🛡️ Habilitations</h4>
-          <div class="tags-list">
-            <span *ngFor="let hab of md.habilitations" 
-                  class="tag tag-habilitation"
-                  [class.expired]="isHabilitationExpiree(hab, md)">
-              <span class="tag-icon" [class.expired-icon]="isHabilitationExpiree(hab, md)">⚠</span>
-              {{hab}}
-              <span *ngIf="md.habilitationsExpiration && md.habilitationsExpiration[hab]" 
-                    class="expiration-date">
-                (Exp: {{md.habilitationsExpiration[hab] | date:'shortDate'}})
-              </span>
-              <span *ngIf="isHabilitationExpiree(hab, md)" class="expired-badge">Expirée</span>
+              {{md.competence}}
             </span>
           </div>
         </div>
 
-        <!-- Horaires de travail -->
-        <div *ngIf="md.horairesTravail && hasHoraires(md.horairesTravail)" class="info-section">
-          <h4 class="section-title">⏰ Horaires de travail</h4>
-          <div class="horaires-list">
-            <ng-container *ngFor="let jour of joursSemaine">
-              <span *ngIf="md.horairesTravail && md.horairesTravail[jour]"
-                    class="horaire-badge">
-                <span class="horaire-day">{{jour.substring(0, 3)}}</span>
-                <span class="horaire-time">{{md.horairesTravail[jour]}}</span>
-              </span>
-            </ng-container>
-          </div>
-        </div>
-
-        <!-- Congés et absences -->
-        <div *ngIf="(md.conges && md.conges.length > 0) || (md.absences && md.absences.length > 0)" class="info-section">
-          <h4 class="section-title">📅 Disponibilité</h4>
-          <div class="dates-display">
-            <div *ngIf="md.conges && md.conges.length > 0" class="dates-group">
-              <strong class="dates-label">🏖️ Congés ({{md.conges.length}}):</strong>
-              <div class="dates-tags">
-                <span *ngFor="let conge of md.conges" class="date-tag conge">{{conge | date:'dd/MM'}}</span>
-              </div>
-            </div>
-            <div *ngIf="md.absences && md.absences.length > 0" class="dates-group">
-              <strong class="dates-label">🏥 Absences ({{md.absences.length}}):</strong>
-              <div class="dates-tags">
-                <span *ngFor="let absence of md.absences" class="date-tag absence">{{absence | date:'dd/MM'}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Historique -->
-        <div *ngIf="md.historiqueInterventionIds && md.historiqueInterventionIds.length > 0" class="info-section historique-section">
-          <div class="historique-info">
-            <div class="historique-icon">📊</div>
-            <div class="historique-content">
-              <strong>Interventions réalisées</strong>
-              <span class="historique-count">{{md.historiqueInterventionIds.length}} intervention(s)</span>
-            </div>
-          </div>
-        </div>
+        <!-- Historique supprimé selon le nouveau schéma XSD -->
       </div>
 
       <!-- Card Actions -->
@@ -525,23 +306,15 @@
           class="btn-action btn-edit" 
           (click)="editer(md)" 
           [attr.aria-label]="'Modifier la fiche de ' + md.nom"
-          [disabled]="!md.active">
+          [disabled]="md.disponibilite === 'ARCHIVE'">
           <span class="btn-icon">✏️</span>
           <span class="btn-text">Modifier</span>
-        </button>
-        <button 
-          class="btn-action btn-history" 
-          (click)="voirHistorique(md)" 
-          [attr.aria-label]="'Voir l\'historique de ' + md.nom"
-          [disabled]="!md.historiqueInterventionIds || md.historiqueInterventionIds.length === 0">
-          <span class="btn-icon">📊</span>
-          <span class="btn-text">Historique</span>
         </button>
         <button 
           class="btn-action btn-archive" 
           (click)="archiver(md)" 
           [attr.aria-label]="'Archiver la fiche de ' + md.nom"
-          [disabled]="!md.active">
+          [disabled]="md.disponibilite === 'ARCHIVE'">
           <span class="btn-icon">🗄️</span>
           <span class="btn-text">Archiver</span>
         </button>
@@ -561,77 +334,5 @@
     </div>
   </div>
 
-  <!-- Modal Historique -->
-  <div *ngIf="showHistorique && selectedMainDOeuvreForHistorique" class="modal-overlay" (click)="fermerHistorique()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2>📊 Historique des Interventions</h2>
-        <button class="btn-close" (click)="fermerHistorique()">✕</button>
-      </div>
-      <div class="modal-body">
-        <p class="agent-info">
-          <strong>{{selectedMainDOeuvreForHistorique.nom}} {{selectedMainDOeuvreForHistorique.prenom || ''}}</strong>
-          <span *ngIf="selectedMainDOeuvreForHistorique.matricule"> - Matricule: {{selectedMainDOeuvreForHistorique.matricule}}</span>
-        </p>
-        
-        <div *ngIf="historique.length === 0" class="empty-state">
-          <p>Aucune intervention enregistrée</p>
-        </div>
-        
-        <div *ngIf="historique.length > 0" class="historique-list">
-          <!-- Statistiques globales -->
-          <div class="historique-stats">
-            <div class="stat-item">
-              <strong>Total interventions:</strong>
-              <span>{{historique.length}}</span>
-            </div>
-            <div class="stat-item">
-              <strong>Temps total travaillé:</strong>
-              <span>{{calculerTempsTotal()}} minutes ({{formatTempsTotal()}})</span>
-            </div>
-            <div class="stat-item">
-              <strong>Interventions terminées:</strong>
-              <span>{{compterTerminees()}}</span>
-            </div>
-          </div>
-
-          <!-- Liste des interventions -->
-          <div *ngFor="let hist of historique" class="historique-item">
-            <div class="historique-header">
-              <h4>Intervention #{{hist.interventionId}}</h4>
-              <span class="badge" [class]="'etat-' + (hist.etat || 'INCONNU').toLowerCase()">{{hist.etat || 'INCONNU'}}</span>
-            </div>
-            <p class="historique-description">{{hist.description}}</p>
-            <div class="historique-details">
-              <div class="detail-item">
-                <strong>Date début:</strong>
-                <span>{{hist.dateDebut | date:'short'}}</span>
-              </div>
-              <div *ngIf="hist.dateFin" class="detail-item">
-                <strong>Date fin:</strong>
-                <span>{{hist.dateFin | date:'short'}}</span>
-              </div>
-              <div class="detail-item">
-                <strong>Temps passé:</strong>
-                <span>{{hist.tempsPasseMinutes}} minutes ({{formatTemps(hist.tempsPasseMinutes)}})</span>
-              </div>
-              <div *ngIf="hist.competencesUtilisees && hist.competencesUtilisees.length > 0" class="detail-item">
-                <strong>Compétences utilisées:</strong>
-                <div class="tags-list">
-                  <span *ngFor="let comp of hist.competencesUtilisees" class="tag tag-competence">{{comp}}</span>
-                </div>
-              </div>
-              <div *ngIf="hist.resultat" class="detail-item">
-                <strong>Résultat:</strong>
-                <span class="resultat-badge" [class]="'resultat-' + (hist.resultat || 'inconnu').toLowerCase()">{{hist.resultat || 'N/A'}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-secondary" (click)="fermerHistorique()">Fermer</button>
-      </div>
-    </div>
-  </div>
+  <!-- Modal Historique supprimé car historiqueInterventions n'est plus dans le schéma XSD -->
 </div>

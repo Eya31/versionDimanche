@@ -24,7 +24,7 @@ export class RegisterComponent {
     prenom: '',
     matricule: '',
     cin: '',
-    metier: ''
+    competence: ''
   };
 
   confirmPassword: string = '';
@@ -90,9 +90,9 @@ export class RegisterComponent {
 
     // Validation spécifique pour MAIN_DOEUVRE
     if (this.registerData.role === RoleType.MAIN_DOEUVRE) {
-      if (!this.registerData.prenom?.trim() || !this.registerData.matricule?.trim() ||
+      if (!this.registerData.nom?.trim() || !this.registerData.prenom?.trim() ||
           !this.registerData.cin?.trim() || !this.registerData.telephone?.trim() ||
-          !this.registerData.metier?.trim()) {
+          !this.registerData.competence?.trim()) {
         this.errorMessage = 'Tous les champs sont obligatoires pour un agent main d\'œuvre';
         return;
       }
@@ -158,6 +158,6 @@ export class RegisterComponent {
     this.registerData.prenom = '';
     this.registerData.matricule = '';
     this.registerData.cin = '';
-    this.registerData.metier = '';
+    this.registerData.competence = '';
   }
 }

@@ -1,4 +1,80 @@
 <div class="planification-container">
+  <!-- Étape 0: Infos d'intervention -->
+  <div *ngIf="etapeActuelle === 'infos'" class="etape-infos">
+    <h2>📋 Informations de l'intervention</h2>
+    
+    <!-- Description -->
+    <div class="section-infos">
+      <h3>📝 Description</h3>
+      <div class="form-group">
+        <textarea 
+          [(ngModel)]="intervention.description" 
+          placeholder="Description détaillée de l'intervention"
+          class="form-control"
+          rows="4"
+          required
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Priorité -->
+    <div class="section-infos">
+      <h3>⚡ Priorité</h3>
+      <div class="form-group">
+        <select 
+          [(ngModel)]="intervention.priorite" 
+          class="form-control"
+          required
+        >
+          <option value="FAIBLE">Faible</option>
+          <option value="NORMALE">Normale</option>
+          <option value="PLANIFIEE">Planifiée</option>
+          <option value="URGENTE">Urgente</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Budget -->
+    <div class="section-infos">
+      <h3>💰 Budget</h3>
+      <div class="form-group">
+        <input 
+          type="number" 
+          [(ngModel)]="intervention.budget" 
+          placeholder="Montant en DT"
+          class="form-control"
+          required
+          [value]="500"
+        />
+      </div>
+    </div>
+
+    <!-- Date de création (affichage seulement) -->
+    <div class="section-infos">
+      <h3>📆 Date de création</h3>
+      <div class="form-group">
+        <input 
+          type="text" 
+          [value]="intervention.dateCreation | date:'dd/MM/yyyy'" 
+          class="form-control"
+          disabled
+        />
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button (click)="annuler()" class="btn btn-secondary">Annuler</button>
+      <button 
+        (click)="validerInfos()" 
+        class="btn btn-primary"
+        [disabled]="!infosValides()"
+      >
+        Suivant: Définir les exigences →
+      </button>
+    </div>
+  </div>
+
   <!-- Étape 1: Définir les exigences -->
   <div *ngIf="etapeActuelle === 'exigences'" class="etape-exigences">
     <h2>📋 Définir les exigences de l'intervention</h2>

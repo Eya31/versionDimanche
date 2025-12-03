@@ -1,22 +1,15 @@
 export interface MainDOeuvre {
   id: number;
   nom: string;
-  prenom?: string;
-  matricule?: string;
+  email: string;
+  motDePasse?: string;
+  role?: string;
+  prenom: string;
+  matricule: string;
   cin: string;
   telephone: string;
-  email?: string;
-  metier?: string;
-  competences: string[];
-  habilitations: string[];
-  habilitationsExpiration?: { [key: string]: string }; // Map habilitation -> date expiration (ISO string)
-  disponibilite: 'DISPONIBLE' | 'OCCUPE' | 'CONFLIT' | 'EN_CONGE' | 'ABSENT' | 'HORS_HABILITATION' | 'ARCHIVE' | 'DESACTIVE';
-  active: boolean;
-  photoPath?: string;
-  horairesTravail?: { [key: string]: string }; // Map jour -> "08:00-17:00"
-  conges?: string[]; // Dates ISO
-  absences?: string[]; // Dates ISO
-  historiqueInterventionIds?: number[];
+  disponibilite: 'LIBRE' | 'OCCUPE' | 'ARCHIVE';
+  competence: string; // Compétence unique (obligatoire)
 }
 
 export interface HabilitationDTO {
@@ -70,15 +63,11 @@ export function isVerificationValide(verification: VerificationAffectationDTO): 
 
 export interface CreateMainDOeuvreRequest {
   nom: string;
-  prenom?: string;
-  matricule?: string;
+  email: string;
+  prenom: string;
+  matricule: string;
   cin: string;
   telephone: string;
-  email?: string;
-  metier?: string;
-  competences: string[];
-  habilitations: HabilitationDTO[];
-  horairesTravail?: { [key: string]: string };
-  photoPath?: string;
+  competence: string; // Compétence unique (obligatoire)
 }
 

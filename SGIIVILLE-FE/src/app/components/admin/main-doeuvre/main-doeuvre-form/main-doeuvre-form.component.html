@@ -37,66 +37,18 @@
           <input type="email" [(ngModel)]="formData.email" name="email" />
         </div>
       </div>
+    </div>
+
+    <div class="form-section">
+      <h3>🔧 Compétence <span class="required">*</span></h3>
       <div class="form-group">
-        <label>Métier</label>
-        <input type="text" [(ngModel)]="formData.metier" name="metier" />
-      </div>
-    </div>
-
-    <div class="form-section">
-      <h3>🔧 Compétences</h3>
-      <div class="competences-input">
-        <input 
-          type="text" 
-          [(ngModel)]="competenceInput" 
-          name="competenceInput"
-          placeholder="Ajouter une compétence..."
-          (keyup.enter)="addCompetence()"
-        />
-        <button type="button" class="btn btn-sm btn-primary" (click)="addCompetence()">Ajouter</button>
-      </div>
-      <div class="competences-list" *ngIf="formData.competences.length > 0">
-        <span class="competence-badge" *ngFor="let comp of formData.competences">
-          {{ comp }}
-          <button type="button" class="remove-btn" (click)="removeCompetence(comp)">×</button>
-        </span>
-      </div>
-    </div>
-
-    <div class="form-section">
-      <h3>📜 Habilitations</h3>
-      <div class="habilitation-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Nom habilitation</label>
-            <input type="text" [(ngModel)]="habilitationInput.nom" name="habilitationNom" />
-          </div>
-          <div class="form-group">
-            <label>Numéro certificat</label>
-            <input type="text" [(ngModel)]="habilitationInput.numeroCertificat" name="numeroCertificat" />
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Date d'obtention</label>
-            <input type="date" [(ngModel)]="habilitationInput.dateObtention" name="dateObtention" />
-          </div>
-          <div class="form-group">
-            <label>Date d'expiration</label>
-            <input type="date" [(ngModel)]="habilitationInput.dateExpiration" name="dateExpiration" />
-          </div>
-        </div>
-        <button type="button" class="btn btn-sm btn-primary" (click)="addHabilitation()">Ajouter habilitation</button>
-      </div>
-      <div class="habilitations-list" *ngIf="formData.habilitations.length > 0">
-        <div class="habilitation-item" *ngFor="let hab of formData.habilitations; let i = index">
-          <div class="habilitation-info">
-            <strong>{{ hab.nom }}</strong>
-            <span *ngIf="hab.numeroCertificat"> - Cert: {{ hab.numeroCertificat }}</span>
-            <span *ngIf="hab.dateExpiration"> - Expire: {{ hab.dateExpiration | date:'short' }}</span>
-          </div>
-          <button type="button" class="btn btn-sm btn-danger" (click)="removeHabilitation(i)">Supprimer</button>
-        </div>
+        <select 
+          [(ngModel)]="formData.competence" 
+          name="competence"
+          required>
+          <option value="">-- Sélectionnez une compétence --</option>
+          <option *ngFor="let comp of competencesDisponibles" [value]="comp">{{comp}}</option>
+        </select>
       </div>
     </div>
 
