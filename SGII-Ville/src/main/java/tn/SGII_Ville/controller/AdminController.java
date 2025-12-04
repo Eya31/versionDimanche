@@ -241,8 +241,9 @@ public class AdminController {
             }
 
             // Sauvegarder la fiche main-d'œuvre
-            mainDOeuvre.setDisponibilite("DISPONIBLE");
-            mainDOeuvre.setActive(true);
+            if (mainDOeuvre.getDisponibilite() == null || mainDOeuvre.getDisponibilite().isEmpty()) {
+                mainDOeuvre.setDisponibilite("LIBRE");
+            }
             MainDOeuvre saved = mainDOeuvreService.save(mainDOeuvre);
 
             // Créer le compte utilisateur AgentMainDOeuvre
@@ -253,8 +254,15 @@ public class AdminController {
             agent.setMatricule(mainDOeuvre.getMatricule());
             agent.setCin(mainDOeuvre.getCin());
             agent.setTelephone(mainDOeuvre.getTelephone());
-            agent.setMetier(mainDOeuvre.getMetier());
-            agent.setCompetences(mainDOeuvre.getCompetences());
+            // Metier supprimé du schéma XSD
+            // Convertir la compétence unique en liste pour AgentMainDOeuvre
+            if (mainDOeuvre.getCompetence() != null) {
+                List<String> competences = new ArrayList<>();
+                competences.add(mainDOeuvre.getCompetence());
+                agent.setCompetences(competences);
+            } else {
+                agent.setCompetences(new ArrayList<>());
+            }
             agent.setMainDOeuvreId(saved.getId());
 
             // Générer un mot de passe par défaut (matricule ou CIN)
@@ -304,11 +312,9 @@ public class AdminController {
             existing.setCin(mainDOeuvre.getCin());
             existing.setTelephone(mainDOeuvre.getTelephone());
             existing.setEmail(mainDOeuvre.getEmail());
-            existing.setMetier(mainDOeuvre.getMetier());
-            existing.setCompetences(mainDOeuvre.getCompetences());
-            existing.setHabilitations(mainDOeuvre.getHabilitations());
+            // Metier supprimé du schéma XSD
+            existing.setCompetence(mainDOeuvre.getCompetence());
             existing.setDisponibilite(mainDOeuvre.getDisponibilite());
-            existing.setActive(mainDOeuvre.isActive());
 
             MainDOeuvre updated = mainDOeuvreService.save(existing);
             return ResponseEntity.ok(updated);
@@ -336,9 +342,8 @@ public class AdminController {
                 return ResponseEntity.notFound().build();
             }
 
-            // Archiver au lieu de supprimer
+            // Archiver au lieu de supprimer (le champ active n'existe plus, on utilise disponibilite)
             existing.setDisponibilite("ARCHIVE");
-            existing.setActive(false);
             mainDOeuvreService.save(existing);
 
             return ResponseEntity.ok().build();

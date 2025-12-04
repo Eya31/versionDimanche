@@ -14,7 +14,7 @@ public class AgentMainDOeuvre extends Utilisateur {
     private String matricule;
     private String cin;
     private String telephone;
-    private String metier;
+    private String competence;
     private List<String> competences = new ArrayList<>();
     private int mainDOeuvreId; // ID de la fiche MainDOeuvre correspondante
 
@@ -67,12 +67,12 @@ public class AgentMainDOeuvre extends Utilisateur {
         this.telephone = telephone;
     }
 
-    public String getMetier() {
-        return metier;
+    public String getCompetence() {
+        return competence;
     }
 
-    public void setMetier(String metier) {
-        this.metier = metier;
+    public void setCompetence(String competence) {
+        this.competence = competence;
     }
 
     public List<String> getCompetences() {

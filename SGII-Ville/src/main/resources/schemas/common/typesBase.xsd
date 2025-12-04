@@ -56,4 +56,12 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="DisponibiliteType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="LIBRE"/>
+      <xs:enumeration value="OCCUPE"/>
+      <xs:enumeration value="ARCHIVE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
 </xs:schema>

@@ -14,21 +14,25 @@ public class DemandeAjout {
     private int quantite;
     private double budget;
     private String justification;
-    private EtatDemandeAjoutType etat;
     private int chefId;
     private Integer adminId;
     private LocalDateTime dateTraitement;
     private String motifRefus;
-    private LocalDateTime dateDemande;
     
     // Anciens champs pour compatibilité
     private String typeObjet;
     private int idChefService;
     private LocalDate dateSoumission;
+        private LocalDateTime dateDemande = LocalDateTime.now(); // ✅ INITIALISÉ
+
+    private EtatDemandeAjoutType etat = EtatDemandeAjoutType.EN_ATTENTE_ADMIN; // ✅ INITIALISÉ
 
     // Constructeurs
-    public DemandeAjout() {}
-
+public DemandeAjout() {
+        // Initialisation par défaut
+        this.etat = EtatDemandeAjoutType.EN_ATTENTE_ADMIN;
+        this.dateDemande = LocalDateTime.now();
+    }
     public DemandeAjout(int id, String typeObjet, int idChefService, 
                        EtatDemandeAjoutType etat, LocalDate dateSoumission) {
         this.id = id;

@@ -33,7 +33,7 @@ public class RegisterRequest {
     // Champs MAIN_DOEUVRE
     private String matricule;
     private String cin;
-    private String metier;
+    private String competence;
 
     public RegisterRequest() {
     }
@@ -77,8 +77,8 @@ public class RegisterRequest {
     public String getCin() { return cin; }
     public void setCin(String cin) { this.cin = cin; }
 
-    public String getMetier() { return metier; }
-    public void setMetier(String metier) { this.metier = metier; }
+    public String getCompetence() { return competence; }
+    public void setCompetence(String competence) { this.competence = competence; }
 
     @Override
     public String toString() {

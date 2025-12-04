@@ -1,19 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           targetNamespace="http://example.com/gestion-interventions" 
-           xmlns:tns="http://example.com/gestion-interventions" 
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://example.com/gestion-interventions"
+           xmlns:tns="http://example.com/gestion-interventions"
            elementFormDefault="qualified">
 
+  <!-- Rendre ce fichier autonome comme `techniciens.xsd` :
+       - inclure les types de base
+       - redéfinir un UtilisateurType local (pour compatibilité)
+       - définir MainDOeuvreType et l'élément racine
+  -->
+
+  <xs:include schemaLocation="../common/typesBase.xsd"/>
   <xs:include schemaLocation="../common/contacts.xsd"/>
 
-  <!-- Main d'œuvre -->
-  <xs:complexType name="MainDOeuvreType">
+  <!-- Ré-écriture locale du type Utilisateur pour éviter les conflits d'inclusion -->
+  <xs:complexType name="UtilisateurType" abstract="true">
     <xs:sequence>
       <xs:element name="id" type="xs:int"/>
       <xs:element name="nom" type="xs:string"/>
-      <xs:element name="cin" type="tns:CinType"/>
-      <xs:element name="telephone" type="tns:TelephoneType"/>
+      <xs:element name="email" type="tns:EmailType"/>
+      <xs:element name="motDePasse" type="xs:string"/>
+      <xs:element name="role" type="tns:RoleType"/>
     </xs:sequence>
   </xs:complexType>
+
+  <!-- Type pour les agents main d'oeuvre -->
+  <xs:complexType name="MainDOeuvreType">
+    <xs:complexContent>
+      <xs:extension base="tns:UtilisateurType">
+        <xs:sequence>
+          <xs:element name="prenom" type="xs:string"/>
+          <xs:element name="matricule" type="xs:string"/>
+          <xs:element name="cin" type="tns:CinType"/>
+          <xs:element name="telephone" type="tns:TelephoneType"/>
+          <xs:element name="disponibilite" type="tns:DisponibiliteType"/>
+          <xs:element name="competence" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Liste des mains d'oeuvre -->
+  <xs:element name="MainDOeuvres">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MainDOeuvre" type="tns:MainDOeuvreType" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 
 </xs:schema>

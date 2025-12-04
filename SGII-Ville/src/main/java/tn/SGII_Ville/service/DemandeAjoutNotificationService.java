@@ -11,82 +11,39 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional; // ✅ Ajouter cet import
 
 @Service
 public class DemandeAjoutNotificationService {
 
     @Autowired
-    private NotifService notifService; // ✅ Utilise NotifService
+    private NotifService notifService;
     
     @Autowired
     private UserXmlService userXmlService;
+    @Autowired
+    private StockRessourceService stockRessourceService;
 
     /**
      * Notifie tous les administrateurs d'une nouvelle demande d'ajout
      */
-    public void notifierNouvelleDemandeAjout(DemandeAjout demande) {
-        System.out.println("🔔 [NOTIFICATION] Nouvelle demande #" + demande.getId() + " de chef #" + demande.getChefId());
-        
+public void notifierReponseDemandeAjout(DemandeAjout demande, boolean acceptee, String motifRefus) {
         try {
-            // Trouver tous les administrateurs
-            List<Utilisateur> admins = trouverAdministrateurs();
+            // Notifier le chef de la réponse
+            String message = construireMessageReponse(demande, acceptee, motifRefus);
             
-            if (admins.isEmpty()) {
-                System.err.println("❌ AUCUN ADMINISTRATEUR TROUVÉ !");
-                return;
-            }
+            // ✅ Appel correct avec 2 paramètres seulement
+            notifService.creerNotificationPourDemande(demande.getChefId(), message);
             
-            String message = construireMessageNouvelleDemande(demande);
+            System.out.println("📨 Notification envoyée au chef #" + demande.getChefId() + 
+                             " pour réponse demande #" + demande.getId());
             
-            for (Utilisateur admin : admins) {
-                System.out.println("📨 Envoi notification à admin #" + admin.getId());
-                boolean success = notifService.creerNotificationPourDemande(admin.getId(), message);
-                
-                if (success) {
-                    System.out.println("✅ Notification envoyée à l'admin #" + admin.getId());
-                } else {
-                    System.err.println("❌ Échec envoi notification admin #" + admin.getId());
-                }
-            }
         } catch (Exception e) {
-            System.err.println("❌ Erreur notification nouvelle demande: " + e.getMessage());
+            System.err.println("❌ Erreur lors de la notification de réponse: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    /**
-     * Notifie le chef de service de la réponse à sa demande
-     */
-    public void notifierReponseDemandeAjout(DemandeAjout demande, boolean acceptee, String motifRefus) {
-    System.out.println("🔔 [NOTIFICATION] Réponse demande #" + demande.getId() + 
-                     " pour chef #" + demande.getChefId() + 
-                     " - Acceptée: " + acceptee);
-    
-    try {
-        // Vérifier que le chefId est valide
-        if (demande.getChefId() <= 0) {
-            System.err.println("❌ ChefId invalide: " + demande.getChefId());
-            return;
-        }
-        
-        String message = construireMessageReponse(demande, acceptee, motifRefus);
-        
-        System.out.println("📨 Envoi notification au chef #" + demande.getChefId() + " - Message: " + message);
-        
-        // CORRECTION : Utiliser demande.getChefId() au lieu d'un ID fixe
-        boolean success = notifService.creerNotificationPourDemande(demande.getChefId(), message);
-        
-        if (success) {
-            System.out.println("✅ Notification réponse envoyée au chef #" + demande.getChefId());
-        } else {
-            System.err.println("❌ Échec envoi notification au chef #" + demande.getChefId());
-        }
-        
-    } catch (Exception e) {
-        System.err.println("❌ Erreur notification réponse: " + e.getMessage());
-        e.printStackTrace();
-    }
-}
     /**
      * Trouve tous les administrateurs dans le système
      */
@@ -125,7 +82,6 @@ public class DemandeAjoutNotificationService {
                          ", EstAdmin: " + isAdmin);
         return isAdmin;
     }
-
     /**
      * Construit le message pour une nouvelle demande
      */
@@ -148,48 +104,62 @@ public class DemandeAjoutNotificationService {
             demande.getChefId()
         );
     }
-
     /**
      * Construit le message de réponse à une demande
      */
     private String construireMessageReponse(DemandeAjout demande, boolean acceptee, String motifRefus) {
-    String typeDemande = demande.getTypeDemande() == TypeDemandeAjout.EQUIPEMENT ? 
-        "d'équipement" : "de matériel";
+        String typeDemande = demande.getTypeDemande() == TypeDemandeAjout.EQUIPEMENT ? 
+            "d'équipement" : "de ressource matérielle";
         
-    if (acceptee) {
-        return String.format(
-            "✅ Votre demande %s a été ACCEPTÉE !%n" +
-            "📋 Détails:%n" +
-            "   • Référence: #%d%n" +
-            "   • Désignation: %s%n" +
-            "   • Quantité: %d unités%n" +
-            "   • Budget: %.2f DT%n" +
-            "   • Traitée le: %s%n" +
-            "🎉 Votre demande a été approuvée par l'administration.",
-            typeDemande,
-            demande.getId(),           // ID de la demande réelle
-            demande.getDesignation(),  // Désignation réelle
-            demande.getQuantite(),     // Quantité réelle
-            demande.getBudget(),       // Budget réel
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm"))
-        );
-    } else {
-        return String.format(
-            "❌ Votre demande %s a été REFUSÉE%n" +
-            "📋 Détails:%n" +
-            "   • Référence: #%d%n" +
-            "   • Désignation: %s%n" +
-            "   • Motif: %s%n" +
-            "   • Traitée le: %s%n" +
-            "💡 Vous pouvez soumettre une nouvelle demande avec les corrections nécessaires.",
-            typeDemande,
-            demande.getId(),
-            demande.getDesignation(),
-            motifRefus != null ? motifRefus : "Non spécifié par l'administration",
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm"))
-        );
+        if (acceptee) {
+            // Pour les ressources, ajouter des infos sur le stock
+            String infoStock = "";
+            if (demande.getTypeDemande() == TypeDemandeAjout.RESSOURCE) {
+                try {
+                    int stockActuel = stockRessourceService.getQuantiteStock(demande.getDesignation());
+                    infoStock = String.format(
+                        "%n📦 Stock après ajout: %d unités",
+                        stockActuel
+                    );
+                } catch (Exception e) {
+                    infoStock = "%n📦 Stock: mise à jour effectuée";
+                }
+            }
+            
+            return String.format(
+                "✅ Votre demande %s a été ACCEPTÉE !%n" +
+                "📋 Détails:%n" +
+                "   • Référence: #%d%n" +
+                "   • Désignation: %s%n" +
+                "   • Quantité: %d unités%n" +
+                "   • Budget: %.2f DT%n" +
+                "   • Traitée le: %s%s%n" +
+                "🎉 Les ressources ont été ajoutées au stock avec succès.",
+                typeDemande,
+                demande.getId(),
+                demande.getDesignation(),
+                demande.getQuantite(),
+                demande.getBudget(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm")),
+                infoStock
+            );
+        } else {
+            return String.format(
+                "❌ Votre demande %s a été REFUSÉE%n" +
+                "📋 Détails:%n" +
+                "   • Référence: #%d%n" +
+                "   • Désignation: %s%n" +
+                "   • Motif: %s%n" +
+                "   • Traitée le: %s%n" +
+                "💡 Vous pouvez soumettre une nouvelle demande avec les corrections nécessaires.",
+                typeDemande,
+                demande.getId(),
+                demande.getDesignation(),
+                motifRefus != null ? motifRefus : "Non spécifié par l'administration",
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm"))
+            );
+        }
     }
-}
     /**
      * Méthode de test pour vérifier les notifications
      */
@@ -198,12 +168,62 @@ public class DemandeAjoutNotificationService {
         
         String message = "🧪 TEST: " + testMessage + " - " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
         
+        // ✅ Appel correct avec 2 paramètres seulement
         boolean success = notifService.creerNotificationPourDemande(userId, message);
         
         if (success) {
             System.out.println("✅ Notification test envoyée à l'user #" + userId);
         } else {
             System.err.println("❌ Échec notification test pour user #" + userId);
+        }
+    }
+    
+    public void notifierNouvelleDemandeAjout(DemandeAjout demande) {
+        try {
+            // Récupérer le chef qui a fait la demande
+            Optional<Utilisateur> chefOpt = userXmlService.findById(demande.getChefId());
+            if (chefOpt.isEmpty()) {
+                System.err.println("❌ Chef non trouvé pour notification: " + demande.getChefId());
+                return;
+            }
+            
+            Utilisateur chef = chefOpt.get();
+            String nomChef = chef.getNom();
+            String departement = "Département"; // À remplacer par la méthode correcte si elle existe
+            
+            // Trouver tous les administrateurs
+            List<Utilisateur> admins = userXmlService.findAll().stream()
+                .filter(this::estAdministrateur)
+                .collect(Collectors.toList());
+            
+            for (Utilisateur admin : admins) {
+                String message = String.format(
+                    "📋 Nouvelle demande de %s%n" +
+                    "👤 Chef: %s%n" +
+                    "🏢 Département: %s%n" +
+                    "📦 Type: %s%n" +
+                    "🛒 Désignation: %s%n" +
+                    "📊 Quantité: %d%n" +
+                    "💰 Budget: %.2f DT",
+                    nomChef,
+                    nomChef,
+                    departement,
+                    demande.getTypeDemande().toString(),
+                    demande.getDesignation(),
+                    demande.getQuantite(),
+                    demande.getBudget()
+                );
+                
+                // ✅ Appel correct avec 2 paramètres seulement
+                notifService.creerNotificationPourDemande(admin.getId(), message);
+                
+                System.out.println("📨 Notification envoyée à l'admin #" + admin.getId() + 
+                                 " pour demande #" + demande.getId());
+            }
+            
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la notification: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

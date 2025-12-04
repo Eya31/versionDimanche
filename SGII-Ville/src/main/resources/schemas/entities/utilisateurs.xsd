@@ -7,15 +7,6 @@
   <xs:include schemaLocation="../common/typesBase.xsd"/>
   <xs:include schemaLocation="../common/contacts.xsd"/>
 
-  <!-- État de disponibilité -->
-  <xs:simpleType name="DisponibiliteType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="LIBRE"/>
-      <xs:enumeration value="OCCUPE"/>
-      <xs:enumeration value="ARCHIVE"/>
-    </xs:restriction>
-  </xs:simpleType>
-
   <!-- Utilisateurs -->
   <xs:complexType name="UtilisateurType" abstract="true">
     <xs:sequence>
@@ -26,6 +17,7 @@
       <xs:element name="role" type="tns:RoleType"/>
     </xs:sequence>
   </xs:complexType>
+  
 
   <xs:complexType name="CitoyenType">
     <xs:complexContent>
@@ -65,7 +57,6 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <!-- REMPLACER AgentMainDOeuvreType par MainDOeuvreType étendu -->
   <xs:complexType name="MainDOeuvreType">
     <xs:complexContent>
       <xs:extension base="tns:UtilisateurType">
@@ -74,18 +65,9 @@
           <xs:element name="matricule" type="xs:string"/>
           <xs:element name="cin" type="tns:CinType"/>
           <xs:element name="telephone" type="tns:TelephoneType"/>
-          <xs:element name="metier" type="xs:string"/>
           <xs:element name="disponibilite" type="tns:DisponibiliteType"/>
-          <xs:element name="active" type="xs:boolean"/>
-          <xs:element name="competences" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-          <xs:element name="habilitations" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-          <xs:element name="historiqueInterventions" minOccurs="0">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="interventionId" type="xs:int" maxOccurs="unbounded"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
+          <!-- compétence unique -->
+          <xs:element name="competence" type="xs:string" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

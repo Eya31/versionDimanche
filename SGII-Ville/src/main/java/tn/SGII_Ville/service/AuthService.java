@@ -222,7 +222,7 @@ public LoginResponse login(LoginRequest request) {
                 agent.setMatricule(request.getMatricule());
                 agent.setCin(request.getCin());
                 agent.setTelephone(request.getTelephone());
-                agent.setMetier(request.getMetier());
+                agent.setCompetence(request.getCompetence());
                 agent.setMainDOeuvreId(0); // Temporaire, sera mis à jour après création MainDOeuvre
                 utilisateur = agent;
                 break;
@@ -247,18 +247,19 @@ public LoginResponse login(LoginRequest request) {
     private void createMainDOeuvreEntry(Utilisateur user, RegisterRequest request) {
     if (user instanceof AgentMainDOeuvre) {
         MainDOeuvre mainDOeuvre = new MainDOeuvre();
-        mainDOeuvre.setId(mainDOeuvreService.generateNewId());
-        mainDOeuvre.setNom(request.getNom());
-        mainDOeuvre.setPrenom(request.getPrenom());
-        mainDOeuvre.setEmail(request.getEmail());
-        mainDOeuvre.setMatricule(request.getMatricule());
-        mainDOeuvre.setCin(request.getCin());
-        mainDOeuvre.setTelephone(request.getTelephone());
-        mainDOeuvre.setMetier(request.getMetier());
-        mainDOeuvre.setDisponibilite("LIBRE");
-        mainDOeuvre.setActive(true);
-        mainDOeuvre.setCompetences(new ArrayList<>());
-        mainDOeuvre.setHabilitations(new ArrayList<>());
+            mainDOeuvre.setId(mainDOeuvreService.generateNewId());
+            mainDOeuvre.setNom(request.getNom());
+            mainDOeuvre.setPrenom(request.getPrenom());
+            mainDOeuvre.setEmail(request.getEmail());
+            mainDOeuvre.setMatricule(request.getMatricule());
+            mainDOeuvre.setCin(request.getCin());
+            mainDOeuvre.setTelephone(request.getTelephone());
+            // MainDOeuvre (fiche) n'a pas de 'metier' ni de listes de compétences/habilitations.
+            // On conserve la 'competence' (unique) en prenant la première compétence fournie si disponible.
+            // Utiliser 'competence' de la requête
+            String competence = request.getCompetence() != null ? request.getCompetence() : "";
+            mainDOeuvre.setCompetence(competence);
+            mainDOeuvre.setDisponibilite("LIBRE");
         // Note: setHistoriqueInterventions n'existe pas dans MainDOeuvre, on l'ignore
 
         try {

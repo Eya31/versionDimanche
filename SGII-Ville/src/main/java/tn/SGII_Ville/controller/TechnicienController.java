@@ -451,8 +451,7 @@ public class TechnicienController {
             }
 
             // Sauvegarder la fiche main-d'œuvre
-            mainDOeuvre.setDisponibilite("DISPONIBLE");
-            mainDOeuvre.setActive(true);
+            mainDOeuvre.setDisponibilite("LIBRE");
             MainDOeuvre saved = mainDOeuvreService.save(mainDOeuvre);
 
             // Créer le compte utilisateur AgentMainDOeuvre
@@ -463,8 +462,14 @@ public class TechnicienController {
             agent.setMatricule(mainDOeuvre.getMatricule());
             agent.setCin(mainDOeuvre.getCin());
             agent.setTelephone(mainDOeuvre.getTelephone());
-            agent.setMetier(mainDOeuvre.getMetier());
-            agent.setCompetences(mainDOeuvre.getCompetences());
+            // Metier supprimé du schéma XSD
+            // agent.setMetier(mainDOeuvre.getMetier());
+            // Convertir la compétence unique en liste pour AgentMainDOeuvre
+            if (mainDOeuvre.getCompetence() != null) {
+                List<String> competences = new ArrayList<>();
+                competences.add(mainDOeuvre.getCompetence());
+                agent.setCompetences(competences);
+            }
             agent.setMainDOeuvreId(saved.getId());
 
             // Générer un mot de passe par défaut (matricule ou CIN)
@@ -536,7 +541,7 @@ public class TechnicienController {
                 return ResponseEntity.notFound().build();
             }
 
-            mainDOeuvre.setActive(false);
+            // Active supprimé du schéma XSD - utiliser disponibilite à la place
             mainDOeuvre.setDisponibilite("ARCHIVE");
             mainDOeuvreService.save(mainDOeuvre);
 
@@ -662,10 +667,10 @@ public class TechnicienController {
                 if (mainDOeuvre != null) {
                     mainDOeuvre.setDisponibilite("OCCUPE");
                     
-                    // Ajouter à l'historique
-                    if (!mainDOeuvre.getHistoriqueInterventionIds().contains(id)) {
-                        mainDOeuvre.getHistoriqueInterventionIds().add(id);
-                    }
+                    // HistoriqueInterventions supprimé du schéma XSD - plus de gestion d'historique
+                    // if (!mainDOeuvre.getHistoriqueInterventionIds().contains(id)) {
+                    //     mainDOeuvre.getHistoriqueInterventionIds().add(id);
+                    // }
                     
                     mainDOeuvreService.save(mainDOeuvre);
                 }
@@ -755,57 +760,14 @@ public class TechnicienController {
 
     /**
      * GET /api/technicien/main-doeuvre/{id}/historique
+     * @deprecated HistoriqueInterventions supprimé du schéma XSD
      * Récupère l'historique complet des interventions d'un agent
      */
     @GetMapping("/main-doeuvre/{id}/historique")
+    @Deprecated
     public ResponseEntity<List<HistoriqueInterventionDTO>> getHistoriqueMainDOeuvre(@PathVariable int id) {
-        try {
-            MainDOeuvre mainDOeuvre = mainDOeuvreService.findById(id);
-            if (mainDOeuvre == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            List<HistoriqueInterventionDTO> historique = new ArrayList<>();
-            
-            if (mainDOeuvre.getHistoriqueInterventionIds() != null) {
-                for (Integer interventionId : mainDOeuvre.getHistoriqueInterventionIds()) {
-                    Intervention intervention = interventionService.findById(interventionId);
-                    if (intervention != null) {
-                    HistoriqueInterventionDTO hist = new HistoriqueInterventionDTO();
-                    hist.setInterventionId(intervention.getId());
-                    hist.setDescription(intervention.getDescription() != null ? 
-                        intervention.getDescription() : "Intervention #" + intervention.getId());
-                    hist.setDateDebut(intervention.getDateDebut());
-                    hist.setDateFin(intervention.getDateFin());
-                    hist.setTempsPasseMinutes(intervention.getTempsPasseMinutes() != null ? 
-                        intervention.getTempsPasseMinutes() : 0);
-                    hist.setEtat(intervention.getEtat() != null ? 
-                        intervention.getEtat().name() : "INCONNU");
-                        
-                        // Compétences utilisées (basées sur les compétences de l'agent)
-                        hist.setCompetencesUtilisees(mainDOeuvre.getCompetences() != null ? 
-                            mainDOeuvre.getCompetences() : new ArrayList<>());
-                        
-                        // Résultat basé sur l'état
-                        if ("TERMINEE".equals(intervention.getEtat().name())) {
-                            hist.setResultat("Succès");
-                        } else if ("SUSPENDUE".equals(intervention.getEtat().name())) {
-                            hist.setResultat("Suspendue");
-                        } else {
-                            hist.setResultat("En cours");
-                        }
-                        
-                        historique.add(hist);
-                    }
-                }
-            }
-
-            return ResponseEntity.ok(historique);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        // HistoriqueInterventions n'est plus dans le schéma XSD - retourner une liste vide
+        return ResponseEntity.ok(new ArrayList<>());
     }
 
     // ==================== T8 - PROFIL TECHNICIEN ====================

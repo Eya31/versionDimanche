@@ -40,7 +40,7 @@ public class XmlService {
         SECTION_FILES.put("Interventions", "interventions.xml");
         SECTION_FILES.put("Fournisseurs", "fournisseurs.xml");
         SECTION_FILES.put("Equipements", "equipements.xml");
-        SECTION_FILES.put("RessourcesMaterielles", "ressources.xml");
+    SECTION_FILES.put("RessourcesMaterielles", "ressources.xml");  // ← ICI
         SECTION_FILES.put("MainDOeuvre", "maindoeuvre.xml");
         SECTION_FILES.put("Notifications", "notifications.xml");
         SECTION_FILES.put("DemandesAjout", "demandesajout.xml");
@@ -73,41 +73,42 @@ public class XmlService {
         return loadXmlDocument("Utilisateurs");
     }
 
-    public void saveXmlDocument(Document doc, String sectionName) throws Exception {
-        String xsdResource = switch (sectionName) {
-            case "Interventions" -> "/schemas/entities/interventions.xsd";
-            case "Demandes"       -> "/schemas/entities/demandes.xsd";
-            default               -> null;
-        };
+    public String saveXmlDocument(Document doc, String sectionName) throws Exception {
+    String xsdResource = switch (sectionName) {
+        case "Interventions" -> "/schemas/entities/interventions.xsd";
+        case "Demandes"       -> "/schemas/entities/demandes.xsd";
+        default               -> null;
+    };
 
-        if (xsdResource != null) {
-            try {
-                SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-                Schema schema = factory.newSchema(getClass().getResource(xsdResource));
-                if (schema != null) {
-                    Validator validator = schema.newValidator();
-                    validator.validate(new DOMSource(doc));
-                }
-            } catch (Exception e) {
-                logger.warn("Validation XSD échouée pour {}: {}", sectionName, e.getMessage());
+    if (xsdResource != null) {
+        try {
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = factory.newSchema(getClass().getResource(xsdResource));
+            if (schema != null) {
+                Validator validator = schema.newValidator();
+                validator.validate(new DOMSource(doc));
             }
+        } catch (Exception e) {
+            logger.warn("Validation XSD échouée pour {}: {}", sectionName, e.getMessage());
         }
-
-        Transformer tf = TransformerFactory.newInstance().newTransformer();
-        tf.setOutputProperty(OutputKeys.INDENT, "yes");
-        tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-        String fileName = SECTION_FILES.get(sectionName);
-        if (fileName == null) throw new IllegalArgumentException("Section inconnue: " + sectionName);
-
-        Path path = Paths.get(DATA_DIR + fileName);
-        try (FileOutputStream fos = new FileOutputStream(path.toFile())) {
-            tf.transform(new DOMSource(doc), new StreamResult(fos));
-        }
-        
-        logger.info("Document sauvegardé: {}", path);
     }
+
+    Transformer tf = TransformerFactory.newInstance().newTransformer();
+    tf.setOutputProperty(OutputKeys.INDENT, "yes");
+    tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+    tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+    String fileName = SECTION_FILES.get(sectionName);
+    if (fileName == null) throw new IllegalArgumentException("Section inconnue: " + sectionName);
+
+    Path path = Paths.get(DATA_DIR + fileName);
+    try (FileOutputStream fos = new FileOutputStream(path.toFile())) {
+        tf.transform(new DOMSource(doc), new StreamResult(fos));
+    }
+    
+    logger.info("Document sauvegardé: {}", path);
+    return path.toString();  // AJOUTEZ CETTE LIGNE
+}
 
     @Deprecated
     public void saveXmlDocument(Document doc) throws Exception {
@@ -303,4 +304,15 @@ public class XmlService {
         saveXmlDocument(doc, "Interventions");
         logger.info("Fichier interventions.xml réinitialisé");
     }
+    // Dans XmlService.java
+public boolean checkFileExists(String sectionName) {
+    String fileName = SECTION_FILES.get(sectionName);
+    if (fileName == null) {
+        return false;
+    }
+    File xmlFile = new File(DATA_DIR + fileName);
+    boolean exists = xmlFile.exists();
+    System.out.println("📁 Fichier " + fileName + " existe: " + exists);
+    return exists;
+}
 }

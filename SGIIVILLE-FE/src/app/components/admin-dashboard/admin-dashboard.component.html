@@ -6,7 +6,7 @@
       <div class="notification-bell" (click)="toggleNotificationsDropdown()">
         🔔
         <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
-        
+
         <!-- Dropdown notifications -->
         <div class="notifications-dropdown" *ngIf="showNotificationsDropdown" (click)="$event.stopPropagation()">
           <div class="dropdown-header">
@@ -17,7 +17,7 @@
             <div *ngIf="notifications.length === 0" class="empty-state">
               Aucune notification
             </div>
-            <div *ngFor="let notif of notifications" 
+            <div *ngFor="let notif of notifications"
                  class="notification-item"
                  [class.unread]="!notif.readable"
                  (click)="markAsRead(notif)">
@@ -42,7 +42,7 @@
       <h2>🗺️ Carte des Interventions en Cours</h2>
       <span class="total-count">Total: {{ interventionsEnCours.length }}</span>
     </div>
-    
+
     <!-- Légende -->
     <div class="map-legend">
       <div class="legend-item">
@@ -172,4 +172,146 @@
       </table>
     </div>
   </div>
+  <!-- SECTION GESTION DES DEMANDES DE RESSOURCES -->
+<div class="section demande-ressource-section">
+  <div class="section-header">
+    <h2>📦 Gestion des demandes de ressources</h2>
+    <div class="stats-badge">
+      <span class="stat-item pending" (click)="demandeRessourceFilter = 'EN_ATTENTE'">
+  ⏳ {{ demandesEnAttenteCount }} en attente
+</span>
+      <span class="stat-item success" (click)="demandeRessourceFilter = 'TRAITEES'">
+  ✅ {{ demandesAccepteesCount }} acceptées
+</span>
+      <span class="stat-item error" (click)="demandeRessourceFilter = 'TRAITEES'">
+  ❌ {{ demandesRefuseesCount }} refusées
+</span>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filter-tabs">
+    <button class="filter-tab"
+            [class.active]="demandeRessourceFilter === 'TOUTES'"
+            (click)="demandeRessourceFilter = 'TOUTES'">
+      Toutes ({{ demandesRessources.length }})
+    </button>
+    <button class="filter-tab"
+            [class.active]="demandeRessourceFilter === 'EN_ATTENTE'"
+            (click)="demandeRessourceFilter = 'EN_ATTENTE'">
+⏳ En attente ({{ demandesEnAttenteCount }})    </button>
+    <button class="filter-tab"
+            [class.active]="demandeRessourceFilter === 'TRAITEES'"
+            (click)="demandeRessourceFilter = 'TRAITEES'">
+⏳ En attente ({{ demandesEnAttenteCount }})    </button>
+  </div>
+
+  <!-- Tableau des demandes -->
+  <div class="table-container">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Ressource</th>
+          <th>Quantité</th>
+          <th>Budget</th>
+          <th>Chef</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let demande of getDemandesFiltrees()">
+          <td><strong>#{{ demande.id }}</strong></td>
+          <td class="designation-cell">
+            <strong>{{ demande.designation }}</strong><br>
+            <small class="text-muted">{{ demande.justification | slice:0:60 }}...</small>
+          </td>
+          <td>{{ demande.quantite }} unités</td>
+          <td>{{ demande.budget | currency:'DT ' }}</td>
+          <td>Chef #{{ demande.chefId }}</td>
+          <td>{{ demande.dateDemande | date:'dd/MM' }}</td>
+          <td>
+            <span class="status" [ngClass]="getEtatBadgeClassDemande(demande.etat)">
+              {{ getEtatTextDemande(demande.etat) }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <div class="action-buttons" *ngIf="demande.etat === 'EN_ATTENTE_ADMIN'">
+              <button class="btn-small success"
+                      (click)="accepterDemandeRessource(demande)"
+                      title="Accepter et ajouter au stock">
+                ✅ Accepter
+              </button>
+              <button class="btn-small danger"
+                      (click)="refuserDemandeRessource(demande)"
+                      title="Refuser avec motif">
+                ❌ Refuser
+              </button>
+              <button class="btn-small info"
+                      (click)="voirDetailsDemandeRessourceAdmin(demande)"
+                      title="Voir détails">
+                👁️ Détails
+              </button>
+            </div>
+            <div *ngIf="demande.etat !== 'EN_ATTENTE_ADMIN'">
+              <span class="text-success" *ngIf="demande.etat === 'ACCEPTEE'">✅ Acceptée</span>
+              <span class="text-danger" *ngIf="demande.etat === 'REFUSEE'">❌ Refusée</span>
+              <button class="btn-small view"
+                      (click)="voirDetailsDemandeRessourceAdmin(demande)">
+                Détails
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="getDemandesFiltrees().length === 0">
+          <td colspan="8" class="no-data">
+            <div style="padding: 40px;">
+              <div style="font-size: 48px; margin-bottom: 10px;">📭</div>
+              <p>Aucune demande de ressource à afficher</p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL REFUS DEMANDE RESSOURCE -->
+<div class="modal-overlay" *ngIf="showRefusRessourceModal" (click)="closeRefusRessourceModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()" style="max-width: 500px;">
+    <button class="close-btn" (click)="closeRefusRessourceModal()">×</button>
+    <h2>❌ Refuser la demande #{{ selectedDemandeRessource?.id }}</h2>
+
+    <div class="demande-info">
+      <p><strong>Ressource:</strong> {{ selectedDemandeRessource?.designation }}</p>
+      <p><strong>Quantité:</strong> {{ selectedDemandeRessource?.quantite }} unités</p>
+      <p><strong>Budget:</strong> {{ selectedDemandeRessource?.budget }} DT</p>
+      <p><strong>Chef:</strong> #{{ selectedDemandeRessource?.chefId }}</p>
+    </div>
+
+    <div class="form-group">
+      <label>Motif du refus *</label>
+      <textarea [(ngModel)]="motifRefusRessource"
+                placeholder="Expliquez clairement pourquoi cette demande est refusée..."
+                rows="4" required></textarea>
+      <small class="form-hint">Ce message sera envoyé au chef de service</small>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="action-btn secondary"
+              (click)="closeRefusRessourceModal()">
+        Annuler
+      </button>
+      <button type="button" class="action-btn danger large"
+              (click)="confirmerRefusRessource()"
+              [disabled]="!motifRefusRessource || motifRefusRessource.length < 10">
+        ❌ Confirmer le refus
+      </button>
+    </div>
+  </div>
+</div>
+
+
 </div>

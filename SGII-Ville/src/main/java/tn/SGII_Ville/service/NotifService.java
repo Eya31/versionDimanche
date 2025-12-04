@@ -31,19 +31,24 @@ public class NotifService {
     /**
      * Récupère toutes les notifications
      */
-    public List<Notification> getAllNotifications() {
+     public List<Notification> getAllNotifications() {
         List<Notification> notifications = new ArrayList<>();
         try {
-            Document doc = loadXmlDocument();
-            NodeList notificationNodes = doc.getElementsByTagNameNS(NAMESPACE_URI, "Notification");
-            
-            for (int i = 0; i < notificationNodes.getLength(); i++) {
-                Element notificationElement = (Element) notificationNodes.item(i);
-                notifications.add(parseNotification(notificationElement));
+            Document doc = xmlService.loadXmlDocument("Notifications");
+            Element root = doc.getDocumentElement();
+
+            NodeList notifNodes = root.getElementsByTagNameNS(
+                xmlService.getNamespaceUri(), "Notification"
+            );
+
+            for (int i = 0; i < notifNodes.getLength(); i++) {
+                Element notifElement = (Element) notifNodes.item(i);
+                Notification notification = parseNotification(notifElement);
+                notifications.add(notification);
             }
+
         } catch (Exception e) {
-            System.err.println("❌ Erreur lors du chargement des notifications: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Erreur récupération toutes notifications: " + e.getMessage());
         }
         return notifications;
     }
@@ -51,11 +56,42 @@ public class NotifService {
     /**
      * Récupère les notifications par utilisateur
      */
+/**
+     * Récupère toutes les notifications d'un utilisateur
+     */
     public List<Notification> getNotificationsByUser(int userId) {
-        return getAllNotifications().stream()
-                .filter(notification -> notification.getUserId() == userId)
-                .collect(java.util.stream.Collectors.toList());
+        List<Notification> notifications = new ArrayList<>();
+        try {
+            Document doc = xmlService.loadXmlDocument("Notifications");
+            Element root = doc.getDocumentElement();
+
+            NodeList notifNodes = root.getElementsByTagNameNS(
+                xmlService.getNamespaceUri(), "Notification"
+            );
+
+            for (int i = 0; i < notifNodes.getLength(); i++) {
+                Element notifElement = (Element) notifNodes.item(i);
+                
+                // Vérifier si c'est pour cet utilisateur
+                String userIdStr = xmlService.getElementTextContent(notifElement, "userId");
+                if (userIdStr != null && Integer.parseInt(userIdStr) == userId) {
+                    Notification notification = parseNotification(notifElement);
+                    notifications.add(notification);
+                }
+            }
+
+            // Trier par date (plus récentes d'abord)
+            notifications.sort((n1, n2) -> 
+                n2.getCreatedAt().compareTo(n1.getCreatedAt())
+            );
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur récupération notifications: " + e.getMessage());
+        }
+        return notifications;
     }
+
+    
 
     /**
      * Récupère les notifications non lues par utilisateur
@@ -70,9 +106,14 @@ public class NotifService {
      * Compte les notifications non lues par utilisateur
      */
     public int getUnreadCountByUser(int userId) {
-        return (int) getNotificationsByUser(userId).stream()
-                .filter(notification -> !notification.isReadable())
+        try {
+            List<Notification> notifications = getNotificationsByUser(userId);
+            return (int) notifications.stream()
+                .filter(n -> !n.isReadable())
                 .count();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     /**
@@ -113,30 +154,45 @@ public class NotifService {
     /**
      * Marque une notification comme lue
      */
-    public boolean markAsRead(int notificationId) {
+     public boolean markAsRead(int notificationId) {
         try {
-            Document doc = loadXmlDocument();
-            NodeList notificationNodes = doc.getElementsByTagNameNS(NAMESPACE_URI, "Notification");
-            
-            for (int i = 0; i < notificationNodes.getLength(); i++) {
-                Element notificationElement = (Element) notificationNodes.item(i);
-                int id = Integer.parseInt(getElementText(notificationElement, "idNotification"));
+            Document doc = xmlService.loadXmlDocument("Notifications");
+            Element root = doc.getDocumentElement();
+
+            NodeList notifNodes = root.getElementsByTagNameNS(
+                xmlService.getNamespaceUri(), "Notification"
+            );
+
+            for (int i = 0; i < notifNodes.getLength(); i++) {
+                Element notifElement = (Element) notifNodes.item(i);
+                String idStr = xmlService.getElementTextContent(notifElement, "idNotification");
                 
-                if (id == notificationId) {
-                    updateElementText(notificationElement, "readable", "true");
-                    saveXmlDocument(doc);
-                    System.out.println("✅ Notification #" + notificationId + " marquée comme lue");
+                if (idStr != null && Integer.parseInt(idStr) == notificationId) {
+                    // Mettre à jour le champ readable
+                    NodeList readableNodes = notifElement.getElementsByTagNameNS(
+                        xmlService.getNamespaceUri(), "readable"
+                    );
+                    
+                    if (readableNodes.getLength() > 0) {
+                        Element readableElement = (Element) readableNodes.item(0);
+                        readableElement.setTextContent("true");
+                    } else {
+                        // Créer l'élément s'il n'existe pas
+                        xmlService.addTextElement(doc, notifElement, "readable", "true");
+                    }
+
+                    xmlService.saveXmlDocument(doc, "Notifications");
                     return true;
                 }
             }
+
             return false;
+
         } catch (Exception e) {
-            System.err.println("❌ Erreur lors du marquage de la notification: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Erreur marquage notification comme lue: " + e.getMessage());
             return false;
         }
     }
-
     /**
      * Trouve une notification par son ID
      */
@@ -151,36 +207,42 @@ public class NotifService {
     /**
      * Crée une notification pour une demande d'ajout (méthode simplifiée)
      */
+     /**
+     * Crée une notification pour une demande d'ajout
+     */
     public boolean creerNotificationPourDemande(int userId, String message) {
-    try {
-        System.out.println("📨 [NOTIF SERVICE] Création notification pour user #" + userId);
-        System.out.println("📝 Message: " + message);
-        
-        // Créer une notification simple
-        Notification notification = new Notification();
-        notification.setMessage(message);
-        notification.setCreatedAt(LocalDateTime.now());
-        notification.setUserId(userId);
-        notification.setReadable(false);
-        
-        System.out.println("💾 Sauvegarde notification...");
-        Notification saved = save(notification);
-        
-        if (saved != null && saved.getIdNotification() > 0) {
-            System.out.println("✅ Notification créée avec ID: " + saved.getIdNotification());
+        try {
+            System.out.println("📨 Création notification pour user #" + userId);
+            System.out.println("📝 Message: " + message);
+
+            Document doc = xmlService.loadXmlDocument("Notifications");
+            Element root = doc.getDocumentElement();
+
+            // Générer nouvel ID
+            int newId = generateNewId(doc);
+
+            // Créer l'élément Notification
+            Element notifElement = doc.createElementNS(xmlService.getNamespaceUri(), "Notification");
+
+            // Ajouter les champs
+            xmlService.addTextElement(doc, notifElement, "idNotification", String.valueOf(newId));
+            xmlService.addTextElement(doc, notifElement, "userId", String.valueOf(userId));
+            xmlService.addTextElement(doc, notifElement, "message", message);
+            xmlService.addTextElement(doc, notifElement, "createdAt", LocalDateTime.now().format(FORMATTER));
+            xmlService.addTextElement(doc, notifElement, "readable", "false");
+
+            root.appendChild(notifElement);
+            xmlService.saveXmlDocument(doc, "Notifications");
+
+            System.out.println("✅ Notification créée avec ID: " + newId);
             return true;
-        } else {
-            System.err.println("❌ Échec création notification - saved est null ou ID invalide");
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur création notification: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
-        
-    } catch (Exception e) {
-        System.err.println("❌ Erreur création notification: " + e.getMessage());
-        e.printStackTrace();
-        return false;
     }
-}
-
     // === MÉTHODES PRIVÉES ===
 
     private Document loadXmlDocument() throws Exception {
@@ -208,31 +270,34 @@ public class NotifService {
         transformer.transform(source, result);
     }
 
-    private Notification parseNotification(Element element) {
+     private Notification parseNotification(Element element) {
         Notification notification = new Notification();
         
         try {
-            notification.setIdNotification(Integer.parseInt(getElementText(element, "idNotification")));
-            notification.setMessage(getElementText(element, "message"));
-            
-            String createdAt = getElementText(element, "createdAt");
-            if (createdAt != null && !createdAt.isEmpty()) {
-                notification.setCreatedAt(LocalDateTime.parse(createdAt, FORMATTER));
-            } else {
-                notification.setCreatedAt(LocalDateTime.now());
+            String idStr = xmlService.getElementTextContent(element, "idNotification");
+            if (idStr != null) notification.setIdNotification(Integer.parseInt(idStr));
+
+            String userIdStr = xmlService.getElementTextContent(element, "userId");
+            if (userIdStr != null) notification.setUserId(Integer.parseInt(userIdStr));
+
+            notification.setMessage(xmlService.getElementTextContent(element, "message"));
+
+            String createdAtStr = xmlService.getElementTextContent(element, "createdAt");
+            if (createdAtStr != null) {
+                notification.setCreatedAt(LocalDateTime.parse(createdAtStr, FORMATTER));
             }
-            
-            notification.setUserId(Integer.parseInt(getElementText(element, "userId")));
-            notification.setReadable(Boolean.parseBoolean(getElementText(element, "readable")));
-            
+
+            String readableStr = xmlService.getElementTextContent(element, "readable");
+            if (readableStr != null) {
+                notification.setReadable(Boolean.parseBoolean(readableStr));
+            }
+
         } catch (Exception e) {
             System.err.println("❌ Erreur parsing notification: " + e.getMessage());
-            e.printStackTrace();
         }
         
         return notification;
     }
-
     private String getElementText(Element element, String tagName) {
         NodeList nodes = element.getElementsByTagNameNS(NAMESPACE_URI, tagName);
         if (nodes.getLength() > 0) {
@@ -255,14 +320,16 @@ public class NotifService {
         }
     }
 
-    private int generateNewId(Document doc) {
+     private int generateNewId(Document doc) {
         int maxId = 0;
-        NodeList nodes = doc.getElementsByTagNameNS(NAMESPACE_URI, "Notification");
+        NodeList nodes = doc.getElementsByTagNameNS(xmlService.getNamespaceUri(), "Notification");
         for (int i = 0; i < nodes.getLength(); i++) {
             Element el = (Element) nodes.item(i);
-            int id = Integer.parseInt(getElementText(el, "idNotification"));
-            if (id > maxId) {
-                maxId = id;
+            String idStr = xmlService.getElementTextContent(el, "idNotification");
+            if (idStr != null) {
+                try {
+                    maxId = Math.max(maxId, Integer.parseInt(idStr));
+                } catch (NumberFormatException ignored) {}
             }
         }
         return maxId + 1;
@@ -320,4 +387,6 @@ public class NotifService {
         save(notification);
         System.out.println("✅ Notification citoyen envoyée");
     }
+
+    
 }

@@ -11,11 +11,25 @@ import { Intervention } from '../../models/intervention.model';
 import { RessourceMaterielle } from '../../models/ressource.model';
 import { Technicien } from '../../models/technicien.model';
 import { TechnicienListService } from '../../services/technicien-list.service';
-import { NotificationService, Notification } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { InterventionPlanificationComponent } from '../intervention-planification/intervention-planification.component';
 import * as L from 'leaflet';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { NotifService, Notification } from '../../services/notif.service';
+
+  // Ajouter ces imports
+import { DemandeAjoutService , DemandeAjout} from '../../services/demande-ajout.service';
+import {
+  DemandeAjoutMaterielService,  // Nom du service changé
+  DemandeRessource,
+  CreateDemandeRessourceRequest,
+  DemandeAjoutMateriel
+} from "../../services/demande-ajout-materiel.service" // Nom du fichier changé
+import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-chef-dashboard',
   standalone: true,
@@ -116,15 +130,18 @@ currentRessource: RessourceMaterielle = {
     private interventionService: InterventionService,
     private ressourceService: RessourceService,
     private technicienListService: TechnicienListService,
-    private notificationService: NotificationService,
-    private authService: AuthService
+    private authService: AuthService,
+      private demandeAjoutService: DemandeAjoutService,
+      private Router: Router,
+private demandeAjoutMaterielService: DemandeAjoutMaterielService, // Utiliser le nouveau service seulement
+private notificationService: NotifService,
   ) {}
 
   ngOnInit(): void {
     this.loadAllData();
     this.loadTechniciens();
-    this.loadNotifications();
-    this.startNotificationPolling();
+    this.loadNotifications(); // AJOUTER CETTE LIGNE
+  this.startNotificationPolling(); // AJOUTER CETTE LIGNE
   }
 
   ngAfterViewInit(): void {
@@ -138,67 +155,59 @@ currentRessource: RessourceMaterielle = {
     this.unreadCountSubscription?.unsubscribe();
   }
 
-  // === GESTION DES NOTIFICATIONS ===
-  loadNotifications(): void {
-    const userId = this.authService.getUserId();
-    if (!userId) return;
+  // Méthode pour charger les notifications
+loadNotifications(): void {
+  const userId = this.authService.getUserId();
+  if (!userId) return;
 
-    this.notificationService.getNotificationsByUser(userId).subscribe({
-      next: (data) => {
-        this.notifications = data.sort((a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        this.unreadCount = this.notifications.filter(n => !n.readable).length;
-      },
-      error: (err) => console.error('Erreur chargement notifications:', err)
-    });
+  this.notificationService.getNotificationsByUser(userId).subscribe({
+    next: (data: Notification[]) => {
+      this.notifications = data;
+      this.unreadCount = data.filter(n => !n.readable).length;
+      console.log('📨 Notifications chargées:', data.length);
+    },
+    error: (err:any) => console.error('Erreur chargement notifications:', err)
+  });
+}
+
+  private startNotificationPolling(): void {
+  const userId = this.authService.getUserId();
+  if (!userId) return;
+
+  // Poll toutes les 10 secondes
+  this.notificationSubscription = this.notificationService.pollUnreadCount(userId).pipe(
+    switchMap((response: { unreadCount: number }) => of(response.unreadCount))
+  ).subscribe({
+    next: (unreadCount: number) => {
+      this.unreadCount = unreadCount;
+    },
+    error: (err: any) => console.error('Erreur polling notifications:', err)
+  });
+}
+toggleNotificationsDropdown(): void {
+  this.showNotificationsDropdown = !this.showNotificationsDropdown;
+  if (this.showNotificationsDropdown) {
+    this.loadNotifications();
   }
-
-  startNotificationPolling(): void {
-    const userId = this.authService.getUserId();
-    if (!userId) return;
-
-    // Poll toutes les 15 secondes pour le compteur
-    this.unreadCountSubscription = this.notificationService.pollUnreadCount(userId).subscribe({
-      next: (data) => {
-        this.unreadCount = data.unreadCount;
-      },
-      error: (err) => console.error('Erreur polling notifications:', err)
-    });
-  }
-
-  toggleNotificationsDropdown(): void {
-    this.showNotificationsDropdown = !this.showNotificationsDropdown;
-    if (this.showNotificationsDropdown) {
-      this.loadNotifications();
-    }
-  }
+}
 
   markAsRead(notification: Notification): void {
-    if (notification.readable) return;
+  if (notification.readable) return;
 
-    this.notificationService.markAsRead(notification.idNotification).subscribe({
-      next: () => {
-        notification.readable = true;
-        this.unreadCount = this.notifications.filter(n => !n.readable).length;
-      },
-      error: (err) => console.error('Erreur marquage notification:', err)
-    });
-  }
+  this.notificationService.markAsRead(notification.idNotification).subscribe({
+    next: () => {
+      notification.readable = true;
+      this.unreadCount = this.notifications.filter(n => !n.readable).length;
+      console.log('✅ Notification marquée comme lue');
+    },
+    error: (err:any) => console.error('Erreur marquage notification:', err)
+  });
+}
 
   formatNotificationDate(dateStr: string): string {
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
+  return this.notificationService.formatNotificationDate(dateStr);
+}
 
-    if (minutes < 1) return 'À l\'instant';
-    if (minutes < 60) return `Il y a ${minutes} min`;
-    if (hours < 24) return `Il y a ${hours}h`;
-    return `Il y a ${days}j`;
-  }
 loadTechniciens(): void {
     this.technicienListService.getAllTechniciens().subscribe({
       next: (data) => {
@@ -483,7 +492,7 @@ loadTechniciens(): void {
 
   onPlanificationComplete(result: any): void {
     console.log('Planification complétée:', result);
-    
+
     if (result.success) {
       alert('✅ Planification enregistrée avec succès! Intervention #' + result.interventionId + ' créée.');
       this.closePlanificationModal();
@@ -1064,4 +1073,227 @@ private resetEquipementForm(): void {
     alert('Fonctionnalité d\'export en cours de développement');
     // TODO: Implémenter l'export des rapports
   }
+
+
+
+
+
+// Ajouter ces variables dans la classe ChefDashboardComponent
+showDemandeRessourceModal = false;
+mesDemandesRessources: DemandeRessource[] = [];
+
+// Données du formulaire (SEULEMENT RESSOURCE)
+demandeRessourceData: CreateDemandeRessourceRequest = {
+  designation: '',
+  quantite: 1,
+  budget: 0,
+  justification: '',
+  chefId: 0
+};
+
+// Injecter le service dans le constructeur
+
+
+// Méthodes pour la modal de demande de ressource
+
+
+closeDemandeRessourceModal(): void {
+  this.showDemandeRessourceModal = false;
+  this.resetDemandeRessourceForm();
+}
+
+resetDemandeRessourceForm(): void {
+  const userId = this.authService.getUserId();
+
+  this.demandeRessourceData = {
+    designation: '',
+    quantite: 1,
+    budget: 0,
+    justification: '',
+    chefId: userId || 0  // ✅ Garder l'ID si disponible
+  };
+}
+
+
+
+
+// Utiliser comme ceci dans openDemandeRessourceModal():
+openDemandeRessourceModal(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      alert('Veuillez vous connecter');
+      this.Router.navigate(['/login']); // ✅ Utiliser router
+      return;
+    }
+
+    this.demandeRessourceData = {
+      designation: '',
+      quantite: 1,
+      budget: 0,
+      justification: '',
+      chefId: userId // ✅ Toujours inclure chefId
+    };
+
+    this.showDemandeRessourceModal = true;
+    this.loadMesDemandesRessources();
+  }
+
+  // Corriger submitDemandeRessource
+  submitDemandeRessource(): void {
+    // Validation du chefId
+    const userId = this.authService.getUserId();
+    if (!this.demandeRessourceData.chefId || this.demandeRessourceData.chefId <= 0) {
+        alert('Erreur: Vous devez être connecté!');
+        this.Router.navigate(['/login']);
+        return;
+    }
+    if (!userId || userId <= 0) {
+      alert('Erreur: Vous devez être connecté pour soumettre une demande.');
+      this.Router.navigate(['/login']); // ✅ Utiliser router
+      return;
+    }
+
+    // S'assurer que chefId est inclus
+    this.demandeRessourceData.chefId = userId;
+
+    // Autres validations...
+    if (!this.demandeRessourceData.designation.trim()) {
+      alert('Veuillez saisir la désignation de la ressource');
+      return;
+    }
+
+    if (this.demandeRessourceData.quantite <= 0) {
+      alert('La quantité doit être supérieure à 0');
+      return;
+    }
+
+    if (this.demandeRessourceData.budget <= 0) {
+      alert('Le budget doit être supérieur à 0');
+      return;
+    }
+
+    if (!this.demandeRessourceData.justification.trim()) {
+      alert('Veuillez justifier votre demande');
+      return;
+    }
+
+    console.log('📨 Envoi de la demande de ressource:', this.demandeRessourceData);
+
+    this.demandeAjoutMaterielService.creerDemandeRessource(this.demandeRessourceData).subscribe({
+  next: (response: DemandeRessource) => { // Ajouter le type
+        console.log('✅ Demande de ressource créée:', response);
+        alert('✅ Demande soumise avec succès !\n\n' +
+              'Votre demande a été envoyée à l\'administration pour validation.\n' +
+              'Vous serez notifié de la décision.');
+this.sendNotificationToAdmins(response);
+
+        // Recharger les demandes
+        this.loadMesDemandesRessources();
+
+        // Fermer la modal
+        this.closeDemandeRessourceModal();
+
+        // Recharger les notifications
+        this.loadNotifications();
+      },
+      error: (error: any) => {
+        console.error('❌ Erreur création demande:', error);
+        let errorMessage = 'Erreur lors de la soumission de la demande';
+
+        if (error.status === 401 || error.status === 403) {
+          errorMessage = 'Session expirée. Veuillez vous reconnecter.';
+          this.authService.logout();
+          this.Router.navigate(['/login']); // ✅ Utiliser Router
+        } else if (error.error?.error) {
+          errorMessage = error.error.error;
+        }
+
+        alert(`❌ ${errorMessage}`);
+      }
+    });
+  }
+// Méthodes pour les statuts
+getEtatBadgeClassDemande(etat: string): string {
+  switch (etat) {
+    case 'EN_ATTENTE_ADMIN': return 'status pending';
+    case 'ACCEPTEE': return 'status done';
+    case 'REFUSEE': return 'status error';
+    default: return 'status pending';
+  }
+}
+
+getEtatTextDemande(etat: string): string {
+  switch (etat) {
+    case 'EN_ATTENTE_ADMIN': return '⏳ En attente admin';
+    case 'ACCEPTEE': return '✅ Acceptée';
+    case 'REFUSEE': return '❌ Refusée';
+    default: return etat;
+  }
+}
+voirMotifRefus(demande: DemandeRessource): void {
+    if (demande.motifRefus) {
+      alert(`📝 Motif de refus - Demande #${demande.id}\n\n${demande.motifRefus}`);
+    } else {
+      alert('Aucun motif de refus disponible.');
+    }
+  }
+// Ajoutez après la méthode voirMotifRefus() :
+
+loadMesDemandesRessources(): void {
+  const chefId = this.authService.getUserId();
+  if (!chefId) return;
+
+  // Utiliser la méthode spécifique pour les ressources du chef
+  this.demandeAjoutMaterielService.getDemandesRessourcesParChef(chefId).subscribe({
+  next: (demandes: DemandeRessource[]) => {
+      this.mesDemandesRessources = demandes.sort((a, b) =>
+        new Date(b.dateDemande).getTime() - new Date(a.dateDemande).getTime()
+      );
+      console.log('📦 Mes demandes de ressources:', this.mesDemandesRessources.length);
+    },
+    error: (error: any) => {
+      console.error('Erreur chargement demandes:', error);
+    }
+  });
+}
+
+voirDetailsDemandeRessource(demande: DemandeRessource): void {
+  let message = `📦 Détails de la demande #${demande.id}\n\n`;
+  message += `Désignation: ${demande.designation}\n`;
+  message += `Quantité demandée: ${demande.quantite} unités\n`;
+  message += `Budget estimé: ${demande.budget} DT\n`;
+  message += `Date de demande: ${new Date(demande.dateDemande).toLocaleDateString('fr-FR')}\n`;
+  message += `Statut: ${this.getEtatTextDemande(demande.etat)}\n`;
+  message += `Justification:\n${demande.justification}\n`;
+
+  if (demande.motifRefus) {
+    message += `\n❌ Motif du refus:\n${demande.motifRefus}`;
+  }
+
+  if (demande.dateTraitement) {
+    message += `\n📅 Traitée le: ${new Date(demande.dateTraitement).toLocaleDateString('fr-FR')}`;
+  }
+
+  alert(message);
+}
+private sendNotificationToAdmins(demande: DemandeRessource): void {
+  const chefId = this.authService.getUserId();
+  if (!chefId) return;
+
+  const message = `📦 Nouvelle demande de ressource #${demande.id}\n` +
+                 `Désignation: ${demande.designation}\n` +
+                 `Quantité: ${demande.quantite} unités\n` +
+                 `Budget: ${demande.budget} DT\n` +
+                 `Chef: #${chefId}`;
+
+  // Utiliser la méthode testCreateNotification au lieu de createNotificationForDemand
+  this.notificationService.testCreateNotification(chefId, message).subscribe({
+    next: (response: any) => {
+      console.log('📨 Notification envoyée:', response);
+    },
+    error: (error: any) => {
+      console.error('❌ Erreur envoi notification:', error);
+    }
+  });
+}
 }

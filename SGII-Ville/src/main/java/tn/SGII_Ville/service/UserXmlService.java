@@ -284,7 +284,7 @@ public class UserXmlService {
             }
             
             AgentMainDOeuvre agent = new AgentMainDOeuvre(id, nom, email, motDePasse, prenom, matricule, cin, telephone);
-            agent.setMetier(metier);
+            agent.setCompetence(metier);
             agent.setCompetences(competences);
             agent.setMainDOeuvreId(mainDOeuvreId);
             agent.setRole(role);
@@ -368,7 +368,7 @@ private String normalizeTagName(String tagName) {
             xmlService.addTextElement(doc, userElement, "matricule", agent.getMatricule() != null ? agent.getMatricule() : "");
             xmlService.addTextElement(doc, userElement, "cin", agent.getCin() != null ? agent.getCin() : "");
             xmlService.addTextElement(doc, userElement, "telephone", agent.getTelephone() != null ? agent.getTelephone() : "");
-            xmlService.addTextElement(doc, userElement, "metier", agent.getMetier() != null ? agent.getMetier() : "");
+            xmlService.addTextElement(doc, userElement, "competence", agent.getCompetence() != null ? agent.getCompetence() : "");
             xmlService.addTextElement(doc, userElement, "mainDOeuvreId", String.valueOf(agent.getMainDOeuvreId()));
             
             // Ajouter les compétences comme éléments enfants

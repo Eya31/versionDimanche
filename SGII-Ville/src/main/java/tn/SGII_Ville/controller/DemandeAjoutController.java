@@ -4,6 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+// Ajoutez ces imports au début du fichier
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.io.StringWriter;
+import tn.SGII_Ville.service.XmlService;  // Ajoutez cet import
 import tn.SGII_Ville.entities.DemandeAjout;
 import tn.SGII_Ville.entities.Utilisateur;
 import tn.SGII_Ville.model.enums.EtatDemandeAjoutType;
@@ -11,14 +23,21 @@ import tn.SGII_Ville.model.enums.RoleType;
 import tn.SGII_Ville.model.enums.TypeDemandeAjout;
 import tn.SGII_Ville.service.DemandeAjoutNotificationService;
 import tn.SGII_Ville.service.DemandeAjoutXmlService;
+import tn.SGII_Ville.service.StockRessourceService;
 import tn.SGII_Ville.service.UserXmlService;
 
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 @RestController
 @RequestMapping("/api/demandes-ajout")
@@ -35,32 +54,56 @@ public class DemandeAjoutController {
     private UserXmlService userXmlService;
 
     // === ENDPOINTS CHEF DE SERVICE ===
+    @Autowired  // AJOUTEZ CETTE INJECTION
+    private XmlService xmlService;  // AJOUTEZ CETTE LIGNE
 
     @PostMapping
-    public ResponseEntity<?> creerDemande(@RequestBody CreateDemandeRequest request) {
-        try {
-            System.out.println("📨 Création demande reçue: " + request);
-            
-            DemandeAjout demande = new DemandeAjout();
-            demande.setTypeDemande(request.getTypeDemande());
-            demande.setDesignation(request.getDesignation());
-            demande.setQuantite(request.getQuantite());
-            demande.setBudget(request.getBudget());
-            demande.setJustification(request.getJustification());
-            demande.setChefId(request.getChefId());
-
-            DemandeAjout savedDemande = demandeAjoutService.save(demande);
-
-            // Notifier les administrateurs
-            notifierNouvelleDemandeAjout(savedDemande);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedDemande);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Erreur lors de la création de la demande: " + e.getMessage()));
+public ResponseEntity<?> creerDemande(@RequestBody CreateDemandeRequest request) {
+    try {
+        System.out.println("=== DÉBUT CRÉATION DEMANDE ===");
+        System.out.println("Request: " + request);
+        
+        // Validation
+        if (request.getChefId() <= 0) {
+            return ResponseEntity.badRequest().body("ID du chef invalide");
         }
+        
+        System.out.println("✅ Validation OK");
+
+        DemandeAjout demande = new DemandeAjout();
+        demande.setTypeDemande(request.getTypeDemande());
+        demande.setDesignation(request.getDesignation());
+        demande.setQuantite(request.getQuantite());
+        demande.setBudget(request.getBudget());
+        demande.setJustification(request.getJustification());
+        demande.setChefId(request.getChefId());
+        
+        // État déjà défini dans le constructeur
+        System.out.println("📋 Demande créée - État: " + demande.getEtat());
+        System.out.println("📋 Date demande: " + demande.getDateDemande());
+
+        System.out.println("💾 Tentative de sauvegarde...");
+        DemandeAjout savedDemande = demandeAjoutService.save(demande);
+        System.out.println("✅ Demande sauvegardée avec ID: " + savedDemande.getId());
+
+        // Notifier les administrateurs
+        notifierNouvelleDemandeAjout(savedDemande);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedDemande);
+    } catch (Exception e) {
+        System.err.println("=== ERREUR CRITIQUE ===");
+        System.err.println("Exception: " + e.getClass().getName());
+        System.err.println("Message: " + e.getMessage());
+        e.printStackTrace();
+        
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(Map.of(
+                "error", "Erreur lors de la création de la demande",
+                "details", e.getMessage(),
+                "exception", e.getClass().getName()
+            ));
     }
+}
 
     @GetMapping("/chef/{chefId}")
     public ResponseEntity<List<DemandeAjout>> getDemandesParChef(@PathVariable int chefId) {
@@ -111,13 +154,31 @@ public ResponseEntity<?> accepterDemande(@PathVariable int demandeId, @RequestBo
 
         DemandeAjout demande = optionalDemande.get();
         
-        // LOGS CRITIQUES
         System.out.println("🔍 Détails demande trouvée:");
         System.out.println("   - ID: " + demande.getId());
         System.out.println("   - ChefId: " + demande.getChefId());
         System.out.println("   - Designation: " + demande.getDesignation());
         System.out.println("   - Type: " + demande.getTypeDemande());
         System.out.println("   - État actuel: " + demande.getEtat());
+
+        // 🔥 CORRECTION ICI : Vérifier si c'est une demande RESSOURCE et mettre à jour le stock
+        if (demande.getTypeDemande() == TypeDemandeAjout.RESSOURCE) {
+            System.out.println("📦 Mise à jour du stock pour: " + demande.getDesignation());
+            
+            boolean stockMisAJour = stockRessourceService.augmenterStock(
+                demande.getDesignation(), 
+                demande.getQuantite(),
+                demande.getBudget()
+            );
+            
+            if (!stockMisAJour) {
+                System.err.println("❌ Échec mise à jour stock pour: " + demande.getDesignation());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Erreur lors de la mise à jour du stock"));
+            }
+            
+            System.out.println("✅ Stock mis à jour avec succès");
+        }
 
         // Mettre à jour la demande
         demande.setEtat(EtatDemandeAjoutType.ACCEPTEE);
@@ -414,5 +475,163 @@ public ResponseEntity<?> debugTestNotificationChef(@RequestBody Map<String, Inte
         return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
     }
 }
+// Dans DemandeAjoutController.java
 
+@GetMapping("/admin/ressources/en-attente")
+public ResponseEntity<List<DemandeAjout>> getDemandesRessourcesEnAttente() {
+    try {
+        List<DemandeAjout> demandes = demandeAjoutService.getAllDemandesAjout().stream()
+            .filter(d -> d.getEtat() == EtatDemandeAjoutType.EN_ATTENTE_ADMIN 
+                      && d.getTypeDemande() == TypeDemandeAjout.RESSOURCE)
+            .collect(Collectors.toList());
+        System.out.println("📦 Demandes ressources en attente: " + demandes.size());
+        return ResponseEntity.ok(demandes);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+
+@GetMapping("/admin/equipements/en-attente")
+public ResponseEntity<List<DemandeAjout>> getDemandesEquipementsEnAttente() {
+    try {
+        List<DemandeAjout> demandes = demandeAjoutService.getAllDemandesAjout().stream()
+            .filter(d -> d.getEtat() == EtatDemandeAjoutType.EN_ATTENTE_ADMIN 
+                      && d.getTypeDemande() == TypeDemandeAjout.EQUIPEMENT)
+            .collect(Collectors.toList());
+        System.out.println("🛠️ Demandes équipements en attente: " + demandes.size());
+        return ResponseEntity.ok(demandes);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+@GetMapping("/debug/ressources")
+public ResponseEntity<?> debugRessources() {
+    try {
+        // Vérifier si le fichier existe
+        String filePath = "src/main/resources/data/ressources.xml";
+        File file = new File(filePath);
+        System.out.println("📁 Fichier ressources.xml existe: " + file.exists());
+        System.out.println("📁 Chemin absolu: " + file.getAbsolutePath());
+        
+        // Essayer de charger le document
+        Document doc = xmlService.loadXmlDocument("RessourcesMaterielles");
+        Element root = doc.getDocumentElement();
+        System.out.println("📝 Élément racine: " + root.getTagName());
+        
+        // Compter les ressources
+        NodeList ressources = doc.getElementsByTagNameNS(
+            xmlService.getNamespaceUri(), "RessourceMaterielle"
+        );
+        System.out.println("📊 Nombre de ressources: " + ressources.getLength());
+        
+        // Afficher le contenu XML
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        StringWriter writer = new StringWriter();
+        transformer.transform(new DOMSource(doc), new StreamResult(writer));
+        
+        return ResponseEntity.ok(Map.of(
+            "fileExists", file.exists(),
+            "rootElement", root.getTagName(),
+            "resourceCount", ressources.getLength(),
+            "xmlContent", writer.toString()
+        ));
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+}
+// Endpoint pour accepter et mettre à jour le stock
+// Ajouter cette méthode dans DemandeAjoutController.java
+@Autowired
+private StockRessourceService stockRessourceService;
+
+@PostMapping("/admin/{demandeId}/accepter-et-mettre-a-jour")
+public ResponseEntity<?> accepterEtMettreAJour(@PathVariable int demandeId, 
+                                               @RequestBody TraitementDemandeRequest request) {
+    try {
+        System.out.println("🔄 Acceptation et mise à jour stock demande #" + demandeId);
+        
+        Optional<DemandeAjout> optionalDemande = demandeAjoutService.findById(demandeId);
+        if (optionalDemande.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", "Demande non trouvée"));
+        }
+
+        DemandeAjout demande = optionalDemande.get();
+        
+        // Vérifier si c'est une demande de ressource
+        if (demande.getTypeDemande() != TypeDemandeAjout.RESSOURCE) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "Cette demande n'est pas une demande de ressource"));
+        }
+
+        // Mettre à jour la demande
+        demande.setEtat(EtatDemandeAjoutType.ACCEPTEE);
+        demande.setAdminId(request.getAdminId());
+        demande.setDateTraitement(LocalDateTime.now());
+
+        // Mettre à jour le stock de la ressource
+        boolean stockMisAJour = stockRessourceService.augmenterStock(
+            demande.getDesignation(), 
+            demande.getQuantite(),
+            demande.getBudget()
+        );
+        
+        if (!stockMisAJour) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Erreur lors de la mise à jour du stock"));
+        }
+
+        DemandeAjout updatedDemande = demandeAjoutService.update(demande);
+        
+        // Notifier le chef
+        notifierReponseDemandeAjout(updatedDemande, true, "Demande acceptée et stock mis à jour");
+
+        System.out.println("✅ Demande acceptée et stock mis à jour");
+        return ResponseEntity.ok(Map.of(
+            "message", "Demande acceptée et stock mis à jour avec succès",
+            "demande", updatedDemande,
+            "stockMisAJour", true
+        ));
+    } catch (Exception e) {
+        System.err.println("❌ Erreur acceptation et mise à jour: " + e.getMessage());
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(Map.of("error", "Erreur lors de l'acceptation et mise à jour: " + e.getMessage()));
+    }
+}
+@PostMapping("/test/add-ressource")
+public ResponseEntity<?> testAddRessource(@RequestBody Map<String, Object> request) {
+    try {
+        String designation = (String) request.get("designation");
+        int quantite = (int) request.get("quantite");
+        double budget = (double) request.get("budget");
+        
+        System.out.println("🧪 TEST: Ajout de ressource");
+        System.out.println("   - Désignation: " + designation);
+        System.out.println("   - Quantité: " + quantite);
+        System.out.println("   - Budget: " + budget);
+        
+        // Appeler directement le service
+        boolean success = stockRessourceService.augmenterStock(designation, quantite, budget);
+        
+        if (success) {
+            return ResponseEntity.ok(Map.of(
+                "message", "Ressource ajoutée avec succès",
+                "designation", designation,
+                "quantite", quantite
+            ));
+        } else {
+            return ResponseEntity.status(500).body(Map.of("error", "Échec de l'ajout"));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+}
 }

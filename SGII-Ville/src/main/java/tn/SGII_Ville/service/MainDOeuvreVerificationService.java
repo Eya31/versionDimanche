@@ -9,11 +9,8 @@ import tn.SGII_Ville.entities.Tache;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Service pour vérifier la validité d'une affectation de main-d'œuvre
@@ -43,16 +40,15 @@ public class MainDOeuvreVerificationService {
         List<String> avertissements = new ArrayList<>();
 
         // 1. Vérifier disponibilité
-        if (!"DISPONIBLE".equals(mainDOeuvre.getDisponibilite())) {
+        if (!"LIBRE".equals(mainDOeuvre.getDisponibilite())) {
             erreurs.add("L'agent n'est pas disponible (statut: " + mainDOeuvre.getDisponibilite() + ")");
             result.setDisponible(false);
         } else {
             result.setDisponible(true);
         }
 
-        // 2. Vérifier compétences (si l'intervention nécessite des compétences spécifiques)
-        // Pour l'instant, on accepte si l'agent a au moins une compétence
-        if (mainDOeuvre.getCompetences() == null || mainDOeuvre.getCompetences().isEmpty()) {
+        // 2. Vérifier compétence (obligatoire selon le schéma XSD)
+        if (mainDOeuvre.getCompetence() == null || mainDOeuvre.getCompetence().isEmpty()) {
             avertissements.add("L'agent n'a aucune compétence enregistrée");
             result.setCompetencesOk(false);
         } else {
@@ -60,20 +56,9 @@ public class MainDOeuvreVerificationService {
         }
 
         // 3. Vérifier habilitations et dates d'expiration
-        boolean habilitationsValides = true;
-        if (mainDOeuvre.getHabilitationsExpiration() != null) {
-            LocalDate aujourdhui = LocalDate.now();
-            for (Map.Entry<String, LocalDate> entry : mainDOeuvre.getHabilitationsExpiration().entrySet()) {
-                LocalDate expiration = entry.getValue();
-                if (expiration != null && expiration.isBefore(aujourdhui)) {
-                    erreurs.add("Habilitation '" + entry.getKey() + "' expirée depuis le " + expiration);
-                    habilitationsValides = false;
-                } else if (expiration != null && expiration.isBefore(aujourdhui.plusDays(30))) {
-                    avertissements.add("Habilitation '" + entry.getKey() + "' expire le " + expiration);
-                }
-            }
-        }
-        result.setHabilitationsOk(habilitationsValides);
+        // Les habilitations ne sont plus dans le nouveau schéma XSD
+        // On considère toujours les habilitations comme valides
+        result.setHabilitationsOk(true);
 
         // 4. Vérifier conflits d'horaires
         boolean pasDeConflit = verifierConflitsHoraires(mainDOeuvre, intervention, toutesInterventions, erreurs);
@@ -169,50 +154,9 @@ public class MainDOeuvreVerificationService {
             Intervention intervention,
             List<String> erreurs) {
         
-        if (intervention.getDatePlanifiee() == null) return true;
-
-        LocalDateTime dateIntervention = intervention.getDatePlanifiee().atStartOfDay();
-        if (dateIntervention == null) return true;
-
-        // Vérifier si jour de congé
-        LocalDate date = dateIntervention.toLocalDate();
-        if (mainDOeuvre.getConges() != null && mainDOeuvre.getConges().contains(date)) {
-            erreurs.add("L'agent est en congé le " + date);
-            return false;
-        }
-
-        if (mainDOeuvre.getAbsences() != null && mainDOeuvre.getAbsences().contains(date)) {
-            erreurs.add("L'agent est absent le " + date);
-            return false;
-        }
-
-        // Vérifier horaires de travail
-        String jourSemaine = date.getDayOfWeek().name(); // LUNDI, MARDI, etc.
-        String horaires = mainDOeuvre.getHorairesTravail() != null ? 
-            mainDOeuvre.getHorairesTravail().get(jourSemaine) : null;
-        
-        if (horaires == null || horaires.isEmpty()) {
-            // Pas d'horaires définis, on accepte mais c'est un avertissement (géré dans la méthode appelante)
-            return true;
-        }
-
-        // Parser horaires (format: "08:00-17:00")
-        String[] parts = horaires.split("-");
-        if (parts.length == 2) {
-            try {
-                LocalTime debut = LocalTime.parse(parts[0].trim());
-                LocalTime fin = LocalTime.parse(parts[1].trim());
-                LocalTime heureIntervention = dateIntervention.toLocalTime();
-
-                if (heureIntervention.isBefore(debut) || heureIntervention.isAfter(fin)) {
-                    erreurs.add("L'intervention est en dehors des horaires de travail (" + horaires + ")");
-                    return false;
-                }
-            } catch (Exception e) {
-                // Format invalide, on accepte
-            }
-        }
-
+        // Les horaires de travail ne sont plus dans le nouveau schéma XSD
+        // Cette vérification est désactivée mais la méthode est conservée pour compatibilité
+        // On accepte toujours les affectations
         return true;
     }
 
@@ -233,28 +177,11 @@ public class MainDOeuvreVerificationService {
 
     /**
      * Vérifie et met à jour le statut d'un agent selon ses habilitations
+     * Note: Les habilitations ne sont plus dans le schéma XSD, mais on garde pour compatibilité
      */
     public void verifierEtMettreAJourStatut(MainDOeuvre mainDOeuvre) {
-        if (mainDOeuvre.getHabilitationsExpiration() != null) {
-            LocalDate aujourdhui = LocalDate.now();
-            boolean hasExpired = false;
-
-            for (LocalDate expiration : mainDOeuvre.getHabilitationsExpiration().values()) {
-                if (expiration != null && expiration.isBefore(aujourdhui)) {
-                    hasExpired = true;
-                    break;
-                }
-            }
-
-            if (hasExpired && !"HORS_HABILITATION".equals(mainDOeuvre.getDisponibilite())) {
-                mainDOeuvre.setDisponibilite("HORS_HABILITATION");
-                try {
-                    mainDOeuvreService.save(mainDOeuvre);
-                } catch (Exception e) {
-                    // Log error
-                }
-            }
-        }
+        // Les habilitations ne sont plus dans le nouveau schéma XSD
+        // Cette méthode est conservée pour compatibilité mais ne fait rien
     }
 }
 

@@ -54,6 +54,10 @@
           <span class="sidebar-icon">⬇️</span>
           <span class="sidebar-label">Exporter</span>
         </button>
+        <button class="sidebar-item" (click)="openDemandeRessourceModal()">
+  <span class="sidebar-icon">📦</span>
+  <span class="sidebar-label">Demander ressource</span>
+</button>
       </nav>
     </div>
   </aside>
@@ -252,7 +256,7 @@
   <div class="modal-overlay" *ngIf="showPlanificationModal && selectedDemande" (click)="closePlanificationModal()">
     <div class="modal-content planification-modal" (click)="$event.stopPropagation()" style="max-width: 1200px; max-height: 95vh; overflow-y: auto;">
       <button class="close-btn" (click)="closePlanificationModal()">×</button>
-      
+
       <app-intervention-planification
         [demandeId]="selectedDemande.id"
         (planificationComplete)="onPlanificationComplete($event)"
@@ -370,9 +374,155 @@
           <button type="button" class="action-btn secondary" (click)="closePlanificationModal()">Annuler</button>
           <button type="button" class="action-btn primary large" (click)="validerPlanification()">✅ Valider la Planification</button>
         </div>
+        <div class="actions" style="margin-bottom: 20px;">
+  <button class="btn-create" (click)="openDemandeRessourceModal()">
+    <span class="btn-icon">📦</span>
+    Demander une ressource
+  </button>
+</div>
       </form>
     </div>
   </div>
+<!-- MODAL FORMULAIRE DEMANDE RESSOURCE -->
+<div class="modal-overlay" *ngIf="showDemandeRessourceModal" (click)="closeDemandeRessourceModal()">
+  <div class="modal-content form-modal" (click)="$event.stopPropagation()" style="max-width: 700px;">
+    <button class="close-btn" (click)="closeDemandeRessourceModal()">×</button>
+    <h2>📦 Nouvelle demande de ressource</h2>
+    <p class="subtitle">Demande d'ajout au stock de ressources matérielles</p>
+
+    <form (ngSubmit)="submitDemandeRessource()" #demandeForm="ngForm" class="demande-form">
+
+      <!-- Désignation -->
+      <div class="form-group">
+        <label>Désignation de la ressource *</label>
+        <input type="text" [(ngModel)]="demandeRessourceData.designation"
+               name="designation" placeholder="Ex: Tuyaux PVC 100mm, Ciment, etc." required
+               [ngClass]="{'invalid': !demandeRessourceData.designation.trim()}">
+        <small class="form-hint">Nom précis de la ressource matérielle</small>
+      </div>
+
+      <!-- Quantité et Budget -->
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Quantité demandée *</label>
+          <input type="number" [(ngModel)]="demandeRessourceData.quantite"
+                 name="quantite" min="1" step="1" required
+                 [ngClass]="{'invalid': demandeRessourceData.quantite <= 0}">
+          <small class="form-hint">Nombre d'unités à ajouter au stock</small>
+        </div>
+
+        <div class="form-group">
+          <label>Budget estimé (DT) *</label>
+          <input type="number" [(ngModel)]="demandeRessourceData.budget"
+                 name="budget" min="0.01" step="0.01" required
+                 [ngClass]="{'invalid': demandeRessourceData.budget <= 0}">
+          <small class="form-hint">Coût total estimé pour l'acquisition</small>
+        </div>
+      </div>
+
+      <!-- Justification -->
+      <div class="form-group">
+        <label>Justification détaillée *</label>
+        <textarea [(ngModel)]="demandeRessourceData.justification"
+                  name="justification" rows="5"
+                  placeholder="Expliquez en détail pourquoi cette ressource est nécessaire, son utilisation prévue, l'urgence, etc."
+                  required [ngClass]="{'invalid': !demandeRessourceData.justification.trim()}"></textarea>
+        <small class="form-hint">Plus votre justification est détaillée, plus la demande a de chances d'être acceptée</small>
+      </div>
+
+      <!-- Informations -->
+      <div class="info-card">
+        <div class="info-icon">ℹ️</div>
+        <div class="info-content">
+          <strong>Processus de validation :</strong><br>
+          1. Votre demande sera examinée par l'administration<br>
+          2. Si acceptée, la quantité sera automatiquement ajoutée au stock<br>
+          3. Vous recevrez une notification avec la décision
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" class="action-btn secondary"
+                (click)="closeDemandeRessourceModal()">
+          Annuler
+        </button>
+        <button type="submit" class="action-btn primary large"
+                [disabled]="!demandeForm.form.valid ||
+                           demandeRessourceData.quantite <= 0 ||
+                           demandeRessourceData.budget <= 0">
+          📨 Soumettre la demande
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- SECTION MES DEMANDES DE RESSOURCES -->
+<section class="section" *ngIf="mesDemandesRessources.length > 0">
+  <div class="section-header">
+    <h3>📦 Mes demandes de ressources</h3>
+    <span class="badge-count">{{ mesDemandesRessources.length }} demande(s)</span>
+  </div>
+
+  <div class="table-container">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Désignation</th>
+          <th>Quantité</th>
+          <th>Budget</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let demande of mesDemandesRessources">
+          <td><strong>#{{ demande.id }}</strong></td>
+          <td class="designation-cell">
+            <strong>{{ demande.designation }}</strong><br>
+            <small class="text-muted">{{ demande.justification | slice:0:60 }}...</small>
+          </td>
+          <td>{{ demande.quantite }} unités</td>
+          <td>{{ demande.budget | currency:'DT ' }}</td>
+          <td>{{ demande.dateDemande | date:'dd/MM/yy' }}</td>
+          <td>
+            <span class="status" [ngClass]="getEtatBadgeClassDemande(demande.etat)">
+              {{ getEtatTextDemande(demande.etat) }}
+            </span>
+            <br>
+            <small *ngIf="demande.dateTraitement" class="text-muted">
+              {{ demande.dateTraitement | date:'dd/MM' }}
+            </small>
+          </td>
+          <td class="actions-cell">
+            <button class="btn-small view"
+                    (click)="voirDetailsDemandeRessource(demande)">
+              👁️ Détails
+            </button>
+           <button (click)="voirMotifRefus(demande)" *ngIf="demande.etat === 'REFUSEE'">
+  Voir motif
+</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Message si aucune demande -->
+<div class="empty-state" *ngIf="mesDemandesRessources.length === 0 && !showDemandeRessourceModal">
+  <div class="empty-icon">📦</div>
+  <h4>Aucune demande de ressource</h4>
+  <p>Vous n'avez pas encore soumis de demande d'ajout de ressource.</p>
+  <button class="action-btn primary" (click)="openDemandeRessourceModal()">
+    📨 Faire une première demande
+  </button>
+</div>
+
+<!-- Fonction pour voir le motif de refus -->
 
   <!-- MODAL DÉTAILS DEMANDE -->
   <div class="modal-overlay" *ngIf="showDetailModal && selectedDemande" (click)="closeDetailModal()">

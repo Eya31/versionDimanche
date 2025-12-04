@@ -120,13 +120,22 @@ public class DemandeAjoutXmlService {
     }
 
 private String getElementText(Element element, String tagName) {
-        NodeList nodes = element.getElementsByTagName(tagName);
-        if (nodes.getLength() > 0) {
-            String text = nodes.item(0).getTextContent();
-            return text != null ? text.trim() : null;
-        }
-        return null;
+    // 1. Chercher AVEC namespace
+    NodeList nodes = element.getElementsByTagNameNS(xmlService.getNamespaceUri(), tagName);
+    
+    // 2. Si pas trouvé, chercher SANS namespace
+    if (nodes.getLength() == 0) {
+        nodes = element.getElementsByTagName(tagName);
     }
+    
+    // 3. Retourner le texte si trouvé
+    if (nodes.getLength() > 0) {
+        String text = nodes.item(0).getTextContent();
+        return text != null ? text.trim() : null;
+    }
+    
+    return null; // Non trouvé
+}
    public DemandeAjout save(DemandeAjout demande) {
     try {
         Document doc = xmlService.loadXmlDocument("DemandesAjout");
@@ -138,29 +147,30 @@ private String getElementText(Element element, String tagName) {
             demande.setId(newId);
         }
 
-        Element demandeElement = doc.createElement("DemandeAjout");
+        // ✅ CORRECTION : Créer l'élément AVEC namespace
+        Element demandeElement = doc.createElementNS(xmlService.getNamespaceUri(), "DemandeAjout");
 
-        // Créer les éléments sans namespace
-        addTextElementSimple(doc, demandeElement, "id", String.valueOf(demande.getId()));
-        addTextElementSimple(doc, demandeElement, "typeDemande", demande.getTypeDemande().name());
-        addTextElementSimple(doc, demandeElement, "designation", demande.getDesignation());
-        addTextElementSimple(doc, demandeElement, "quantite", String.valueOf(demande.getQuantite()));
-        addTextElementSimple(doc, demandeElement, "budget", String.valueOf(demande.getBudget()));
-        addTextElementSimple(doc, demandeElement, "justification", demande.getJustification());
-        addTextElementSimple(doc, demandeElement, "etat", demande.getEtat().name());
-        addTextElementSimple(doc, demandeElement, "dateDemande", 
+        // Créer les éléments AVEC namespace
+        addTextElementWithNamespace(doc, demandeElement, "id", String.valueOf(demande.getId()));
+        addTextElementWithNamespace(doc, demandeElement, "typeDemande", demande.getTypeDemande().name());
+        addTextElementWithNamespace(doc, demandeElement, "designation", demande.getDesignation());
+        addTextElementWithNamespace(doc, demandeElement, "quantite", String.valueOf(demande.getQuantite()));
+        addTextElementWithNamespace(doc, demandeElement, "budget", String.valueOf(demande.getBudget()));
+        addTextElementWithNamespace(doc, demandeElement, "justification", demande.getJustification());
+        addTextElementWithNamespace(doc, demandeElement, "etat", demande.getEtat().name());
+        addTextElementWithNamespace(doc, demandeElement, "dateDemande", 
             demande.getDateDemande() != null ? demande.getDateDemande().format(FORMATTER) : LocalDateTime.now().format(FORMATTER));
-        addTextElementSimple(doc, demandeElement, "chefId", String.valueOf(demande.getChefId()));
+        addTextElementWithNamespace(doc, demandeElement, "chefId", String.valueOf(demande.getChefId()));
 
         // Champs optionnels
         if (demande.getAdminId() != null) {
-            addTextElementSimple(doc, demandeElement, "adminId", String.valueOf(demande.getAdminId()));
+            addTextElementWithNamespace(doc, demandeElement, "adminId", String.valueOf(demande.getAdminId()));
         }
         if (demande.getDateTraitement() != null) {
-            addTextElementSimple(doc, demandeElement, "dateTraitement", demande.getDateTraitement().format(FORMATTER));
+            addTextElementWithNamespace(doc, demandeElement, "dateTraitement", demande.getDateTraitement().format(FORMATTER));
         }
         if (demande.getMotifRefus() != null) {
-            addTextElementSimple(doc, demandeElement, "motifRefus", demande.getMotifRefus());
+            addTextElementWithNamespace(doc, demandeElement, "motifRefus", demande.getMotifRefus());
         }
 
         root.appendChild(demandeElement);
@@ -174,25 +184,52 @@ private String getElementText(Element element, String tagName) {
         throw new RuntimeException("Erreur lors de la sauvegarde de la demande", e);
     }
 }
+
+// Nouvelle méthode avec namespace
+private void addTextElementWithNamespace(Document doc, Element parent, String tagName, String textContent) {
+    Element element = doc.createElementNS(xmlService.getNamespaceUri(), tagName);
+    if (textContent != null) {
+        element.setTextContent(textContent);
+    }
+    parent.appendChild(element);
+}
+
 private void addTextElementSimple(Document doc, Element parent, String tagName, String textContent) {
-    Element element = doc.createElement(tagName);
-    element.setTextContent(textContent);
+    Element element = doc.createElementNS(xmlService.getNamespaceUri(), tagName);
+    if (textContent != null) {
+        element.setTextContent(textContent);
+    }
     parent.appendChild(element);
 }
 
     public DemandeAjout update(DemandeAjout demande) {
-        try {
-            Document doc = xmlService.loadXmlDocument("DemandesAjout");
-            Element root = doc.getDocumentElement();
-            
-            NodeList nodes = root.getChildNodes();
-            for (int i = 0; i < nodes.getLength(); i++) {
-                Node node = nodes.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE && 
-                    "DemandeAjout".equals(node.getNodeName())) {
-                    
+    try {
+        System.out.println("🔄 Début mise à jour demande #" + demande.getId());
+        
+        Document doc = xmlService.loadXmlDocument("DemandesAjout");
+        Element root = doc.getDocumentElement();
+        
+        System.out.println("📁 Recherche de la demande dans le XML...");
+        
+        NodeList nodes = root.getChildNodes();
+        boolean found = false;
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                // ✅ CORRECTION : Utiliser getLocalName() pour le namespace
+                String nodeName = node.getLocalName();
+                if (nodeName == null) {
+                    nodeName = node.getNodeName();
+                }
+                
+                if ("DemandeAjout".equals(nodeName)) {
                     Element el = (Element) node;
-                    if (Integer.parseInt(getElementText(el, "id")) == demande.getId()) {
+                    String idText = getElementText(el, "id");
+                    
+                    if (idText != null && Integer.parseInt(idText) == demande.getId()) {
+                        System.out.println("✅ Demande trouvée #" + demande.getId());
+                        
                         // Mettre à jour l'élément existant
                         updateElementText(el, "typeDemande", demande.getTypeDemande().name());
                         updateElementText(el, "designation", demande.getDesignation());
@@ -221,17 +258,24 @@ private void addTextElementSimple(Document doc, Element parent, String tagName, 
                         }
 
                         xmlService.saveXmlDocument(doc, "DemandesAjout");
-                        System.out.println("✅ Demande mise à jour: " + demande.getId());
+                        System.out.println("✅ Demande mise à jour dans le XML: " + demande.getId());
+                        found = true;
                         return demande;
                     }
                 }
             }
-        } catch (Exception e) {
-            System.err.println("❌ Erreur mise à jour demande: " + e.getMessage());
-            e.printStackTrace();
         }
-        return null;
+        
+        if (!found) {
+            System.err.println("❌ Demande non trouvée pour mise à jour: #" + demande.getId());
+        }
+        
+    } catch (Exception e) {
+        System.err.println("❌ Erreur mise à jour demande: " + e.getMessage());
+        e.printStackTrace();
     }
+    return null;
+}
 
 
       private void updateElementText(Element parent, String tagName, String textContent) {

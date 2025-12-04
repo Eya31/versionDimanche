@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!-- Dans DemandesAjout.xsd -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://www.sgiiville.tn/DemandesAjout"
            xmlns:tns="http://www.sgiiville.tn/DemandesAjout"
@@ -26,6 +26,9 @@
             <xs:element name="adminId" type="xs:int" minOccurs="0"/>
             <xs:element name="dateTraitement" type="xs:dateTime" minOccurs="0"/>
             <xs:element name="motifRefus" type="xs:string" minOccurs="0"/>
+            <!-- Nouveaux champs optionnels -->
+            <xs:element name="ressourceId" type="xs:int" minOccurs="0"/>
+            <xs:element name="equipementId" type="xs:int" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

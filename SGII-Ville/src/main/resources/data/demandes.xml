@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Demandes xmlns="http://example.com/gestion-interventions">
-                                    
+                                            
+    
+    
     
     
     
@@ -9,7 +11,199 @@
     
     
     <!-- Demandes vides - Prêt pour de nouvelles instances -->
-                                
+                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Demande>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>1</id>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <description>fce fvefdv efvev</description>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateSoumission>2025-11-26</dateSoumission>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>TRAITEE</etat>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <category>Eau &amp; Assainissement</category>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <subCategory>rerf</subCategory>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <priority>HIGH</priority>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <contactEmail/>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <citoyenId>1</citoyenId>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <localisation>
+                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            <latitude>34.709618</latitude>
+                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            <longitude>10.680781</longitude>
+                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            <address/>
+                                                                                                                    
+        
+        
+        
+        
+        
+        
+        
+        
+        </localisation>
+                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        <photoIds>
+                                                                                                                        
+            
+            
+            
+            
+            
+            
+            
+            
+            <photoId>1</photoId>
+                                                                                                                    
+        
+        
+        
+        
+        
+        
+        
+        
+        </photoIds>
+                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    </Demande>
+                                    
+
     
     
     
@@ -25,7 +219,7 @@
         
         
         
-        <id>1</id>
+        <id>2</id>
                                                                 
         
         
@@ -33,7 +227,7 @@
         
         
         
-        <description>fce fvefdv efvev</description>
+        <description>fdsd dfgfdg fdgdfgdfgdf</description>
                                                                 
         
         
@@ -41,7 +235,7 @@
         
         
         
-        <dateSoumission>2025-11-26</dateSoumission>
+        <dateSoumission>2025-11-29</dateSoumission>
                                                                 
         
         
@@ -57,7 +251,7 @@
         
         
         
-        <category>Eau &amp; Assainissement</category>
+        <category>Éclairage public</category>
                                                                 
         
         
@@ -65,7 +259,7 @@
         
         
         
-        <subCategory>rerf</subCategory>
+        <subCategory/>
                                                                 
         
         
@@ -73,7 +267,7 @@
         
         
         
-        <priority>HIGH</priority>
+        <priority>MEDIUM</priority>
                                                                 
         
         
@@ -89,7 +283,7 @@
         
         
         
-        <citoyenId>1</citoyenId>
+        <citoyenId>9</citoyenId>
                                                                 
         
         
@@ -130,30 +324,6 @@
         
         
         </localisation>
-                                                                
-        
-        
-        
-        
-        
-        
-        <photoIds>
-                                                                                                
-            
-            
-            
-            
-            
-            
-            <photoId>1</photoId>
-                                                                                            
-        
-        
-        
-        
-        
-        
-        </photoIds>
                                                             
     
     
@@ -175,13 +345,13 @@
         
         
         
-        <id>2</id>
+        <id>3</id>
                                                 
         
         
         
         
-        <description>fdsd dfgfdg fdgdfgdfgdf</description>
+        <description>xcvxvx fvdfvdf vdsfvdfv</description>
                                                 
         
         
@@ -199,7 +369,7 @@
         
         
         
-        <category>Éclairage public</category>
+        <category>Eau &amp; Assainissement</category>
                                                 
         
         
@@ -269,15 +439,15 @@
                                 
         
         
-        <id>3</id>
+        <id>4</id>
                                 
         
         
-        <description>xcvxvx fvdfvdf vdsfvdfv</description>
+        <description> erfgdg rzgfer erge gr</description>
                                 
         
         
-        <dateSoumission>2025-11-29</dateSoumission>
+        <dateSoumission>2025-12-01</dateSoumission>
                                 
         
         
@@ -285,7 +455,7 @@
                                 
         
         
-        <category>Eau &amp; Assainissement</category>
+        <category>Voirie</category>
                                 
         
         
@@ -309,11 +479,11 @@
                                                 
             
             
-            <latitude>34.709618</latitude>
+            <latitude>36.79537</latitude>
                                                 
             
             
-            <longitude>10.680781</longitude>
+            <longitude>10.15686</longitude>
                                                 
             
             
@@ -331,15 +501,15 @@
     
     <Demande>
                 
-        <id>4</id>
+        <id>5</id>
                 
-        <description> erfgdg rzgfer erge gr</description>
+        <description>dzfz zefez eafez </description>
                 
-        <dateSoumission>2025-12-01</dateSoumission>
+        <dateSoumission>2025-12-03</dateSoumission>
                 
         <etat>TRAITEE</etat>
                 
-        <category>Voirie</category>
+        <category>Éclairage public</category>
                 
         <subCategory/>
                 
@@ -351,9 +521,9 @@
                 
         <localisation>
                         
-            <latitude>36.79537</latitude>
+            <latitude>34.70962</latitude>
                         
-            <longitude>10.15686</longitude>
+            <longitude>10.680777</longitude>
                         
             <address/>
                     
