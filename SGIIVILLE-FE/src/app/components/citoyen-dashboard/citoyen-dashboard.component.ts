@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DemandeFormComponent } from '../demande-form/demande-form.component';
@@ -6,14 +6,17 @@ import { Router } from '@angular/router';
 import { DemandeService } from '../../services/demande.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService, Notification } from '../../services/notification.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
+import { TranslationService } from '../../services/translation.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-citoyen-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, DemandeFormComponent],
+  imports: [CommonModule, FormsModule, DemandeFormComponent, TranslatePipe],
   templateUrl: './citoyen-dashboard.component.html',
-  styleUrls: ['./citoyen-dashboard.component.css']
+  styleUrls: ['./citoyen-dashboard.component.css'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class CitoyenDashboardComponent implements OnInit, OnDestroy {
   demandes: any[] = [];
@@ -32,23 +35,35 @@ export class CitoyenDashboardComponent implements OnInit, OnDestroy {
   showNotificationsDropdown = false;
   private notificationSubscription?: Subscription;
   private unreadCountSubscription?: Subscription;
+  private languageSubscription?: Subscription;
 
   constructor(
     private demandeService: DemandeService,
     private authService: AuthService,
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    public translationService: TranslationService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadMesDemandes();
     this.loadNotifications();
     this.startNotificationPolling();
+    this.subscribeToLanguageChanges();
   }
 
   ngOnDestroy(): void {
     this.notificationSubscription?.unsubscribe();
     this.unreadCountSubscription?.unsubscribe();
+    this.languageSubscription?.unsubscribe();
+  }
+
+  private subscribeToLanguageChanges(): void {
+    this.languageSubscription = this.translationService.currentLanguage$.subscribe(() => {
+      console.log('[CitoyenDashboard] Langue changée, marquant pour re-render');
+      this.cdr.markForCheck();
+    });
   }
 
   // === GESTION DES NOTIFICATIONS ===

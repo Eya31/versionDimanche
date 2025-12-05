@@ -4,14 +4,14 @@
     <div class="container">
       <nav class="navbar">
         <div class="logo">
-          <h1>elBaladiya.tn</h1>
+          <h1>{{ 'visiteur.platformTitle' | translate }}</h1>
         </div>
         <ul class="nav-links">
-          <li><a routerLink="/" routerLinkActive="active">Accueil</a></li>
-          <li><a routerLink="/demandes-terminees" routerLinkActive="active">Demandes terminées</a></li>
-          <li><a routerLink="/faq" routerLinkActive="active">FAQ</a></li>
-          <li><a routerLink="/about" routerLinkActive="active">À propos</a></li>
-          <li><a routerLink="/login" routerLinkActive="active">Connexion</a></li>
+          <li><a routerLink="/" routerLinkActive="active">{{ 'visiteur.home' | translate }}</a></li>
+          <li><a routerLink="/demandes-terminees" routerLinkActive="active">{{ 'visiteur.demandesTerminees' | translate }}</a></li>
+          <li><a routerLink="/faq" routerLinkActive="active">{{ 'visiteur.faq' | translate }}</a></li>
+          <li><a routerLink="/about" routerLinkActive="active">{{ 'visiteur.about' | translate }}</a></li>
+          <li><a routerLink="/login" routerLinkActive="active">{{ 'visiteur.connection' | translate }}</a></li>
         </ul>
       </nav>
     </div>
@@ -20,10 +20,10 @@
   <!-- BANNIÈRE -->
   <section class="banner">
     <div class="container">
-      <h1 class="banner-title">elBaladiya.tn</h1>
-      <p class="banner-subtitle">La plateforme numérique municipale</p>
+      <h1 class="banner-title">{{ 'visiteur.platformTitle' | translate }}</h1>
+      <p class="banner-subtitle">{{ 'visiteur.platformSubtitle' | translate }}</p>
       <p class="banner-description">
-        Connectez les citoyens et les municipalités pour une gestion transparente et efficace des services urbains
+        {{ 'visiteur.platformDescription' | translate }}
       </p>
     </div>
   </section>
@@ -31,18 +31,16 @@
   <!-- SECTION PRÉSENTATION -->
   <section class="presentation">
     <div class="container">
-      <h2>Qu'est-ce que elBaladiya.tn ?</h2>
+      <h2>{{ 'visiteur.whatIs' | translate }}</h2>
       <p>
-        elBaladiya.tn est une plateforme innovante qui permet aux citoyens de soumettre des demandes d'intervention
-        urbaine et de suivre leur traitement en temps réel. Les municipalités peuvent planifier et gérer efficacement
-        les interventions grâce à un système intelligent de validation des ressources.
+        {{ 'visiteur.whatIsDescription' | translate }}
       </p>
       <div class="cta-buttons">
         <a routerLink="/demandes-terminees" class="btn btn-primary">
-          Découvrir les services >
+          {{ 'visiteur.discoverServices' | translate }}
         </a>
         <a routerLink="/municipalite-inscription" class="btn btn-secondary">
-          S'inscrire en tant que municipalité >
+          {{ 'visiteur.registerMunicipality' | translate }}
         </a>
       </div>
     </div>
@@ -51,15 +49,15 @@
   <!-- STATISTIQUES -->
   <section class="stats" *ngIf="stats">
     <div class="container">
-      <h2>Notre impact</h2>
+      <h2>{{ 'visiteur.impact' | translate }}</h2>
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-number">{{ stats.demandesTraitees }}</div>
-          <div class="stat-label">Demandes traitées</div>
+          <div class="stat-label">{{ 'visiteur.demandesTraitees' | translate }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">{{ stats.totalDemandes }}</div>
-          <div class="stat-label">Total des demandes</div>
+          <div class="stat-label">{{ 'visiteur.totalDemandes' | translate }}</div>
         </div>
       </div>
     </div>
@@ -68,10 +66,10 @@
   <!-- SECTION DEMANDES TERMINÉES -->
   <section class="demandes-terminees">
     <div class="container">
-      <h2>Demandes citoyennes terminées</h2>
-      <div *ngIf="loading" class="loading">Chargement...</div>
+      <h2>{{ 'visiteur.citizenDemands' | translate }}</h2>
+      <div *ngIf="loading" class="loading">{{ 'visiteur.loading' | translate }}</div>
       <div *ngIf="!loading && demandesTerminees.length === 0" class="no-data">
-        Aucune demande terminée disponible pour le moment.
+        {{ 'visiteur.noDemands' | translate }}
       </div>
       <div *ngIf="!loading && demandesTerminees.length > 0" class="demandes-grid">
         <div *ngFor="let demande of demandesTerminees" class="demande-card">
@@ -79,21 +77,21 @@
             <img [src]="demande.photos[0].url" [alt]="demande.photos[0].nom" />
           </div>
           <div class="demande-content">
-            <h3>{{ demande.category || 'Demande' }}</h3>
+            <h3>{{ translationService.translateCategory(demande.category) || ('visiteur.request' | translate) }}</h3>
             <p class="demande-description">{{ demande.description | slice:0:100 }}...</p>
             <p class="demande-date">
               <i class="icon-calendar"></i>
               {{ demande.dateSoumission | date:'dd/MM/yyyy' }}
             </p>
             <a [routerLink]="['/demande', demande.id]" class="btn btn-link">
-              Voir détails >
+              {{ 'visiteur.viewDetails' | translate }}
             </a>
           </div>
         </div>
       </div>
       <div *ngIf="!loading && demandesTerminees.length > 0" class="view-all">
         <a routerLink="/demandes-terminees" class="btn btn-primary">
-          Voir toutes les demandes terminées >
+          {{ 'visiteur.viewAllDemands' | translate }}
         </a>
       </div>
     </div>
@@ -104,24 +102,24 @@
     <div class="container">
       <div class="footer-content">
         <div class="footer-section">
-          <h3>elBaladiya.tn</h3>
-          <p>Plateforme numérique municipale</p>
+          <h3>{{ 'visiteur.platformTitle' | translate }}</h3>
+          <p>{{ 'visiteur.platformSubtitle' | translate }}</p>
         </div>
         <div class="footer-section">
-          <h4>Liens utiles</h4>
+          <h4>{{ 'visiteur.usefulLinks' | translate }}</h4>
           <ul>
-            <li><a routerLink="/faq">FAQ</a></li>
-            <li><a routerLink="/about">À propos</a></li>
-            <li><a routerLink="/demandes-terminees">Demandes terminées</a></li>
+            <li><a routerLink="/faq">{{ 'visiteur.faq' | translate }}</a></li>
+            <li><a routerLink="/about">{{ 'visiteur.about' | translate }}</a></li>
+            <li><a routerLink="/demandes-terminees">{{ 'visiteur.demandesTerminees' | translate }}</a></li>
           </ul>
         </div>
         <div class="footer-section">
-          <h4>Contact</h4>
-          <p>Pour toute question, contactez-nous via le formulaire d'inscription municipalité.</p>
+          <h4>{{ 'visiteur.contact' | translate }}</h4>
+          <p>{{ 'visiteur.contactMessage' | translate }}</p>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2024 elBaladiya.tn - Tous droits réservés</p>
+        <p>{{ 'visiteur.copyright' | translate }}</p>
       </div>
     </div>
   </footer>

@@ -3,51 +3,49 @@
     <div class="container">
       <nav class="navbar">
         <div class="logo">
-          <a routerLink="/"><h1>elBaladiya.tn</h1></a>
+          <a routerLink="/"><h1>{{ 'visiteur.platformTitle' | translate }}</h1></a>
         </div>
         <ul class="nav-links">
-          <li><a routerLink="/" routerLinkActive="active">Accueil</a></li>
-          <li><a routerLink="/demandes-terminees" routerLinkActive="active">Demandes terminées</a></li>
-          <li><a routerLink="/faq" routerLinkActive="active">FAQ</a></li>
-          <li><a routerLink="/about" routerLinkActive="active">À propos</a></li>
-          <li><a routerLink="/login" routerLinkActive="active">Connexion</a></li>
+          <li><a routerLink="/" routerLinkActive="active">{{ 'visiteur.home' | translate }}</a></li>
+          <li><a routerLink="/demandes-terminees" routerLinkActive="active">{{ 'visiteur.demandesTerminees' | translate }}</a></li>
+          <li><a routerLink="/faq" routerLinkActive="active">{{ 'visiteur.faq' | translate }}</a></li>
+          <li><a routerLink="/about" routerLinkActive="active">{{ 'visiteur.about' | translate }}</a></li>
+          <li><a routerLink="/login" routerLinkActive="active">{{ 'visiteur.connection' | translate }}</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <div class="container main-content">
-    <h1 class="page-title">À propos de elBaladiya.tn</h1>
+    <h1 class="page-title">{{ 'visiteur.aboutPage' | translate }}</h1>
 
     <section class="mission-section">
-      <h2>Notre Mission</h2>
+      <h2>{{ 'visiteur.mission' | translate }}</h2>
       <p>
-        elBaladiya.tn a pour mission de moderniser la gestion des services municipaux en créant
-        un pont numérique entre les citoyens et les municipalités. Nous facilitons la communication,
-        la transparence et l'efficacité dans le traitement des demandes d'intervention urbaine.
+        {{ 'visiteur.missionText' | translate }}
       </p>
     </section>
 
     <section class="values-section">
-      <h2>Nos Valeurs</h2>
+      <h2>{{ 'visiteur.values' | translate }}</h2>
       <div class="values-grid">
         <div class="value-card">
-          <h3>Participation Citoyenne</h3>
-          <p>Nous croyons en l'importance de donner la parole aux citoyens et de les impliquer activement dans l'amélioration de leur environnement urbain.</p>
+          <h3>{{ 'visiteur.citizenParticipation' | translate }}</h3>
+          <p>{{ 'visiteur.citizenParticipationText' | translate }}</p>
         </div>
         <div class="value-card">
-          <h3>Transparence</h3>
-          <p>Tous les citoyens peuvent consulter les demandes terminées pour garantir la transparence et la crédibilité du service public.</p>
+          <h3>{{ 'visiteur.transparency' | translate }}</h3>
+          <p>{{ 'visiteur.transparencyText' | translate }}</p>
         </div>
         <div class="value-card">
-          <h3>Efficacité</h3>
-          <p>Notre système de planification intelligent permet d'optimiser l'utilisation des ressources et de réduire les délais de traitement.</p>
+          <h3>{{ 'visiteur.efficiency' | translate }}</h3>
+          <p>{{ 'visiteur.efficiencyText' | translate }}</p>
         </div>
       </div>
     </section>
 
     <section class="tech-section">
-      <h2>Technologies Utilisées</h2>
+      <h2>{{ 'visiteur.techUsed' | translate }}</h2>
       <p>
         elBaladiya.tn est construit avec les technologies modernes suivantes :
       </p>
@@ -72,8 +70,7 @@
 
   <footer class="footer">
     <div class="container">
-      <p>&copy; 2024 elBaladiya.tn - Tous droits réservés</p>
+      <p>{{ 'visiteur.copyright' | translate }}</p>
     </div>
   </footer>
 </div>
-

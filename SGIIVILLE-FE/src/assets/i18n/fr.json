@@ -1,0 +1,90 @@
+{
+  "app": {
+    "title": "SGII-Ville",
+    "subtitle": "Système de Gestion des Interventions Urbaines"
+  },
+  "nav": {
+    "home": "Accueil",
+    "interventions": "Interventions",
+    "demandes": "Demandes",
+    "planification": "Planification",
+    "rapports": "Rapports",
+    "admin": "Administration",
+    "profile": "Profil",
+    "logout": "Déconnexion",
+    "login": "Connexion",
+    "register": "S'inscrire"
+  },
+  "dashboard": {
+    "citoyen": "Espace Citoyen",
+    "chef": "Espace Chef de Service",
+    "technicien": "Espace Technicien",
+    "mainDoeuvre": "Espace Main-d'Œuvre",
+    "admin": "Espace Admin",
+    "welcome": "Bienvenue",
+    "manageRequests": "Gérez vos signalements"
+  },
+  "demande": {
+    "create": "Créer une demande",
+    "list": "Liste des demandes",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "details": "Détails",
+    "status": "État",
+    "date": "Date",
+    "description": "Description",
+    "location": "Localisation",
+    "priority": "Priorité",
+    "type": "Type"
+  },
+  "intervention": {
+    "create": "Créer une intervention",
+    "list": "Liste des interventions",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "plan": "Planifier",
+    "assign": "Assigner",
+    "start": "Démarrer",
+    "finish": "Terminer",
+    "status": "État",
+    "date": "Date",
+    "technician": "Technicien"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "add": "Ajouter",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "export": "Exporter",
+    "import": "Importer",
+    "download": "Télécharger",
+    "upload": "Télécharger",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "warning": "Avertissement",
+    "noData": "Aucune donnée",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "notifications": {
+    "unread": "Non lues",
+    "all": "Toutes",
+    "read": "Lues",
+    "newMessage": "Nouveau message",
+    "markAsRead": "Marquer comme lu"
+  },
+  "language": {
+    "select": "Sélectionner la langue",
+    "french": "Français",
+    "english": "English",
+    "arabic": "العربية"
+  }
+}

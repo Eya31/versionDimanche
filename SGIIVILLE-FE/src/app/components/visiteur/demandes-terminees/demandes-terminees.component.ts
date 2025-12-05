@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PublicService, DemandePublique } from '../../../services/public.service';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
+import { TranslationService } from '../../../services/translation.service';
 
 @Component({
   selector: 'app-demandes-terminees',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslatePipe],
   templateUrl: './demandes-terminees.component.html',
   styleUrl: './demandes-terminees.component.css'
 })
@@ -24,7 +26,10 @@ export class DemandesTermineesComponent implements OnInit {
   // Catégories disponibles
   categories: string[] = [];
 
-  constructor(private publicService: PublicService) {}
+  constructor(
+    private publicService: PublicService,
+    public translationService: TranslationService
+  ) {}
 
   ngOnInit(): void {
     this.loadDemandes();

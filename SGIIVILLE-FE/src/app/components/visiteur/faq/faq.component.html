@@ -3,22 +3,22 @@
     <div class="container">
       <nav class="navbar">
         <div class="logo">
-          <a routerLink="/"><h1>elBaladiya.tn</h1></a>
+          <a routerLink="/"><h1>{{ 'visiteur.platformTitle' | translate }}</h1></a>
         </div>
         <ul class="nav-links">
-          <li><a routerLink="/" routerLinkActive="active">Accueil</a></li>
-          <li><a routerLink="/demandes-terminees" routerLinkActive="active">Demandes terminées</a></li>
-          <li><a routerLink="/faq" routerLinkActive="active">FAQ</a></li>
-          <li><a routerLink="/about" routerLinkActive="active">À propos</a></li>
-          <li><a routerLink="/login" routerLinkActive="active">Connexion</a></li>
+          <li><a routerLink="/" routerLinkActive="active">{{ 'visiteur.home' | translate }}</a></li>
+          <li><a routerLink="/demandes-terminees" routerLinkActive="active">{{ 'visiteur.demandesTerminees' | translate }}</a></li>
+          <li><a routerLink="/faq" routerLinkActive="active">{{ 'visiteur.faq' | translate }}</a></li>
+          <li><a routerLink="/about" routerLinkActive="active">{{ 'visiteur.about' | translate }}</a></li>
+          <li><a routerLink="/login" routerLinkActive="active">{{ 'visiteur.connection' | translate }}</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <div class="container main-content">
-    <h1 class="page-title">Foire aux Questions (FAQ)</h1>
-    <p class="page-subtitle">Trouvez les réponses aux questions les plus fréquentes</p>
+    <h1 class="page-title">{{ 'visiteur.faqPage' | translate }}</h1>
+    <p class="page-subtitle">{{ 'visiteur.faqSubtitle' | translate }}</p>
 
     <div class="faq-list">
       <div *ngFor="let faq of faqs; let i = index" class="faq-item">
@@ -35,7 +35,7 @@
 
   <footer class="footer">
     <div class="container">
-      <p>&copy; 2024 elBaladiya.tn - Tous droits réservés</p>
+      <p>{{ 'visiteur.copyright' | translate }}</p>
     </div>
   </footer>
 </div>

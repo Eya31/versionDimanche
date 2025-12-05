@@ -4,55 +4,55 @@
     <div class="container">
       <nav class="navbar">
         <div class="logo">
-          <a routerLink="/"><h1>elBaladiya.tn</h1></a>
+          <a routerLink="/"><h1>{{ 'visiteur.platformTitle' | translate }}</h1></a>
         </div>
         <ul class="nav-links">
-          <li><a routerLink="/" routerLinkActive="active">Accueil</a></li>
-          <li><a routerLink="/demandes-terminees" routerLinkActive="active">Demandes terminées</a></li>
-          <li><a routerLink="/faq" routerLinkActive="active">FAQ</a></li>
-          <li><a routerLink="/about" routerLinkActive="active">À propos</a></li>
-          <li><a routerLink="/login" routerLinkActive="active">Connexion</a></li>
+          <li><a routerLink="/" routerLinkActive="active">{{ 'visiteur.home' | translate }}</a></li>
+          <li><a routerLink="/demandes-terminees" routerLinkActive="active">{{ 'visiteur.demandesTerminees' | translate }}</a></li>
+          <li><a routerLink="/faq" routerLinkActive="active">{{ 'visiteur.faq' | translate }}</a></li>
+          <li><a routerLink="/about" routerLinkActive="active">{{ 'visiteur.about' | translate }}</a></li>
+          <li><a routerLink="/login" routerLinkActive="active">{{ 'visiteur.connection' | translate }}</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <div class="container main-content">
-    <h1 class="page-title">Demandes citoyennes terminées</h1>
-    <p class="page-subtitle">Consultez les demandes qui ont été traitées avec succès</p>
+    <h1 class="page-title">{{ 'visiteur.demandesTermineesPage' | translate }}</h1>
+    <p class="page-subtitle">{{ 'visiteur.demandesTermineesSubtitle' | translate }}</p>
 
     <!-- FILTRES -->
     <div class="filters-section">
-      <h2>Filtres</h2>
+      <h2>{{ 'visiteur.filters' | translate }}</h2>
       <div class="filters-grid">
         <div class="filter-group">
-          <label for="category">Catégorie</label>
+          <label for="category">{{ 'visiteur.category' | translate }}</label>
           <select id="category" [(ngModel)]="categoryFilter" (change)="applyFilters()">
-            <option value="">Toutes les catégories</option>
+            <option value="">{{ 'visiteur.allCategories' | translate }}</option>
             <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
           </select>
         </div>
         <div class="filter-group">
-          <label for="dateDebut">Date début</label>
+          <label for="dateDebut">{{ 'visiteur.dateDebut' | translate }}</label>
           <input type="date" id="dateDebut" [(ngModel)]="dateDebutFilter" (change)="applyFilters()" />
         </div>
         <div class="filter-group">
-          <label for="dateFin">Date fin</label>
+          <label for="dateFin">{{ 'visiteur.dateFin' | translate }}</label>
           <input type="date" id="dateFin" [(ngModel)]="dateFinFilter" (change)="applyFilters()" />
         </div>
         <div class="filter-group">
           <button type="button" class="btn btn-secondary" (click)="clearFilters()">
-            Réinitialiser
+            {{ 'visiteur.reset' | translate }}
           </button>
         </div>
       </div>
     </div>
 
     <!-- LISTE DES DEMANDES -->
-    <div *ngIf="loading" class="loading">Chargement des demandes...</div>
+    <div *ngIf="loading" class="loading">{{ 'visiteur.loadingDemands' | translate }}</div>
     
     <div *ngIf="!loading && demandesFiltrees.length === 0" class="no-data">
-      <p>Aucune demande terminée ne correspond à vos critères de recherche.</p>
+      <p>{{ 'visiteur.noCriteriaMatch' | translate }}</p>
     </div>
 
     <div *ngIf="!loading && demandesFiltrees.length > 0" class="demandes-list">
@@ -62,8 +62,8 @@
         </div>
         <div class="demande-info">
           <div class="demande-header">
-            <h3>{{ demande.category || 'Demande' }}</h3>
-            <span class="badge badge-success">Terminée</span>
+            <h3>{{ translationService.translateCategory(demande.category) || ('visiteur.request' | translate) }}</h3>
+            <span class="badge badge-success">{{ 'visiteur.terminated' | translate }}</span>
           </div>
           <p class="demande-description">{{ demande.description }}</p>
           <div class="demande-meta">
@@ -77,7 +77,7 @@
             </span>
           </div>
           <a [routerLink]="['/demande', demande.id]" class="btn btn-primary">
-            Voir détails >
+            {{ 'visiteur.viewDetails' | translate }}
           </a>
         </div>
       </div>
@@ -87,7 +87,7 @@
   <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
-      <p>&copy; 2024 elBaladiya.tn - Tous droits réservés</p>
+      <p>{{ 'visiteur.copyright' | translate }}</p>
     </div>
   </footer>
 </div>

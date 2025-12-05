@@ -1,0 +1,90 @@
+{
+  "app": {
+    "title": "نظام إدارة التدخلات",
+    "subtitle": "نظام إدارة التدخلات الحضرية"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "interventions": "التدخلات",
+    "demandes": "الطلبات",
+    "planification": "التخطيط",
+    "rapports": "التقارير",
+    "admin": "الإدارة",
+    "profile": "الملف الشخصي",
+    "logout": "تسجيل الخروج",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب"
+  },
+  "dashboard": {
+    "citoyen": "مساحة المواطن",
+    "chef": "مساحة رئيس الخدمة",
+    "technicien": "مساحة الفني",
+    "mainDoeuvre": "مساحة القوى العاملة",
+    "admin": "مساحة الإدارة",
+    "welcome": "أهلا وسهلا",
+    "manageRequests": "إدارة تقاريرك"
+  },
+  "demande": {
+    "create": "إنشاء طلب",
+    "list": "قائمة الطلبات",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "details": "التفاصيل",
+    "status": "الحالة",
+    "date": "التاريخ",
+    "description": "الوصف",
+    "location": "الموقع",
+    "priority": "الأولوية",
+    "type": "النوع"
+  },
+  "intervention": {
+    "create": "إنشاء تدخل",
+    "list": "قائمة التدخلات",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "plan": "التخطيط",
+    "assign": "تعيين",
+    "start": "ابدأ",
+    "finish": "إنهاء",
+    "status": "الحالة",
+    "date": "التاريخ",
+    "technician": "الفني"
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "add": "إضافة",
+    "close": "إغلاق",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "import": "استيراد",
+    "download": "تحميل",
+    "upload": "رفع",
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجاح",
+    "warning": "تحذير",
+    "noData": "لا توجد بيانات",
+    "yes": "نعم",
+    "no": "لا"
+  },
+  "notifications": {
+    "unread": "غير مقروءة",
+    "all": "الكل",
+    "read": "مقروءة",
+    "newMessage": "رسالة جديدة",
+    "markAsRead": "وضع علامة كمقروءة"
+  },
+  "language": {
+    "select": "اختر اللغة",
+    "french": "Français",
+    "english": "English",
+    "arabic": "العربية"
+  }
+}

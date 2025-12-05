@@ -71,37 +71,39 @@
         <p class="subtitle">Gestion intelligente des interventions urbaines • Tunis 2025</p>
       </div>
 
-    <!-- Icône notifications -->
-    <div class="notification-bell" (click)="toggleNotificationsDropdown()">
-      🔔
-      <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+      <div class="header-actions">
+        <!-- Icône notifications -->
+        <div class="notification-bell" (click)="toggleNotificationsDropdown()">
+          🔔
+          <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
 
-      <!-- Dropdown notifications -->
-      <div class="notifications-dropdown" *ngIf="showNotificationsDropdown" (click)="$event.stopPropagation()">
-        <div class="dropdown-header">
-          <h4>Notifications</h4>
-          <span class="count">{{ unreadCount }} non lue(s)</span>
-        </div>
-        <div class="notifications-list">
-          <div *ngIf="notifications.length === 0" class="empty-state">
-            Aucune notification
-          </div>
-          <div *ngFor="let notif of notifications"
-               class="notification-item"
-               [class.unread]="!notif.readable"
-               (click)="markAsRead(notif)">
-            <div class="notif-icon">
-              {{ notif.readable ? '📬' : '📭' }}
+          <!-- Dropdown notifications -->
+          <div class="notifications-dropdown" *ngIf="showNotificationsDropdown" (click)="$event.stopPropagation()">
+            <div class="dropdown-header">
+              <h4>Notifications</h4>
+              <span class="count">{{ unreadCount }} non lue(s)</span>
             </div>
-            <div class="notif-content">
-              <p class="notif-message">{{ notif.message }}</p>
-              <span class="notif-time">{{ formatNotificationDate(notif.createdAt) }}</span>
+            <div class="notifications-list">
+              <div *ngIf="notifications.length === 0" class="empty-state">
+                Aucune notification
+              </div>
+              <div *ngFor="let notif of notifications"
+                   class="notification-item"
+                   [class.unread]="!notif.readable"
+                   (click)="markAsRead(notif)">
+                <div class="notif-icon">
+                  {{ notif.readable ? '📬' : '📭' }}
+                </div>
+                <div class="notif-content">
+                  <p class="notif-message">{{ notif.message }}</p>
+                  <span class="notif-time">{{ formatNotificationDate(notif.createdAt) }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
 
   <!-- Stats Cards Modernes -->
   <div class="stats-grid">

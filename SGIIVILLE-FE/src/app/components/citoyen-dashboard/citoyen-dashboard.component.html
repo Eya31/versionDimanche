@@ -1,8 +1,8 @@
 <div class="citoyen-dashboard">
   <div class="dashboard-header">
     <div class="header-content">
-      <h1>Espace Citoyen</h1>
-      <p>Bienvenue. Gérez vos signalements et suivez leur état.</p>
+      <h1>{{ 'dashboard.citoyen' | translate }}</h1>
+      <p>{{ 'dashboard.manageRequests' | translate }}</p>
     </div>
     <div class="header-actions">
       <!-- Icône notifications -->
@@ -13,12 +13,12 @@
         <!-- Dropdown notifications -->
         <div class="notifications-dropdown" *ngIf="showNotificationsDropdown" (click)="$event.stopPropagation()">
           <div class="dropdown-header">
-            <h4>Notifications</h4>
-            <span class="count">{{ unreadCount }} non lue(s)</span>
+            <h4>{{ 'notifications.all' | translate }}</h4>
+            <span class="count">{{ unreadCount }} {{ 'notifications.unread' | translate }}</span>
           </div>
           <div class="notifications-list">
             <div *ngIf="notifications.length === 0" class="empty-state">
-              Aucune notification
+              {{ 'common.noData' | translate }}
             </div>
             <div *ngFor="let notif of notifications" 
                  class="notification-item"
@@ -36,7 +36,7 @@
         </div>
       </div>
       <button class="btn-logout" (click)="logout()">
-        <span>🚪 Déconnexion</span>
+        <span>🚪 {{ 'nav.logout' | translate }}</span>
       </button>
     </div>
   </div>
@@ -46,7 +46,7 @@
       <div class="stat-icon">📂</div>
       <div class="stat-info">
         <h3>{{ stats.total }}</h3>
-        <p>Total signalés</p>
+        <p>{{ 'demande.list' | translate }}</p>
       </div>
     </div>
     <div class="stat-card stat-encours">
@@ -60,15 +60,15 @@
       <div class="stat-icon">✅</div>
       <div class="stat-info">
         <h3>{{ stats.traitee }}</h3>
-        <p>Résolus</p>
+        <p>{{ 'common.success' | translate }}</p>
       </div>
     </div>
   </div>
 
   <div class="actions-bar">
-    <h2 style="color: #2c3e50; margin: 0;">Mes Demandes</h2>
+    <h2 style="color: #2c3e50; margin: 0;">{{ 'demande.list' | translate }}</h2>
     <button class="btn-primary" (click)="showCreateForm = !showCreateForm">
-      {{ showCreateForm ? '✖ Fermer le formulaire' : '+ Nouveau Signalement' }}
+      {{ showCreateForm ? '✖ ' + ('common.close' | translate) : '+ ' + ('demande.create' | translate) }}
     </button>
   </div>
 
@@ -78,7 +78,7 @@
 
   <div class="demandes-grid" *ngIf="!showCreateForm">
     <div *ngIf="demandes.length === 0" class="empty-state">
-      <p>Aucune demande pour le moment.</p>
+      <p>{{ 'common.noData' | translate }}</p>
     </div>
 
     <div *ngFor="let d of demandes" class="demande-card">
@@ -90,7 +90,7 @@
       </div>
 
       <div class="card-body">
-        <h3>{{ d.category || 'Signalement divers' }}</h3>
+        <h3>{{ translationService.translateCategory(d.category) || 'Signalement divers' }}</h3>
         <p class="card-desc">{{ d.description }}</p>
 
         <div class="meta-info">

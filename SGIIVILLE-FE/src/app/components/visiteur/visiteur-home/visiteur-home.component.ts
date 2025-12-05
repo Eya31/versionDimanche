@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PublicService, PublicStats, DemandePublique } from '../../../services/public.service';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
+import { TranslationService } from '../../../services/translation.service';
 
 @Component({
   selector: 'app-visiteur-home',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './visiteur-home.component.html',
   styleUrl: './visiteur-home.component.css'
 })
@@ -15,7 +17,10 @@ export class VisiteurHomeComponent implements OnInit {
   demandesTerminees: DemandePublique[] = [];
   loading = true;
 
-  constructor(private publicService: PublicService) {}
+  constructor(
+    private publicService: PublicService,
+    public translationService: TranslationService
+  ) {}
 
   ngOnInit(): void {
     this.loadStats();
