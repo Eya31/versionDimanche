@@ -6,6 +6,8 @@ import { TechnicienService } from '../../../services/technicien.service';
 import { AuthService } from '../../../services/auth.service';
 import { Intervention } from '../../../models/intervention.model';
 import { MiniCalendarComponent } from '../../../components/mini-calendar/mini-calendar.component';
+import { InterventionService } from '../../../services/intervention.service';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-technicien-dashboard',
@@ -18,16 +20,16 @@ export class TechnicienDashboardComponent implements OnInit {
   interventions: Intervention[] = [];
   interventionsFiltrees: Intervention[] = [];
   loading = false;
-  
+
   // Vue
   viewMode: 'list' | 'calendar' = 'list';
   selectedCalendarDate: Date | null = null;
-  
+
   // Filtres
   filtreEtat: string = '';
   filtrePriorite: string = '';
   recherche: string = '';
-  
+
   // Statistiques
   stats = {
     enAttente: 0,
@@ -39,7 +41,9 @@ export class TechnicienDashboardComponent implements OnInit {
   constructor(
     private technicienService: TechnicienService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private interventionService: InterventionService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +55,7 @@ export class TechnicienDashboardComponent implements OnInit {
     const filters: any = {};
     if (this.filtreEtat) filters.etat = this.filtreEtat;
     if (this.filtrePriorite) filters.priorite = this.filtrePriorite;
-    
+
     this.technicienService.getMyInterventions(filters).subscribe({
       next: (data: Intervention[]) => {
         this.interventions = data || [];
@@ -78,7 +82,7 @@ export class TechnicienDashboardComponent implements OnInit {
 
   appliquerFiltres(): void {
     this.interventionsFiltrees = this.interventions.filter(i => {
-      const matchRecherche = !this.recherche || 
+      const matchRecherche = !this.recherche ||
         i.description?.toLowerCase().includes(this.recherche.toLowerCase()) ||
         i.id.toString().includes(this.recherche) ||
         i.typeIntervention?.toLowerCase().includes(this.recherche.toLowerCase());
@@ -208,5 +212,67 @@ export class TechnicienDashboardComponent implements OnInit {
     }
     return `${mins} min`;
   }
+// technicien-dashboard.component.ts
+// Ajouter ces méthodes
 
+// technicien-dashboard.component.ts
+// AJOUTER CES MÉTHODES
+
+verifierEtTerminerIntervention(intervention: Intervention): void {
+  // 1. Vérifier d'abord si toutes les tâches sont terminées
+  this.interventionService.verifierToutesTachesTerminees(intervention.id).subscribe({
+    next: (result: any) => {
+      if (result.toutesTerminees) {
+        // 2. Confirmation du technicien
+        if (confirm('Toutes les tâches sont terminées. Voulez-vous vérifier et terminer l\'intervention ?')) {
+          this.terminerIntervention(intervention);
+        }
+      } else {
+        alert('❌ Toutes les tâches ne sont pas encore terminées !');
+      }
+    },
+    error: (err: any) => {
+      console.error('Erreur vérification tâches:', err);
+      alert('Erreur lors de la vérification des tâches');
+    }
+  });
+}
+
+private terminerIntervention(intervention: Intervention): void {
+  this.interventionService.verifierIntervention(intervention.id).subscribe({
+    next: (interventionMaj: Intervention) => {
+      // Notifier le chef
+      this.notifierChefInterventionTerminee(interventionMaj);
+      alert('✅ Intervention vérifiée et terminée ! Le chef a été notifié.');
+      this.loadMyInterventions();
+    },
+    error: (err: any) => {
+      console.error('Erreur terminaison intervention:', err);
+      alert('❌ Erreur lors de la terminaison');
+    }
+  });
+}
+
+private notifierChefInterventionTerminee(intervention: Intervention): void {
+  const chefId = intervention.chefServiceId; // Récupérer l'ID du chef depuis l'intervention
+
+  if (!chefId) {
+    console.error('ID du chef non disponible');
+    return;
+  }
+
+  const message = `🏁 Intervention #${intervention.id} terminée\n` +
+                 `Type: ${intervention.typeIntervention || 'Non spécifié'}\n` +
+                 `Technicien: #${intervention.technicienId}\n` +
+                 `Date: ${new Date().toLocaleDateString('fr-FR')}`;
+
+  this.notificationService.notifierChefInterventionTerminee(chefId, intervention.id, message).subscribe({
+    next: (response: any) => {
+      console.log('📨 Notification envoyée au chef:', response);
+    },
+    error: (error: any) => {
+      console.error('❌ Erreur envoi notification chef:', error);
+    }
+  });
+}
 }

@@ -4,7 +4,9 @@ export interface Tache {
   libelle: string;
   description?: string;
   mainDOeuvreId?: number;
+  technicienId?: number; // ← Ajouter cette ligne
   etat: 'A_FAIRE' | 'EN_COURS' | 'TERMINEE' | 'VERIFIEE' | 'SUSPENDUE' | 'REPORTEE';
+  
   dateCreation?: string;
   dateDebut?: string;
   dateFin?: string;

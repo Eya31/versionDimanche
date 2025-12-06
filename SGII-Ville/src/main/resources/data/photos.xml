@@ -1,23 +1,62 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Photos xmlns="http://example.com/gestion-interventions">
-            
+                    
+    
+    
     
     <!-- Photos vides - Prêt pour de nouvelles instances -->
+                
+    
+    
+    
+    <Photo>
+                                
+        
+        
+        <id_photo>1</id_photo>
+                                
+        
+        
+        <url>/api/demandes/uploads/1764120216127_Capture_d’écran_2024-09-12_à_16.35.17.png</url>
+                                
+        
+        
+        <nom>Capture d’écran 2024-09-12 à 16.35.17.png</nom>
+                            
+    
+    
+    </Photo>
+            
+    
+    
+    <Photo>
+                        
+        
+        <id_photo>1</id_photo>
+                        
+        
+        <url>/api/demandes/uploads/1764461424743_téléchargement_(4).jpeg</url>
+                        
+        
+        <nom>téléchargement (4).jpeg</nom>
+                    
+    
+    </Photo>
         
     
     <Photo>
                 
         <id_photo>1</id_photo>
                 
-        <url>/api/demandes/uploads/1764120216127_Capture_d’écran_2024-09-12_à_16.35.17.png</url>
+        <url>/api/demandes/uploads/1765039018833_582335112_2054631275363695_792693425379093593_n.png</url>
                 
-        <nom>Capture d’écran 2024-09-12 à 16.35.17.png</nom>
+        <nom>582335112_2054631275363695_792693425379093593_n.png</nom>
             
     </Photo>
     
     <Photo>
         <id_photo>1</id_photo>
-        <url>/api/demandes/uploads/1764461424743_téléchargement_(4).jpeg</url>
-        <nom>téléchargement (4).jpeg</nom>
+        <url>/api/demandes/uploads/1765039823834_582335112_2054631275363695_792693425379093593_n.png</url>
+        <nom>582335112_2054631275363695_792693425379093593_n.png</nom>
     </Photo>
 </Photos>

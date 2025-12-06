@@ -1,3 +1,4 @@
+import { Intervention } from './../../models/intervention.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,10 +9,22 @@ import { Subscription } from 'rxjs';
 import { MainDOeuvreAgentService } from '../../services/main-doeuvre-agent.service';
 import { MainDOeuvreTacheService } from '../../services/main-doeuvre-tache.service';
 import { AuthService } from '../../services/auth.service';
+import { InterventionService } from '../../services/intervention.service';
+import { NotificationService } from '../../services/notification.service';
 
 // Modèles
-import { Tache, TerminerTacheRequest, ChangerEtatTacheRequest } from '../../models/tache.model';
-import { MainDOeuvre } from '../../models/main-doeuvre.model';
+import { Tache, TerminerTacheRequest } from '../../models/tache.model';
+
+// Interface étendue pour inclure interventionInfo
+interface TacheEtendue extends Tache {
+  interventionInfo?: {
+    id: number;
+    description: string;
+    datePlanifiee: string;
+    etat: string;
+    technicienId?: number;
+  };
+}
 
 @Component({
   selector: 'app-main-doeuvre-dashboard',
@@ -22,9 +35,9 @@ import { MainDOeuvre } from '../../models/main-doeuvre.model';
 })
 export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
   // Données
-  taches: Tache[] = [];
-  tachesFiltrees: Tache[] = [];
-  profil: MainDOeuvre | null = null;
+  taches: TacheEtendue[] = [];
+  tachesFiltrees: TacheEtendue[] = [];
+  profil: any = null;
 
   // États UI
   loading = false;
@@ -35,7 +48,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
   recherche: string = '';
 
   // Modals
-  selectedTache: Tache | null = null;
+  selectedTache: TacheEtendue | null = null;
   modalAction: 'terminer' | 'commenter' | 'reporter' | 'suspendre' | null = null;
 
   // Formulaires
@@ -47,6 +60,10 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
   commentaireTache: string = '';
   raisonReport: string = '';
   raisonSuspension: string = '';
+
+  // Ajouter ces propriétés
+  technicienId: number | null = null;
+  mainDOeuvreNom: string = '';
 
   // Statistiques
   stats = {
@@ -63,12 +80,42 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
     private mainDoeuvreAgentService: MainDOeuvreAgentService,
     private mainDoeuvreTacheService: MainDOeuvreTacheService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService,
+    private interventionService: InterventionService
   ) {}
 
   ngOnInit(): void {
+    console.log('🚀 Initialisation dashboard main-d\'œuvre');
+    this.testConnection();
     this.loadProfil();
     this.loadMyTaches();
+    this.chargerDonneesNotification();
+  }
+
+  testConnection(): void {
+    console.log('🔗 Test connexion API...');
+    this.mainDoeuvreAgentService.testConnection().subscribe({
+      next: (response: any) => {
+        console.log('✅ Test API réussi:', response);
+      },
+      error: (error: any) => {
+        console.error('❌ Test API échoué:', error);
+        alert('Erreur de connexion à l\'API. Vérifiez que le serveur est démarré.');
+      }
+    });
+  }
+
+  private chargerDonneesNotification(): void {
+    // Charger l'ID du technicien (exemple depuis localStorage)
+    this.technicienId = localStorage.getItem('currentTechnicienId')
+      ? parseInt(localStorage.getItem('currentTechnicienId')!)
+      : null;
+
+    // Charger le nom de la main-d'œuvre
+    if (this.profil) {
+      this.mainDOeuvreNom = `${this.profil.nom} ${this.profil.prenom}`;
+    }
   }
 
   ngOnDestroy(): void {
@@ -81,6 +128,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
     const sub = this.mainDoeuvreAgentService.getProfil().subscribe({
       next: (profil) => {
         this.profil = profil;
+        this.mainDOeuvreNom = `${profil.nom} ${profil.prenom}`;
         this.loading = false;
       },
       error: (err) => {
@@ -98,7 +146,8 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
 
     const sub = this.mainDoeuvreTacheService.getMyTaches(filters).subscribe({
       next: (taches) => {
-        this.taches = taches || [];
+        // Cast les tâches vers TacheEtendue
+        this.taches = (taches as TacheEtendue[]) || [];
         this.calculerStats();
         this.appliquerFiltres();
         this.loading = false;
@@ -113,11 +162,11 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
   }
 
   // ========== GESTION DES ÉTATS ==========
-  commencerTache(tache: Tache): void {
+  commencerTache(tache: TacheEtendue): void {
     if (confirm(`Commencer la tâche "${tache.libelle}" ?`)) {
       const sub = this.mainDoeuvreTacheService.commencerTache(tache.id).subscribe({
         next: (tacheMaj) => {
-          this.mettreAJourTache(tacheMaj);
+          this.mettreAJourTache(tacheMaj as TacheEtendue);
           alert('✅ Tâche commencée avec succès');
         },
         error: (err) => {
@@ -129,7 +178,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  ouvrirModalTerminer(tache: Tache): void {
+  ouvrirModalTerminer(tache: TacheEtendue): void {
     this.selectedTache = tache;
     this.modalAction = 'terminer';
     this.terminerTacheRequest = {
@@ -146,7 +195,11 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
       this.terminerTacheRequest
     ).subscribe({
       next: (tacheMaj) => {
-        this.mettreAJourTache(tacheMaj);
+        this.mettreAJourTache(tacheMaj as TacheEtendue);
+
+        // VÉRIFIER SI TOUTES LES TÂCHES DE L'INTERVENTION SONT TERMINÉES
+        this.verifierEtNotifierSiToutesTachesTerminees(tacheMaj.interventionId);
+
         this.fermerModal();
         alert('✅ Tâche terminée avec succès');
       },
@@ -158,7 +211,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
-  ouvrirModalCommenter(tache: Tache): void {
+  ouvrirModalCommenter(tache: TacheEtendue): void {
     this.selectedTache = tache;
     this.modalAction = 'commenter';
     this.commentaireTache = tache.commentaireMainDOeuvre || '';
@@ -172,7 +225,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
       this.commentaireTache
     ).subscribe({
       next: (tacheMaj) => {
-        this.mettreAJourTache(tacheMaj);
+        this.mettreAJourTache(tacheMaj as TacheEtendue);
         this.fermerModal();
         alert('✅ Commentaire ajouté avec succès');
       },
@@ -184,7 +237,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
-  ouvrirModalReporter(tache: Tache): void {
+  ouvrirModalReporter(tache: TacheEtendue): void {
     this.selectedTache = tache;
     this.modalAction = 'reporter';
     this.raisonReport = '';
@@ -201,7 +254,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
       this.raisonReport
     ).subscribe({
       next: (tacheMaj) => {
-        this.mettreAJourTache(tacheMaj);
+        this.mettreAJourTache(tacheMaj as TacheEtendue);
         this.fermerModal();
         alert('✅ Tâche reportée avec succès');
       },
@@ -213,7 +266,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
-  ouvrirModalSuspendre(tache: Tache): void {
+  ouvrirModalSuspendre(tache: TacheEtendue): void {
     this.selectedTache = tache;
     this.modalAction = 'suspendre';
     this.raisonSuspension = '';
@@ -230,7 +283,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
       this.raisonSuspension
     ).subscribe({
       next: (tacheMaj) => {
-        this.mettreAJourTache(tacheMaj);
+        this.mettreAJourTache(tacheMaj as TacheEtendue);
         this.fermerModal();
         alert('✅ Tâche suspendue avec succès');
       },
@@ -242,11 +295,11 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
-  reprendreTache(tache: Tache): void {
+  reprendreTache(tache: TacheEtendue): void {
     if (confirm(`Reprendre la tâche "${tache.libelle}" ?`)) {
       const sub = this.mainDoeuvreTacheService.reprendreTache(tache.id).subscribe({
         next: (tacheMaj) => {
-          this.mettreAJourTache(tacheMaj);
+          this.mettreAJourTache(tacheMaj as TacheEtendue);
           alert('✅ Tâche reprise avec succès');
         },
         error: (err) => {
@@ -259,13 +312,74 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
   }
 
   // ========== UTILITAIRES ==========
-  private mettreAJourTache(tacheMaj: Tache): void {
+  private mettreAJourTache(tacheMaj: TacheEtendue): void {
     const index = this.taches.findIndex(t => t.id === tacheMaj.id);
     if (index !== -1) {
+      const ancienEtat = this.taches[index].etat;
       this.taches[index] = tacheMaj;
       this.calculerStats();
       this.appliquerFiltres();
+
+      // Envoyer notification au technicien
+      this.envoyerNotificationTechnicien(tacheMaj, ancienEtat);
     }
+  }
+
+  private envoyerNotificationTechnicien(tache: TacheEtendue, ancienEtat: string): void {
+    // Si technicienId n'est pas déjà chargé, essayer de le récupérer depuis l'interventionInfo
+    if (!this.technicienId && tache.interventionInfo) {
+      if (tache.interventionInfo.technicienId) {
+        this.technicienId = tache.interventionInfo.technicienId;
+      }
+    }
+
+    if (!this.technicienId) return;
+
+    const notificationData = {
+      technicienId: this.technicienId,
+      tacheId: tache.id,
+      libelleTache: tache.libelle,
+      mainDOeuvreNom: this.mainDOeuvreNom,
+      ancienEtat: ancienEtat,
+      nouvelEtat: tache.etat,
+      details: tache.commentaireMainDOeuvre || 'Changement d\'état effectué'
+    };
+
+    this.notificationService.notifierTechnicienChangementTache(notificationData).subscribe({
+      next: () => console.log('📢 Notification envoyée au technicien'),
+      error: (err: any) => console.error('❌ Erreur envoi notification:', err)
+    });
+  }
+
+  private verifierEtNotifierSiToutesTachesTerminees(interventionId: number): void {
+    if (!interventionId) return;
+
+    this.interventionService.verifierToutesTachesTerminees(interventionId).subscribe({
+      next: (result: any) => {
+        if (result.toutesTerminees) {
+          // Récupérer l'intervention pour avoir l'ID du technicien
+          this.interventionService.getInterventionById(interventionId).subscribe({
+            next: (intervention: Intervention) => {
+              if (intervention.technicienId) {
+                // Notifier le technicien pour vérification
+                const message = `🔍 Toutes les tâches de l'intervention #${interventionId} sont terminées.\n` +
+                  `Veuillez vérifier et terminer l'intervention.`;
+
+                this.notificationService.notifierTechnicienVerification(
+                  intervention.technicienId,
+                  interventionId,
+                  message
+                ).subscribe({
+                  next: () => console.log('📢 Technicien notifié pour vérification'),
+                  error: (err) => console.error('❌ Erreur notification technicien:', err)
+                });
+              }
+            }
+          });
+        }
+      },
+      error: (err: any) => console.error('Erreur vérification tâches:', err)
+    });
   }
 
   calculerStats(): void {
@@ -283,7 +397,8 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
       const matchRecherche = !this.recherche ||
         t.libelle.toLowerCase().includes(this.recherche.toLowerCase()) ||
         t.description?.toLowerCase().includes(this.recherche.toLowerCase()) ||
-        t.intervention?.description?.toLowerCase().includes(this.recherche.toLowerCase());
+        (t.interventionInfo &&
+          t.interventionInfo.description?.toLowerCase().includes(this.recherche.toLowerCase()));
       return matchRecherche;
     });
   }
@@ -299,7 +414,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
 
   // ========== UI HELPERS ==========
   getEtatTacheLabel(etat: string): string {
-    switch(etat) {
+    switch (etat) {
       case 'A_FAIRE': return '⏳ À Faire';
       case 'EN_COURS': return '🔧 En Cours';
       case 'TERMINEE': return '✅ Terminée';
@@ -311,7 +426,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
   }
 
   getEtatTacheClass(etat: string): string {
-    switch(etat) {
+    switch (etat) {
       case 'A_FAIRE': return 'etat-a-faire';
       case 'EN_COURS': return 'etat-en-cours';
       case 'TERMINEE': return 'etat-terminee';
@@ -323,7 +438,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
   }
 
   getEtatProgress(etat: string): number {
-    switch(etat) {
+    switch (etat) {
       case 'A_FAIRE': return 25;
       case 'EN_COURS': return 50;
       case 'TERMINEE': return 75;
@@ -360,7 +475,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
     return new Date(dateStr).toLocaleDateString('fr-FR');
   }
 
-  trackByTacheId(index: number, tache: Tache): number {
+  trackByTacheId(index: number, tache: TacheEtendue): number {
     return tache.id;
   }
 

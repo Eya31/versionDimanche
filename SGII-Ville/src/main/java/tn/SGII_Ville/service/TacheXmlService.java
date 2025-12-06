@@ -53,12 +53,23 @@ public class TacheXmlService {
     /**
      * Récupère toutes les tâches d'une main-d'œuvre
      */
-    public List<Tache> findByMainDOeuvreId(int mainDOeuvreId) {
-        return findAll().stream()
+   public List<Tache> findByMainDOeuvreId(int mainDOeuvreId) {
+    System.out.println("Recherche tâches pour mainDOeuvreId: " + mainDOeuvreId);
+    try {
+        List<Tache> allTaches = findAll();
+        System.out.println("Total tâches trouvées: " + allTaches.size());
+        
+        List<Tache> result = allTaches.stream()
                 .filter(t -> t.getMainDOeuvreId() != null && t.getMainDOeuvreId() == mainDOeuvreId)
                 .collect(Collectors.toList());
+        
+        System.out.println("Tâches filtrées pour mainDOeuvreId: " + result.size());
+        return result;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return new ArrayList<>();
     }
-
+}
     /**
      * Récupère une tâche par ID
      */
@@ -333,5 +344,12 @@ public List<MainDOeuvreController.HistoriqueEtatTache> getHistoriqueByTacheId(in
     
     return historique;
 }
+ /**
+     * Récupère toutes les tâches (remplace findAll par getAllTaches)
+     */
+    public List<Tache> getAllTaches() {
+        return findAll(); // Si vous avez déjà une méthode findAll()
+    }
+    
 }
 

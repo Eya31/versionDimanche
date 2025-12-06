@@ -14,9 +14,8 @@ export class InterventionService {
     return this.http.get<Intervention[]>(this.baseUrl);
   }
 
-  getInterventionById(id: number): Observable<Intervention> {
-    return this.http.get<Intervention>(`${this.baseUrl}/${id}`);
-  }
+  // Dans intervention.service.ts
+
 
   updateStatut(interventionId: number, statut: string): Observable<Intervention> {
     return this.http.patch<Intervention>(`${this.baseUrl}/${interventionId}`, { statut: statut });
@@ -48,4 +47,28 @@ export class InterventionService {
   }): Observable<any> {
     return this.http.post(`${this.baseUrl}/planifier-complete`, request);
   }
+
+  // Ajouter ces méthodes dans votre intervention.service.ts
+
+
+
+
+
+
+// Ajouter ces méthodes
+terminerIntervention(interventionId: number): Observable<Intervention> {
+  return this.http.patch<Intervention>(`${this.baseUrl}/${interventionId}/terminer`, {});
+}
+
+verifierIntervention(interventionId: number): Observable<Intervention> {
+  return this.http.patch<Intervention>(`${this.baseUrl}/${interventionId}/verifier`, {});
+}
+
+verifierToutesTachesTerminees(interventionId: number): Observable<{ toutesTerminees: boolean }> {
+  return this.http.get<{ toutesTerminees: boolean }>(`${this.baseUrl}/${interventionId}/taches/statut`);
+}
+
+getInterventionById(id: number): Observable<Intervention> {
+  return this.http.get<Intervention>(`${this.baseUrl}/${id}`);
+}
 }

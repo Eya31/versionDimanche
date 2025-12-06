@@ -60,4 +60,34 @@ export class NotificationService {
       switchMap(() => this.getUnreadCount(userId))
     );
   }
+ notifierTechnicienChangementTache(data: {
+    technicienId: number;
+    tacheId: number;
+    libelleTache: string;
+    mainDOeuvreNom: string;
+    ancienEtat: string;
+    nouvelEtat: string;
+    details?: string;
+  }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/notifier-technicien-tache`, data);
+  }
+// notification.service.ts
+// Ajouter ces méthodes
+
+// Ajouter ces méthodes
+notifierChefInterventionTerminee(chefId: number, interventionId: number, message: string): Observable<any> {
+  return this.http.post(`${this.baseUrl}/notifier-chef-intervention-terminee`, {
+    chefId: chefId,
+    interventionId: interventionId,
+    message: message
+  });
+}
+
+notifierTechnicienVerification(technicienId: number, interventionId: number, message: string): Observable<any> {
+  return this.http.post(`${this.baseUrl}/notifier-technicien-verification`, {
+    technicienId: technicienId,
+    interventionId: interventionId,
+    message: message
+  });
+}
 }

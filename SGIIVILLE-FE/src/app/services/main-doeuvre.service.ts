@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { 
-  MainDOeuvre, 
-  CreateMainDOeuvreRequest, 
+import {
+  MainDOeuvre,
+  CreateMainDOeuvreRequest,
   VerificationAffectationDTO
 } from '../models/main-doeuvre.model';
-
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -83,5 +84,14 @@ export class MainDOeuvreService {
       observer.complete();
     });
   }
+  getProfil(): Observable<MainDOeuvre> {
+    console.log('URL appelée:', `${this.apiUrl}/profil`);
+    return this.http.get<MainDOeuvre>(`${this.apiUrl}/profil`).pipe(
+        catchError(error => {
+            console.error('Erreur détaillée:', error);
+            return throwError(() => error);
+        })
+    );
+}
 }
 

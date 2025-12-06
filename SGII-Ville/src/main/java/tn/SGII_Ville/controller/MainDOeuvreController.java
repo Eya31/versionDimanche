@@ -71,26 +71,39 @@ public class MainDOeuvreController {
      * Récupère le profil de l'agent connecté
      */
     @GetMapping("/profil")
-    public ResponseEntity<?> getProfil() {
-        try {
-            AgentMainDOeuvre agent = getCurrentAgent();
-            if (agent == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            // Récupérer la fiche complète de main-d'œuvre
-            MainDOeuvre fiche = mainDOeuvreService.findById(agent.getMainDOeuvreId());
-            if (fiche == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return ResponseEntity.ok(fiche);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+public ResponseEntity<?> getProfil() {
+    try {
+        System.out.println("=== GET /api/main-doeuvre/profil appelé ===");
+        
+        // Récupérer l'email de l'utilisateur connecté
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("Email utilisateur connecté: " + email);
+        
+        AgentMainDOeuvre agent = getCurrentAgent();
+        System.out.println("Agent trouvé: " + (agent != null));
+        
+        if (agent == null) {
+            System.out.println("Agent non trouvé ou non de type AgentMainDOeuvre");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+        System.out.println("MainDOeuvreId de l'agent: " + agent.getMainDOeuvreId());
+        
+        // Récupérer la fiche complète de main-d'œuvre
+        MainDOeuvre fiche = mainDOeuvreService.findById(agent.getMainDOeuvreId());
+        System.out.println("Fiche MainDOeuvre trouvée: " + (fiche != null));
+        
+        if (fiche == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(fiche);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+}
 
     /**
      * GET /api/main-doeuvre/interventions
@@ -215,26 +228,33 @@ public class MainDOeuvreController {
      * Méthode utilitaire pour récupérer l'agent connecté
      */
     private AgentMainDOeuvre getCurrentAgent() {
-        try {
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            Optional<Utilisateur> userOpt = userXmlService.findByEmail(email);
-            
-            if (userOpt.isEmpty()) {
-                return null;
-            }
-            
-            Utilisateur user = userOpt.get();
-            if (user instanceof AgentMainDOeuvre) {
-                return (AgentMainDOeuvre) user;
-            }
-            
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
+    try {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("Email utilisateur connecté: " + email);
+        
+        Optional<Utilisateur> userOpt = userXmlService.findByEmail(email);
+        
+        if (userOpt.isEmpty()) {
+            System.out.println("Utilisateur non trouvé dans la base avec email: " + email);
             return null;
         }
+        
+        Utilisateur user = userOpt.get();
+        System.out.println("Type d'utilisateur: " + user.getClass().getSimpleName());
+        
+        if (user instanceof AgentMainDOeuvre) {
+            AgentMainDOeuvre agent = (AgentMainDOeuvre) user;
+            System.out.println("MainDOeuvreId de l'agent: " + agent.getMainDOeuvreId());
+            return agent;
+        } else {
+            System.out.println("L'utilisateur n'est pas un AgentMainDOeuvre");
+            return null;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return null;
     }
-
+}
     // ==================== GESTION DES TÂCHES ====================
 
     /**
@@ -242,34 +262,38 @@ public class MainDOeuvreController {
      * Récupère toutes les tâches assignées à l'agent connecté
      */
     @GetMapping("/taches")
-    public ResponseEntity<List<Tache>> getMyTaches(@RequestParam(required = false) String etat) {
-        try {
-            AgentMainDOeuvre agent = getCurrentAgent();
-            if (agent == null) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-
-            MainDOeuvre mainDOeuvre = mainDOeuvreService.findById(agent.getMainDOeuvreId());
-            if (mainDOeuvre == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            List<Tache> taches = tacheService.findByMainDOeuvreId(mainDOeuvre.getId());
-            
-            // Filtrer par état si fourni
-            if (etat != null && !etat.isEmpty()) {
-                taches = taches.stream()
-                        .filter(t -> etat.equals(t.getEtat()))
-                        .collect(Collectors.toList());
-            }
-            
-            return ResponseEntity.ok(taches);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+public ResponseEntity<List<Tache>> getMyTaches(@RequestParam(required = false) String etat) {
+    try {
+        System.out.println("=== GET /api/main-doeuvre/taches appelé ===");
+        
+        AgentMainDOeuvre agent = getCurrentAgent();
+        if (agent == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+
+        MainDOeuvre mainDOeuvre = mainDOeuvreService.findById(agent.getMainDOeuvreId());
+        if (mainDOeuvre == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        List<Tache> taches = tacheService.findByMainDOeuvreId(mainDOeuvre.getId());
+        
+        // Filtrer par état si fourni
+        if (etat != null && !etat.isEmpty()) {
+            taches = taches.stream()
+                    .filter(t -> etat.equals(t.getEtat()))
+                    .collect(Collectors.toList());
+        }
+        
+        System.out.println("Nombre de tâches trouvées: " + taches.size());
+        
+        return ResponseEntity.ok(taches);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+}
 
     /**
      * GET /api/main-doeuvre/interventions/{interventionId}/taches
@@ -483,6 +507,7 @@ public class MainDOeuvreController {
      * Récupère l'historique des états d'une tâche
      * IMPLÉMENTATION COMPLÈTE - Plus de TODO
      */
+    
     @GetMapping("/taches/{tacheId}/historique")
     public ResponseEntity<List<HistoriqueEtatTache>> getHistoriqueTache(@PathVariable int tacheId) {
         try {
@@ -571,59 +596,60 @@ public class MainDOeuvreController {
      * IMPLÉMENTATION COMPLÈTE
      */
     private List<HistoriqueEtatTache> genererHistoriqueFromTache(Tache tache) {
-        List<HistoriqueEtatTache> historique = new ArrayList<>();
-        int histId = 1;
-        
-        // État initial : création
-        if (tache.getDateCreation() != null) {
-            HistoriqueEtatTache histCreation = new HistoriqueEtatTache();
-            histCreation.setId(histId++);
-            histCreation.setTacheId(tache.getId());
-            histCreation.setEtat("A_FAIRE");
-            histCreation.setDateChangement(tache.getDateCreation());
-            histCreation.setCommentaire("Tâche créée et assignée");
-            historique.add(histCreation);
-        }
-        
-        // Début de la tâche
-        if (tache.getDateDebut() != null) {
-            HistoriqueEtatTache histDebut = new HistoriqueEtatTache();
-            histDebut.setId(histId++);
-            histDebut.setTacheId(tache.getId());
-            histDebut.setEtat("EN_COURS");
-            histDebut.setDateChangement(tache.getDateDebut());
-            histDebut.setCommentaire("Tâche commencée par la main d'œuvre");
-            historique.add(histDebut);
-        }
-        
-        // Fin de la tâche
-        if (tache.getDateFin() != null) {
-            HistoriqueEtatTache histFin = new HistoriqueEtatTache();
-            histFin.setId(histId++);
-            histFin.setTacheId(tache.getId());
-            histFin.setEtat("TERMINEE");
-            histFin.setDateChangement(tache.getDateFin());
-            histFin.setCommentaire(tache.getCommentaireMainDOeuvre() != null ? 
-                tache.getCommentaireMainDOeuvre() : "Tâche terminée");
-            histFin.setTempsPasseMinutes(tache.getTempsPasseMinutes());
-            historique.add(histFin);
-        }
-        
-        // Vérification
-        if (tache.getDateVerification() != null) {
-            HistoriqueEtatTache histVerif = new HistoriqueEtatTache();
-            histVerif.setId(histId++);
-            histVerif.setTacheId(tache.getId());
-            histVerif.setEtat("VERIFIEE");
-            histVerif.setDateChangement(tache.getDateVerification());
-            histVerif.setCommentaire(tache.getCommentaireTechnicien() != null ? 
-                tache.getCommentaireTechnicien() : "Tâche vérifiée et validée");
-            historique.add(histVerif);
-        }
-        
-        // État actuel (si différent des états historiques)
-        String dernierEtat = historique.isEmpty() ? "" : historique.get(historique.size() - 1).getEtat();
-        if (!historique.isEmpty() && !dernierEtat.equals(tache.getEtat())) {
+    List<HistoriqueEtatTache> historique = new ArrayList<>();
+    int histId = 1;
+    
+    // État initial : création
+    if (tache.getDateCreation() != null) {
+        HistoriqueEtatTache histCreation = new HistoriqueEtatTache();
+        histCreation.setId(histId++);
+        histCreation.setTacheId(tache.getId());
+        histCreation.setEtat("A_FAIRE");
+        histCreation.setDateChangement(tache.getDateCreation());
+        histCreation.setCommentaire("Tâche créée et assignée");
+        historique.add(histCreation);
+    }
+    
+    // Début de la tâche
+    if (tache.getDateDebut() != null) {
+        HistoriqueEtatTache histDebut = new HistoriqueEtatTache();
+        histDebut.setId(histId++);
+        histDebut.setTacheId(tache.getId());
+        histDebut.setEtat("EN_COURS");
+        histDebut.setDateChangement(tache.getDateDebut());
+        histDebut.setCommentaire("Tâche commencée par la main d'œuvre");
+        historique.add(histDebut);
+    }
+    
+    // Fin de la tâche
+    if (tache.getDateFin() != null) {
+        HistoriqueEtatTache histFin = new HistoriqueEtatTache();
+        histFin.setId(histId++);
+        histFin.setTacheId(tache.getId());
+        histFin.setEtat("TERMINEE");
+        histFin.setDateChangement(tache.getDateFin());
+        histFin.setCommentaire(tache.getCommentaireMainDOeuvre() != null ? 
+            tache.getCommentaireMainDOeuvre() : "Tâche terminée");
+        histFin.setTempsPasseMinutes(tache.getTempsPasseMinutes());
+        historique.add(histFin);
+    }
+    
+    // Vérification
+    if (tache.getDateVerification() != null) {
+        HistoriqueEtatTache histVerif = new HistoriqueEtatTache();
+        histVerif.setId(histId++);
+        histVerif.setTacheId(tache.getId());
+        histVerif.setEtat("VERIFIEE");
+        histVerif.setDateChangement(tache.getDateVerification());
+        histVerif.setCommentaire(tache.getCommentaireTechnicien() != null ? 
+            tache.getCommentaireTechnicien() : "Tâche vérifiée et validée");
+        historique.add(histVerif);
+    }
+    
+    // État actuel (si différent des états historiques)
+    if (!historique.isEmpty()) {
+        String dernierEtat = historique.get(historique.size() - 1).getEtat();
+        if (!dernierEtat.equals(tache.getEtat())) {
             HistoriqueEtatTache histActuel = new HistoriqueEtatTache();
             histActuel.setId(histId);
             histActuel.setTacheId(tache.getId());
@@ -632,10 +658,10 @@ public class MainDOeuvreController {
             histActuel.setCommentaire("Dernier changement d'état");
             historique.add(histActuel);
         }
-        
-        return historique;
     }
-
+    
+    return historique;
+}
     // ==================== CLASSES INTERNES POUR LES REQUÊTES ====================
 
     public static class TerminerTacheRequest {
@@ -649,39 +675,106 @@ public class MainDOeuvreController {
         public void setTempsPasseMinutes(Integer tempsPasseMinutes) { this.tempsPasseMinutes = tempsPasseMinutes; }
     }
 
-    public static class HistoriqueEtatTache {
-        private int id;
-        private int tacheId;
-        private String etat;
-        private LocalDateTime dateChangement;
-        private String commentaire;
-        private Integer utilisateurId;
-        private String utilisateurNom;
-        private Integer tempsPasseMinutes;
+    // Ajouter cette classe interne à la fin de MainDOeuvreController
+public static class HistoriqueEtatTache {
+    private int id;
+    private int tacheId;
+    private String etat;
+    private LocalDateTime dateChangement;
+    private String commentaire;
+    private Integer utilisateurId;
+    private String utilisateurNom;
+    private Integer tempsPasseMinutes;
 
-        // Getters et Setters
-        public int getId() { return id; }
-        public void setId(int id) { this.id = id; }
+    // Getters et Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    
+    public int getTacheId() { return tacheId; }
+    public void setTacheId(int tacheId) { this.tacheId = tacheId; }
+    
+    public String getEtat() { return etat; }
+    public void setEtat(String etat) { this.etat = etat; }
+    
+    public LocalDateTime getDateChangement() { return dateChangement; }
+    public void setDateChangement(LocalDateTime dateChangement) { this.dateChangement = dateChangement; }
+    
+    public String getCommentaire() { return commentaire; }
+    public void setCommentaire(String commentaire) { this.commentaire = commentaire; }
+    
+    public Integer getUtilisateurId() { return utilisateurId; }
+    public void setUtilisateurId(Integer utilisateurId) { this.utilisateurId = utilisateurId; }
+    
+    public String getUtilisateurNom() { return utilisateurNom; }
+    public void setUtilisateurNom(String utilisateurNom) { this.utilisateurNom = utilisateurNom; }
+    
+    public Integer getTempsPasseMinutes() { return tempsPasseMinutes; }
+    public void setTempsPasseMinutes(Integer tempsPasseMinutes) { this.tempsPasseMinutes = tempsPasseMinutes; }
+}
+/**
+ * GET /api/main-doeuvre/test
+ * Endpoint de test pour vérifier que le contrôleur fonctionne
+ */
+@GetMapping("/test")
+public ResponseEntity<String> test() {
+    return ResponseEntity.ok("API MainDOeuvre fonctionnelle - " + LocalDateTime.now());
+}
+
+/**
+ * GET /api/main-doeuvre/debug
+ * Endpoint de débogage pour vérifier les données
+ */
+
+/**
+ * GET /api/main-doeuvre/test
+ * Endpoint de test pour vérifier que le contrôleur fonctionne
+ */
+
+
+/**
+ * GET /api/main-doeuvre/debug
+ * Endpoint de débogage pour vérifier les données
+ */
+@GetMapping("/debug")
+public ResponseEntity<?> debug() {
+    try {
+        Map<String, Object> debugInfo = new HashMap<>();
         
-        public int getTacheId() { return tacheId; }
-        public void setTacheId(int tacheId) { this.tacheId = tacheId; }
+        // Info utilisateur
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        debugInfo.put("emailUtilisateur", email);
         
-        public String getEtat() { return etat; }
-        public void setEtat(String etat) { this.etat = etat; }
+        // Info agent
+        AgentMainDOeuvre agent = getCurrentAgent();
+        debugInfo.put("agentExiste", agent != null);
+        if (agent != null) {
+            debugInfo.put("agentId", agent.getId());
+            debugInfo.put("mainDOeuvreId", agent.getMainDOeuvreId());
+            
+            // Info main-d'œuvre
+            MainDOeuvre mainDOeuvre = mainDOeuvreService.findById(agent.getMainDOeuvreId());
+            debugInfo.put("mainDOeuvreExiste", mainDOeuvre != null);
+            
+            // Info tâches
+            if (mainDOeuvre != null) {
+                List<Tache> taches = tacheService.findByMainDOeuvreId(mainDOeuvre.getId());
+                debugInfo.put("nombreTaches", taches != null ? taches.size() : 0);
+            }
+        }
         
-        public LocalDateTime getDateChangement() { return dateChangement; }
-        public void setDateChangement(LocalDateTime dateChangement) { this.dateChangement = dateChangement; }
+        // Nombre total de main-d'œuvre
+        List<MainDOeuvre> allMainDOeuvre = mainDOeuvreService.findAll();
+        debugInfo.put("totalMainDOeuvre", allMainDOeuvre.size());
         
-        public String getCommentaire() { return commentaire; }
-        public void setCommentaire(String commentaire) { this.commentaire = commentaire; }
+        // Nombre total de tâches
+        List<Tache> allTaches = tacheService.findAll();
+        debugInfo.put("totalTaches", allTaches.size());
         
-        public Integer getUtilisateurId() { return utilisateurId; }
-        public void setUtilisateurId(Integer utilisateurId) { this.utilisateurId = utilisateurId; }
+        return ResponseEntity.ok(debugInfo);
         
-        public String getUtilisateurNom() { return utilisateurNom; }
-        public void setUtilisateurNom(String utilisateurNom) { this.utilisateurNom = utilisateurNom; }
-        
-        public Integer getTempsPasseMinutes() { return tempsPasseMinutes; }
-        public void setTempsPasseMinutes(Integer tempsPasseMinutes) { this.tempsPasseMinutes = tempsPasseMinutes; }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur: " + e.getMessage());
     }
+}
 }

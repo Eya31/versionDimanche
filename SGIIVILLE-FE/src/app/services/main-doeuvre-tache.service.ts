@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Tache, TerminerTacheRequest, ChangerEtatTacheRequest } from '../models/tache.model';
 
@@ -9,6 +9,8 @@ import { Tache, TerminerTacheRequest, ChangerEtatTacheRequest } from '../models/
 })
 export class MainDOeuvreTacheService {
   private apiUrl = `${environment.apiUrl}/main-doeuvre`;
+    private notificationUrl = `${environment.apiUrl}/notifications`; // ← Nouvelle URL
+
 
   constructor(private http: HttpClient) {}
 
@@ -39,9 +41,7 @@ export class MainDOeuvreTacheService {
   /**
    * Changer l'état d'une tâche
    */
-  changerEtatTache(tacheId: number, request: ChangerEtatTacheRequest): Observable<Tache> {
-    return this.http.put<Tache>(`${this.apiUrl}/taches/${tacheId}/etat`, request);
-  }
+
 
   /**
    * Commencer une tâche (état A_FAIRE → EN_COURS)
@@ -134,4 +134,57 @@ export class MainDOeuvreTacheService {
   terminer(tacheId: number, request: TerminerTacheRequest): Observable<Tache> {
     return this.terminerTache(tacheId, request);
   }
+  /************************************************************************************* */
+  changerEtatTache(tacheId: number, request: ChangerEtatTacheRequest): Observable<Tache> {
+    return this.http.put<Tache>(`${this.apiUrl}/taches/${tacheId}/etat`, request).pipe(
+      tap(tacheMaj => {
+        // Envoyer une notification au technicien après changement d'état
+        this.notifierTechnicienChangementTache(tacheMaj);
+      })
+    );
+  }
+
+  /**
+   * Notifier le technicien du changement d'état
+   */
+  private notifierTechnicienChangementTache(tache: Tache): void {
+    // Récupérer les informations du technicien (à adapter selon votre structure)
+    const technicienId = this.getTechnicienIdForTache(tache);
+    const mainDOeuvreNom = this.getCurrentMainDOeuvreName();
+
+    const notificationData = {
+      technicienId: technicienId,
+      tacheId: tache.id,
+      libelleTache: tache.libelle,
+      mainDOeuvreNom: mainDOeuvreNom,
+      ancienEtat: 'CHANGEMENT', // Vous devriez stocker l'ancien état
+      nouvelEtat: tache.etat,
+      details: `La tâche "${tache.libelle}" a été mise à jour par la main-d'œuvre`
+    };
+
+    // Appeler l'API de notification
+    this.http.post(`${this.notificationUrl}/notifier-technicien-tache`, notificationData).subscribe({
+      next: () => console.log('✅ Notification envoyée au technicien'),
+      error: (err) => console.error('❌ Erreur envoi notification:', err)
+    });
+  }
+
+  /**
+   * Méthodes pour récupérer l'ID du technicien et le nom de la main-d'œuvre
+   * À ADAPTER selon votre application
+   */
+  private getTechnicienIdForTache(tache: Tache): number {
+    // Exemple: Récupérer depuis localStorage ou session
+    // Vous devrez peut-être modifier la structure de Tache pour inclure technicienId
+    return localStorage.getItem('currentTechnicienId')
+      ? parseInt(localStorage.getItem('currentTechnicienId')!)
+      : 1; // Valeur par défaut
+  }
+
+  private getCurrentMainDOeuvreName(): string {
+    // Récupérer depuis le profil de la main-d'œuvre connectée
+    const profil = JSON.parse(localStorage.getItem('mainDOeuvreProfil') || '{}');
+    return `${profil.nom} ${profil.prenom}` || 'Main-d\'œuvre';
+  }
+
 }

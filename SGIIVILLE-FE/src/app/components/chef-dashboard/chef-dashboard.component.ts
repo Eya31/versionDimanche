@@ -20,7 +20,6 @@ import { of } from 'rxjs';
 import { NotifService, Notification } from '../../services/notif.service';
 import { RegisterRequest, RoleType } from '../../models/auth.model';
 
-  // Ajouter ces imports
 import { DemandeAjoutService , DemandeAjout} from '../../services/demande-ajout.service';
 import {
   DemandeAjoutMaterielService,  // Nom du service changé
@@ -38,6 +37,7 @@ import { Router } from '@angular/router';
   templateUrl: './chef-dashboard.component.html',
   styleUrls: ['./chef-dashboard.component.css']
 })
+
 export class ChefDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   showEquipementForm = false;
 techniciens: Technicien[] = [];
@@ -141,7 +141,7 @@ currentRessource: RessourceMaterielle = {
   technicienErrorMessage: string = '';
   technicienSuccessMessage: string = '';
   technicienIsLoading: boolean = false;
-  
+
   competencesDisponibles = [
     'Plomberie',
     'Électricité',
@@ -265,7 +265,7 @@ loadTechniciens(): void {
   openAddTechnicienForm(): void {
     this.openRegisterTechnicienForm();
   }
-  
+
   loadAllData(): void {
     this.loadDemandes();
     this.loadEquipements();
@@ -1456,4 +1456,24 @@ private sendNotificationToAdmins(demande: DemandeRessource): void {
 
     return 'Erreur lors de l\'enregistrement. Veuillez réessayer.';
   }
+  // Dans chef-dashboard.component.ts
+// Ajouter cette méthode
+// Dans la classe ChefDashboardComponent
+interventionsTerminees: Intervention[] = [];
+showInterventionsTermineesModal = false;
+ouvrirModalInterventionsTerminees(): void {
+  this.interventionsTerminees = this.interventions.filter(i => i.etat === 'TERMINEE');
+
+  if (this.interventionsTerminees.length === 0) {
+    alert('Aucune intervention terminée');
+    return;
+  }
+
+  this.showInterventionsTermineesModal = true;
+}
+closeInterventionsTermineesModal(): void {
+  this.showInterventionsTermineesModal = false;
+  this.interventionsTerminees = [];
+}
+
 }

@@ -39,6 +39,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
   private mapInterventions?: L.Map;
 
   // Notifications
+  
   notifications: Notification[] = [];
   unreadCount = 0;
   showNotificationsDropdown = false;

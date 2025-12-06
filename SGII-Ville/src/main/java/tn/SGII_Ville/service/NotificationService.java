@@ -211,4 +211,113 @@ public class NotificationService {
         
         notificationXmlService.save(notification);
     }
+    //************************************************************************************** */
+    /**
+ * Notifie le technicien quand la main-d'œuvre commence une tâche
+ */
+public void notifierTechnicienDebutTache(int technicienId, int tacheId, String libelleTache, String mainDOeuvreNom) {
+    Notification notification = new Notification();
+    notification.setMessage("🛠️ La main-d'œuvre " + mainDOeuvreNom + " a COMMENCÉ la tâche #" + tacheId + " : " + libelleTache);
+    notification.setCreatedAt(LocalDateTime.now());
+    notification.setUserId(technicienId);
+    notification.setReadable(false);
+    
+    notificationXmlService.save(notification);
+    System.out.println("📢 Notification envoyée au technicien #" + technicienId + " : début tâche #" + tacheId);
+}
+
+/**
+ * Notifie le technicien quand la main-d'œuvre termine une tâche
+ */
+public void notifierTechnicienTacheTerminee(int technicienId, int tacheId, String libelleTache, String mainDOeuvreNom, String commentaire) {
+    String message = "✅ La main-d'œuvre " + mainDOeuvreNom + " a TERMINÉ la tâche #" + tacheId + " : " + libelleTache;
+    if (commentaire != null && !commentaire.trim().isEmpty()) {
+        message += " - Commentaire : " + commentaire;
+    }
+    
+    Notification notification = new Notification();
+    notification.setMessage(message);
+    notification.setCreatedAt(LocalDateTime.now());
+    notification.setUserId(technicienId);
+    notification.setReadable(false);
+    
+    notificationXmlService.save(notification);
+    System.out.println("📢 Notification envoyée au technicien #" + technicienId + " : tâche terminée #" + tacheId);
+}
+
+/**
+ * Notifie le technicien quand la main-d'œuvre suspend une tâche
+ */
+public void notifierTechnicienTacheSuspendue(int technicienId, int tacheId, String libelleTache, String mainDOeuvreNom, String raison) {
+    String message = "⏸️ La main-d'œuvre " + mainDOeuvreNom + " a SUSPENDU la tâche #" + tacheId + " : " + libelleTache;
+    if (raison != null && !raison.trim().isEmpty()) {
+        message += " - Raison : " + raison;
+    }
+    
+    Notification notification = new Notification();
+    notification.setMessage(message);
+    notification.setCreatedAt(LocalDateTime.now());
+    notification.setUserId(technicienId);
+    notification.setReadable(false);
+    
+    notificationXmlService.save(notification);
+    System.out.println("📢 Notification envoyée au technicien #" + technicienId + " : tâche suspendue #" + tacheId);
+}
+
+/**
+ * Notifie le technicien quand la main-d'œuvre reprend une tâche suspendue
+ */
+public void notifierTechnicienTacheReprise(int technicienId, int tacheId, String libelleTache, String mainDOeuvreNom) {
+    Notification notification = new Notification();
+    notification.setMessage("🔁 La main-d'œuvre " + mainDOeuvreNom + " a REPRIS la tâche #" + tacheId + " : " + libelleTache);
+    notification.setCreatedAt(LocalDateTime.now());
+    notification.setUserId(technicienId);
+    notification.setReadable(false);
+    
+    notificationXmlService.save(notification);
+    System.out.println("📢 Notification envoyée au technicien #" + technicienId + " : tâche reprise #" + tacheId);
+}
+
+/**
+ * Notifie le technicien quand la main-d'œuvre ajoute un commentaire à une tâche
+ */
+public void notifierTechnicienCommentaireTache(int technicienId, int tacheId, String libelleTache, String mainDOeuvreNom, String commentaire) {
+    Notification notification = new Notification();
+    notification.setMessage("💬 La main-d'œuvre " + mainDOeuvreNom + " a ajouté un commentaire sur la tâche #" + tacheId + " : " + libelleTache + " - \"" + commentaire + "\"");
+    notification.setCreatedAt(LocalDateTime.now());
+    notification.setUserId(technicienId);
+    notification.setReadable(false);
+    
+    notificationXmlService.save(notification);
+    System.out.println("📢 Notification envoyée au technicien #" + technicienId + " : commentaire sur tâche #" + tacheId);
+}
+
+/**
+ * Notifie le technicien pour tout changement d'état d'une tâche (méthode générique)
+ */
+public void notifierTechnicienChangementEtatTache(int technicienId, int tacheId, String libelleTache, String mainDOeuvreNom, String ancienEtat, String nouvelEtat, String details) {
+    String emoji = "";
+    switch (nouvelEtat) {
+        case "EN_COURS": emoji = "🛠️"; break;
+        case "TERMINEE": emoji = "✅"; break;
+        case "SUSPENDUE": emoji = "⏸️"; break;
+        case "REPORTEE": emoji = "📅"; break;
+        default: emoji = "📝";
+    }
+    
+    String message = emoji + " La main-d'œuvre " + mainDOeuvreNom + " a changé l'état de la tâche #" + tacheId + " : " + libelleTache;
+    message += "\nÉtat : " + ancienEtat + " → " + nouvelEtat;
+    if (details != null && !details.trim().isEmpty()) {
+        message += "\n" + details;
+    }
+    
+    Notification notification = new Notification();
+    notification.setMessage(message);
+    notification.setCreatedAt(LocalDateTime.now());
+    notification.setUserId(technicienId);
+    notification.setReadable(false);
+    
+    notificationXmlService.save(notification);
+    System.out.println("📢 Notification envoyée au technicien #" + technicienId + " : changement état tâche #" + tacheId + " (" + ancienEtat + " → " + nouvelEtat + ")");
+}
 }

@@ -64,6 +64,9 @@
   <span class="sidebar-icon">📦</span>
   <span class="sidebar-label">Demander ressource</span>
 </button>
+<button class="action-btn primary" (click)="openDemandeRessourceModal()">
+    📨 Faire une première demande
+  </button>
       </nav>
     </div>
   </aside>
@@ -521,14 +524,6 @@
 </section>
 
 <!-- Message si aucune demande -->
-<div class="empty-state" *ngIf="mesDemandesRessources.length === 0 && !showDemandeRessourceModal">
-  <div class="empty-icon">📦</div>
-  <h4>Aucune demande de ressource</h4>
-  <p>Vous n'avez pas encore soumis de demande d'ajout de ressource.</p>
-  <button class="action-btn primary" (click)="openDemandeRessourceModal()">
-    📨 Faire une première demande
-  </button>
-</div>
 
 <!-- Fonction pour voir le motif de refus -->
 

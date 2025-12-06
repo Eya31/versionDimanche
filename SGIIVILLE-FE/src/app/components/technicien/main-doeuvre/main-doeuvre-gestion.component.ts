@@ -16,11 +16,11 @@ import { normalizeText } from '../../../utils/string.utils';
 export class MainDOeuvreGestionComponent implements OnInit {
   mainDOeuvreListe: MainDOeuvre[] = [];
   mainDOeuvreFiltree: MainDOeuvre[] = [];
-  
+
   isCreating = false;
   isEditing = false;
   selectedMainDOeuvre: MainDOeuvre | null = null;
-  
+
   nouveauMainDOeuvre: MainDOeuvre = {
     id: 0,
     nom: '',
@@ -38,13 +38,13 @@ export class MainDOeuvreGestionComponent implements OnInit {
   recherche = '';
 
   competencesDisponibles = ['Électricité', 'Hydraulique', 'Mécanique', 'Plomberie', 'Maçonnerie', 'Peinture', 'Télécom'];
-  
+
   // Les champs suivants ont été supprimés du schéma XSD :
   // - habilitationsDisponibles
   // - horairesTravail, conges, absences
   // - photoPath, metier, active
   // - historiqueInterventions
-  
+
   // Historique supprimé car historiqueInterventions n'est plus dans le schéma XSD
 
   constructor(
@@ -96,14 +96,14 @@ export class MainDOeuvreGestionComponent implements OnInit {
     const rechercheLower = normalizeText(this.recherche);
     this.mainDOeuvreFiltree = this.mainDOeuvreListe.filter(md => {
       if (!rechercheLower) return true;
-      
+
       // Filtre par recherche (nom, prénom, matricule, compétence) - avec guards null
-      const matchRecherche = 
+      const matchRecherche =
         normalizeText(md.nom).includes(rechercheLower) ||
         normalizeText(md.prenom).includes(rechercheLower) ||
         normalizeText(md.matricule).includes(rechercheLower) ||
         normalizeText(md.competence || '').includes(rechercheLower);
-      
+
       return matchRecherche;
     });
   }
@@ -167,12 +167,12 @@ export class MainDOeuvreGestionComponent implements OnInit {
           const mainDOeuvre = response.mainDOeuvre || response;
           const userId = response.userId;
           const defaultPassword = response.defaultPassword;
-          
+
           let message = '✅ Fiche et compte utilisateur créés avec succès !\n\n';
           message += '📋 Fiche Main d\'Œuvre:\n';
           message += '   • ID: #' + mainDOeuvre.id + '\n';
           message += '   • Nom: ' + mainDOeuvre.nom + ' ' + (mainDOeuvre.prenom || '') + '\n\n';
-          
+
           if (userId && defaultPassword) {
             message += '👤 Compte Utilisateur Créé:\n';
             message += '   • Email: ' + mainDOeuvre.email + '\n';
@@ -181,7 +181,7 @@ export class MainDOeuvreGestionComponent implements OnInit {
             message += '⚠️ IMPORTANT: Communiquez ces identifiants à l\'agent.\n';
             message += 'L\'agent devra changer son mot de passe lors de la première connexion.';
           }
-          
+
           alert(message);
           this.isCreating = false;
           this.nouveauMainDOeuvre = {

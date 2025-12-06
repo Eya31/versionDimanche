@@ -9,6 +9,7 @@ import tn.SGII_Ville.dto.DateValidationRequest;
 import tn.SGII_Ville.dto.DateValidationResult;
 import tn.SGII_Ville.entities.Demande;
 import tn.SGII_Ville.entities.Intervention;
+import tn.SGII_Ville.entities.Tache;
 import tn.SGII_Ville.model.enums.EtatDemandeType;
 import tn.SGII_Ville.model.enums.EtatInterventionType;
 import tn.SGII_Ville.service.DemandeXmlService;
@@ -18,6 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
+
+import tn.SGII_Ville.service.TacheXmlService;
 
 /**
  * Contrôleur REST pour gérer les interventions et la planification des demandes
@@ -37,6 +41,9 @@ public class InterventionController {
 
     @Autowired
     private tn.SGII_Ville.service.NotificationService notificationService;
+
+    @Autowired
+    private TacheXmlService tacheXmlService;
 
     @Autowired
     private InterventionValidationService validationService;
@@ -292,4 +299,43 @@ public ResponseEntity<?> planifierDemande(@PathVariable int id) {
             this.technicienId = technicienId;
         }
     }
+    // InterventionController.java
+// Ajouter cet endpoint
+
+@GetMapping("/{interventionId}/taches/statut")
+public ResponseEntity<?> verifierToutesTachesTerminees(@PathVariable int interventionId) {
+    try {
+        // Récupérer toutes les tâches de l'intervention
+        List<Tache> taches = tacheXmlService.findByInterventionId(interventionId);
+        
+        if (taches.isEmpty()) {
+            return ResponseEntity.ok(Map.of("toutesTerminees", false, "message", "Aucune tâche trouvée"));
+        }
+        
+        // Vérifier si toutes les tâches sont terminées
+        boolean toutesTerminees = taches.stream()
+            .allMatch(t -> "TERMINEE".equals(t.getEtat()) || "VERIFIEE".equals(t.getEtat()));
+        
+        // Calculer les statistiques
+        long totalTaches = taches.size();
+        long tachesTerminees = taches.stream()
+            .filter(t -> "TERMINEE".equals(t.getEtat()) || "VERIFIEE".equals(t.getEtat()))
+            .count();
+        
+        return ResponseEntity.ok(Map.of(
+            "toutesTerminees", toutesTerminees,
+            "statistiques", Map.of(
+                "totalTaches", totalTaches,
+                "tachesTerminees", tachesTerminees,
+                "tachesEnCours", totalTaches - tachesTerminees
+            ),
+            "message", toutesTerminees ? 
+                "✅ Toutes les tâches sont terminées" : 
+                "❌ " + (totalTaches - tachesTerminees) + " tâche(s) restante(s)"
+        ));
+    } catch (Exception e) {
+        return ResponseEntity.status(500)
+            .body(Map.of("error", "Erreur vérification tâches: " + e.getMessage()));
+    }
+}
 }
