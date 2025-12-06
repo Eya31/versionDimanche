@@ -27,9 +27,15 @@
           <span class="sidebar-badge">{{ interventionsEnCoursCount }}</span>
         </button>
 
+        <button class="sidebar-item" (click)="openAddTechnicienForm()">
+          <span class="sidebar-icon">👤</span>
+          <span class="sidebar-label">Nouvelle Technicien</span>
+          <span class="sidebar-badge">+</span>
+        </button>
+
         <button class="sidebar-item" (click)="openTechniciensModal()">
           <span class="sidebar-icon">👤</span>
-          <span class="sidebar-label">Techniciens</span>
+          <span class="sidebar-label">Listes Techniciens</span>
           <span class="sidebar-badge">{{ techniciens.length }}</span>
         </button>
 
@@ -878,6 +884,162 @@
 
       <!-- Carte Leaflet -->
       <div id="mapInterventions" style="height: calc(100% - 120px); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>
+    </div>
+  </div>
+
+  <!-- MODAL FORMULAIRE D'ENREGISTREMENT TECHNICIEN -->
+  <div class="modal-overlay" *ngIf="showRegisterTechnicienForm" (click)="closeRegisterTechnicienForm()">
+    <div class="modal-content register-modal" (click)="$event.stopPropagation()" style="max-width: 600px; width: 95%; max-height: 90vh; overflow-y: auto;">
+      <button class="close-btn" (click)="closeRegisterTechnicienForm()">×</button>
+
+      <div class="register-form-container">
+        <h2>📝 Enregistrer un nouveau Technicien</h2>
+
+        <form (ngSubmit)="submitRegisterTechnicien()" class="inline-register-form">
+          <!-- Nom -->
+          <div class="form-group">
+            <label for="tech_nom">Nom *</label>
+            <input
+              type="text"
+              id="tech_nom"
+              [(ngModel)]="technicienRegisterData.nom"
+              name="tech_nom"
+              placeholder="Entrez le nom complet"
+              required
+              [disabled]="technicienIsLoading"
+            />
+          </div>
+
+          <!-- Prénom -->
+          <div class="form-group">
+            <label for="tech_prenom">Prénom *</label>
+            <input
+              type="text"
+              id="tech_prenom"
+              [(ngModel)]="technicienRegisterData.prenom"
+              name="tech_prenom"
+              placeholder="Entrez le prénom"
+              required
+              [disabled]="technicienIsLoading"
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="tech_email">Email *</label>
+            <input
+              type="email"
+              id="tech_email"
+              [(ngModel)]="technicienRegisterData.email"
+              name="tech_email"
+              placeholder="exemple@email.com"
+              required
+              [disabled]="technicienIsLoading"
+            />
+          </div>
+
+          <!-- Téléphone -->
+          <div class="form-group">
+            <label for="tech_telephone">Téléphone *</label>
+            <input
+              type="tel"
+              id="tech_telephone"
+              [(ngModel)]="technicienRegisterData.telephone"
+              name="tech_telephone"
+              placeholder="12345678"
+              required
+              [disabled]="technicienIsLoading"
+            />
+          </div>
+
+          <!-- Compétence (sélection unique) -->
+          <div class="form-group">
+            <label for="tech_competence">Compétence *</label>
+            <select
+              id="tech_competence"
+              [(ngModel)]="technicienRegisterData.competence"
+              name="tech_competence"
+              required
+              [disabled]="technicienIsLoading"
+            >
+              <option value="">Sélectionnez une compétence</option>
+              <option *ngFor="let comp of competencesDisponibles" [value]="comp">
+                {{ comp }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Disponibilité -->
+          <div class="form-group">
+            <label for="tech_disponibilite">Disponibilité</label>
+            <select
+              id="tech_disponibilite"
+              [(ngModel)]="technicienRegisterData.disponibilite"
+              name="tech_disponibilite"
+              [disabled]="technicienIsLoading"
+            >
+              <option [value]="true">Disponible</option>
+              <option [value]="false">Non disponible</option>
+            </select>
+          </div>
+
+          <!-- Mot de passe -->
+          <div class="form-group">
+            <label for="tech_motdepasse">Mot de passe *</label>
+            <input
+              type="password"
+              id="tech_motdepasse"
+              [(ngModel)]="technicienRegisterData.motDePasse"
+              name="tech_motdepasse"
+              placeholder="Min 6 caractères"
+              required
+              [disabled]="technicienIsLoading"
+            />
+          </div>
+
+          <!-- Confirmation mot de passe -->
+          <div class="form-group">
+            <label for="tech_confirm_mdp">Confirmer mot de passe *</label>
+            <input
+              type="password"
+              id="tech_confirm_mdp"
+              [(ngModel)]="technicienConfirmPassword"
+              name="tech_confirm_mdp"
+              placeholder="Répétez le mot de passe"
+              required
+              [disabled]="technicienIsLoading"
+            />
+          </div>
+
+          <!-- Messages -->
+          <div *ngIf="technicienErrorMessage" class="error-msg">
+            {{ technicienErrorMessage }}
+          </div>
+
+          <div *ngIf="technicienSuccessMessage" class="success-msg">
+            {{ technicienSuccessMessage }}
+          </div>
+
+          <!-- Boutons -->
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="btn-primary"
+              [disabled]="technicienIsLoading"
+            >
+              {{ technicienIsLoading ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+            <button
+              type="button"
+              class="btn-secondary"
+              (click)="closeRegisterTechnicienForm()"
+              [disabled]="technicienIsLoading"
+            >
+              Fermer
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 

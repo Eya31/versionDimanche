@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, RouterOutlet, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../../services/auth.service';
 import { NotificationService, Notification } from '../../../services/notification.service';
+import { RegisterRequest, RoleType } from '../../../models/auth.model';
 
 interface MenuItem {
   title: string;
@@ -27,7 +29,7 @@ interface SubMenuItem {
 @Component({
   selector: 'app-technicien-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, RouterOutlet],
+  imports: [CommonModule, FormsModule, RouterModule, RouterOutlet],
   templateUrl: './technicien-layout.component.html',
   styleUrls: ['./technicien-layout.component.css']
 })
@@ -39,9 +41,44 @@ export class TechnicienLayoutComponent implements OnInit, OnDestroy {
   pageTitle = 'Tableau de bord';
   showNotificationsDropdown = false;
   notifications: Notification[] = [];
+  unreadNotifications: Notification[] = [];
   private unreadCountSubscription?: Subscription;
   private routeSubscription?: Subscription;
   private notificationsSubscription?: Subscription;
+
+  // ✅ PROPRIÉTÉS POUR L'ENREGISTREMENT MAIN D'OEUVRE
+  showRegisterMainDoeuvreForm = false;
+  mainDoeuvreRegisterData: RegisterRequest & { disponibilite?: boolean } = {
+    nom: '',
+    prenom: '',
+    email: '',
+    motDePasse: '',
+    role: RoleType.MAIN_DOEUVRE,
+    telephone: '',
+    competence: '',
+    disponibilite: true
+  };
+  mainDoeuvreConfirmPassword: string = '';
+  mainDoeuvreErrorMessage: string = '';
+  mainDoeuvreSuccessMessage: string = '';
+  mainDoeuvreIsLoading: boolean = false;
+
+  competencesDisponibles = [
+    'Plomberie',
+    'Électricité',
+    'Menuiserie',
+    'Maçonnerie',
+    'Peinture',
+    'Carrelage',
+    'Couverture',
+    'Chauffage',
+    'Climatisation',
+    'Tuyauterie',
+    'Ferronnerie',
+    'Vitrerie',
+    'Serrurerie',
+    'Charpenterie'
+  ];
 
   menuItems: MenuItem[] = [
     {
@@ -64,6 +101,11 @@ export class TechnicienLayoutComponent implements OnInit, OnDestroy {
       title: 'Main d\'œuvre',
       icon: '🛠️',
       route: '/technicien/main-doeuvre'
+    },
+    {
+      title: 'Nouvel Main d\'Œuvre',
+      icon: '➕',
+      action: 'register-main-doeuvre'
     },
     {
       title: 'Mon profil',
@@ -206,12 +248,17 @@ export class TechnicienLayoutComponent implements OnInit, OnDestroy {
 
   updateUnreadCount(): void {
     this.unreadCount = this.notifications.filter(n => !n.readable).length;
+    this.unreadNotifications = this.notifications.filter(n => !n.readable);
   }
 
   toggleNotificationsDropdown(): void {
     this.showNotificationsDropdown = !this.showNotificationsDropdown;
     if (this.showNotificationsDropdown) {
       this.loadNotifications();
+      // Marquer automatiquement tous les notifications non lues comme lues
+      this.unreadNotifications.forEach(notif => {
+        this.markAsRead(notif);
+      });
     }
   }
 
@@ -269,6 +316,121 @@ export class TechnicienLayoutComponent implements OnInit, OnDestroy {
         this.authService.logout();
         this.router.navigate(['/login']);
       }
+    } else if (action === 'register-main-doeuvre') {
+      this.openRegisterMainDoeuvreForm();
     }
+  }
+
+  // ✅ MÉTHODES POUR L'ENREGISTREMENT MAIN D'OEUVRE
+  openRegisterMainDoeuvreForm(): void {
+    this.showRegisterMainDoeuvreForm = true;
+  }
+
+  closeRegisterMainDoeuvreForm(): void {
+    this.showRegisterMainDoeuvreForm = false;
+    this.resetMainDoeuvreForm();
+  }
+
+  resetMainDoeuvreForm(): void {
+    this.mainDoeuvreRegisterData = {
+      nom: '',
+      prenom: '',
+      email: '',
+      motDePasse: '',
+      role: RoleType.MAIN_DOEUVRE,
+      telephone: '',
+      competence: '',
+      disponibilite: true
+    };
+    this.mainDoeuvreConfirmPassword = '';
+    this.mainDoeuvreErrorMessage = '';
+    this.mainDoeuvreSuccessMessage = '';
+  }
+
+  submitRegisterMainDoeuvre(): void {
+    this.mainDoeuvreErrorMessage = '';
+    this.mainDoeuvreSuccessMessage = '';
+
+    // Validation
+    if (!this.mainDoeuvreRegisterData.nom?.trim()) {
+      this.mainDoeuvreErrorMessage = 'Le nom est obligatoire';
+      return;
+    }
+
+    if (!this.mainDoeuvreRegisterData.prenom?.trim()) {
+      this.mainDoeuvreErrorMessage = 'Le prénom est obligatoire';
+      return;
+    }
+
+    if (!this.mainDoeuvreRegisterData.email?.trim()) {
+      this.mainDoeuvreErrorMessage = 'L\'email est obligatoire';
+      return;
+    }
+
+    if (!this.mainDoeuvreRegisterData.motDePasse) {
+      this.mainDoeuvreErrorMessage = 'Le mot de passe est obligatoire';
+      return;
+    }
+
+    if (!this.mainDoeuvreRegisterData.telephone?.trim()) {
+      this.mainDoeuvreErrorMessage = 'Le téléphone est obligatoire';
+      return;
+    }
+
+    if (!this.mainDoeuvreRegisterData.competence?.trim()) {
+      this.mainDoeuvreErrorMessage = 'La compétence est obligatoire';
+      return;
+    }
+
+    if (this.mainDoeuvreRegisterData.motDePasse !== this.mainDoeuvreConfirmPassword) {
+      this.mainDoeuvreErrorMessage = 'Les mots de passe ne correspondent pas';
+      return;
+    }
+
+    if (this.mainDoeuvreRegisterData.motDePasse.length < 6) {
+      this.mainDoeuvreErrorMessage = 'Le mot de passe doit contenir au moins 6 caractères';
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.mainDoeuvreRegisterData.email)) {
+      this.mainDoeuvreErrorMessage = 'Format d\'email invalide';
+      return;
+    }
+
+    this.mainDoeuvreIsLoading = true;
+
+    this.authService.register(this.mainDoeuvreRegisterData).subscribe({
+      next: (response) => {
+        console.log('✅ Main d\'œuvre enregistré avec succès', response);
+        this.mainDoeuvreSuccessMessage = 'Main d\'œuvre enregistré avec succès!';
+        this.mainDoeuvreIsLoading = false;
+
+        setTimeout(() => {
+          this.closeRegisterMainDoeuvreForm();
+        }, 1500);
+      },
+      error: (error) => {
+        console.error('❌ Erreur d\'enregistrement', error);
+        this.mainDoeuvreErrorMessage = this.getMainDoeuvreErrorMessage(error);
+        this.mainDoeuvreIsLoading = false;
+      }
+    });
+  }
+
+  private getMainDoeuvreErrorMessage(error: any): string {
+    if (error.status === 0) {
+      return 'Impossible de se connecter au serveur. Vérifiez que le serveur est démarré.';
+    }
+
+    if (error.error?.message) {
+      return error.error.message;
+    }
+
+    if (error.message) {
+      return error.message;
+    }
+
+    return 'Erreur lors de l\'enregistrement. Veuillez réessayer.';
   }
 }

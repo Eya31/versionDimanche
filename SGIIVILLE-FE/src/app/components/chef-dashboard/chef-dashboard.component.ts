@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotifService, Notification } from '../../services/notif.service';
+import { RegisterRequest, RoleType } from '../../models/auth.model';
 
   // Ajouter ces imports
 import { DemandeAjoutService , DemandeAjout} from '../../services/demande-ajout.service';
@@ -124,6 +125,40 @@ currentRessource: RessourceMaterielle = {
   // Sidebar state
   sidebarCollapsed = true;
 
+  // ✅ FORMULAIRE D'ENREGISTREMENT TECHNICIEN
+  showRegisterTechnicienForm = false;
+  technicienRegisterData: RegisterRequest & { disponibilite?: boolean } = {
+    nom: '',
+    prenom: '',
+    email: '',
+    motDePasse: '',
+    role: RoleType.TECHNICIEN,
+    telephone: '',
+    competence: '',
+    disponibilite: true
+  };
+  technicienConfirmPassword: string = '';
+  technicienErrorMessage: string = '';
+  technicienSuccessMessage: string = '';
+  technicienIsLoading: boolean = false;
+  
+  competencesDisponibles = [
+    'Plomberie',
+    'Électricité',
+    'Menuiserie',
+    'Maçonnerie',
+    'Peinture',
+    'Carrelage',
+    'Couverture',
+    'Chauffage',
+    'Climatisation',
+    'Tuyauterie',
+    'Ferronnerie',
+    'Vitrerie',
+    'Serrurerie',
+    'Charpenterie'
+  ];
+
   constructor(
     private demandeService: DemandeService,
     private equipementService: EquipementService,
@@ -227,7 +262,10 @@ loadTechniciens(): void {
     this.loadTechniciens(); // recharge à chaque ouverture
   }
 
-
+  openAddTechnicienForm(): void {
+    this.openRegisterTechnicienForm();
+  }
+  
   loadAllData(): void {
     this.loadDemandes();
     this.loadEquipements();
@@ -1296,4 +1334,126 @@ private sendNotificationToAdmins(demande: DemandeRessource): void {
     }
   });
 }
+
+  // ✅ MÉTHODES POUR L'ENREGISTREMENT TECHNICIEN
+  openRegisterTechnicienForm(): void {
+    this.showRegisterTechnicienForm = true;
+  }
+
+  closeRegisterTechnicienForm(): void {
+    this.showRegisterTechnicienForm = false;
+    this.resetTechnicienForm();
+    this.loadTechniciens();
+  }
+
+  resetTechnicienForm(): void {
+    this.technicienRegisterData = {
+      nom: '',
+      prenom: '',
+      email: '',
+      motDePasse: '',
+      role: RoleType.TECHNICIEN,
+      telephone: '',
+      competence: '',
+      disponibilite: true
+    };
+    this.technicienConfirmPassword = '';
+    this.technicienErrorMessage = '';
+    this.technicienSuccessMessage = '';
+  }
+
+  ajouterCompetenceTechnicien(competence: string): void {
+    this.technicienRegisterData.competence = competence;
+  }
+
+  supprimerCompetenceTechnicien(): void {
+    this.technicienRegisterData.competence = '';
+  }
+
+  submitRegisterTechnicien(): void {
+    this.technicienErrorMessage = '';
+    this.technicienSuccessMessage = '';
+
+    // Validation
+    if (!this.technicienRegisterData.nom?.trim()) {
+      this.technicienErrorMessage = 'Le nom est obligatoire';
+      return;
+    }
+
+    if (!this.technicienRegisterData.prenom?.trim()) {
+      this.technicienErrorMessage = 'Le prénom est obligatoire';
+      return;
+    }
+
+    if (!this.technicienRegisterData.email?.trim()) {
+      this.technicienErrorMessage = 'L\'email est obligatoire';
+      return;
+    }
+
+    if (!this.technicienRegisterData.motDePasse) {
+      this.technicienErrorMessage = 'Le mot de passe est obligatoire';
+      return;
+    }
+
+    if (!this.technicienRegisterData.telephone?.trim()) {
+      this.technicienErrorMessage = 'Le téléphone est obligatoire';
+      return;
+    }
+
+    if (!this.technicienRegisterData.competence?.trim()) {
+      this.technicienErrorMessage = 'La compétence est obligatoire';
+      return;
+    }
+
+    if (this.technicienRegisterData.motDePasse !== this.technicienConfirmPassword) {
+      this.technicienErrorMessage = 'Les mots de passe ne correspondent pas';
+      return;
+    }
+
+    if (this.technicienRegisterData.motDePasse.length < 6) {
+      this.technicienErrorMessage = 'Le mot de passe doit contenir au moins 6 caractères';
+      return;
+    }
+
+    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+    if (!emailRegex.test(this.technicienRegisterData.email)) {
+      this.technicienErrorMessage = 'Format d\'email invalide';
+      return;
+    }
+
+    this.technicienIsLoading = true;
+
+    this.authService.register(this.technicienRegisterData).subscribe({
+      next: (response) => {
+        console.log('✅ Technicien enregistré avec succès', response);
+        this.technicienSuccessMessage = 'Technicien enregistré avec succès!';
+        this.technicienIsLoading = false;
+
+        setTimeout(() => {
+          this.closeRegisterTechnicienForm();
+        }, 1500);
+      },
+      error: (error) => {
+        console.error('❌ Erreur d\'enregistrement', error);
+        this.technicienErrorMessage = this.getTechnicienErrorMessage(error);
+        this.technicienIsLoading = false;
+      }
+    });
+  }
+
+  private getTechnicienErrorMessage(error: any): string {
+    if (error.status === 0) {
+      return 'Impossible de se connecter au serveur. Vérifiez que le serveur est démarré.';
+    }
+
+    if (error.error?.message) {
+      return error.error.message;
+    }
+
+    if (error.message) {
+      return error.message;
+    }
+
+    return 'Erreur lors de l\'enregistrement. Veuillez réessayer.';
+  }
 }

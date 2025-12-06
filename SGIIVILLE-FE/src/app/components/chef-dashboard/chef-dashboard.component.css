@@ -1704,3 +1704,202 @@
   margin-bottom: 20px;
 }
 }
+
+/* ========================= MODAL REGISTER TECHNICIEN ========================= */
+.register-modal {
+  background: white !important;
+  padding: 30px !important;
+  border-radius: 15px !important;
+}
+
+.register-form-container {
+  width: 100%;
+}
+
+.register-form-container h2 {
+  color: #667eea;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.inline-register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.inline-register-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inline-register-form .form-group label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.inline-register-form .form-group input,
+.inline-register-form .form-group select {
+  padding: 10px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.inline-register-form .form-group input:focus,
+.inline-register-form .form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.competences-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.competences-input select {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.btn-add-comp {
+  padding: 10px 15px;
+  background-color: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-add-comp:hover:not(:disabled) {
+  background-color: #764ba2;
+  transform: translateY(-2px);
+}
+
+.btn-add-comp:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.competences-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.competence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: #e8f0ff;
+  color: #667eea;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #d0e0ff;
+}
+
+.badge-close {
+  background: none;
+  border: none;
+  color: #667eea;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  line-height: 1;
+  font-weight: bold;
+}
+
+.badge-close:hover {
+  color: #764ba2;
+}
+
+.error-msg {
+  padding: 12px 15px;
+  background-color: #fee;
+  border-left: 4px solid #f44;
+  border-radius: 6px;
+  color: #c33;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.success-msg {
+  padding: 12px 15px;
+  background-color: #efe;
+  border-left: 4px solid #4f4;
+  border-radius: 6px;
+  color: #3c3;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  flex: 1;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #f0f2f5;
+  color: #333;
+  border: 2px solid #ddd;
+  flex: 1;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #e8ebf0;
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

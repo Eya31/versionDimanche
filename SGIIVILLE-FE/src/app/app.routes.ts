@@ -10,6 +10,7 @@ import { ChefDashboardComponent } from './components/chef-dashboard/chef-dashboa
 import { CitoyenDashboardComponent } from './components/citoyen-dashboard/citoyen-dashboard.component';
 import { VisiteurHomeComponent } from './components/visiteur/visiteur-home/visiteur-home.component';
 import { authGuard, roleGuard } from './guards/auth.guard';
+import { RegisterCitoyenComponent } from './components/visiteur/registerCitoyen/registerCitoyen.component';
 
 export const routes: Routes = [
   // ROUTES PUBLIQUES (Interface Visiteur)
@@ -23,6 +24,8 @@ export const routes: Routes = [
   // ROUTES AUTHENTIFICATION
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'visiteur/register', component: RegisterCitoyenComponent },
+
   { path: 'intervention-list', component: ChefDashboardComponent, canActivate: [authGuard] },
 
   // DASHBOARDS PAR RÔLE – LE PLUS IMPORTANT

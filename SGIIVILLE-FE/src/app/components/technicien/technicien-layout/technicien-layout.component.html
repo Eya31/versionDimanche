@@ -13,7 +13,7 @@
 
         <nav class="sidebar-nav" [class.collapsed]="sidebarCollapsed">
             <div *ngFor="let item of menuItems" class="menu-item">
-                <!-- Item simple (sans sous-menu) -->
+                <!-- Item simple (sans sous-menu) - routé ou avec action -->
                 <a *ngIf="!item.submenu && !item.action && item.route" 
                    class="nav-item" 
                    [routerLink]="item.route"
@@ -24,9 +24,10 @@
                     <span *ngIf="item.badge && !sidebarCollapsed" class="badge">{{ getBadgeValue(item.badge) }}</span>
                 </a>
 
-                <!-- Item avec action (déconnexion) -->
+                <!-- Item avec action (register-main-doeuvre ou logout) -->
                 <div *ngIf="item.action" 
-                     class="nav-item logout-item" 
+                     class="nav-item" 
+                     [ngClass]="{'logout-item': item.action === 'logout'}"
                      (click)="handleAction(item.action)"
                      [title]="sidebarCollapsed ? item.title : ''">
                     <span class="icon">{{ item.icon }}</span>
@@ -116,13 +117,13 @@
                         </div>
 
                         <div class="notifications-list">
-                            <div *ngIf="notifications.length === 0" class="empty-notifications">
+                            <div *ngIf="unreadNotifications.length === 0" class="empty-notifications">
                                 <div class="empty-icon">📭</div>
                                 <p>Aucune notification</p>
                             </div>
 
                             <div
-                                *ngFor="let notif of notifications"
+                                *ngFor="let notif of unreadNotifications"
                                 class="notification-item"
                                 [class.unread]="!notif.readable"
                                 (click)="markAsRead(notif)">
@@ -157,4 +158,160 @@
             <router-outlet></router-outlet>
         </div>
     </main>
+
+    <!-- MODAL FORMULAIRE D'ENREGISTREMENT MAIN D'OEUVRE -->
+    <div class="modal-overlay-main-doeuvre" *ngIf="showRegisterMainDoeuvreForm" (click)="closeRegisterMainDoeuvreForm()">
+        <div class="modal-content-main-doeuvre" (click)="$event.stopPropagation()">
+            <button class="close-btn-modal" (click)="closeRegisterMainDoeuvreForm()">×</button>
+
+            <div class="register-form-header">
+                <h2>➕ Enregistrer un nouveau Main d'Œuvre</h2>
+            </div>
+
+            <form (ngSubmit)="submitRegisterMainDoeuvre()" class="register-main-doeuvre-form">
+                <!-- Nom -->
+                <div class="form-group">
+                    <label for="md_nom">Nom *</label>
+                    <input
+                        type="text"
+                        id="md_nom"
+                        [(ngModel)]="mainDoeuvreRegisterData.nom"
+                        name="md_nom"
+                        placeholder="Entrez le nom"
+                        required
+                        [disabled]="mainDoeuvreIsLoading"
+                    />
+                </div>
+
+                <!-- Prénom -->
+                <div class="form-group">
+                    <label for="md_prenom">Prénom *</label>
+                    <input
+                        type="text"
+                        id="md_prenom"
+                        [(ngModel)]="mainDoeuvreRegisterData.prenom"
+                        name="md_prenom"
+                        placeholder="Entrez le prénom"
+                        required
+                        [disabled]="mainDoeuvreIsLoading"
+                    />
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="md_email">Email *</label>
+                    <input
+                        type="email"
+                        id="md_email"
+                        [(ngModel)]="mainDoeuvreRegisterData.email"
+                        name="md_email"
+                        placeholder="exemple@email.com"
+                        required
+                        [disabled]="mainDoeuvreIsLoading"
+                    />
+                </div>
+
+                <!-- Téléphone -->
+                <div class="form-group">
+                    <label for="md_telephone">Téléphone *</label>
+                    <input
+                        type="tel"
+                        id="md_telephone"
+                        [(ngModel)]="mainDoeuvreRegisterData.telephone"
+                        name="md_telephone"
+                        placeholder="12345678"
+                        required
+                        [disabled]="mainDoeuvreIsLoading"
+                    />
+                </div>
+
+                <!-- Compétence -->
+                <div class="form-group">
+                    <label for="md_competence">Compétence *</label>
+                    <select
+                        id="md_competence"
+                        [(ngModel)]="mainDoeuvreRegisterData.competence"
+                        name="md_competence"
+                        required
+                        [disabled]="mainDoeuvreIsLoading"
+                    >
+                        <option value="">Sélectionnez une compétence</option>
+                        <option *ngFor="let comp of competencesDisponibles" [value]="comp">
+                            {{ comp }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Disponibilité -->
+                <div class="form-group">
+                    <label for="md_disponibilite">Disponibilité</label>
+                    <select
+                        id="md_disponibilite"
+                        [(ngModel)]="mainDoeuvreRegisterData.disponibilite"
+                        name="md_disponibilite"
+                        [disabled]="mainDoeuvreIsLoading"
+                    >
+                        <option [value]="true">Disponible</option>
+                        <option [value]="false">Non disponible</option>
+                    </select>
+                </div>
+
+                <!-- Mot de passe -->
+                <div class="form-group">
+                    <label for="md_motdepasse">Mot de passe *</label>
+                    <input
+                        type="password"
+                        id="md_motdepasse"
+                        [(ngModel)]="mainDoeuvreRegisterData.motDePasse"
+                        name="md_motdepasse"
+                        placeholder="Min 6 caractères"
+                        required
+                        [disabled]="mainDoeuvreIsLoading"
+                    />
+                </div>
+
+                <!-- Confirmation mot de passe -->
+                <div class="form-group">
+                    <label for="md_confirm_mdp">Confirmer mot de passe *</label>
+                    <input
+                        type="password"
+                        id="md_confirm_mdp"
+                        [(ngModel)]="mainDoeuvreConfirmPassword"
+                        name="md_confirm_mdp"
+                        placeholder="Répétez le mot de passe"
+                        required
+                        [disabled]="mainDoeuvreIsLoading"
+                    />
+                </div>
+
+                <!-- Messages -->
+                <div *ngIf="mainDoeuvreErrorMessage" class="error-message-md">
+                    {{ mainDoeuvreErrorMessage }}
+                </div>
+
+                <div *ngIf="mainDoeuvreSuccessMessage" class="success-message-md">
+                    {{ mainDoeuvreSuccessMessage }}
+                </div>
+
+                <!-- Boutons -->
+                <div class="form-actions-md">
+                    <button
+                        type="submit"
+                        class="btn-submit-md"
+                        [disabled]="mainDoeuvreIsLoading"
+                    >
+                        {{ mainDoeuvreIsLoading ? 'Enregistrement...' : 'Enregistrer' }}
+                    </button>
+                    <button
+                        type="button"
+                        class="btn-cancel-md"
+                        (click)="closeRegisterMainDoeuvreForm()"
+                        [disabled]="mainDoeuvreIsLoading"
+                    >
+                        Fermer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
