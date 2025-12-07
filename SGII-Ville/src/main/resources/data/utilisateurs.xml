@@ -19354,4 +19354,13 @@
         <adresse>EyaBoussarsar@gmail.com</adresse>
         <telephone>12346578</telephone>
     </citoyen>
+    <citoyen>
+        <id>49</id>
+        <nom>Eya Boussarsar</nom>
+        <email>EyaBoussarsar@gmail.com</email>
+        <motDePasse>$2a$10$VYBQRIa3xNyRTbKPctFAGON83riXoaKoL.GSgD34.S7Y3idzhCaK.</motDePasse>
+        <role>CITOYEN</role>
+        <adresse>EyaBoussarsar@gmail.com</adresse>
+        <telephone>12346578</telephone>
+    </citoyen>
 </Utilisateurs>
