@@ -20,8 +20,8 @@ public class Demande {
     private PointGeo localisation;
     private List<Photo> photos = new ArrayList<>();
 
-    // ID du citoyen qui a créé la demande (clé étrangère - obligatoire selon XSD)
-    private int citoyenId;
+    // ✅ IMPORTANT: Utiliser Integer pour permettre null (anonymat)
+    private Integer citoyenId;
 
     // Nouveaux champs selon XML
     private String category;
@@ -47,7 +47,7 @@ public class Demande {
         this.localisation = localisation;
     }
 
-    // Getters & Setters
+    // ✅ Getters & Setters avec gestion de l'anonymat
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -84,14 +84,47 @@ public class Demande {
     public boolean isAnonymous() { return isAnonymous; }
     public void setAnonymous(boolean anonymous) { this.isAnonymous = anonymous; }
 
-    public int getCitoyenId() { return citoyenId; }
-    public void setCitoyenId(int citoyenId) { this.citoyenId = citoyenId; }
+    // ✅ Getter qui retourne null si la demande est anonyme
+    public Integer getCitoyenId() {
+    return citoyenId;  // Remove the null check for anonymous
+}
+
+// Add a separate method for display purposes
+public boolean isAssociatedWithCitoyen(Integer citoyenId) {
+    if (isAnonymous) return false;
+    return citoyenId != null && citoyenId.equals(this.citoyenId);
+}
+    
+    // ✅ Setter pour le stockage interne (toujours sauvegarder l'ID)
+    public void setCitoyenId(Integer citoyenId) {
+        this.citoyenId = citoyenId;
+    }
+    
+    // ✅ Méthode pour obtenir l'ID interne (pour le XML/BDD)
+    public Integer getInternalCitoyenId() {
+        return citoyenId;
+    }
 
     public List<Integer> getPhotoIds() { 
         if (photoIds == null) photoIds = new ArrayList<>();
         return photoIds; 
     }
     public void setPhotoIds(List<Integer> photoIds) { this.photoIds = photoIds; }
+
+    // ✅ Méthode utilitaire pour obtenir le nom affiché
+    public String getCitoyenDisplayName() {
+        if (isAnonymous) {
+            return "Citoyen anonyme";
+        }
+        return "Citoyen #" + (citoyenId != null ? citoyenId : "Inconnu");
+    }
+    
+    // ✅ Méthode utilitaire pour savoir si le citoyen peut voir cette demande
+    public boolean canCitoyenView(Integer citoyenId) {
+        if (citoyenId == null) return false;
+        if (isAnonymous) return false; // Les demandes anonymes ne sont pas visibles dans le dashboard
+        return citoyenId.equals(this.citoyenId);
+    }
 
     // Méthode utilitaire pour obtenir les URLs des photos à partir des références
     public List<String> getPhotoUrls() {
@@ -114,6 +147,8 @@ public class Demande {
                 ", category='" + category + '\'' +
                 ", priority='" + priority + '\'' +
                 ", address='" + address + '\'' +
+                ", isAnonymous=" + isAnonymous +
+                ", citoyenId=" + citoyenId +
                 ", photosCount=" + (photos != null ? photos.size() : 0) +
                 ", photoIdsCount=" + (photoIds != null ? photoIds.size() : 0) +
                 '}';

@@ -242,7 +242,7 @@ public class UserXmlService {
         case "Citoyen" -> {
             String adresse = xmlService.getElementTextContent(userElement, "adresse");
             String telephone = xmlService.getElementTextContent(userElement, "telephone");
-            Citoyen citoyen = new Citoyen(id, nom, email, motDePasse, adresse, telephone);
+            Citoyen citoyen = new Citoyen(id, nom, nom, email, motDePasse, adresse, telephone, telephone);
             citoyen.setRole(role);
             yield citoyen;
         }

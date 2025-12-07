@@ -26,7 +26,6 @@ import tn.SGII_Ville.service.DemandeAjoutXmlService;
 import tn.SGII_Ville.service.StockRessourceService;
 import tn.SGII_Ville.service.UserXmlService;
 
-import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;

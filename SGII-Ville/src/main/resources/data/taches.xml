@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Taches xmlns="http://example.com/gestion-interventions">
-                                                                                                                                                                    
+                                                                                                                                                                                        
 
     
     
@@ -64,8 +64,18 @@
     
     
     
+    
+    
+    
+    
+    
     <Tache>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -101,7 +111,12 @@
         
         
         <id>2</id>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -137,7 +152,12 @@
         
         
         <interventionId>3</interventionId>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -173,7 +193,12 @@
         
         
         <libelle>testtttttttt</libelle>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -209,7 +234,12 @@
         
         
         <description>29_11___2025</description>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -245,7 +275,12 @@
         
         
         <mainDOeuvreId>7</mainDOeuvreId>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -281,7 +316,12 @@
         
         
         <etat>VERIFIEE</etat>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -317,7 +357,12 @@
         
         
         <dateCreation>2025-11-29T22:38:22.039821700</dateCreation>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -353,7 +398,12 @@
         
         
         <dateDebut>2025-11-29T22:38:57.337174500</dateDebut>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -389,7 +439,12 @@
         
         
         <dateFin>2025-11-29T22:39:20.711276900</dateFin>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -425,7 +480,12 @@
         
         
         <dateVerification>2025-11-29T22:40:13.399542200</dateVerification>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -461,7 +521,12 @@
         
         
         <tempsPasseMinutes>0</tempsPasseMinutes>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -497,7 +562,12 @@
         
         
         <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -533,7 +603,12 @@
         
         
         <commentaireTechnicien/>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -569,7 +644,12 @@
         
         
         <ordre>1</ordre>
-                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -605,7 +685,12 @@
         
         
         <verifiee>true</verifiee>
-                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
     
     
     
@@ -641,13 +726,18 @@
     
     
     </Tache>
-                                                                                                                                            
+                                                                                                                                                                
     
 
     
 
     
 
+    
+    
+    
+    
+    
     
     
     
@@ -680,7 +770,12 @@
     
     
     <Tache>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -712,7 +807,12 @@
         
         
         <id>3</id>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -744,7 +844,12 @@
         
         
         <interventionId>3</interventionId>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -776,7 +881,12 @@
         
         
         <libelle>11_06_29_11_2025</libelle>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -808,7 +918,12 @@
         
         
         <mainDOeuvreId>8</mainDOeuvreId>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -840,7 +955,12 @@
         
         
         <etat>VERIFIEE</etat>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -872,7 +992,12 @@
         
         
         <dateCreation>2025-11-29T23:06:13.598823500</dateCreation>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -904,7 +1029,12 @@
         
         
         <dateDebut>2025-11-29T23:06:35.725383300</dateDebut>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -936,7 +1066,12 @@
         
         
         <dateFin>2025-11-29T23:07:50.700911300</dateFin>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -968,7 +1103,12 @@
         
         
         <dateVerification>2025-11-29T23:08:23.683382700</dateVerification>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1000,7 +1140,12 @@
         
         
         <tempsPasseMinutes>0</tempsPasseMinutes>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1032,7 +1177,12 @@
         
         
         <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1064,7 +1214,12 @@
         
         
         <commentaireTechnicien/>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1096,7 +1251,12 @@
         
         
         <ordre>2</ordre>
-                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1128,7 +1288,12 @@
         
         
         <verifiee>true</verifiee>
-                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
     
     
     
@@ -1160,13 +1325,18 @@
     
     
     </Tache>
-                                                                                                                            
+                                                                                                                                                
     
 
     
 
     
 
+    
+    
+    
+    
+    
     
     
     
@@ -1195,7 +1365,12 @@
     
     
     <Tache>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1223,7 +1398,12 @@
         
         
         <id>4</id>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1251,7 +1431,12 @@
         
         
         <interventionId>3</interventionId>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1279,7 +1464,12 @@
         
         
         <libelle>11_29_29_11_2025</libelle>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1307,7 +1497,12 @@
         
         
         <mainDOeuvreId>8</mainDOeuvreId>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1335,7 +1530,12 @@
         
         
         <etat>VERIFIEE</etat>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1363,7 +1563,12 @@
         
         
         <dateCreation>2025-11-29T23:29:53.374604600</dateCreation>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1391,7 +1596,12 @@
         
         
         <dateDebut>2025-11-29T23:30:17.656034600</dateDebut>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1419,7 +1629,12 @@
         
         
         <dateFin>2025-11-29T23:31:17.049450400</dateFin>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1447,7 +1662,12 @@
         
         
         <dateVerification>2025-11-29T23:31:48.152190400</dateVerification>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1475,7 +1695,12 @@
         
         
         <tempsPasseMinutes>0</tempsPasseMinutes>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1503,7 +1728,12 @@
         
         
         <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1531,7 +1761,12 @@
         
         
         <commentaireTechnicien/>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1559,7 +1794,12 @@
         
         
         <ordre>3</ordre>
-                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1587,7 +1827,12 @@
         
         
         <verifiee>true</verifiee>
-                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                    
+    
+    
+    
+    
+    
     
     
     
@@ -1615,7 +1860,7 @@
     
     
     </Tache>
-                                                                                                            
+                                                                                                                                
     
 
     
@@ -1628,6 +1873,11 @@
 
     
 
+    
+    
+    
+    
+    
     
     
     
@@ -1649,7 +1899,12 @@
     
     
     <Tache>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1670,7 +1925,12 @@
         
         
         <id>5</id>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1691,7 +1951,12 @@
         
         
         <interventionId>3</interventionId>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1712,7 +1977,12 @@
         
         
         <libelle>tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt</libelle>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1733,7 +2003,12 @@
         
         
         <mainDOeuvreId>9</mainDOeuvreId>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1754,7 +2029,12 @@
         
         
         <etat>VERIFIEE</etat>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1775,7 +2055,12 @@
         
         
         <dateCreation>2025-11-29T23:40:57.109074</dateCreation>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1796,7 +2081,12 @@
         
         
         <dateDebut>2025-11-29T23:43:17.640594900</dateDebut>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1817,7 +2107,12 @@
         
         
         <dateFin>2025-11-29T23:43:22.183618</dateFin>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1838,7 +2133,12 @@
         
         
         <dateVerification>2025-11-29T23:43:47.770373800</dateVerification>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1859,7 +2159,12 @@
         
         
         <tempsPasseMinutes>0</tempsPasseMinutes>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1880,7 +2185,12 @@
         
         
         <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1901,7 +2211,12 @@
         
         
         <commentaireTechnicien/>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1922,7 +2237,12 @@
         
         
         <ordre>4</ordre>
-                                                                                                                                                                        
+                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -1943,7 +2263,12 @@
         
         
         <verifiee>true</verifiee>
-                                                                                                                                                                    
+                                                                                                                                                                                                            
+    
+    
+    
+    
+    
     
     
     
@@ -1964,7 +2289,445 @@
     
     
     </Tache>
-                                                                                
+                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Tache>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>1</id>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <interventionId>1</interventionId>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <libelle>Réparation du système électrique</libelle>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <description>Remplacer les câbles défectueux et installer de nouveaux disjoncteurs</description>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <mainDOeuvreId>6</mainDOeuvreId>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>VERIFIEE</etat>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateCreation>2025-01-15T10:00</dateCreation>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateDebut>2025-01-15T14:00</dateDebut>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateFin>2025-11-29T21:35:35.396831100</dateFin>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateVerification>2025-11-30T01:09:45.345116900</dateVerification>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <tempsPasseMinutes>10</tempsPasseMinutes>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <commentaireMainDOeuvre>jdshcbjsej</commentaireMainDOeuvre>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <commentaireTechnicien/>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <ordre>1</ordre>
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <verifiee>true</verifiee>
+                                                                                                                                                                                                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Tache>
+                                                                                                
+    
+    
+    
+    
+    
+                
+    
+
+    
+
+    
+
     
     
     
@@ -2004,7 +2767,7 @@
         
         
         
-        <id>1</id>
+        <id>7</id>
                                                                                                                                                                 
         
         
@@ -2024,7 +2787,7 @@
         
         
         
-        <interventionId>1</interventionId>
+        <interventionId>3</interventionId>
                                                                                                                                                                 
         
         
@@ -2044,7 +2807,7 @@
         
         
         
-        <libelle>Réparation du système électrique</libelle>
+        <libelle>3_26_3_12</libelle>
                                                                                                                                                                 
         
         
@@ -2064,7 +2827,7 @@
         
         
         
-        <description>Remplacer les câbles défectueux et installer de nouveaux disjoncteurs</description>
+        <description>hhhhhhhhhhhhhh</description>
                                                                                                                                                                 
         
         
@@ -2084,7 +2847,7 @@
         
         
         
-        <mainDOeuvreId>6</mainDOeuvreId>
+        <mainDOeuvreId>12</mainDOeuvreId>
                                                                                                                                                                 
         
         
@@ -2124,7 +2887,7 @@
         
         
         
-        <dateCreation>2025-01-15T10:00</dateCreation>
+        <dateCreation>2025-12-03T15:28:57.862045200</dateCreation>
                                                                                                                                                                 
         
         
@@ -2144,7 +2907,7 @@
         
         
         
-        <dateDebut>2025-01-15T14:00</dateDebut>
+        <dateDebut>2025-12-03T15:30:05.032126500</dateDebut>
                                                                                                                                                                 
         
         
@@ -2164,7 +2927,7 @@
         
         
         
-        <dateFin>2025-11-29T21:35:35.396831100</dateFin>
+        <dateFin>2025-12-03T15:30:17.458945</dateFin>
                                                                                                                                                                 
         
         
@@ -2184,7 +2947,7 @@
         
         
         
-        <dateVerification>2025-11-30T01:09:45.345116900</dateVerification>
+        <dateVerification>2025-12-03T15:31:20.979282600</dateVerification>
                                                                                                                                                                 
         
         
@@ -2204,7 +2967,7 @@
         
         
         
-        <tempsPasseMinutes>10</tempsPasseMinutes>
+        <tempsPasseMinutes>0</tempsPasseMinutes>
                                                                                                                                                                 
         
         
@@ -2224,7 +2987,7 @@
         
         
         
-        <commentaireMainDOeuvre>jdshcbjsej</commentaireMainDOeuvre>
+        <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
                                                                                                                                                                 
         
         
@@ -2264,7 +3027,7 @@
         
         
         
-        <ordre>1</ordre>
+        <ordre>5</ordre>
                                                                                                                                                                 
         
         
@@ -2307,17 +3070,10 @@
     </Tache>
                                                                             
     
-    
-    
-    
-    
-                
-    
 
     
-
     
-
+    
     
     
     
@@ -2333,7 +3089,7 @@
     
     
     <Tache>
-                                                                                                                        
+                                                                                                                                                
         
         
         
@@ -2347,11 +3103,11 @@
         
         
         
-        <id>7</id>
-                                                                                                                        
         
         
         
+        <id>6</id>
+                                                                                                                                                
         
         
         
@@ -2362,14 +3118,14 @@
         
         
         
-        <interventionId>3</interventionId>
-                                                                                                                        
         
         
         
         
         
         
+        <interventionId>4</interventionId>
+                                                                                                                                                
         
         
         
@@ -2377,8 +3133,6 @@
         
         
         
-        <libelle>3_26_3_12</libelle>
-                                                                                                                        
         
         
         
@@ -2388,12 +3142,12 @@
         
         
         
+        <libelle>rfrege ergreg</libelle>
+                                                                                                                                                
         
         
         
         
-        <description>hhhhhhhhhhhhhh</description>
-                                                                                                                        
         
         
         
@@ -2406,9 +3160,29 @@
         
         
         
+        <description>ergerg greger</description>
+                                                                                                                                                
         
-        <mainDOeuvreId>12</mainDOeuvreId>
-                                                                                                                        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <mainDOeuvreId>9</mainDOeuvreId>
+                                                                                                                                                
+        
+        
+        
         
         
         
@@ -2423,7 +3197,7 @@
         
         
         <etat>VERIFIEE</etat>
-                                                                                                                        
+                                                                                                                                                
         
         
         
@@ -2437,11 +3211,11 @@
         
         
         
-        <dateCreation>2025-12-03T15:28:57.862045200</dateCreation>
-                                                                                                                        
         
         
         
+        <dateCreation>2025-12-01T10:40:28.525773</dateCreation>
+                                                                                                                                                
         
         
         
@@ -2452,14 +3226,14 @@
         
         
         
-        <dateDebut>2025-12-03T15:30:05.032126500</dateDebut>
-                                                                                                                        
         
         
         
         
         
         
+        <ordre>1</ordre>
+                                                                                                                                                
         
         
         
@@ -2467,8 +3241,6 @@
         
         
         
-        <dateFin>2025-12-03T15:30:17.458945</dateFin>
-                                                                                                                        
         
         
         
@@ -2478,87 +3250,11 @@
         
         
         
-        
-        
-        
-        
-        <dateVerification>2025-12-03T15:31:20.979282600</dateVerification>
-                                                                                                                        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <tempsPasseMinutes>0</tempsPasseMinutes>
-                                                                                                                        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
-                                                                                                                        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <commentaireTechnicien/>
-                                                                                                                        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <ordre>5</ordre>
-                                                                                                                        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <verifiee>true</verifiee>
-                                                                                                                    
+        <verifiee>false</verifiee>
+                                                                                                                                            
+    
+    
+    
     
     
     
@@ -2573,9 +3269,252 @@
     
     
     </Tache>
-                                                        
+                                                                    
     
 
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Tache>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <id>8</id>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <interventionId>4</interventionId>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <libelle>ez. ezzefez zefzefezf</libelle>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <description>deezfzefez efez</description>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <mainDOeuvreId>13</mainDOeuvreId>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <etat>VERIFIEE</etat>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateCreation>2025-12-03T17:02:42.797527</dateCreation>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateDebut>2025-12-03T17:04:02.935077</dateDebut>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateFin>2025-12-03T17:04:54.540521</dateFin>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <dateVerification>2025-12-03T17:08:25.856185</dateVerification>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <tempsPasseMinutes>2</tempsPasseMinutes>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <commentaireMainDOeuvre>عمل ,, </commentaireMainDOeuvre>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <commentaireTechnicien/>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <ordre>2</ordre>
+                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <verifiee>true</verifiee>
+                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </Tache>
+                                                    
     
     
     
@@ -2601,7 +3540,7 @@
         
         
         
-        <id>6</id>
+        <id>9</id>
                                                                                                         
         
         
@@ -2614,7 +3553,7 @@
         
         
         
-        <interventionId>4</interventionId>
+        <interventionId>5</interventionId>
                                                                                                         
         
         
@@ -2627,7 +3566,7 @@
         
         
         
-        <libelle>rfrege ergreg</libelle>
+        <libelle>sdfdfdsf</libelle>
                                                                                                         
         
         
@@ -2640,7 +3579,7 @@
         
         
         
-        <description>ergerg greger</description>
+        <description>dfdsf</description>
                                                                                                         
         
         
@@ -2653,7 +3592,7 @@
         
         
         
-        <mainDOeuvreId>9</mainDOeuvreId>
+        <mainDOeuvreId>12</mainDOeuvreId>
                                                                                                         
         
         
@@ -2679,7 +3618,7 @@
         
         
         
-        <dateCreation>2025-12-01T10:40:28.525773</dateCreation>
+        <dateCreation>2025-12-03T19:15:16.204638</dateCreation>
                                                                                                         
         
         
@@ -2705,7 +3644,7 @@
         
         
         
-        <verifiee>false</verifiee>
+        <verifiee>true</verifiee>
                                                                                                     
     
     
@@ -2727,254 +3666,170 @@
     
 
     
+
     
+
     
+
     
     
     
     
     
     <Tache>
-                                                                        
+                                                
         
         
         
         
-        
-        
-        
-        <id>8</id>
-                                                                        
-        
+        <id>10</id>
+                                                
         
         
         
         
-        
-        
-        <interventionId>4</interventionId>
-                                                                        
-        
+        <interventionId>7</interventionId>
+                                                
         
         
         
         
-        
-        
-        <libelle>ez. ezzefez zefzefezf</libelle>
-                                                                        
-        
+        <libelle>Réparation</libelle>
+                                                
         
         
         
         
-        
-        
-        <description>deezfzefez efez</description>
-                                                                        
-        
+        <description>................................</description>
+                                                
         
         
         
         
-        
-        
-        <mainDOeuvreId>13</mainDOeuvreId>
-                                                                        
-        
-        
-        
+        <mainDOeuvreId>15</mainDOeuvreId>
+                                                
         
         
         
         
         <etat>VERIFIEE</etat>
-                                                                        
+                                                
         
         
         
         
-        
-        
-        
-        <dateCreation>2025-12-03T17:02:42.797527</dateCreation>
-                                                                        
-        
+        <dateCreation>2025-12-06T18:13:50.647428400</dateCreation>
+                                                
         
         
         
         
-        
-        
-        <dateDebut>2025-12-03T17:04:02.935077</dateDebut>
-                                                                        
-        
+        <dateDebut>2025-12-06T18:14:53.941315400</dateDebut>
+                                                
         
         
         
         
-        
-        
-        <dateFin>2025-12-03T17:04:54.540521</dateFin>
-                                                                        
-        
+        <dateFin>2025-12-06T18:15:34.543693900</dateFin>
+                                                
         
         
         
         
-        
-        
-        <dateVerification>2025-12-03T17:08:25.856185</dateVerification>
-                                                                        
-        
+        <dateVerification>2025-12-06T18:54:23.855397400</dateVerification>
+                                                
         
         
         
         
-        
-        
-        <tempsPasseMinutes>2</tempsPasseMinutes>
-                                                                        
-        
+        <tempsPasseMinutes>0</tempsPasseMinutes>
+                                                
         
         
         
         
-        
-        
-        <commentaireMainDOeuvre>عمل ,, </commentaireMainDOeuvre>
-                                                                        
-        
-        
-        
+        <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
+                                                
         
         
         
         
         <commentaireTechnicien/>
-                                                                        
-        
-        
-        
-        
-        
-        
-        
-        <ordre>2</ordre>
-                                                                        
-        
-        
-        
-        
-        
-        
-        
-        <verifiee>true</verifiee>
-                                                                    
-    
-    
-    
-    
-    
-    
-    
-    </Tache>
-                                
-    
-    
-    
-    
-    
-    
-    
-    <Tache>
-                                                                
-        
-        
-        
-        
-        
-        
-        <id>9</id>
-                                                                
-        
-        
-        
-        
-        
-        
-        <interventionId>5</interventionId>
-                                                                
-        
-        
-        
-        
-        
-        
-        <libelle>sdfdfdsf</libelle>
-                                                                
-        
-        
-        
-        
-        
-        
-        <description>dfdsf</description>
-                                                                
-        
-        
-        
-        
-        
-        
-        <mainDOeuvreId>12</mainDOeuvreId>
-                                                                
-        
-        
-        
-        
-        
-        
-        <etat>VERIFIEE</etat>
-                                                                
-        
-        
-        
-        
-        
-        
-        <dateCreation>2025-12-03T19:15:16.204638</dateCreation>
-                                                                
-        
-        
+                                                
         
         
         
         
         <ordre>1</ordre>
-                                                                
-        
-        
+                                                
         
         
         
         
         <verifiee>true</verifiee>
-                                                            
-    
-    
+                                            
     
     
     
     
     </Tache>
-                            
+                    
     
-
     
-
     
-
+    
+    <Tache>
+                                        
+        
+        
+        
+        <id>11</id>
+                                        
+        
+        
+        
+        <interventionId>8</interventionId>
+                                        
+        
+        
+        
+        <libelle>Reparation</libelle>
+                                        
+        
+        
+        
+        <description>mmmmmmmmmmmmmmm</description>
+                                        
+        
+        
+        
+        <mainDOeuvreId>11</mainDOeuvreId>
+                                        
+        
+        
+        
+        <etat>A_FAIRE</etat>
+                                        
+        
+        
+        
+        <dateCreation>2025-12-06T20:57:45.169670600</dateCreation>
+                                        
+        
+        
+        
+        <ordre>1</ordre>
+                                        
+        
+        
+        
+        <verifiee>false</verifiee>
+                                    
+    
+    
+    
+    </Tache>
+                
     
 
     
@@ -2982,20 +3837,20 @@
     
 
     <Tache>
-        <id>10</id>
-        <interventionId>7</interventionId>
+        <id>12</id>
+        <interventionId>8</interventionId>
         <libelle>Réparation</libelle>
-        <description>................................</description>
-        <mainDOeuvreId>15</mainDOeuvreId>
+        <description>jjjjjjjjjjjjjjjjjjjjjjj</description>
+        <mainDOeuvreId>13</mainDOeuvreId>
         <etat>VERIFIEE</etat>
-        <dateCreation>2025-12-06T18:13:50.647428400</dateCreation>
-        <dateDebut>2025-12-06T18:14:53.941315400</dateDebut>
-        <dateFin>2025-12-06T18:15:34.543693900</dateFin>
-        <dateVerification>2025-12-06T18:54:23.855397400</dateVerification>
+        <dateCreation>2025-12-06T20:58:03.668022300</dateCreation>
+        <dateDebut>2025-12-06T20:58:27.852908600</dateDebut>
+        <dateFin>2025-12-06T20:58:51.444199300</dateFin>
+        <dateVerification>2025-12-06T20:59:10.277130800</dateVerification>
         <tempsPasseMinutes>0</tempsPasseMinutes>
         <commentaireMainDOeuvre>Tâche commencée</commentaireMainDOeuvre>
         <commentaireTechnicien/>
-        <ordre>1</ordre>
+        <ordre>2</ordre>
         <verifiee>true</verifiee>
     </Tache>
 </Taches>

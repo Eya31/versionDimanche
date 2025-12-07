@@ -65,7 +65,7 @@ export class DemandeFormComponent implements AfterViewInit, OnDestroy {
   });
 
   constructor(
-    private demandeService: DemandeService, 
+    private demandeService: DemandeService,
     private http: HttpClient,
     private authService: AuthService
   ) {}
@@ -294,20 +294,44 @@ export class DemandeFormComponent implements AfterViewInit, OnDestroy {
       citoyenId: currentUser?.id || null,
       dateSoumission: new Date().toISOString().split('T')[0]
     };
+// Si la demande est anonyme, NE PAS envoyer le citoyenId
+    if (!this.demande.isAnonymous && currentUser?.id) {
+        demandeData.citoyenId = currentUser.id;
+    } else {
+        demandeData.citoyenId = null; // Pour les demandes anonymes
+    }
+     // Si la demande est anonyme, utiliser l'email fourni
+    if (this.demande.isAnonymous) {
+        demandeData.contactEmail = this.demande.contactEmail;
+    } else if (currentUser?.email) {
+        // Sinon, utiliser l'email de l'utilisateur connecté
+        demandeData.contactEmail = currentUser.email;
+    }
+
+    console.log('📨 Envoi demande (anonyme:', this.demande.isAnonymous, '):', demandeData);
 
     this.demandeService.createDemande(demandeData, this.selectedFiles)
-      .subscribe({
-        next: (res: any) => {
-          this.ticketId = res.id ? 'SCTY-' + new Date().getFullYear() + '-' + String(res.id).padStart(6, '0') : null;
-          this.step = this.totalSteps + 1;
-          this.isSubmitting = false;
-        },
-        error: (err) => {
-          console.error('Erreur création demande:', err);
-          this.errorMessage = err.error?.error || err.error?.message || 'Une erreur est survenue lors de l\'envoi.';
-          this.isSubmitting = false;
-        }
-      });
+        .subscribe({
+            next: (res: any) => {
+                this.ticketId = res.id ? 'SCTY-' + new Date().getFullYear() + '-' + String(res.id).padStart(6, '0') : null;
+                this.step = this.totalSteps + 1;
+                this.isSubmitting = false;
+
+                // Message différent selon l'anonymat
+                if (this.demande.isAnonymous) {
+                    alert('✅ Signalement anonyme enregistré ! Un email de confirmation a été envoyé.');
+                } else {
+                    alert('✅ Signalement enregistré ! Vous pouvez suivre votre demande dans votre dashboard.');
+                }
+            },
+            error: (err) => {
+                console.error('Erreur création demande:', err);
+                this.errorMessage = err.error?.error || err.error?.message || 'Une erreur est survenue lors de l\'envoi.';
+                this.isSubmitting = false;
+            }
+        });
+
+    
   }
 
   resetForm() {

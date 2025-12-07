@@ -95,14 +95,14 @@ public class DemandeXmlService {
         
         // Citoyen ID
         String citoyenIdStr = xmlService.getElementTextContent(demandeElement, "citoyenId");
-        Integer citoyenId = null;
-        if (citoyenIdStr != null && !citoyenIdStr.trim().isEmpty()) {
-            try {
-                citoyenId = Integer.parseInt(citoyenIdStr);
-            } catch (NumberFormatException e) {
-                System.err.println("CitoyenId invalide: " + citoyenIdStr);
-            }
+    Integer citoyenId = null;
+    if (citoyenIdStr != null && !citoyenIdStr.trim().isEmpty() && !citoyenIdStr.equals("null")) {
+        try {
+            citoyenId = Integer.parseInt(citoyenIdStr);
+        } catch (NumberFormatException e) {
+            System.err.println("CitoyenId invalide: " + citoyenIdStr);
         }
+    }
 
         // Localisation
         PointGeo localisation = null;
@@ -144,9 +144,19 @@ public class DemandeXmlService {
             }
         }
 
+ // Lecture du champ isAnonymous
+    String isAnonymousStr = xmlService.getElementTextContent(demandeElement, "isAnonymous");
+    boolean isAnonymous = false;
+    if (isAnonymousStr != null) {
+        isAnonymous = Boolean.parseBoolean(isAnonymousStr);
+    } else {
+        // Pour compatibilité avec anciennes demandes : si pas de citoyenId, alors anonyme
+        isAnonymous = (citoyenId == null);
+    }
         // Construction finale
         Demande demande = new Demande(id, description, dateSoumission, etat, localisation);
-
+demande.setAnonymous(isAnonymous);
+    demande.setCitoyenId(citoyenId); // Même si null, c'est correct
         demande.setCategory(category);
         demande.setSubCategory(subCategory);
         demande.setPriority(priority);
@@ -183,10 +193,20 @@ public class DemandeXmlService {
             appendText(doc, demandeEl, "subCategory", demande.getSubCategory());
             appendText(doc, demandeEl, "priority", demande.getPriority());
             appendText(doc, demandeEl, "contactEmail", demande.getContactEmail());
-            
+            // Use this:
+if (demande.getCitoyenId() != null) {
+    appendText(doc, demandeEl, "citoyenId", String.valueOf(demande.getCitoyenId()));
+} else {
+    appendText(doc, demandeEl, "citoyenId", "null");
+}
             // CitoyenId (obligatoire)
+        if (!demande.isAnonymous() && demande.getCitoyenId() != null) {
             appendText(doc, demandeEl, "citoyenId", String.valueOf(demande.getCitoyenId()));
-
+        } else {
+            // Pour les demandes anonymes, on peut mettre "null" ou omettre
+            appendText(doc, demandeEl, "citoyenId", "null");
+        }
+          appendText(doc, demandeEl, "isAnonymous", String.valueOf(demande.isAnonymous()));
             // Localisation
             if (demande.getLocalisation() != null) {
                 Element loc = doc.createElementNS(xmlService.getNamespaceUri(), "localisation");

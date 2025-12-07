@@ -65,6 +65,7 @@ showRessourceFormModal = false;
   showNotificationsDropdown = false;
   private notificationSubscription?: Subscription;
   private unreadCountSubscription?: Subscription;
+citoyenInfos = new Map<number, any>(); // Stocke les infos citoyen par ID de demande
 
   // Stats
   demandesPendantes = 0;
@@ -76,8 +77,8 @@ showRessourceFormModal = false;
   showFormModal = false;
   showDetailModal = false;
   showPlanificationModal = false;
-  selectedDemande: Demande | null = null;
-
+selectedDemande: any = null;
+citoyenDetails: any = null; // Nouvelle propriété pour stocker les détails citoyen
   // Planification
   planificationData: any = {
     technicienId: null,
@@ -273,19 +274,133 @@ loadTechniciens(): void {
     this.loadInterventions();
   }
 
-  loadDemandes(): void {
-    this.demandeService.getAllDemandes().subscribe({
+loadDemandes(): void {
+    this.demandeService.getAllDemandesWithCitoyenNames().subscribe({
+        next: (data: any[]) => {
+            // Transformer les données pour qu'elles correspondent à l'interface Demande
+            this.demandes = data.map(item => {
+                const demande = item.demande;
+                // Ajouter les informations du citoyen à la demande
+                demande.citoyenNom = item.citoyenNom;
+                demande.citoyenEmail = item.citoyenEmail;
+                demande.citoyenTelephone = item.citoyenTelephone;
+                demande.citoyenAdresse = item.citoyenAdresse;
+                return demande;
+            });
+            this.appliquerFiltre();
+            this.updateStats();
+        },
+        error: (error) => {
+            console.error('Erreur chargement demandes avec noms:', error);
+            // Fallback à l'ancienne méthode
+            this.demandeService.getAllDemandes().subscribe({
+                next: (data) => {
+                    this.demandes = data;
+                    this.appliquerFiltre();
+                    this.updateStats();
+                },
+                error: (err) => {
+                    console.error('Erreur chargement demandes de base:', err);
+                    alert('Erreur lors du chargement des demandes');
+                }
+            });
+        }
+    });
+}
+// Nouvelle méthode pour charger tous les noms des citoyens
+  loadCitoyenNames(): void {
+    if (this.demandes.length === 0) return;
+
+    // Filtrer les demandes qui ont un citoyenId non anonyme
+    const demandesAvecCitoyen = this.demandes.filter(d =>
+      !d.isAnonymous && d.citoyenId
+    );
+
+    if (demandesAvecCitoyen.length === 0) return;
+
+    // Créer un Set pour éviter les doublons (si plusieurs demandes du même citoyen)
+    const citoyenIds = new Set<number>();
+    demandesAvecCitoyen.forEach(d => {
+      const id = typeof d.citoyenId === 'string'
+        ? parseInt(d.citoyenId)
+        : (d.citoyenId as number);
+      if (id) citoyenIds.add(id);
+    });
+
+    // Charger les informations pour chaque citoyen
+    Array.from(citoyenIds).forEach(citoyenId => {
+      this.loadCitoyenInfoForAllDemandes(citoyenId);
+    });
+  }
+// Méthode pour charger les infos d'un citoyen et les associer à toutes ses demandes
+  loadCitoyenInfoForAllDemandes(citoyenId: number): void {
+    // Trouver toutes les demandes de ce citoyen
+    const demandesDuCitoyen = this.demandes.filter(d => {
+      if (d.isAnonymous) return false;
+      const id = typeof d.citoyenId === 'string'
+        ? parseInt(d.citoyenId)
+        : (d.citoyenId as number);
+      return id === citoyenId;
+    });
+
+    if (demandesDuCitoyen.length === 0) return;
+
+    // Prendre une demande pour récupérer les infos (elles sont les mêmes pour toutes)
+    const premiereDemande = demandesDuCitoyen[0];
+
+    this.demandeService.getCitoyenDetails(premiereDemande.id).subscribe({
       next: (data) => {
-        this.demandes = data;
-        this.appliquerFiltre();
-        this.updateStats();
+        // Associer ces infos à toutes les demandes de ce citoyen
+        demandesDuCitoyen.forEach(demande => {
+          this.citoyenInfos.set(demande.id, data);
+        });
       },
-      error: (error) => {
-        console.error('Erreur chargement demandes:', error);
-        alert('Erreur lors du chargement des demandes');
+      error: (err) => {
+        console.error('Erreur chargement info citoyen:', err);
       }
     });
   }
+
+  // Méthode pour obtenir le nom complet du citoyen
+  getCitoyenName(demandeId: number): string {
+    const demande = this.demandes.find(d => d.id === demandeId);
+    if (!demande) return 'Inconnu';
+
+    if (demande.isAnonymous) {
+        return '🎭 Anonyme';
+    }
+
+    // Vérifier si on a déjà les détails du citoyen
+    if (this.citoyenInfos.has(demandeId)) {
+        const info = this.citoyenInfos.get(demandeId);
+        if (info.anonyme) return '🎭 Anonyme';
+        if (info.nom) {
+            const prenom = info.prenom || '';
+            return prenom ? `${prenom} ${info.nom}` : info.nom;
+        }
+    }
+
+    // Sinon, charger les détails
+    if (demande.citoyenId && !this.citoyenInfos.has(demandeId)) {
+        this.loadCitoyenDetailsOnDemand(demandeId);
+    }
+
+    // Retourner temporairement l'ID
+    return demande.citoyenId ? `Citoyen #${demande.citoyenId}` : 'Non renseigné';
+}
+
+// Nouvelle méthode pour charger les détails à la demande
+loadCitoyenDetailsOnDemand(demandeId: number): void {
+    this.demandeService.getCitoyenDetails(demandeId).subscribe({
+        next: (data) => {
+            this.citoyenInfos.set(demandeId, data);
+            // Forcer la mise à jour de l'affichage
+            this.demandesFiltrees = [...this.demandesFiltrees];
+        },
+        error: (err) => console.error('Erreur chargement détails:', err)
+    });
+}
+
 
   loadEquipements(): void {
     this.equipementService.getAllEquipements().subscribe({
@@ -597,12 +712,53 @@ closeModal(): void {
   openDetailModal(demande: Demande): void {
     this.selectedDemande = demande;
     this.showDetailModal = true;
-  }
+    this.citoyenDetails = null; // Réinitialiser
 
+    // Si la demande n'est pas anonyme, charger les détails du citoyen
+    if (!demande.isAnonymous && demande.citoyenId) {
+        this.loadCitoyenDetails(demande.id);}
+  }
+// Méthode pour charger les détails du citoyen
+loadCitoyenDetails(demandeId: number): void {
+    this.demandeService.getCitoyenDetails(demandeId).subscribe({
+        next: (data) => {
+            this.citoyenDetails = data;
+            console.log('Détails citoyen chargés:', data);
+        },
+        error: (err) => {
+            console.error('Erreur chargement détails citoyen:', err);
+            this.citoyenDetails = {
+                message: 'Impossible de charger les informations'
+            };
+        }
+    });
+}
   closeDetailModal(): void {
     this.showDetailModal = false;
     this.selectedDemande = null;
+    this.citoyenDetails = null;
   }
+// Méthode pour obtenir le nom complet du citoyen
+getCitoyenFullName(): string {
+    if (!this.citoyenDetails) return '';
+
+    if (this.citoyenDetails.anonyme) {
+        return 'Citoyen anonyme';
+    }
+
+    const nom = this.citoyenDetails.nom || '';
+    const prenom = this.citoyenDetails.prenom || '';
+
+    if (nom && prenom) {
+        return `${prenom} ${nom}`;
+    } else if (nom) {
+        return nom;
+    } else if (prenom) {
+        return prenom;
+    }
+
+    return `Citoyen #${this.selectedDemande.citoyenId}`;
+}
 
   // === GESTION ÉQUIPEMENTS ===
   openEquipementsModal(): void {

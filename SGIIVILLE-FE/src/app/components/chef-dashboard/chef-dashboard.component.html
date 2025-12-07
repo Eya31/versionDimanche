@@ -171,6 +171,7 @@
           <tr>
             <th>📌 Référence</th>
             <th>📝 Description</th>
+             <th>👤 Citoyen</th> <!-- NOUVELLE COLONNE -->
             <th>📅 Date</th>
             <th>🏷️ Statut</th>
             <th>📍 Localisation</th>
@@ -184,12 +185,30 @@
             <td class="description-cell">
               {{ d.description.length > 60 ? (d.description | slice:0:60) + '...' : d.description }}
             </td>
-            <td>{{ d.dateSoumission | date:'dd/MM/yyyy' }}</td>
-            <td>
-              <span class="status" [ngClass]="getEtatBadgeClass(d.etat)">
-                {{ getEtatText(d.etat) }}
-              </span>
-            </td>
+            <!-- NOUVELLE COLONNE : Afficher "Anonyme" ou le nom -->
+      <td>
+    <span *ngIf="d.isAnonymous" style="color: #ff9800; font-weight: 600;">
+        🎭 Anonyme
+    </span>
+    <span *ngIf="!d.isAnonymous && d.citoyenNom" style="color: #2196f3; font-weight: 500;">
+        👤 {{ d.citoyenNom }}
+        <span *ngIf="d.citoyenEmail" style="font-size: 11px; display: block; color: #666;">
+            {{ d.citoyenEmail }}
+        </span>
+    </span>
+    <span *ngIf="!d.isAnonymous && !d.citoyenNom && d.citoyenId" style="color: #2196f3;">
+        👤 Citoyen #{{ d.citoyenId }}
+    </span>
+    <span *ngIf="!d.isAnonymous && !d.citoyenId" class="text-muted">
+        Non renseigné
+    </span>
+</td>
+             <td>{{ d.dateSoumission | date:'dd/MM/yyyy' }}</td>
+      <td>
+        <span class="status" [ngClass]="getEtatBadgeClass(d.etat)">
+          {{ getEtatText(d.etat) }}
+        </span>
+      </td>
             <td class="location-cell">
               <span *ngIf="d.localisation" style="font-size: 12px;">
                 📍 {{ d.localisation.latitude | number:'1.4' }}, {{ d.localisation.longitude | number:'1.4' }}
@@ -224,7 +243,120 @@
     </div>
     </section>
   </div><!-- Fin main-content -->
+<!-- MODAL DÉTAILS DEMANDE - Version corrigée -->
+<div class="modal-overlay" *ngIf="showDetailModal && selectedDemande" (click)="closeDetailModal()">
+  <div class="modal-content detail-modal" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeDetailModal()">×</button>
 
+    <div class="detail-header">
+      <h2>📋 Détail de la demande #{{ selectedDemande.id }}</h2>
+      <span class="status" [ngClass]="getEtatBadgeClass(selectedDemande.etat)">
+        {{ getEtatText(selectedDemande.etat) }}
+      </span>
+      <span *ngIf="selectedDemande.isAnonymous"
+            style="background: #ff9800; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 10px;">
+        🎭 ANONYME
+      </span>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-left">
+        <!-- Section Informations citoyen UNIQUE -->
+        <div class="info-block">
+    <h3>👤 Informations du citoyen</h3>
+
+    <div *ngIf="selectedDemande.isAnonymous">
+        <p><strong>Statut :</strong> 🎭 <span style="color: #ff9800; font-weight: 600;">Anonyme</span></p>
+        <p *ngIf="selectedDemande.contactEmail">
+            <strong>Email de contact :</strong> {{ selectedDemande.contactEmail }}
+        </p>
+    </div>
+
+    <div *ngIf="!selectedDemande.isAnonymous">
+        <p *ngIf="citoyenDetails && !citoyenDetails.anonyme">
+            <strong>Nom complet :</strong> {{ getCitoyenFullName() }}
+        </p>
+        <p *ngIf="citoyenDetails && citoyenDetails.email">
+            <strong>📧 Email :</strong> {{ citoyenDetails.email }}
+        </p>
+        <p *ngIf="citoyenDetails && citoyenDetails.telephone">
+            <strong>📱 Téléphone :</strong> {{ citoyenDetails.telephone }}
+        </p>
+        <p *ngIf="citoyenDetails && citoyenDetails.adresse">
+            <strong>📍 Adresse :</strong> {{ citoyenDetails.adresse }}
+        </p>
+
+        <div *ngIf="!citoyenDetails || citoyenDetails.message" class="loading-indicator">
+            <div style="display: flex; align-items: center; gap: 10px; color: #667eea;">
+                <div class="spinner"></div>
+                <span>Chargement des informations du citoyen...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!-- Reste du contenu du modal (description, localisation, etc.) -->
+        <div class="info-block">
+          <h3>📝 Description complète</h3>
+          <p class="description">{{ selectedDemande.description }}</p>
+        </div>
+
+        <div class="info-block">
+          <h3>📅 Date de soumission</h3>
+          <p>{{ selectedDemande.dateSoumission | date:'fullDate' }}</p>
+        </div>
+
+        <div class="info-block">
+          <h3>📍 Localisation GPS</h3>
+          <ng-container *ngIf="selectedDemande.localisation as loc; else noLocation">
+            <p><strong>Lat:</strong> {{ loc.latitude | number:'1.6' }}<br>
+               <strong>Lng:</strong> {{ loc.longitude | number:'1.6' }}</p>
+            <a [href]="'https://www.google.com/maps?q=' + loc.latitude + ',' + loc.longitude"
+               target="_blank"
+               class="map-link">
+              Voir sur Google Maps
+            </a>
+          </ng-container>
+          <ng-template #noLocation>
+            <p class="text-muted">Localisation non fournie</p>
+          </ng-template>
+        </div>
+
+        <div class="action-buttons" *ngIf="selectedDemande.etat !== 'TRAITEE'">
+          <button class="action-btn primary large" (click)="planifierDemande(selectedDemande)">
+            Planifier l'intervention
+          </button>
+        </div>
+      </div>
+
+      <div class="detail-right">
+        <!-- Photos jointes -->
+        <h3>Photos jointes ({{ selectedDemande.photos?.length || 0 }})</h3>
+        <div class="photos-grid" *ngIf="selectedDemande.photos?.length; else noPhotos">
+          <div class="photo-item" *ngFor="let photo of selectedDemande.photos">
+            <div class="photo-container">
+              <img [src]="getPhotoUrl(photo.url)" [alt]="photo.nom" (error)="handleImageError($event)" class="demande-photo">
+              <div class="photo-overlay">
+                <button class="view-photo-btn" (click)="openPhotoModal(getPhotoUrl(photo.url))">Agrandir</button>
+              </div>
+            </div>
+            <p class="photo-caption">{{ photo.nom || 'Photo' }}</p>
+          </div>
+        </div>
+        <ng-template #noPhotos>
+          <div class="no-photos-message">
+            <div class="no-photos-icon">Photo</div>
+            <p>Aucune photo</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="detail-actions">
+      <button class="action-btn secondary" (click)="closeDetailModal()">Fermer</button>
+    </div>
+  </div>
+</div>
   <!-- MODAL TECHNICIENS -->
   <div class="modal-overlay" *ngIf="showTechniciensModal" (click)="closeModal()">
     <div class="modal-content techniciens-modal" (click)="$event.stopPropagation()">
@@ -527,66 +659,153 @@
 
 <!-- Fonction pour voir le motif de refus -->
 
-  <!-- MODAL DÉTAILS DEMANDE -->
-  <div class="modal-overlay" *ngIf="showDetailModal && selectedDemande" (click)="closeDetailModal()">
-    <div class="modal-content detail-modal" (click)="$event.stopPropagation()">
-      <button class="close-btn" (click)="closeDetailModal()">×</button>
-      <div class="detail-header">
-        <h2>📋 Détail de la demande #{{ selectedDemande.id }}</h2>
-        <span class="status" [ngClass]="getEtatBadgeClass(selectedDemande.etat)">
-          {{ getEtatText(selectedDemande.etat) }}
-        </span>
-      </div>
-      <div class="detail-grid">
-        <div class="detail-left">
-          <div class="info-block">
-            <h3>📝 Description complète</h3>
-            <p class="description">{{ selectedDemande.description }}</p>
+<!-- MODAL DÉTAILS DEMANDE - Version corrigée -->
+<div class="modal-overlay" *ngIf="showDetailModal && selectedDemande" (click)="closeDetailModal()">
+  <div class="modal-content detail-modal" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeDetailModal()">×</button>
+
+    <div class="detail-header">
+      <h2>📋 Détail de la demande #{{ selectedDemande.id }}</h2>
+      <span class="status" [ngClass]="getEtatBadgeClass(selectedDemande.etat)">
+        {{ getEtatText(selectedDemande.etat) }}
+      </span>
+      <!-- CORRECTION: Change d.isAnonymous to selectedDemande.isAnonymous -->
+      <span *ngIf="selectedDemande.isAnonymous" style="color: #ff9800; font-weight: 600;">
+        🎭 Anonyme
+      </span>
+      <!-- CORRECTION: Change !d.isAnonymous to !selectedDemande.isAnonymous -->
+      <span *ngIf="!selectedDemande.isAnonymous" style="color: #2196f3;">
+        👤 {{ getCitoyenName(selectedDemande.id) }}
+      </span>
+
+      <!-- CORRECTION: Change !d.isAnonymous && !citoyenInfos.has(d.id) to !selectedDemande.isAnonymous && !citoyenInfos.has(selectedDemande.id) -->
+      <span *ngIf="!selectedDemande.isAnonymous && !citoyenInfos.has(selectedDemande.id)" class="text-muted" style="font-size: 10px;">
+        (chargement...)
+      </span>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-left">
+        <!-- Section Informations citoyen -->
+        <div class="info-block">
+          <h3>👤 Informations du citoyen</h3>
+
+          <!-- Cas 1: Demande anonyme -->
+          <div *ngIf="selectedDemande.isAnonymous">
+            <p><strong>Statut :</strong> 🎭 <span style="color: #ff9800; font-weight: 600;">Anonyme</span></p>
+            <p *ngIf="selectedDemande.contactEmail">
+              <strong>Email de contact :</strong> {{ selectedDemande.contactEmail }}
+            </p>
+            <p class="text-muted">
+              <small>Le citoyen a choisi de rester anonyme pour cette demande</small>
+            </p>
           </div>
-          <div class="info-block">
-            <h3>📅 Date de soumission</h3>
-            <p>{{ selectedDemande.dateSoumission | date:'fullDate' }}</p>
-          </div>
-          <div class="info-block">
-            <h3>📍 Localisation GPS</h3>
-            <ng-container *ngIf="selectedDemande.localisation as loc; else noLocation">
-              <p><strong>Lat:</strong> {{ loc.latitude | number:'1.6' }}<br>
-                 <strong>Lng:</strong> {{ loc.longitude | number:'1.6' }}</p>
-              <a [href]="'https://www.google.com/maps?q=' + loc.latitude + ',' + loc.longitude" target="_blank" class="map-link">
-                Voir sur Google Maps
-              </a>
-            </ng-container>
-            <ng-template #noLocation><p class="text-muted">Localisation non fournie</p></ng-template>
-          </div>
-          <div class="action-buttons" *ngIf="selectedDemande.etat !== 'TRAITEE'">
-            <button class="action-btn primary large" (click)="planifierDemande(selectedDemande)">
-              Planifier l'intervention
-            </button>
-          </div>
-        </div>
-        <div class="detail-right">
-          <h3>Photos jointes ({{ selectedDemande.photos?.length || 0 }})</h3>
-          <div class="photos-grid" *ngIf="selectedDemande.photos?.length; else noPhotos">
-            <div class="photo-item" *ngFor="let photo of selectedDemande.photos">
-              <div class="photo-container">
-                <img [src]="getPhotoUrl(photo.url)" [alt]="photo.nom" (error)="handleImageError($event)" class="demande-photo">
-                <div class="photo-overlay">
-                  <button class="view-photo-btn" (click)="openPhotoModal(getPhotoUrl(photo.url))">Agrandir</button>
-                </div>
+
+          <!-- Cas 2: Citoyen identifié -->
+          <div *ngIf="!selectedDemande.isAnonymous">
+            <!-- Affichage basique -->
+            <div *ngIf="!citoyenDetails || citoyenDetails.message">
+              <p><strong>Citoyen ID :</strong> #{{ selectedDemande.citoyenId }}</p>
+              <p *ngIf="selectedDemande.contactEmail">
+                <strong>Email :</strong> {{ selectedDemande.contactEmail }}
+              </p>
+              <p class="text-muted" *ngIf="citoyenDetails?.message">
+                <small>{{ citoyenDetails.message }}</small>
+              </p>
+            </div>
+
+            <!-- Affichage détaillé -->
+            <div *ngIf="citoyenDetails && !citoyenDetails.anonyme && !citoyenDetails.message">
+              <p><strong>Nom complet :</strong> {{ getCitoyenFullName() }}</p>
+
+              <div class="citoyen-details-grid" style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                <p *ngIf="citoyenDetails.email">
+                  <strong>📧 Email :</strong> {{ citoyenDetails.email }}
+                </p>
+                <p *ngIf="citoyenDetails.telephone">
+                  <strong>📱 Téléphone :</strong> {{ citoyenDetails.telephone }}
+                </p>
+                <p *ngIf="citoyenDetails.cin">
+                  <strong>🆔 CIN :</strong> {{ citoyenDetails.cin }}
+                </p>
+                <p *ngIf="citoyenDetails.adresse">
+                  <strong>📍 Adresse :</strong> {{ citoyenDetails.adresse }}
+                </p>
               </div>
-              <p class="photo-caption">{{ photo.nom || 'Photo' }}</p>
+            </div>
+
+            <!-- Indicateur de chargement -->
+            <div *ngIf="!citoyenDetails && !selectedDemande.isAnonymous" class="loading-indicator">
+              <div style="display: flex; align-items: center; gap: 10px; color: #667eea;">
+                <div class="spinner"></div>
+                <span>Chargement des informations du citoyen...</span>
+              </div>
             </div>
           </div>
-          <ng-template #noPhotos>
-            <div class="no-photos-message"><div class="no-photos-icon">Photo</div><p>Aucune photo</p></div>
+        </div>
+
+        <!-- Reste du contenu du modal (description, localisation, etc.) -->
+        <div class="info-block">
+          <h3>📝 Description complète</h3>
+          <p class="description">{{ selectedDemande.description }}</p>
+        </div>
+
+        <div class="info-block">
+          <h3>📅 Date de soumission</h3>
+          <p>{{ selectedDemande.dateSoumission | date:'fullDate' }}</p>
+        </div>
+
+        <div class="info-block">
+          <h3>📍 Localisation GPS</h3>
+          <ng-container *ngIf="selectedDemande.localisation as loc; else noLocation">
+            <p><strong>Lat:</strong> {{ loc.latitude | number:'1.6' }}<br>
+               <strong>Lng:</strong> {{ loc.longitude | number:'1.6' }}</p>
+            <a [href]="'https://www.google.com/maps?q=' + loc.latitude + ',' + loc.longitude"
+               target="_blank"
+               class="map-link">
+              Voir sur Google Maps
+            </a>
+          </ng-container>
+          <ng-template #noLocation>
+            <p class="text-muted">Localisation non fournie</p>
           </ng-template>
         </div>
+
+        <div class="action-buttons" *ngIf="selectedDemande.etat !== 'TRAITEE'">
+          <button class="action-btn primary large" (click)="planifierDemande(selectedDemande)">
+            Planifier l'intervention
+          </button>
+        </div>
       </div>
-      <div class="detail-actions">
-        <button class="action-btn secondary" (click)="closeDetailModal()">Fermer</button>
+
+      <div class="detail-right">
+        <!-- Photos jointes (garder cette section) -->
+        <h3>Photos jointes ({{ selectedDemande.photos?.length || 0 }})</h3>
+        <div class="photos-grid" *ngIf="selectedDemande.photos?.length; else noPhotos">
+          <div class="photo-item" *ngFor="let photo of selectedDemande.photos">
+            <div class="photo-container">
+              <img [src]="getPhotoUrl(photo.url)" [alt]="photo.nom" (error)="handleImageError($event)" class="demande-photo">
+              <div class="photo-overlay">
+                <button class="view-photo-btn" (click)="openPhotoModal(getPhotoUrl(photo.url))">Agrandir</button>
+              </div>
+            </div>
+            <p class="photo-caption">{{ photo.nom || 'Photo' }}</p>
+          </div>
+        </div>
+        <ng-template #noPhotos>
+          <div class="no-photos-message">
+            <div class="no-photos-icon">Photo</div>
+            <p>Aucune photo</p>
+          </div>
+        </ng-template>
       </div>
     </div>
+
+    <div class="detail-actions">
+      <button class="action-btn secondary" (click)="closeDetailModal()">Fermer</button>
+    </div>
   </div>
+</div>
 
   <!-- MODAL INTERVENTIONS -->
   <div class="modal-overlay" *ngIf="showInterventionModal" (click)="closeModal()">

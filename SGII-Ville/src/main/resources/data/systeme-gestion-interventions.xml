@@ -3,24 +3,6 @@
                              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                              xsi:schemaLocation="http://example.com/gestion-interventions ../schemas/root.xsd">
     
-    <Utilisateurs/>
     
-    <Demandes/>
-    
-    <Interventions/>
-    
-    <Fournisseurs/>
-    
-    <Equipements/>
-    
-    <RessourcesMaterielles/>
-    
-    <MainDOeuvre/>
-    
-    <Notifications/>
-    
-    <DemandesAjout/>
-    
-    <Photos/>
     
 </SystemeGestionInterventions>

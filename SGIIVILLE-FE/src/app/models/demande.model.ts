@@ -18,17 +18,24 @@ export interface Demande {
   etat: 'SOUMISE' | 'EN_ATTENTE' | 'TRAITEE' | 'REJETEE';
   citoyenId?: number | string | null;
 
+  // Informations citoyen (peuvent être anonymes)
+  citoyenNom?: string;
+  citoyenEmail?: string;
+  citoyenTelephone?: string;
+  citoyenAdresse?: string;
+
+  // Flag anonymat
+  isAnonymous?: boolean;
+
+  // Champs existants
   photos?: Photo[];
   localisation: GeoPoint;
-
-  // Nouveaux champs
   category?: string;
   subCategory?: string;
   priority?: string;
   contactEmail?: string;
   address?: string;
-  isAnonymous?: boolean;
 
-  // Compatibilité pour anciens uploads / pièces jointes
+  // Compatibilité pour anciens uploads
   attachments?: any[];
 }

@@ -3,10 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Demande } from '../models/demande.model';
 import { catchError, throwError } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 @Injectable({ providedIn: 'root' })
 export class DemandeService {
   private baseUrl = 'http://localhost:8080/api/demandes';
-
+ private citoyenCache = new Map<number, any>(); // Cache pour éviter les appels multiples
   constructor(private http: HttpClient) {}
 
   /** --------------------------------------------
@@ -78,4 +81,76 @@ export class DemandeService {
     files.forEach(f => fd.append('files', f, f.name));
     return this.http.post<any>(`${this.baseUrl}/${demandeId}/photos`, fd);
   }
+  // demande.service.ts - Ajoutez cette méthode
+/** --------------------------------------------
+ *  RÉCUPÉRER LES INFOS CITOYEN POUR UNE DEMANDE
+ * --------------------------------------------- */
+;
+
+// Méthode pour charger tous les noms de citoyens en parallèle
+  loadAllCitoyenNames(demandes: Demande[]): Observable<Map<number, any>> {
+    const requests: Observable<any>[] = [];
+    const results = new Map<number, any>();
+
+    demandes.forEach(demande => {
+      if (!demande.isAnonymous && demande.citoyenId) {
+        const id = typeof demande.citoyenId === 'string'
+          ? parseInt(demande.citoyenId)
+          : demande.citoyenId;
+
+        requests.push(
+          this.getCitoyenDetails(demande.id).pipe(
+            map(data => ({ demandeId: demande.id, data }))
+          )
+        );
+      }
+    });
+
+    if (requests.length === 0) {
+      return of(results);
+    }
+
+    return forkJoin(requests).pipe(
+      map(responses  => {
+        responses.forEach(response => {
+          results.set(response.demandeId, response.data);
+        });
+        return results;
+      })
+    );
+  }
+  getAllDemandesWithCitoyenInfo(): Observable<Demande[]> {
+    return this.http.get<Demande[]>(this.baseUrl).pipe(
+      map(demandes => {
+        // Retourner les demandes sans bloquer le chargement
+        return demandes;
+      })
+    );
+  }
+
+  // Récupérer les détails du citoyen pour une demande
+  getCitoyenDetails(demandeId: number): Observable<any> {
+    // Vérifier le cache d'abord
+    if (this.citoyenCache.has(demandeId)) {
+      return of(this.citoyenCache.get(demandeId));
+    }
+
+    return this.http.get<any>(`${this.baseUrl}/${demandeId}/citoyen-details`).pipe(
+      map(data => {
+        // Mettre en cache
+        this.citoyenCache.set(demandeId, data);
+        return data;
+      }),
+      catchError(error => {
+        console.error('Erreur récupération détails citoyen:', error);
+        return of(null);
+      })
+    );
+  }
+/** --------------------------------------------
+ *  RÉCUPÉRER TOUTES LES DEMANDES AVEC NOMS CITOYENS
+ * --------------------------------------------- */
+getAllDemandesWithCitoyenNames(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/with-citoyen-names`);
+}
 }

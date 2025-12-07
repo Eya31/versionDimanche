@@ -10,9 +10,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import tn.SGII_Ville.entities.Citoyen;
 import tn.SGII_Ville.entities.Demande;
 import tn.SGII_Ville.entities.Intervention;
 import tn.SGII_Ville.entities.Photo;
+import tn.SGII_Ville.entities.Utilisateur;
 import tn.SGII_Ville.dto.PlanificationCompleteRequest;
 import tn.SGII_Ville.model.enums.EtatDemandeType;
 import tn.SGII_Ville.service.DemandeXmlService;
 import tn.SGII_Ville.service.FileStorageService;
 import tn.SGII_Ville.service.InterventionXmlService;
+import tn.SGII_Ville.service.UserXmlService;
 
 /**
  * Contrôleur REST pour gérer les demandes citoyennes
@@ -49,6 +53,9 @@ public class DemandeController {
 
     @Autowired
     private InterventionXmlService interventionService;
+
+    @Autowired
+    private UserXmlService userXmlService;
 
     @Autowired
     private tn.SGII_Ville.service.NotificationService notificationService;
@@ -84,20 +91,7 @@ public class DemandeController {
     }
 
     // ==================== GET DEMANDES BY CITOYEN ID ====================
-    @GetMapping("/citoyen/{citoyenId}")
-    public ResponseEntity<List<Demande>> getDemandesByCitoyen(@PathVariable int citoyenId) {
-        try {
-            List<Demande> toutes = demandeService.getAllDemandes();
-            List<Demande> demandesCitoyen = toutes.stream()
-                    .filter(d -> d.getCitoyenId() == citoyenId)
-                    .collect(java.util.stream.Collectors.toList());
-            return ResponseEntity.ok(demandesCitoyen);
-        } catch (Exception e) {
-            logger.error("Erreur lors du chargement des demandes du citoyen ID: {}", citoyenId, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
+    
     // ==================== CREATE DEMANDE (JSON ONLY) ====================
     @PostMapping
     public ResponseEntity<?> createDemande(@RequestBody Demande demande) {
@@ -358,6 +352,162 @@ public ResponseEntity<?> planifierDemande(@PathVariable int id) {
         logger.error("ERREUR PLANIFICATION DEMANDE #{}", id, e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("error", "Erreur lors de la planification", "details", e.getMessage()));
+    }
+}
+// Dans DemandeController.java
+@GetMapping("/{id}/citoyen-info")
+public ResponseEntity<Map<String, Object>> getCitoyenInfo(@PathVariable int id) {
+    try {
+        Demande demande = demandeService.findById(id);
+        if (demande == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        Map<String, Object> response = new HashMap<>();
+        
+        if (demande.isAnonymous()) {
+            response.put("anonyme", true);
+            response.put("message", "Demande anonyme");
+            response.put("contactEmail", demande.getContactEmail());
+        } else if (demande.getCitoyenId() != null) {
+            // Récupérer le citoyen depuis UserXmlService
+            Optional<Utilisateur> citoyenOpt = userXmlService.findById(demande.getCitoyenId());
+            
+            if (citoyenOpt.isPresent() && citoyenOpt.get() instanceof Citoyen) {
+                Citoyen citoyen = (Citoyen) citoyenOpt.get();
+                response.put("anonyme", false);
+                response.put("nom", citoyen.getNom());
+                response.put("email", citoyen.getEmail());
+                response.put("telephone", citoyen.getTelephone());
+                response.put("adresse", citoyen.getAdresse());
+            } else {
+                response.put("anonyme", false);
+                response.put("message", "Citoyen non trouvé");
+            }
+        } else {
+            response.put("anonyme", false);
+            response.put("message", "Citoyen non spécifié");
+        }
+        
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+}
+@GetMapping("/citoyen/{citoyenId}")
+public ResponseEntity<List<Demande>> getDemandesByCitoyen(@PathVariable int citoyenId) {
+    try {
+        logger.info("Loading demands for citoyenId: {}", citoyenId);
+        List<Demande> toutes = demandeService.getAllDemandes();
+        logger.info("Total demands found: {}", toutes.size());
+        
+        List<Demande> demandesCitoyen = toutes.stream()
+            .filter(d -> {
+                Integer cid = d.getCitoyenId();
+                if (cid == null) {
+                    logger.debug("Skipping anonymous demand: {}", d.getId());
+                    return false;
+                }
+                return cid == citoyenId;
+            })
+            .collect(java.util.stream.Collectors.toList());
+            
+        logger.info("Found {} demands for citoyen {}", demandesCitoyen.size(), citoyenId);
+        return ResponseEntity.ok(demandesCitoyen);
+        
+    } catch (Exception e) {
+        logger.error("Error loading demands for citoyen ID: {}", citoyenId, e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+// DemandeController.java - Ajoutez cette méthode
+@GetMapping("/{id}/citoyen-details")
+public ResponseEntity<Map<String, Object>> getCitoyenDetails(@PathVariable int id) {
+    try {
+        Demande demande = demandeService.findById(id);
+        if (demande == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        Map<String, Object> response = new HashMap<>();
+        
+        if (demande.isAnonymous()) {
+            response.put("anonyme", true);
+            response.put("message", "Demande anonyme");
+            response.put("contactEmail", demande.getContactEmail());
+        } else if (demande.getCitoyenId() != null) {
+            // Récupérer le citoyen depuis UserXmlService
+            Optional<Utilisateur> citoyenOpt = userXmlService.findById(demande.getCitoyenId());
+            
+            if (citoyenOpt.isPresent()) {
+                Utilisateur utilisateur = citoyenOpt.get();
+                
+                if (utilisateur instanceof Citoyen) {
+                    Citoyen citoyen = (Citoyen) utilisateur;
+                    response.put("anonyme", false);
+                    response.put("nom", citoyen.getNom());
+                    response.put("email", citoyen.getEmail());
+                    response.put("telephone", citoyen.getTelephone());
+                    response.put("adresse", citoyen.getAdresse());
+                    // Note: Supprimer les appels à getPrenom() et getCin() si non disponibles
+                    // response.put("prenom", citoyen.getPrenom());
+                    // response.put("cin", citoyen.getCin());
+                } else {
+                    response.put("anonyme", false);
+                    response.put("message", "Utilisateur n'est pas un citoyen");
+                }
+            } else {
+                response.put("anonyme", false);
+                response.put("message", "Citoyen non trouvé");
+            }
+        } else {
+            response.put("anonyme", false);
+            response.put("message", "Citoyen non spécifié");
+        }
+        
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        logger.error("Erreur récupération citoyen pour demande {}", id, e);
+        return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+}
+
+// ==================== GET ALL DEMANDES WITH CITOYEN NAMES ====================
+@GetMapping("/with-citoyen-names")
+public ResponseEntity<List<Map<String, Object>>> getAllDemandesWithCitoyenNames() {
+    try {
+        List<Demande> demandes = demandeService.getAllDemandes();
+        List<Map<String, Object>> result = new ArrayList<>();
+        
+        for (Demande demande : demandes) {
+            Map<String, Object> demandeMap = new HashMap<>();
+            demandeMap.put("demande", demande);
+            
+            if (demande.isAnonymous()) {
+                demandeMap.put("citoyenNom", "🎭 Anonyme");
+                demandeMap.put("citoyenEmail", demande.getContactEmail());
+            } else if (demande.getCitoyenId() != null) {
+                Optional<Utilisateur> citoyenOpt = userXmlService.findById(demande.getCitoyenId());
+                if (citoyenOpt.isPresent() && citoyenOpt.get() instanceof Citoyen) {
+                    Citoyen citoyen = (Citoyen) citoyenOpt.get();
+                    demandeMap.put("citoyenNom", citoyen.getNom());
+                    demandeMap.put("citoyenEmail", citoyen.getEmail());
+                    demandeMap.put("citoyenTelephone", citoyen.getTelephone());
+                    demandeMap.put("citoyenAdresse", citoyen.getAdresse());
+                } else {
+                    demandeMap.put("citoyenNom", "👤 Citoyen #" + demande.getCitoyenId());
+                }
+            } else {
+                demandeMap.put("citoyenNom", "Citoyen non spécifié");
+            }
+            
+            result.add(demandeMap);
+        }
+        
+        return ResponseEntity.ok(result);
+    } catch (Exception e) {
+        logger.error("Erreur lors du chargement des demandes avec noms", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
 }

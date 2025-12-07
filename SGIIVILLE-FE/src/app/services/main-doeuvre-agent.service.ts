@@ -3,7 +3,7 @@ import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http'
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-
+import { of } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -135,4 +135,43 @@ export class MainDOeuvreAgentService {
       })
     );
   }
-}
+  /**
+   * Récupère les détails d'une intervention spécifique
+   */
+  getInterventionDetails(interventionId: number): Observable<any> {
+    console.log('📤 Appel API détails intervention:', `${this.apiUrl}/interventions/${interventionId}`);
+
+    return this.http.get<any>(`${this.apiUrl}/interventions/${interventionId}`).pipe(
+      map(intervention => {
+        console.log('✅ Détails intervention reçus:', intervention);
+        return intervention || {};
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('❌ Erreur récupération détails intervention:', error);
+        console.error('URL:', error.url);
+        console.error('Status:', error.status, error.statusText);
+
+        // Pour le débogage, retournez une intervention fictive
+        const interventionFictive = {
+          id: interventionId,
+          description: 'Intervention de test',
+          datePlanifiee: new Date().toISOString(),
+          etat: 'PLANIFIEE',
+          adresse: '123 Rue de Test, Ville',
+          demandeur: 'Service Technique',
+          taches: [
+            {
+              id: 1,
+              libelle: 'Tâche de test',
+              description: 'Description de la tâche de test',
+              etat: 'A_FAIRE'
+            }
+          ]
+        };
+
+        // Retourner une intervention fictive pour tester le frontend
+        // return of(interventionFictive);
+        return throwError(() => new Error(`Erreur ${error.status}: Impossible de récupérer les détails de l'intervention`));
+      })
+    );
+  }}

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Demandes xmlns="http://example.com/gestion-interventions">
-                                                                    
+                                                                                        
+    
+    
+    
+    
+    
     
     
     
@@ -17,7 +22,12 @@
     
     
     <!-- Demandes vides - Prêt pour de nouvelles instances -->
-                                                                
+                                                                                    
+    
+    
+    
+    
+    
     
     
     
@@ -34,7 +44,12 @@
     
     
     <Demande>
-                                                                                                                                
+                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -50,7 +65,12 @@
         
         
         <id>1</id>
-                                                                                                                                
+                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -66,7 +86,12 @@
         
         
         <description>fce fvefdv efvev</description>
-                                                                                                                                
+                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -82,7 +107,12 @@
         
         
         <dateSoumission>2025-11-26</dateSoumission>
-                                                                                                                                
+                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -98,7 +128,12 @@
         
         
         <etat>TRAITEE</etat>
-                                                                                                                                
+                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -114,7 +149,12 @@
         
         
         <category>Eau &amp; Assainissement</category>
-                                                                                                                                
+                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -130,7 +170,12 @@
         
         
         <subCategory>rerf</subCategory>
-                                                                                                                                
+                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -146,7 +191,12 @@
         
         
         <priority>HIGH</priority>
-                                                                                                                                
+                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -162,7 +212,12 @@
         
         
         <contactEmail/>
-                                                                                                                                
+                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -178,7 +233,12 @@
         
         
         <citoyenId>1</citoyenId>
-                                                                                                                                
+                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -194,7 +254,12 @@
         
         
         <localisation>
-                                                                                                                                                                                                
+                                                                                                                                                                                                                                                            
+            
+            
+            
+            
+            
             
             
             
@@ -210,7 +275,12 @@
             
             
             <latitude>34.709618</latitude>
-                                                                                                                                                                                                
+                                                                                                                                                                                                                                                            
+            
+            
+            
+            
+            
             
             
             
@@ -226,7 +296,12 @@
             
             
             <longitude>10.680781</longitude>
-                                                                                                                                                                                                
+                                                                                                                                                                                                                                                            
+            
+            
+            
+            
+            
             
             
             
@@ -242,7 +317,12 @@
             
             
             <address/>
-                                                                                                                                                                                            
+                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -258,7 +338,12 @@
         
         
         </localisation>
-                                                                                                                                
+                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -274,7 +359,12 @@
         
         
         <photoIds>
-                                                                                                                                                                                                
+                                                                                                                                                                                                                                                            
+            
+            
+            
+            
+            
             
             
             
@@ -290,7 +380,12 @@
             
             
             <photoId>1</photoId>
-                                                                                                                                                                                            
+                                                                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -306,7 +401,12 @@
         
         
         </photoIds>
-                                                                                                                            
+                                                                                                                                                                    
+    
+    
+    
+    
+    
     
     
     
@@ -322,7 +422,7 @@
     
     
     </Demande>
-                                                            
+                                                                                
 
     
     
@@ -337,8 +437,18 @@
     
     
     
+    
+    
+    
+    
+    
     <Demande>
-                                                                                                                
+                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -352,7 +462,12 @@
         
         
         <id>2</id>
-                                                                                                                
+                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -366,7 +481,12 @@
         
         
         <description>fdsd dfgfdg fdgdfgdfgdf</description>
-                                                                                                                
+                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -380,7 +500,12 @@
         
         
         <dateSoumission>2025-11-29</dateSoumission>
-                                                                                                                
+                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -394,7 +519,12 @@
         
         
         <etat>TRAITEE</etat>
-                                                                                                                
+                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -408,7 +538,12 @@
         
         
         <category>Éclairage public</category>
-                                                                                                                
+                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -422,7 +557,12 @@
         
         
         <subCategory/>
-                                                                                                                
+                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -436,7 +576,12 @@
         
         
         <priority>MEDIUM</priority>
-                                                                                                                
+                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -450,7 +595,12 @@
         
         
         <contactEmail/>
-                                                                                                                
+                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -464,7 +614,12 @@
         
         
         <citoyenId>9</citoyenId>
-                                                                                                                
+                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -478,7 +633,12 @@
         
         
         <localisation>
-                                                                                                                                                                        
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
             
             
             
@@ -492,7 +652,12 @@
             
             
             <latitude>34.709618</latitude>
-                                                                                                                                                                        
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
             
             
             
@@ -506,7 +671,12 @@
             
             
             <longitude>10.680781</longitude>
-                                                                                                                                                                        
+                                                                                                                                                                                                                                    
+            
+            
+            
+            
+            
             
             
             
@@ -520,7 +690,12 @@
             
             
             <address/>
-                                                                                                                                                                    
+                                                                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -534,7 +709,12 @@
         
         
         </localisation>
-                                                                                                            
+                                                                                                                                                    
+    
+    
+    
+    
+    
     
     
     
@@ -548,7 +728,7 @@
     
     
     </Demande>
-                                                    
+                                                                        
 
     
     
@@ -561,8 +741,18 @@
     
     
     
+    
+    
+    
+    
+    
     <Demande>
-                                                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -574,7 +764,12 @@
         
         
         <id>3</id>
-                                                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -586,7 +781,12 @@
         
         
         <description>xcvxvx fvdfvdf vdsfvdfv</description>
-                                                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -598,7 +798,12 @@
         
         
         <dateSoumission>2025-11-29</dateSoumission>
-                                                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -610,7 +815,12 @@
         
         
         <etat>TRAITEE</etat>
-                                                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -622,7 +832,12 @@
         
         
         <category>Eau &amp; Assainissement</category>
-                                                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -634,7 +849,12 @@
         
         
         <subCategory/>
-                                                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -646,7 +866,12 @@
         
         
         <priority>MEDIUM</priority>
-                                                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -658,7 +883,12 @@
         
         
         <contactEmail/>
-                                                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -670,7 +900,12 @@
         
         
         <citoyenId>9</citoyenId>
-                                                                                                
+                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -682,7 +917,12 @@
         
         
         <localisation>
-                                                                                                                                                
+                                                                                                                                                                                                            
+            
+            
+            
+            
+            
             
             
             
@@ -694,7 +934,12 @@
             
             
             <latitude>34.709618</latitude>
-                                                                                                                                                
+                                                                                                                                                                                                            
+            
+            
+            
+            
+            
             
             
             
@@ -706,7 +951,12 @@
             
             
             <longitude>10.680781</longitude>
-                                                                                                                                                
+                                                                                                                                                                                                            
+            
+            
+            
+            
+            
             
             
             
@@ -718,7 +968,12 @@
             
             
             <address/>
-                                                                                                                                            
+                                                                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -730,7 +985,12 @@
         
         
         </localisation>
-                                                                                            
+                                                                                                                                    
+    
+    
+    
+    
+    
     
     
     
@@ -742,7 +1002,7 @@
     
     
     </Demande>
-                                            
+                                                                
 
     
     
@@ -753,8 +1013,18 @@
     
     
     
+    
+    
+    
+    
+    
     <Demande>
-                                                                                
+                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -764,7 +1034,12 @@
         
         
         <id>4</id>
-                                                                                
+                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -774,7 +1049,12 @@
         
         
         <description> erfgdg rzgfer erge gr</description>
-                                                                                
+                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -784,7 +1064,12 @@
         
         
         <dateSoumission>2025-12-01</dateSoumission>
-                                                                                
+                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -794,7 +1079,12 @@
         
         
         <etat>TRAITEE</etat>
-                                                                                
+                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -804,7 +1094,12 @@
         
         
         <category>Voirie</category>
-                                                                                
+                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -814,7 +1109,12 @@
         
         
         <subCategory/>
-                                                                                
+                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -824,7 +1124,12 @@
         
         
         <priority>MEDIUM</priority>
-                                                                                
+                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -834,7 +1139,12 @@
         
         
         <contactEmail/>
-                                                                                
+                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -844,7 +1154,12 @@
         
         
         <citoyenId>9</citoyenId>
-                                                                                
+                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -854,7 +1169,12 @@
         
         
         <localisation>
-                                                                                                                        
+                                                                                                                                                                                    
+            
+            
+            
+            
+            
             
             
             
@@ -864,7 +1184,12 @@
             
             
             <latitude>36.79537</latitude>
-                                                                                                                        
+                                                                                                                                                                                    
+            
+            
+            
+            
+            
             
             
             
@@ -874,7 +1199,12 @@
             
             
             <longitude>10.15686</longitude>
-                                                                                                                        
+                                                                                                                                                                                    
+            
+            
+            
+            
+            
             
             
             
@@ -884,7 +1214,12 @@
             
             
             <address/>
-                                                                                                                    
+                                                                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
@@ -894,7 +1229,12 @@
         
         
         </localisation>
-                                                                            
+                                                                                                                    
+    
+    
+    
+    
+    
     
     
     
@@ -904,7 +1244,7 @@
     
     
     </Demande>
-                                    
+                                                        
 
     
     
@@ -913,8 +1253,18 @@
     
     
     
+    
+    
+    
+    
+    
     <Demande>
-                                                                
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -922,7 +1272,12 @@
         
         
         <id>5</id>
-                                                                
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -930,7 +1285,12 @@
         
         
         <description>dzfz zefez eafez </description>
-                                                                
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -938,7 +1298,12 @@
         
         
         <dateSoumission>2025-12-03</dateSoumission>
-                                                                
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -946,7 +1311,12 @@
         
         
         <etat>TRAITEE</etat>
-                                                                
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -954,7 +1324,12 @@
         
         
         <category>Éclairage public</category>
-                                                                
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -962,7 +1337,12 @@
         
         
         <subCategory/>
-                                                                
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -970,7 +1350,12 @@
         
         
         <priority>MEDIUM</priority>
-                                                                
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -978,7 +1363,12 @@
         
         
         <contactEmail/>
-                                                                
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -986,7 +1376,12 @@
         
         
         <citoyenId>9</citoyenId>
-                                                                
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -994,7 +1389,12 @@
         
         
         <localisation>
-                                                                                                
+                                                                                                                                                            
+            
+            
+            
+            
+            
             
             
             
@@ -1002,7 +1402,12 @@
             
             
             <latitude>34.70962</latitude>
-                                                                                                
+                                                                                                                                                            
+            
+            
+            
+            
+            
             
             
             
@@ -1010,7 +1415,12 @@
             
             
             <longitude>10.680777</longitude>
-                                                                                                
+                                                                                                                                                            
+            
+            
+            
+            
+            
             
             
             
@@ -1018,7 +1428,12 @@
             
             
             <address/>
-                                                                                            
+                                                                                                                                                        
+        
+        
+        
+        
+        
         
         
         
@@ -1026,7 +1441,12 @@
         
         
         </localisation>
-                                                            
+                                                                                                    
+    
+    
+    
+    
+    
     
     
     
@@ -1034,222 +1454,661 @@
     
     
     </Demande>
-                            
+                                                
 
     
     
     
     
     
+    
+    
+    
+    
+    
     <Demande>
-                                                
+                                                                                        
+        
+        
+        
+        
+        
         
         
         
         
         <id>6</id>
-                                                
+                                                                                        
+        
+        
+        
+        
+        
         
         
         
         
         <description>mmmmmmmmmmmmmmmmmmmmmmmmm</description>
-                                                
+                                                                                        
+        
+        
+        
+        
+        
         
         
         
         
         <dateSoumission>2025-12-06</dateSoumission>
-                                                
+                                                                                        
+        
+        
+        
+        
+        
         
         
         
         
         <etat>TRAITEE</etat>
-                                                
+                                                                                        
+        
+        
+        
+        
+        
         
         
         
         
         <category>Déchets</category>
-                                                
+                                                                                        
+        
+        
+        
+        
+        
         
         
         
         
         <subCategory/>
-                                                
+                                                                                        
+        
+        
+        
+        
+        
         
         
         
         
         <priority>MEDIUM</priority>
-                                                
+                                                                                        
+        
+        
+        
+        
+        
         
         
         
         
         <contactEmail/>
-                                                
+                                                                                        
+        
+        
+        
+        
+        
         
         
         
         
         <citoyenId>9</citoyenId>
-                                                
+                                                                                        
+        
+        
+        
+        
+        
         
         
         
         
         <localisation>
-                                                                        
+                                                                                                                                    
+            
+            
+            
+            
+            
             
             
             
             
             <latitude>36.8065</latitude>
-                                                                        
+                                                                                                                                    
+            
+            
+            
+            
+            
             
             
             
             
             <longitude>10.1815</longitude>
-                                                                        
+                                                                                                                                    
+            
+            
+            
+            
+            
             
             
             
             
             <address/>
-                                                                    
+                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
         
         </localisation>
-                                                
+                                                                                        
+        
+        
+        
+        
+        
         
         
         
         
         <photoIds>
-                                                                        
+                                                                                                                                    
+            
+            
+            
+            
+            
             
             
             
             
             <photoId>1</photoId>
-                                                                    
+                                                                                                                                
+        
+        
+        
+        
+        
         
         
         
         
         </photoIds>
-                                            
+                                                                                    
+    
+    
+    
+    
+    
     
     
     
     
     </Demande>
-                    
+                                        
 
     
     
     
+    
+    
+    
+    
+    
     <Demande>
-                                
+                                                                        
+        
+        
+        
+        
+        
         
         
         <id>7</id>
-                                
+                                                                        
+        
+        
+        
+        
+        
         
         
         <description>mmmmmmmmmmmmmmmmmmmmmmmmmm</description>
-                                
+                                                                        
+        
+        
+        
+        
+        
         
         
         <dateSoumission>2025-12-06</dateSoumission>
-                                
+                                                                        
+        
+        
+        
+        
+        
         
         
         <etat>TRAITEE</etat>
-                                
+                                                                        
+        
+        
+        
+        
+        
         
         
         <category>Éclairage public</category>
-                                
+                                                                        
+        
+        
+        
+        
+        
         
         
         <subCategory/>
-                                
+                                                                        
+        
+        
+        
+        
+        
         
         
         <priority>MEDIUM</priority>
-                                
+                                                                        
+        
+        
+        
+        
+        
         
         
         <contactEmail/>
-                                
+                                                                        
+        
+        
+        
+        
+        
         
         
         <citoyenId>9</citoyenId>
-                                
+                                                                        
+        
+        
+        
+        
+        
         
         
         <localisation>
-                                                
+                                                                                                            
+            
+            
+            
+            
+            
             
             
             <latitude>36.8065</latitude>
-                                                
+                                                                                                            
+            
+            
+            
+            
+            
             
             
             <longitude>10.1815</longitude>
-                                                
+                                                                                                            
+            
+            
+            
+            
+            
             
             
             <address/>
-                                            
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         </localisation>
-                                
+                                                                        
+        
+        
+        
+        
+        
         
         
         <photoIds>
-                                                
+                                                                                                            
+            
+            
+            
+            
+            
             
             
             <photoId>1</photoId>
-                                            
+                                                                                                        
+        
+        
+        
+        
+        
         
         
         </photoIds>
-                            
+                                                                    
+    
+    
+    
+    
+    
     
     
     </Demande>
-            
+                                
 
+    
+    
+    
+    
+    
+    
+    <Demande>
+                                                        
+        
+        
+        
+        
+        
+        <id>8</id>
+                                                        
+        
+        
+        
+        
+        
+        <description>llllllllllllllllllllllllllllllllll</description>
+                                                        
+        
+        
+        
+        
+        
+        <dateSoumission>2025-12-06</dateSoumission>
+                                                        
+        
+        
+        
+        
+        
+        <etat>TRAITEE</etat>
+                                                        
+        
+        
+        
+        
+        
+        <category>Éclairage public</category>
+                                                        
+        
+        
+        
+        
+        
+        <subCategory/>
+                                                        
+        
+        
+        
+        
+        
+        <priority>MEDIUM</priority>
+                                                        
+        
+        
+        
+        
+        
+        <contactEmail/>
+                                                        
+        
+        
+        
+        
+        
+        <citoyenId>9</citoyenId>
+                                                        
+        
+        
+        
+        
+        
+        <localisation>
+                                                                                    
+            
+            
+            
+            
+            
+            <latitude>36.8065</latitude>
+                                                                                    
+            
+            
+            
+            
+            
+            <longitude>10.1815</longitude>
+                                                                                    
+            
+            
+            
+            
+            
+            <address/>
+                                                                                
+        
+        
+        
+        
+        
+        </localisation>
+                                                    
+    
+    
+    
+    
+    
+    </Demande>
+                        
+
+    
+    
+    
+    
+    <Demande>
+                                        
+        
+        
+        
+        <id>9</id>
+                                        
+        
+        
+        
+        <description>k,iuhuesdfuerk</description>
+                                        
+        
+        
+        
+        <dateSoumission>2025-12-06</dateSoumission>
+                                        
+        
+        
+        
+        <etat>TRAITEE</etat>
+                                        
+        
+        
+        
+        <category>Éclairage public</category>
+                                        
+        
+        
+        
+        <subCategory/>
+                                        
+        
+        
+        
+        <priority>MEDIUM</priority>
+                                        
+        
+        
+        
+        <contactEmail/>
+                                        
+        
+        
+        
+        <citoyenId>9</citoyenId>
+                                        
+        
+        
+        
+        <localisation>
+                                                            
+            
+            
+            
+            <latitude>36.8065</latitude>
+                                                            
+            
+            
+            
+            <longitude>10.1815</longitude>
+                                                            
+            
+            
+            
+            <address/>
+                                                        
+        
+        
+        
+        </localisation>
+                                    
+    
+    
+    
+    </Demande>
+                
+
+    
+    
+    <Demande>
+                        
+        
+        <id>10</id>
+                        
+        
+        <description>aaaaaaaaaaaaaa</description>
+                        
+        
+        <dateSoumission>2025-12-06</dateSoumission>
+                        
+        
+        <etat>SOUMISE</etat>
+                        
+        
+        <category>Éclairage public</category>
+                        
+        
+        <subCategory/>
+                        
+        
+        <priority>MEDIUM</priority>
+                        
+        
+        <contactEmail>eya</contactEmail>
+                        
+        
+        <citoyenId>null</citoyenId>
+                        
+        
+        <localisation>
+                                    
+            
+            <latitude>36.8065</latitude>
+                                    
+            
+            <longitude>10.1815</longitude>
+                                    
+            
+            <address/>
+                                
+        
+        </localisation>
+                    
+    
+    </Demande>
+        
     
     <Demande>
                 
-        <id>8</id>
+        <id>11</id>
                 
-        <description>llllllllllllllllllllllllllllllllll</description>
+        <description>aaaaaaaaaaaa</description>
                 
-        <dateSoumission>2025-12-06</dateSoumission>
+        <dateSoumission>2025-12-07</dateSoumission>
                 
-        <etat>TRAITEE</etat>
+        <etat>SOUMISE</etat>
                 
-        <category>Éclairage public</category>
+        <category>Eau &amp; Assainissement</category>
                 
         <subCategory/>
                 
         <priority>MEDIUM</priority>
                 
-        <contactEmail/>
+        <contactEmail>eyaeyaeya</contactEmail>
                 
         <citoyenId>9</citoyenId>
+                
+        <citoyenId>null</citoyenId>
+                
+        <isAnonymous>true</isAnonymous>
                 
         <localisation>
                         
@@ -1263,4 +2122,22 @@
             
     </Demande>
     
+    <Demande>
+        <id>12</id>
+        <description>tan  tan tan tan</description>
+        <dateSoumission>2025-12-07</dateSoumission>
+        <etat>SOUMISE</etat>
+        <category>Éclairage public</category>
+        <subCategory/>
+        <priority>MEDIUM</priority>
+        <contactEmail>aloooo</contactEmail>
+        <citoyenId>9</citoyenId>
+        <citoyenId>null</citoyenId>
+        <isAnonymous>true</isAnonymous>
+        <localisation>
+            <latitude>36.8065</latitude>
+            <longitude>10.1815</longitude>
+            <address/>
+        </localisation>
+    </Demande>
 </Demandes>
