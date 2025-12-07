@@ -1,34 +1,34 @@
 <!-- Dans DemandesAjout.xsd -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           targetNamespace="http://www.sgiiville.tn/DemandesAjout"
-           xmlns:tns="http://www.sgiiville.tn/DemandesAjout"
-           elementFormDefault="qualified">
+targetNamespace="http://www.sgiiville.tn/DemandesAjout"
+xmlns:tns="http://www.sgiiville.tn/DemandesAjout"
+elementFormDefault="qualified">
+<xs:include schemaLocation="../common/typesBase.xsd"/>
 
-    <xs:element name="DemandesAjout">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="DemandeAjout" type="tns:DemandeAjoutType" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
+<xs:element name="DemandesAjout">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="DemandeAjout" type="tns:DemandeAjoutType" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
 
-    <xs:complexType name="DemandeAjoutType">
-        <xs:sequence>
-            <xs:element name="id" type="xs:int"/>
-            <xs:element name="typeDemande" type="xs:string"/>
-            <xs:element name="designation" type="xs:string"/>
-            <xs:element name="quantite" type="xs:int"/>
-            <xs:element name="budget" type="xs:double"/>
-            <xs:element name="justification" type="xs:string"/>
-            <xs:element name="etat" type="xs:string"/>
-            <xs:element name="dateDemande" type="xs:dateTime"/>
-            <xs:element name="chefId" type="xs:int"/>
-            <xs:element name="adminId" type="xs:int" minOccurs="0"/>
-            <xs:element name="dateTraitement" type="xs:dateTime" minOccurs="0"/>
-            <xs:element name="motifRefus" type="xs:string" minOccurs="0"/>
-            <!-- Nouveaux champs optionnels -->
-            <xs:element name="ressourceId" type="xs:int" minOccurs="0"/>
-            <xs:element name="equipementId" type="xs:int" minOccurs="0"/>
-        </xs:sequence>
-    </xs:complexType>
+<xs:complexType name="DemandeAjoutType">
+<xs:sequence>
+<xs:element name="id" type="xs:int"/>
+<xs:element name="typeDemande" type="xs:string"/>
+<xs:element name="designation" type="xs:string"/>
+<xs:element name="quantite" type="xs:int"/>
+<xs:element name="budget" type="xs:double"/>
+<xs:element name="justification" type="xs:string"/>
+<xs:element name="etat" type="tns:EtatDemandeAjoutType"/>
+<xs:element name="dateDemande" type="xs:dateTime"/>
+<xs:element name="chefId" type="xs:int"/>
+<xs:element name="adminId" type="xs:int" minOccurs="0"/>
+<xs:element name="dateTraitement" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="motifRefus" type="xs:string" minOccurs="0"/>
+<xs:element name="ressourceId" type="xs:int" minOccurs="0"/>
+<xs:element name="equipementId" type="xs:int" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
 </xs:schema>

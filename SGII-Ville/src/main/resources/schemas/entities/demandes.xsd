@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           targetNamespace="http://example.com/gestion-interventions" 
-           xmlns:tns="http://example.com/gestion-interventions" 
-           elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://example.com/gestion-interventions"
+xmlns:tns="http://example.com/gestion-interventions"
+elementFormDefault="qualified">
 
-  <xs:include schemaLocation="../common/typesBase.xsd"/>
-  <xs:include schemaLocation="../common/geo.xsd"/>
+<xs:include schemaLocation="../common/typesBase.xsd"/>
+<xs:include schemaLocation="../common/geo.xsd"/>
 
-  <!-- Demande citoyen (1 Citoyen -> * Demandes) -->
-  <xs:complexType name="DemandeType">
-    <xs:sequence>
-      <xs:element name="id" type="xs:int"/>
-      <xs:element name="citoyenId" type="xs:int"/>
-      <xs:element name="description" type="xs:string"/>
-      <xs:element name="dateSoumission" type="xs:date"/>
-      <xs:element name="etat" type="tns:EtatDemandeType"/>
-      <xs:element name="localisation" type="tns:GeoPointType"/>
-      <!-- Relation 1 Demande -> 1..* Photos -->
-      <xs:element name="photoIds" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="photoId" type="xs:int" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-  </xs:complexType>
+<xs:complexType name="DemandeType">
+<xs:sequence>
+<xs:element name="id" type="xs:int"/>
+<xs:element name="citoyenId" type="xs:int"/>
+<xs:element name="description" type="xs:string"/>
+<xs:element name="dateSoumission" type="xs:date"/>
+<xs:element name="isAnonyme" type="xs:boolean"/>
+<xs:element name="etat" type="tns:EtatDemandeType"/>
+<xs:element name="localisation" type="tns:GeoPointType"/>
 
+<!-- Relation 1 Demande -> 1..* Photos -->
+
+<xs:element name="photoIds" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="photoId" type="xs:int"  minOccurs="1" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
 </xs:schema>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://example.com/gestion-interventions/chefDeService"
+           xmlns:tns="http://example.com/gestion-interventions/chefDeService"
+           xmlns:base="http://example.com/gestion-interventions/common"
+           elementFormDefault="qualified">
+
+    <xs:import namespace="http://example.com/gestion-interventions/common"
+               schemaLocation="../common/utilisateur-base.xsd"/>
+
+        <xs:complexType name="ChefDeServiceType">
+                <xs:complexContent>
+                        <xs:extension base="base:UtilisateurType"/>
+                </xs:complexContent>
+        </xs:complexType>
+
+        <!-- Liste des chefs de service -->
+        <xs:element name="ChefDeServices">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="ChefDeService" type="tns:ChefDeServiceType" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+</xs:schema>

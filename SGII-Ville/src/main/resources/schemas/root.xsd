@@ -5,17 +5,18 @@
            elementFormDefault="qualified">
 
   <!-- Imports de tous les types -->
-  <xs:include schemaLocation="entities/utilisateurs.xsd"/>
+  <xs:include schemaLocation="common/utilisateur-base.xsd"/>
   <xs:include schemaLocation="entities/demandes.xsd"/>
   <xs:include schemaLocation="entities/interventions.xsd"/>
   <xs:include schemaLocation="entities/fournisseurs.xsd"/>
   <xs:include schemaLocation="entities/equipements.xsd"/>
   <xs:include schemaLocation="entities/ressources.xsd"/>
+    <xs:include schemaLocation="entities/demandesAjout.xsd"/>
+
   <!-- SUPPRIMER maindoeuvre.xsd -->
   <xs:include schemaLocation="entities/taches.xsd"/>
   <xs:include schemaLocation="entities/photos.xsd"/>
   <xs:include schemaLocation="workflow/notifications.xsd"/>
-  <xs:include schemaLocation="workflow/demandesAjout.xsd"/>
 
   <!-- Élément racine -->
   <xs:element name="SystemeGestionInterventions">
