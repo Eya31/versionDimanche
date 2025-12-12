@@ -44,11 +44,7 @@ public class TacheXmlService {
     /**
      * Récupère toutes les tâches d'une intervention
      */
-    public List<Tache> findByInterventionId(int interventionId) {
-        return findAll().stream()
-                .filter(t -> t.getInterventionId() == interventionId)
-                .collect(Collectors.toList());
-    }
+    
 
     /**
      * Récupère toutes les tâches d'une main-d'œuvre
@@ -350,6 +346,49 @@ public List<MainDOeuvreController.HistoriqueEtatTache> getHistoriqueByTacheId(in
     public List<Tache> getAllTaches() {
         return findAll(); // Si vous avez déjà une méthode findAll()
     }
-    
+    public List<Tache> findByInterventionId(int interventionId) {
+    System.out.println("🔍 findByInterventionId appelé avec interventionId: " + interventionId);
+    List<Tache> result = new ArrayList<>();
+    try {
+        Document doc = xmlService.loadXmlDocument("Taches");
+        if (doc == null) {
+            System.out.println("❌ Document XML Taches est null");
+            return result;
+        }
+        
+        NodeList nodes = doc.getElementsByTagNameNS(xmlService.getNamespaceUri(), "Tache");
+        System.out.println("📊 Total nœuds Tache trouvés: " + nodes.getLength());
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            try {
+                Node node = nodes.item(i);
+                if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element el = (Element) node;
+                    Tache tache = parseTache(el);
+                    
+                    if (tache != null) {
+                        System.out.println("   📝 Tâche ID: " + tache.getId() + 
+                                         " | InterventionId: " + tache.getInterventionId() + 
+                                         " | État: " + tache.getEtat());
+                        
+                        if (tache.getInterventionId() == interventionId) {
+                            System.out.println("✅ Tâche correspondante trouvée !");
+                            result.add(tache);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("❌ Erreur parsing tâche: " + e.getMessage());
+            }
+        }
+        
+        System.out.println("📊 Résultat: " + result.size() + " tâches pour intervention #" + interventionId);
+        
+    } catch (Exception e) {
+        System.err.println("❌ Erreur dans findByInterventionId: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return result;
+}
 }
 

@@ -58,13 +58,149 @@ export class MainDOeuvreTacheService {
    * Terminer une tâche (état EN_COURS → TERMINEE)
    */
   terminerTache(tacheId: number, request: TerminerTacheRequest): Observable<Tache> {
-    const changerEtatRequest: ChangerEtatTacheRequest = {
+    return this.http.put<Tache>(`${this.apiUrl}/taches/${tacheId}/etat`, {
       nouvelEtat: 'TERMINEE',
       commentaire: request.commentaire,
       tempsPasseMinutes: request.tempsPasseMinutes
-    };
-    return this.changerEtatTache(tacheId, changerEtatRequest);
+    }).pipe(
+      tap(tacheMaj => {
+        console.log('✅ Tâche terminée');
+
+        // Vérifier si toutes les tâches sont terminées
+        this.verifierToutesTachesTerminees(tacheMaj.interventionId).subscribe({
+          next: (result: any) => {
+            if (result.toutesTerminees) {
+              this.showSuccessNotification(
+                '🎉 INTERVENTION TERMINÉE',
+                `Toutes les tâches de l'intervention #${tacheMaj.interventionId} sont terminées !\n` +
+                `Le technicien a été notifié pour vérification.`
+              );
+            } else {
+              this.showInfoNotification(
+                '📊 Progression',
+                `Tâche terminée !\n` +
+                `Progression: ${result.tachesTerminees}/${result.totalTaches} tâches terminées\n` +
+                `En attente: ${result.tachesAFaire} à faire, ${result.tachesEnCours} en cours`
+              );
+            }
+          }
+        });
+      })
+    );
   }
+
+  verifierToutesTachesTerminees(interventionId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/interventions/${interventionId}/verifier-taches`);
+  }
+
+  // AJOUTER CES MÉTHODES :
+  private showSuccessNotification(title: string, message: string): void {
+    this.showNotification(title, message, 'success');
+  }
+
+  private showInfoNotification(title: string, message: string): void {
+    this.showNotification(title, message, 'info');
+  }
+
+  private showNotification(title: string, message: string, type: 'success' | 'info' | 'error'): void {
+    // Créer un élément de notification
+    const notification = document.createElement('div');
+    notification.className = `custom-notification ${type}`;
+
+    // Style CSS
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      z-index: 10000;
+      max-width: 400px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideInRight 0.3s ease-out;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    `;
+
+    // Couleur selon le type
+    if (type === 'success') {
+      notification.style.background = 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)';
+    } else if (type === 'info') {
+      notification.style.background = 'linear-gradient(135deg, #2196F3 0%, #0D47A1 100%)';
+    } else {
+      notification.style.background = 'linear-gradient(135deg, #F44336 0%, #B71C1C 100%)';
+    }
+
+    // Contenu HTML
+    notification.innerHTML = `
+      <div style="font-weight: bold; margin-bottom: 5px; font-size: 1.1em;">${title}</div>
+      <div style="font-size: 0.9em; line-height: 1.4; white-space: pre-line;">${message}</div>
+    `;
+
+    // Ajouter au DOM
+    document.body.appendChild(notification);
+
+    // Supprimer après 5 secondes
+    setTimeout(() => {
+      notification.style.animation = 'slideOutRight 0.3s ease-out';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
+    }, 5000);
+
+    // Ajouter les animations CSS si elles n'existent pas
+    this.addNotificationStyles();
+  }
+
+  private addNotificationStyles(): void {
+    if (document.getElementById('notification-styles')) return;
+
+    const style = document.createElement('style');
+    style.id = 'notification-styles';
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideOutRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+
+      .custom-notification.success {
+        border-left: 4px solid #2E7D32;
+      }
+
+      .custom-notification.info {
+        border-left: 4px solid #0D47A1;
+      }
+
+      .custom-notification.error {
+        border-left: 4px solid #B71C1C;
+      }
+    `;
+
+    document.head.appendChild(style);
+  }
+/**
+ * Vérifier si toutes les tâches d'une intervention sont terminées
+ */
+
 
   /**
    * Marquer une tâche comme vérifiée (état TERMINEE → VERIFIEE)

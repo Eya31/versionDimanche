@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <RessourcesMaterielles xmlns="http://example.com/gestion-interventions">
-                                                    
+                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -13,7 +23,17 @@
     
     
     <!-- Ressources matérielles vides - Prêt pour de nouvelles instances -->
-                                                
+                                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -26,7 +46,17 @@
     
     
     <RessourceMaterielle>
-                                                                                                
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -38,7 +68,17 @@
         
         
         <id>1</id>
-                                                                                                
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -50,7 +90,7 @@
         
         
         <designation>tuyaux</designation>
-                                                                                                
+                                                                                                                                                                                
         
         
         
@@ -61,8 +101,6 @@
         
         
         
-        <quantiteEnStock>4</quantiteEnStock>
-                                                                                                
         
         
         
@@ -73,8 +111,40 @@
         
         
         
-        <valeurAchat>1000.0</valeurAchat>
-                                                                                                
+        <quantiteEnStock>8</quantiteEnStock>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <valeurAchat>830,40</valeurAchat>
+                                                                                                                                                                                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -86,7 +156,17 @@
         
         
         <unite/>
-                                                                                            
+                                                                                                                                                                            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -98,10 +178,83 @@
     
     
     </RessourceMaterielle>
-                                            
+                                                                                    
 
 
 
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    <RessourceMaterielle>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <id>2</id>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <designation>aaah</designation>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <quantiteEnStock>0</quantiteEnStock>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <valeurAchat>400,00</valeurAchat>
+                                                                        
+        
+        
+        
+        
+        
+        
+        
+        <unite>unité</unite>
+                                                                    
+    
+    
+    
+    
+    
+    
+    
+    </RessourceMaterielle>
+                                
 
 
 

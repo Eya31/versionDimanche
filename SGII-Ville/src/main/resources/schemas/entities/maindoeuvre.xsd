@@ -2,30 +2,24 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://example.com/gestion-interventions"
            xmlns:tns="http://example.com/gestion-interventions"
+           xmlns:base="http://example.com/gestion-interventions/common"
            elementFormDefault="qualified">
 
-  <!-- Rendre ce fichier autonome comme `techniciens.xsd` :
-       - inclure les types de base
-       - redéfinir un UtilisateurType local (pour compatibilité)
-       - définir MainDOeuvreType et l'élément racine
-  -->
+  <!-- Import du type base -->
+  <xs:import namespace="http://example.com/gestion-interventions/common"
+             schemaLocation="../common/utilisateur-base.xsd"/>
 
-  <xs:include schemaLocation="../common/typesBase.xsd"/>
-  <xs:include schemaLocation="../common/contacts.xsd"/>
-
-
-
-     <xs:complexType name="MainDOeuvreType">
-        <xs:complexContent>
-            <xs:extension base="base:UtilisateurType">
-                <xs:sequence>
-                    <xs:element name="prenom" type="xs:string"/>
-                    <xs:element name="disponibilite" type="xs:string"/>
-                    <xs:element name="competence" type="xs:string"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
+  <xs:complexType name="MainDOeuvreType">
+      <xs:complexContent>
+          <xs:extension base="base:UtilisateurType">
+              <xs:sequence>
+                  <xs:element name="prenom" type="xs:string"/>
+                  <xs:element name="disponibilite" type="xs:string"/>
+                  <xs:element name="competence" type="xs:string"/>
+              </xs:sequence>
+          </xs:extension>
+      </xs:complexContent>
+  </xs:complexType>
 
   <!-- Liste des mains d'oeuvre -->
   <xs:element name="MainDOeuvres">

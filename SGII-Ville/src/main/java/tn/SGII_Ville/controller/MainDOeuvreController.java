@@ -43,9 +43,23 @@ public class MainDOeuvreController {
 
     // Classe pour gérer les requêtes de changement d'état
     public static class ChangerEtatTacheRequest {
+        @com.fasterxml.jackson.annotation.JsonProperty("nouvelEtat")
         private String nouvelEtat;
+        
+        @com.fasterxml.jackson.annotation.JsonProperty("commentaire")
         private String commentaire;
+        
+        @com.fasterxml.jackson.annotation.JsonProperty("tempsPasseMinutes")
         private Integer tempsPasseMinutes;
+
+        // Constructors
+        public ChangerEtatTacheRequest() {}
+        
+        public ChangerEtatTacheRequest(String nouvelEtat, String commentaire, Integer tempsPasseMinutes) {
+            this.nouvelEtat = nouvelEtat;
+            this.commentaire = commentaire;
+            this.tempsPasseMinutes = tempsPasseMinutes;
+        }
 
         // Getters et Setters
         public String getNouvelEtat() { return nouvelEtat; }
@@ -373,33 +387,59 @@ public ResponseEntity<List<Tache>> getMyTaches(@RequestParam(required = false) S
      * Change l'état d'une tâche (méthode générique)
      */
     @PutMapping("/taches/{tacheId}/etat")
-    public ResponseEntity<Tache> changerEtatTache(
+    public ResponseEntity<?> changerEtatTache(
             @PathVariable int tacheId,
             @RequestBody ChangerEtatTacheRequest request) {
         try {
+            // Validation du nouvelEtat
+            if (request == null || request.getNouvelEtat() == null || request.getNouvelEtat().trim().isEmpty()) {
+                System.out.println("❌ REQUEST NULL OR NEWETAT EMPTY: request=" + request);
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "nouvelEtat est obligatoire");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            }
+            
+            System.out.println("✅ CHANGEMENT ETAT - TacheId: " + tacheId + ", NouvelEtat: " + request.getNouvelEtat());
+
             AgentMainDOeuvre agent = getCurrentAgent();
             if (agent == null) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Utilisateur non authentifié");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
             }
 
             MainDOeuvre mainDOeuvre = mainDOeuvreService.findById(agent.getMainDOeuvreId());
             if (mainDOeuvre == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Fiche main-d'œuvre non trouvée");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
             }
 
             Tache tache = tacheService.findById(tacheId);
             if (tache == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Tâche non trouvée");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
             }
 
             // Vérifier que la tâche est bien assignée à cet agent
             if (tache.getMainDOeuvreId() == null || tache.getMainDOeuvreId() != mainDOeuvre.getId()) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Cette tâche n'est pas assignée à cet agent");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
             }
 
             // Validation des transitions d'état
+            if (tache.getEtat().equals(request.getNouvelEtat())) {
+                // Idempotent transition - task is already in this state
+                System.out.println("⚠️ IDEMPOTENT TRANSITION: Task already in state " + tache.getEtat());
+                return ResponseEntity.ok(tache); // Return success without doing anything
+            }
+            
             if (!isTransitionEtatValide(tache.getEtat(), request.getNouvelEtat())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                Map<String, String> error = new HashMap<>();
+                error.put("error", String.format("Transition invalide: %s → %s", tache.getEtat(), request.getNouvelEtat()));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
             }
 
             // Mettre à jour l'état et les dates
@@ -431,7 +471,12 @@ public ResponseEntity<List<Tache>> getMyTaches(@RequestParam(required = false) S
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Erreur lors du changement d'état: " + e.getMessage());
+            if (e.getCause() != null) {
+                error.put("cause", e.getCause().getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
 
@@ -480,7 +525,7 @@ public ResponseEntity<List<Tache>> getMyTaches(@RequestParam(required = false) S
      * Commencer une tâche (méthode spécifique)
      */
     @PostMapping("/taches/{tacheId}/commencer")
-    public ResponseEntity<Tache> commencerTache(@PathVariable int tacheId) {
+    public ResponseEntity<?> commencerTache(@PathVariable int tacheId) {
         ChangerEtatTacheRequest request = new ChangerEtatTacheRequest();
         request.setNouvelEtat("EN_COURS");
         request.setCommentaire("Tâche commencée");
@@ -491,17 +536,110 @@ public ResponseEntity<List<Tache>> getMyTaches(@RequestParam(required = false) S
      * POST /api/main-doeuvre/taches/{tacheId}/terminer
      * Terminer une tâche (méthode spécifique)
      */
-    @PostMapping("/taches/{tacheId}/terminer")
-    public ResponseEntity<Tache> terminerTache(
-            @PathVariable int tacheId,
-            @RequestBody TerminerTacheRequest request) {
-        ChangerEtatTacheRequest changerEtatRequest = new ChangerEtatTacheRequest();
-        changerEtatRequest.setNouvelEtat("TERMINEE");
-        changerEtatRequest.setCommentaire(request.getCommentaire());
-        changerEtatRequest.setTempsPasseMinutes(request.getTempsPasseMinutes());
-        return changerEtatTache(tacheId, changerEtatRequest);
-    }
+/**
+ * POST /api/main-doeuvre/taches/{tacheId}/terminer
+ * Terminer une tâche
+ */
+@PostMapping("/taches/{tacheId}/terminer")
+public ResponseEntity<Tache> terminerTache(
+        @PathVariable int tacheId,
+        @RequestBody TerminerTacheRequest request) {
+    try {
+        AgentMainDOeuvre agent = getCurrentAgent();
+        if (agent == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
+        MainDOeuvre mainDOeuvre = mainDOeuvreService.findById(agent.getMainDOeuvreId());
+        if (mainDOeuvre == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Tache tache = tacheService.findById(tacheId);
+        if (tache == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        // Vérifier que la tâche est bien assignée à cet agent
+        if (tache.getMainDOeuvreId() == null || tache.getMainDOeuvreId() != mainDOeuvre.getId()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // Validation des transitions d'état
+        if (!isTransitionEtatValide(tache.getEtat(), "TERMINEE")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(null); // État non autorisé
+        }
+
+        // Sauvegarder l'ancien état pour la notification (non utilisé maintenant)
+        // String ancienEtat = tache.getEtat();
+        
+        // Mettre à jour la tâche
+        tache.setEtat("TERMINEE");
+        tache.setDateFin(LocalDateTime.now());
+        if (request.getCommentaire() != null && !request.getCommentaire().isEmpty()) {
+            tache.setCommentaireMainDOeuvre(request.getCommentaire());
+        }
+        if (request.getTempsPasseMinutes() != null) {
+            tache.setTempsPasseMinutes(request.getTempsPasseMinutes());
+        }
+
+        Tache saved = tacheService.save(tache);
+        
+        // 1. Notifier le technicien que CETTE tâche est terminée
+        // DÉSACTIVÉ: Ne pas envoyer de notifications individuelles
+        // notifierTerminaisonTache(tache, mainDOeuvre, ancienEtat);
+        
+        // 2. VÉRIFIER SI TOUTES LES TÂCHES DE L'INTERVENTION SONT TERMINÉES
+        //    Si oui, envoyer une notification spéciale (seule notification à envoyer)
+        verifierEtNotifierSiToutesTachesTerminees(tache.getInterventionId());
+
+        return ResponseEntity.ok(saved);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+
+
+/**
+ * Notifier le technicien qu'une tâche spécifique est terminée
+ * (DÉSACTIVÉE - ne plus envoyer les notifications individuelles)
+ * Laissée comme référence au cas où on souhaiterait la réactiver
+ 
+private void notifierTerminaisonTache(Tache tache, MainDOeuvre mainDOeuvre, String ancienEtat) {
+    try {
+        Intervention intervention = interventionService.findById(tache.getInterventionId());
+        if (intervention != null) {
+            String message = String.format(
+                "✅ TÂCHE TERMINÉE\n" +
+                "La main-d'œuvre %s %s a terminé la tâche:\n" +
+                "• Tâche: %s (ID: #%d)\n" +
+                "• Intervention: #%d\n" +
+                "• Commentaire: %s\n" +
+                "• Temps passé: %d minutes",
+                mainDOeuvre.getNom(), mainDOeuvre.getPrenom(),
+                tache.getLibelle(), tache.getId(),
+                intervention.getId(),
+                tache.getCommentaireMainDOeuvre() != null ? tache.getCommentaireMainDOeuvre() : "Aucun commentaire",
+                tache.getTempsPasseMinutes() != null ? tache.getTempsPasseMinutes() : 0
+            );
+
+            // Notifier le technicien
+            notificationService.notifierTechnicien(intervention.getTechnicienId(), message);
+            
+            // Notifier le chef de service si présent
+            if (intervention.getChefServiceId() != null) {
+                notificationService.notifierChefService(intervention.getChefServiceId(), message);
+            }
+        }
+    } catch (Exception e) {
+        System.err.println("❌ Erreur notification terminaison tâche: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+*/
     /**
      * GET /api/main-doeuvre/taches/{tacheId}/historique
      * Récupère l'historique des états d'une tâche
@@ -547,6 +685,11 @@ public ResponseEntity<List<Tache>> getMyTaches(@RequestParam(required = false) S
      * Valide les transitions d'état autorisées
      */
     private boolean isTransitionEtatValide(String etatActuel, String nouvelEtat) {
+        // Allow idempotent transitions (same state)
+        if (etatActuel.equals(nouvelEtat)) {
+            return true;
+        }
+        
         // Logique de validation des transitions
         switch (etatActuel) {
             case "A_FAIRE":
@@ -569,27 +712,42 @@ public ResponseEntity<List<Tache>> getMyTaches(@RequestParam(required = false) S
     /**
      * Notification des changements d'état
      */
-    private void notifierChangementEtat(Tache tache, MainDOeuvre mainDOeuvre, String nouvelEtat) {
-        try {
-            Intervention intervention = interventionService.findById(tache.getInterventionId());
-            if (intervention != null) {
-                String message = String.format(
-                    "La main-d'œuvre %s %s a changé l'état de la tâche \"%s\" à %s (Intervention #%d)",
-                    mainDOeuvre.getNom(), mainDOeuvre.getPrenom(), tache.getLibelle(), nouvelEtat, intervention.getId()
-                );
-
-                // Notifier le technicien
-                notificationService.notifierTechnicien(intervention.getTechnicienId(), message);
-
-                // Notifier le chef de service si présent
-                if (intervention.getChefServiceId() != null) {
-                    notificationService.notifierChefService(intervention.getChefServiceId(), message);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // Log l'erreur mais ne pas faire échouer la requête principale
+    /**
+ * Notification des changements d'état (générique)
+ * Ne pas notifier pour TERMINEE, car on le fait spécifiquement dans notifierTerminaisonTache
+ */
+private void notifierChangementEtat(Tache tache, MainDOeuvre mainDOeuvre, String nouvelEtat) {
+    try {
+        // Ne pas notifier pour TERMINEE, car on le fait dans notifierTerminaisonTache
+        if ("TERMINEE".equals(nouvelEtat)) {
+            return;
         }
+        
+        Intervention intervention = interventionService.findById(tache.getInterventionId());
+        if (intervention != null) {
+            String message = String.format(
+                "🔄 CHANGEMENT D'ÉTAT\n" +
+                "La main-d'œuvre %s %s a changé l'état de la tâche:\n" +
+                "• Tâche: %s\n" +
+                "• Nouvel état: %s\n" +
+                "• Intervention: #%d",
+                mainDOeuvre.getNom(), mainDOeuvre.getPrenom(),
+                tache.getLibelle(), nouvelEtat,
+                intervention.getId()
+            );
+
+            // Notifier le technicien
+            notificationService.notifierTechnicien(intervention.getTechnicienId(), message);
+            
+            // Notifier le chef de service si présent
+            if (intervention.getChefServiceId() != null) {
+                notificationService.notifierChefService(intervention.getChefServiceId(), message);
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
 
     /**
      * Génère un historique à partir des dates et états de la tâche
@@ -775,6 +933,180 @@ public ResponseEntity<?> debug() {
     } catch (Exception e) {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur: " + e.getMessage());
+    }
+}
+
+/**
+ * Vérifie si TOUTES les tâches d'une intervention sont terminées
+ * et notifie le technicien uniquement dans ce cas
+ */
+/**
+ * Vérifie si toutes les tâches d'une intervention sont terminées
+ */
+
+/**
+ * GET /api/main-doeuvre/interventions/{id}/verifier-taches
+ * Vérifie manuellement si toutes les tâches sont terminées
+ */
+@GetMapping("/interventions/{id}/verifier-taches")
+public ResponseEntity<?> verifierToutesTachesTerminees(@PathVariable int id) {
+    try {
+        AgentMainDOeuvre agent = getCurrentAgent();
+        if (agent == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        Intervention intervention = interventionService.findById(id);
+        if (intervention == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Récupérer toutes les tâches
+        List<Tache> taches = tacheService.findByInterventionId(id);
+        
+        Map<String, Object> result = new HashMap<>();
+        result.put("interventionId", id);
+        result.put("totalTaches", taches.size());
+        result.put("tachesAFaire", taches.stream().filter(t -> "A_FAIRE".equals(t.getEtat())).count());
+        result.put("tachesEnCours", taches.stream().filter(t -> "EN_COURS".equals(t.getEtat())).count());
+        result.put("tachesTerminees", taches.stream().filter(t -> "TERMINEE".equals(t.getEtat())).count());
+        result.put("tachesVerifiees", taches.stream().filter(t -> "VERIFIEE".equals(t.getEtat())).count());
+        result.put("toutesTerminees", taches.stream()
+                .allMatch(t -> "TERMINEE".equals(t.getEtat()) || "VERIFIEE".equals(t.getEtat())));
+        
+        return ResponseEntity.ok(result);
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+/**
+ * Vérifie si toutes les tâches d'une intervention sont terminées
+ */
+/**
+ * Vérifie si toutes les tâches d'une intervention sont terminées
+ */
+private void verifierEtNotifierSiToutesTachesTerminees(int interventionId) {
+    try {
+        System.out.println("🔍 === VÉRIFICATION TÂCHES TERMINÉES POUR INTERVENTION #" + interventionId + " ===");
+        
+        Intervention intervention = interventionService.findById(interventionId);
+        if (intervention == null) {
+            System.out.println("❌ Intervention non trouvée ID: " + interventionId);
+            return;
+        }
+        
+        System.out.println("📋 Intervention trouvée - ID: " + intervention.getId());
+        System.out.println("👷 ID Technicien: " + intervention.getTechnicienId());
+        System.out.println("🏷️ État intervention: " + intervention.getEtat());
+        
+        // Si l'intervention est déjà terminée, ne rien faire
+        if (intervention.getEtat() == EtatInterventionType.TERMINEE) {
+            System.out.println("ℹ️ Intervention déjà terminée, notification ignorée");
+            return;
+        }
+        
+        // Récupérer toutes les tâches de l'intervention
+        List<Tache> taches = tacheService.findByInterventionId(interventionId);
+        System.out.println("📊 Nombre total de tâches trouvées: " + taches.size());
+        
+        if (taches.isEmpty()) {
+            System.out.println("ℹ️ Aucune tâche pour cette intervention");
+            return;
+        }
+        
+        // Afficher le détail de chaque tâche
+        for (Tache t : taches) {
+            System.out.println("   📝 Tâche ID: " + t.getId() + 
+                             " | État: " + t.getEtat() + 
+                             " | Libellé: " + t.getLibelle());
+        }
+        
+        // Vérifier si TOUTES les tâches sont terminées (état TERMINEE ou VERIFIEE)
+        boolean toutesTerminees = taches.stream()
+                .allMatch(t -> "TERMINEE".equals(t.getEtat()) || "VERIFIEE".equals(t.getEtat()));
+        
+        // Compter les tâches par état
+        long nbTerminees = taches.stream().filter(t -> "TERMINEE".equals(t.getEtat())).count();
+        long nbVerifiees = taches.stream().filter(t -> "VERIFIEE".equals(t.getEtat())).count();
+        long nbEnCours = taches.stream().filter(t -> "EN_COURS".equals(t.getEtat())).count();
+        long nbAFaire = taches.stream().filter(t -> "A_FAIRE".equals(t.getEtat())).count();
+        
+        System.out.println("📈 Statistiques tâches:");
+        System.out.println("  • À faire: " + nbAFaire);
+        System.out.println("  • En cours: " + nbEnCours);
+        System.out.println("  • Terminées: " + nbTerminees);
+        System.out.println("  • Vérifiées: " + nbVerifiees);
+        System.out.println("  • Toutes terminées? " + toutesTerminees);
+        
+        if (toutesTerminees) {
+            System.out.println("🎉 🎉 🎉 TOUTES LES TÂCHES SONT TERMINÉES !");
+            System.out.println("📢 Envoi notification au technicien ID: " + intervention.getTechnicienId());
+            
+            // Créer le message de notification
+            String message = String.format(
+                "🏁 **INTERVENTION #%d TERMINÉE**\n\n" +
+                "Toutes les tâches ont été complétées par la main-d'œuvre.\n\n" +
+                "📋 Détails:\n" +
+                "• Intervention: #%d\n" +
+                "• Type: %s\n" +
+                "• Description: %s\n" +
+                "• Date planifiée: %s\n" +
+                "• Total tâches: %d\n" +
+                "• Tâches terminées: %d\n" +
+                "• Tâches vérifiées: %d\n\n" +
+                "✅ Veuillez maintenant vérifier et clôturer l'intervention.",
+                intervention.getId(),
+                intervention.getId(),
+                intervention.getTypeIntervention() != null ? intervention.getTypeIntervention() : "Non spécifié",
+                intervention.getDescription() != null ? intervention.getDescription().substring(0, Math.min(50, intervention.getDescription().length())) : "Pas de description",
+                intervention.getDatePlanifiee() != null ? intervention.getDatePlanifiee().toString() : "Non planifiée",
+                taches.size(),
+                nbTerminees,
+                nbVerifiees
+            );
+            
+            // Notifier le technicien
+            System.out.println("📤 Appel notificationService.notifierTechnicien avec ID: " + intervention.getTechnicienId());
+            notificationService.notifierTechnicien(intervention.getTechnicienId(), message);
+            System.out.println("✅ Notification envoyée au technicien !");
+            
+            // Notifier aussi le chef de service si présent
+            if (intervention.getChefServiceId() != null) {
+                String messageChef = String.format(
+                    "📊 **Intervention #%d terminée**\n" +
+                    "Toutes les tâches ont été complétées.\n" +
+                    "Le technicien doit maintenant vérifier et clôturer.",
+                    intervention.getId()
+                );
+                notificationService.notifierChefService(intervention.getChefServiceId(), messageChef);
+                System.out.println("✅ Notification envoyée au chef de service !");
+            }
+            
+        } else {
+            System.out.println("ℹ️ Pas toutes les tâches sont terminées:");
+            System.out.println("   - Manquent: " + (taches.size() - (nbTerminees + nbVerifiees)) + " tâches");
+        }
+        
+    } catch (Exception e) {
+        System.err.println("❌ ERREUR dans verifierEtNotifierSiToutesTachesTerminees: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+/**
+ * GET /api/main-doeuvre/test-verification/{interventionId}
+ * Test manuel de vérification des tâches terminées
+ */
+@GetMapping("/test-verification/{interventionId}")
+public ResponseEntity<?> testVerification(@PathVariable int interventionId) {
+    try {
+        System.out.println("🧪 TEST VERIFICATION pour intervention #" + interventionId);
+        verifierEtNotifierSiToutesTachesTerminees(interventionId);
+        return ResponseEntity.ok("Test exécuté - Vérifiez les logs");
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
 }

@@ -426,8 +426,9 @@
           </button>
           <button
             type="submit"
-            class="btn-success">
-            ✅ Terminer la tâche
+            class="btn-success"
+            [disabled]="isSubmitting">
+            {{ isSubmitting ? '⏳ En cours...' : '✅ Terminer la tâche' }}
           </button>
         </div>
       </form>

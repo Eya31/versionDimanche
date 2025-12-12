@@ -85,7 +85,7 @@ public ResponseEntity<?> planifierDemande(@PathVariable int id) {
         notificationService.notifierNouvelleIntervention(intervention.getId(), id);
         
         // 2. Notifier le citoyen que sa demande est acceptée
-        if (demande.getCitoyenId() > 0) {
+        if (demande.getCitoyenId() != null && demande.getCitoyenId() > 0) {
             notificationService.notifierCitoyenInterventionLancee(demande.getCitoyenId(), id, intervention.getId());
         }
 
@@ -251,7 +251,7 @@ public ResponseEntity<?> planifierDemande(@PathVariable int id) {
             Demande demande = demandeService.findById(request.getDemandeId());
             if (demande != null) {
                 notificationService.notifierNouvelleIntervention(intervention.getId(), request.getDemandeId());
-                if (demande.getCitoyenId() > 0) {
+                if (demande.getCitoyenId() != null && demande.getCitoyenId() > 0) {
                     notificationService.notifierCitoyenInterventionLancee(demande.getCitoyenId(), request.getDemandeId(), intervention.getId());
                 }
             }
@@ -336,6 +336,45 @@ public ResponseEntity<?> verifierToutesTachesTerminees(@PathVariable int interve
     } catch (Exception e) {
         return ResponseEntity.status(500)
             .body(Map.of("error", "Erreur vérification tâches: " + e.getMessage()));
+    }
+}
+// -------------------------------------------------------
+// 9. Technicien confirme la réception d'une intervention (passe de EN_ATTENTE à EN_COURS)
+// -------------------------------------------------------
+@PatchMapping("/{id}/confirmer")
+public ResponseEntity<Intervention> confirmerIntervention(@PathVariable int id) {
+    try {
+        Intervention intervention = interventionService.findById(id);
+        if (intervention == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Vérifier que l'intervention est bien EN_ATTENTE
+        if (intervention.getEtat() != EtatInterventionType.EN_ATTENTE) {
+            return ResponseEntity.badRequest()
+                    .body(null); // L'intervention n'est pas en attente
+        }
+
+        // Passer l'état à EN_COURS
+        boolean updated = interventionService.updateEtat(id, EtatInterventionType.EN_COURS);
+        if (!updated) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        // Notifier le chef que le technicien a pris en charge l'intervention
+        /*if (intervention.getChefServiceId() != null && intervention.getChefServiceId() > 0) {
+            notificationService.notifierChefInterventionEnCours(
+                intervention.getChefServiceId(),
+                id,
+                intervention.getTechnicienId()
+            );
+        }*/
+
+        return ResponseEntity.ok(interventionService.findById(id));
+
+    } catch (Exception e) {
+        logger.error("Erreur confirmation intervention {}", id, e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
 }

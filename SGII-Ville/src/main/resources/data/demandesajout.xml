@@ -1,4 +1,301 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <DemandesAjout xmlns="http://example.com/gestion-interventions">
+                                    
+    
+    
+    
+    
+    
+    
+    
     <!-- Demandes d'ajout vides - Prêt pour de nouvelles instances -->
+                                
+    
+    
+    
+    
+    
+    
+    
+    <DemandeAjout>
+                                                                
+        
+        
+        
+        
+        
+        
+        <id>1</id>
+                                                                
+        
+        
+        
+        
+        
+        
+        <typeDemande>RESSOURCE</typeDemande>
+                                                                
+        
+        
+        
+        
+        
+        
+        <designation>Tuyaux</designation>
+                                                                
+        
+        
+        
+        
+        
+        
+        <quantite>1</quantite>
+                                                                
+        
+        
+        
+        
+        
+        
+        <budget>250.0</budget>
+                                                                
+        
+        
+        
+        
+        
+        
+        <justification>sedffze</justification>
+                                                                
+        
+        
+        
+        
+        
+        
+        <etat>ACCEPTEE</etat>
+                                                                
+        
+        
+        
+        
+        
+        
+        <dateDemande>2025-12-10T14:13:37.9671005</dateDemande>
+                                                                
+        
+        
+        
+        
+        
+        
+        <chefId>2</chefId>
+                                                            
+        
+        
+        
+        
+        
+        
+        <adminId>3</adminId>
+                                                        
+        
+        
+        
+        
+        
+        <dateTraitement>2025-12-10T14:14:05.3868902</dateTraitement>
+                                                    
+    
+    
+    
+    
+    
+    </DemandeAjout>
+                            
+
+    
+    
+    
+    
+    
+    <DemandeAjout>
+                                                
+        
+        
+        
+        
+        <id>2</id>
+                                                
+        
+        
+        
+        
+        <typeDemande>RESSOURCE</typeDemande>
+                                                
+        
+        
+        
+        
+        <designation>Tuyaux</designation>
+                                                
+        
+        
+        
+        
+        <quantite>1</quantite>
+                                                
+        
+        
+        
+        
+        <budget>152.0</budget>
+                                                
+        
+        
+        
+        
+        <justification>aaaaaaa</justification>
+                                                
+        
+        
+        
+        
+        <etat>ACCEPTEE</etat>
+                                                
+        
+        
+        
+        
+        <dateDemande>2025-12-10T15:46:14.4578585</dateDemande>
+                                                
+        
+        
+        
+        
+        <chefId>2</chefId>
+                                            
+    
+    
+        
+        
+        <adminId>3</adminId>
+                        
+        
+        <dateTraitement>2025-12-10T16:41:11.1658116</dateTraitement>
+                    
+    
+    </DemandeAjout>
+                    
+    
+    
+    
+    
+    <DemandeAjout>
+                                        
+        
+        
+        
+        <id>3</id>
+                                        
+        
+        
+        
+        <typeDemande>RESSOURCE</typeDemande>
+                                        
+        
+        
+        
+        <designation>aaah</designation>
+                                        
+        
+        
+        
+        <quantite>1</quantite>
+                                        
+        
+        
+        
+        <budget>400.0</budget>
+                                        
+        
+        
+        
+        <justification>kkjjfe</justification>
+                                        
+        
+        
+        
+        <etat>ACCEPTEE</etat>
+                                        
+        
+        
+        
+        <dateDemande>2025-12-10T15:54:03.5240888</dateDemande>
+                                        
+        
+        
+        
+        <chefId>2</chefId>
+                                    
+    
+    
+    
+        <adminId>3</adminId>
+        <dateTraitement>2025-12-10T18:50:40.5571244</dateTraitement>
+    </DemandeAjout>
+                
+    
+    
+    
+    <DemandeAjout>
+                                
+        
+        
+        <id>4</id>
+                                
+        
+        
+        <typeDemande>RESSOURCE</typeDemande>
+                                
+        
+        
+        <designation>rfgrz</designation>
+                                
+        
+        
+        <quantite>1</quantite>
+                                
+        
+        
+        <budget>45.0</budget>
+                                
+        
+        
+        <justification>ij</justification>
+                                
+        
+        
+        <etat>REFUSEE</etat>
+                                
+        
+        
+        <dateDemande>2025-12-10T16:00:28.7212528</dateDemande>
+                                
+        
+        
+        <chefId>2</chefId>
+                            
+    
+        
+        <adminId>3</adminId>
+                
+        <dateTraitement>2025-12-10T16:41:19.0127475</dateTraitement>
+                
+        <motifRefus>sdfze</motifRefus>
+            
+    </DemandeAjout>
+            
+
+
 </DemandesAjout>

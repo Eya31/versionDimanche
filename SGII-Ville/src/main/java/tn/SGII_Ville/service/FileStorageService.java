@@ -37,64 +37,74 @@ public class FileStorageService {
      * Stocke plusieurs fichiers et enregistre leurs métadonnées dans photos.xml
      */
     public List<Photo> storeFiles(MultipartFile[] files) throws Exception {
-
-        // 1) Vérifications globales
-        if (files == null || files.length == 0) return new ArrayList<>();
-
-        if (files.length > MAX_FILES)
-            throw new IllegalArgumentException("Max 5 fichiers");
-
-        List<Photo> photos = new ArrayList<>();
-
-        // 2) Traitement de chaque fichier
-        for (MultipartFile file : files) {
-
-            // Limite taille
-            if (file.getSize() > MAX_FILE_SIZE)
-                throw new IllegalArgumentException("Fichier trop grand: " + file.getOriginalFilename());
-
-            // Vérification type
-            String contentType = file.getContentType();
-            if (contentType == null || allowedPrefixes.stream().noneMatch(contentType::startsWith))
-                throw new IllegalArgumentException("Type non autorisé: " + contentType);
-
-            // Nom original sécurisé
-            String original = file.getOriginalFilename();
-            if (original == null || original.isBlank()) original = "file";
-
-            String base = original
-                    .replaceAll("[\\\\/:*?\"<>|]", "_")
-                    .replaceAll("\\s+", "_");
-
-            if (base.length() > 100)
-                base = base.substring(base.length() - 100);
-
-            String safeName = System.currentTimeMillis() + "_" + base;
-            Path target = uploadDir.resolve(safeName).normalize();
-
-            // Sauvegarde sur disque
-            try {
-                if (target.getParent() != null && !Files.exists(target.getParent())) {
-                    Files.createDirectories(target.getParent());
-                }
-
-                Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-
-            } catch (IOException ioe) {
-                throw new IOException("Failed to store file '" + safeName + "' to " + target.toString(), ioe);
-            }
-
-            // Création de l’objet Photo pour XML
-            Photo photo = new Photo();
-            photo.setNom(original);
-            photo.setUrl("/api/demandes/uploads/" + safeName);
-
-            photos.add(photo);
+    // 1) Vérifications globales
+    if (files == null || files.length == 0) return new ArrayList<>();
+    
+    if (files.length > MAX_FILES)
+        throw new IllegalArgumentException("Max 5 fichiers");
+    
+    List<Photo> photos = new ArrayList<>();
+    
+    // 2) Traitement de chaque fichier
+    for (MultipartFile file : files) {
+        // Limite taille
+        if (file.getSize() > MAX_FILE_SIZE)
+            throw new IllegalArgumentException("Fichier trop grand: " + file.getOriginalFilename());
+        
+        // Vérification type
+        String contentType = file.getContentType();
+        if (contentType == null || allowedPrefixes.stream().noneMatch(contentType::startsWith))
+            throw new IllegalArgumentException("Type non autorisé: " + contentType);
+        
+        // Nom original sécurisé - CORRECTION ICI
+        String original = file.getOriginalFilename();
+        if (original == null || original.isBlank()) original = "file";
+        
+        // Supprimer les caractères spéciaux problématiques
+        String cleanName = original
+            .replaceAll("[\\\\/:*?\"<>|'`’éèêëàâäîïôöùûüçÉÈÊËÀÂÄÎÏÔÖÙÛÜÇ]", "_")
+            .replaceAll("\\s+", "_");
+        
+        // Garder l'extension
+        int lastDot = cleanName.lastIndexOf('.');
+        String extension = "";
+        String baseName = cleanName;
+        if (lastDot > 0) {
+            extension = cleanName.substring(lastDot);
+            baseName = cleanName.substring(0, lastDot);
         }
-
-        // 3) Sauvegarde dans photos.xml (attribution id_photo)
-        return photoXmlService.saveAll(photos);
+        
+        // Tronquer si trop long
+        if (baseName.length() > 50) {
+            baseName = baseName.substring(0, 50);
+        }
+        
+        String safeName = System.currentTimeMillis() + "_" + baseName + extension;
+        Path target = uploadDir.resolve(safeName).normalize();
+        
+        // Sauvegarde sur disque
+        try {
+            if (target.getParent() != null && !Files.exists(target.getParent())) {
+                Files.createDirectories(target.getParent());
+            }
+            
+            Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+            
+        } catch (IOException ioe) {
+            throw new IOException("Failed to store file '" + safeName + "' to " + target.toString(), ioe);
+        }
+        
+        // Création de l'objet Photo pour XML
+        Photo photo = new Photo();
+        photo.setNom(original);
+        photo.setUrl("/api/demandes/uploads/" + safeName);
+        
+        photos.add(photo);
     }
+    
+    // 3) Sauvegarde dans photos.xml (attribution id_photo)
+    return photoXmlService.saveAll(photos);
+}
 
     /**
      * Retourne le chemin complet d’un fichier si valide et existant.

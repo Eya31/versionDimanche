@@ -17,16 +17,15 @@ import * as L from 'leaflet';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { NotifService, Notification } from '../../services/notif.service';
+import { NotificationService, Notification } from '../../services/notification.service'; // IMPORT CORRIGÉ
 import { RegisterRequest, RoleType } from '../../models/auth.model';
-
-import { DemandeAjoutService , DemandeAjout} from '../../services/demande-ajout.service';
+import { DemandeAjoutService } from '../../services/demande-ajout.service';
 import {
-  DemandeAjoutMaterielService,  // Nom du service changé
+  DemandeAjoutMaterielService,
   DemandeRessource,
   CreateDemandeRessourceRequest,
   DemandeAjoutMateriel
-} from "../../services/demande-ajout-materiel.service" // Nom du fichier changé
+} from "../../services/demande-ajout-materiel.service"
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -160,24 +159,24 @@ currentRessource: RessourceMaterielle = {
     'Charpenterie'
   ];
 
-  constructor(
+   constructor(
     private demandeService: DemandeService,
     private equipementService: EquipementService,
     private interventionService: InterventionService,
     private ressourceService: RessourceService,
     private technicienListService: TechnicienListService,
     private authService: AuthService,
-      private demandeAjoutService: DemandeAjoutService,
-      private Router: Router,
-private demandeAjoutMaterielService: DemandeAjoutMaterielService, // Utiliser le nouveau service seulement
-private notificationService: NotifService,
+    private demandeAjoutService: DemandeAjoutService,
+    private Router: Router,
+    private demandeAjoutMaterielService: DemandeAjoutMaterielService,
+    private notificationService: NotificationService // AJOUTEZ CECI
   ) {}
 
   ngOnInit(): void {
     this.loadAllData();
     this.loadTechniciens();
-    this.loadNotifications(); // AJOUTER CETTE LIGNE
-  this.startNotificationPolling(); // AJOUTER CETTE LIGNE
+    this.loadNotifications();
+    this.startNotificationPolling();
   }
 
   ngAfterViewInit(): void {
@@ -193,56 +192,66 @@ private notificationService: NotifService,
 
   // Méthode pour charger les notifications
 loadNotifications(): void {
-  const userId = this.authService.getUserId();
-  if (!userId) return;
+    const userId = this.authService.getUserId();
+    if (!userId) return;
 
-  this.notificationService.getNotificationsByUser(userId).subscribe({
-    next: (data: Notification[]) => {
-      this.notifications = data;
-      this.unreadCount = data.filter(n => !n.readable).length;
-      console.log('📨 Notifications chargées:', data.length);
-    },
-    error: (err:any) => console.error('Erreur chargement notifications:', err)
-  });
-}
+    this.notificationService.getNotificationsByUser(userId).subscribe({
+      next: (data: Notification[]) => {
+        this.notifications = data;
+        this.unreadCount = data.filter(n => !n.readable).length;
+        console.log('📨 Notifications chargées:', data.length);
+      },
+      error: (err: any) => console.error('Erreur chargement notifications:', err)
+    });
+  }
 
   private startNotificationPolling(): void {
-  const userId = this.authService.getUserId();
-  if (!userId) return;
+    const userId = this.authService.getUserId();
+    if (!userId) return;
 
-  // Poll toutes les 10 secondes
-  this.notificationSubscription = this.notificationService.pollUnreadCount(userId).pipe(
-    switchMap((response: { unreadCount: number }) => of(response.unreadCount))
-  ).subscribe({
-    next: (unreadCount: number) => {
-      this.unreadCount = unreadCount;
-    },
-    error: (err: any) => console.error('Erreur polling notifications:', err)
-  });
-}
-toggleNotificationsDropdown(): void {
-  this.showNotificationsDropdown = !this.showNotificationsDropdown;
-  if (this.showNotificationsDropdown) {
-    this.loadNotifications();
+    // Poll toutes les 30 secondes
+    this.notificationSubscription = this.notificationService.pollNotifications(userId).subscribe({
+      next: (notifications: Notification[]) => {
+        this.notifications = notifications;
+        this.unreadCount = notifications.filter(n => !n.readable).length;
+      },
+      error: (err: any) => console.error('Erreur polling notifications:', err)
+    });
   }
-}
+
+  toggleNotificationsDropdown(): void {
+    this.showNotificationsDropdown = !this.showNotificationsDropdown;
+    if (this.showNotificationsDropdown) {
+      this.loadNotifications();
+    }
+  }
 
   markAsRead(notification: Notification): void {
-  if (notification.readable) return;
+    if (notification.readable) return;
 
-  this.notificationService.markAsRead(notification.idNotification).subscribe({
-    next: () => {
-      notification.readable = true;
-      this.unreadCount = this.notifications.filter(n => !n.readable).length;
-      console.log('✅ Notification marquée comme lue');
-    },
-    error: (err:any) => console.error('Erreur marquage notification:', err)
-  });
-}
+    this.notificationService.markAsRead(notification.idNotification).subscribe({
+      next: () => {
+        notification.readable = true;
+        this.unreadCount = this.notifications.filter(n => !n.readable).length;
+        console.log('✅ Notification marquée comme lue');
+      },
+      error: (err: any) => console.error('Erreur marquage notification:', err)
+    });
+  }
 
   formatNotificationDate(dateStr: string): string {
-  return this.notificationService.formatNotificationDate(dateStr);
-}
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 1) return 'À l\'instant';
+    if (minutes < 60) return `Il y a ${minutes} min`;
+    if (hours < 24) return `Il y a ${hours}h`;
+    return `Il y a ${days}j`;
+  }
 
 loadTechniciens(): void {
     this.technicienListService.getAllTechniciens().subscribe({
@@ -1240,23 +1249,37 @@ private resetEquipementForm(): void {
     }
   }
 
-  getPhotoUrl(url: string): string {
-    if (!url) return '';
-    // Si l'URL commence par /api, ajouter le baseURL
-    if (url.startsWith('/api')) {
-      return `http://localhost:8080${url}`;
-    }
-    // Si l'URL commence par http, la retourner telle quelle
-    if (url.startsWith('http')) {
-      return url;
-    }
-    // Sinon, ajouter le préfixe complet
-    return `http://localhost:8080/api/demandes/${url}`;
+  getPhotoUrl(photoUrl: string): string {
+  // If the URL is already absolute (starts with http), return it as-is
+  if (photoUrl?.startsWith('http')) {
+    return photoUrl;
   }
 
-  handleImageError(event: any): void {
-    event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VjZjBmMSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5NWE1YTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBub24gZGlzcG9uaWJsZTwvdGV4dD48L3N2Zz4=';
+  // If it's a relative path from the backend, prepend the base URL
+  // Example: '/api/demandes/uploads/photo.jpg' -> 'http://localhost:8080/api/demandes/uploads/photo.jpg'
+  if (photoUrl?.startsWith('/')) {
+    return `http://localhost:8080${photoUrl}`;
   }
+
+  // If it's just a filename, construct the full path
+  // Example: 'photo.jpg' -> 'http://localhost:8080/api/demandes/uploads/photo.jpg'
+  if (photoUrl) {
+    return `http://localhost:8080/api/demandes/uploads/${photoUrl}`;
+  }
+
+  // Return a placeholder if no URL
+  return 'assets/images/placeholder.jpg';
+}
+ handleImageError(event: Event): void {
+  const imgElement = event.target as HTMLImageElement;
+  console.error('Image failed to load:', imgElement.src);
+
+  // Option 1: Hide the broken image
+  imgElement.style.display = 'none';
+
+  // Option 2: Replace with a placeholder
+  // imgElement.src = 'assets/images/photo-placeholder.png';
+}
 
   // === SIDEBAR TOGGLE ===
   toggleSidebar(): void {

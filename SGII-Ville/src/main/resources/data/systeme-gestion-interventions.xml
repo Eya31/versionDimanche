@@ -2,7 +2,4 @@
 <SystemeGestionInterventions xmlns="http://example.com/gestion-interventions"
                              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                              xsi:schemaLocation="http://example.com/gestion-interventions ../schemas/root.xsd">
-    
-    
-    
 </SystemeGestionInterventions>

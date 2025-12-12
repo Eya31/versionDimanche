@@ -21,48 +21,68 @@ public class PhotoXmlService {
      * Sauvegarde une photo metadata dans photos.xml
      */
     public Photo save(Photo photo) throws Exception {
-        Document doc;
-
-        try {
-            doc = xmlService.loadXmlDocument("Photos");
-        } catch (Exception e) {
-            // créer le document si manquant
-            doc = xmlService.createNewDocument("Photos");
-        }
-
-        Element root = doc.getDocumentElement();
-        if (root == null) {
-            root = doc.createElementNS(xmlService.getNamespaceUri(), "Photos");
-            doc.appendChild(root);
-        }
-
-        // generate id unique
-        int newId = xmlService.generateNewId(doc, "Photo");
-        photo.setIdPhoto(newId);
-
-        // création de l’élément Photo
-        Element photoEl = xmlService.createElement(doc, "Photo");
-        xmlService.addTextElement(doc, photoEl, "id_photo", String.valueOf(photo.getIdPhoto()));
-        xmlService.addTextElement(doc, photoEl, "url", photo.getUrl());
-        xmlService.addTextElement(doc, photoEl, "nom", photo.getNom());
-
-        root.appendChild(photoEl);
-
-        xmlService.saveXmlDocument(doc, "Photos");
-        return photo;
-    }
+    // Pour une seule photo, utiliser saveAll
+    List<Photo> photos = new ArrayList<>();
+    photos.add(photo);
+    List<Photo> saved = saveAll(photos);
+    return saved.get(0);
+}
 
     /**
      * Sauvegarde plusieurs photos
      */
-    public List<Photo> saveAll(List<Photo> photos) throws Exception {
-        List<Photo> saved = new ArrayList<>();
-        for (Photo p : photos) {
-            saved.add(save(p));
-        }
-        return saved;
+  public List<Photo> saveAll(List<Photo> photos) throws Exception {
+    Document doc;
+    
+    try {
+        doc = xmlService.loadXmlDocument("Photos");
+    } catch (Exception e) {
+        // créer le document si manquant
+        doc = xmlService.createNewDocument("Photos");
     }
-
+    
+    Element root = doc.getDocumentElement();
+    if (root == null) {
+        root = doc.createElementNS(xmlService.getNamespaceUri(), "Photos");
+        doc.appendChild(root);
+    }
+    
+    // Déterminer le prochain ID disponible
+    int nextId = 1;
+    NodeList existingPhotos = root.getElementsByTagNameNS(xmlService.getNamespaceUri(), "Photo");
+    for (int i = 0; i < existingPhotos.getLength(); i++) {
+        Element photoElement = (Element) existingPhotos.item(i);
+        String idStr = xmlService.getElementTextContent(photoElement, "id_photo");
+        if (idStr != null) {
+            try {
+                int id = Integer.parseInt(idStr);
+                if (id >= nextId) nextId = id + 1;
+            } catch (NumberFormatException e) {
+                // Ignorer
+            }
+        }
+    }
+    
+    List<Photo> saved = new ArrayList<>();
+    for (Photo photo : photos) {
+        // Assigner un ID unique
+        photo.setIdPhoto(nextId);
+        
+        // Création de l'élément Photo
+        Element photoEl = xmlService.createElement(doc, "Photo");
+        xmlService.addTextElement(doc, photoEl, "id_photo", String.valueOf(photo.getIdPhoto()));
+        xmlService.addTextElement(doc, photoEl, "url", photo.getUrl());
+        xmlService.addTextElement(doc, photoEl, "nom", photo.getNom());
+        
+        root.appendChild(photoEl);
+        saved.add(photo);
+        
+        nextId++; // Incrémenter pour la prochaine photo
+    }
+    
+    xmlService.saveXmlDocument(doc, "Photos");
+    return saved;
+}
     /**
      * Récupérer toutes les photos
      */

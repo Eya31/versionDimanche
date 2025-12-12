@@ -10,17 +10,16 @@ import { Subscription } from 'rxjs';
 import * as L from 'leaflet';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { Observable } from 'rxjs'; // AJOUTER CET IMPORT
+import { Observable } from 'rxjs';
 import { RessourceService } from '../../services/ressource.service';
-// Ajouter ces imports
-import { NotifService, Notification } from '../../services/notif.service';
 import { DemandeAjoutService } from '../../services/demande-ajout.service';
 import {
   DemandeAjoutMaterielService,
   DemandeRessource,
   DemandeAjoutMateriel
 } from '../../services/demande-ajout-materiel.service';
-import { RessourceMaterielle } from '../../models/ressource.model'; // ✅ Ajouter cette ligne
+import { RessourceMaterielle } from '../../models/ressource.model';
+import { NotificationService, Notification } from '../../services/notification.service'; // IMPORT CORRIGÉ
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -39,7 +38,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
   private mapInterventions?: L.Map;
 
   // Notifications
-  
+
   notifications: Notification[] = [];
   unreadCount = 0;
   showNotificationsDropdown = false;
@@ -81,20 +80,46 @@ motifRefusRessource: string = '';
     private router: Router,
     private interventionService: InterventionService,
     private demandeAjoutService: DemandeAjoutService,
-      private demandeAjoutMaterielService: DemandeAjoutMaterielService,
-        private ressourceService: RessourceService, // ✅ Ajouter cette ligne
-  private notificationService: NotifService, // CORRECTION
- // Changer ici
+    private demandeAjoutMaterielService: DemandeAjoutMaterielService,
+    private ressourceService: RessourceService,
+    private notificationService: NotificationService // AJOUTEZ CECI
   ) {}
 
   ngOnInit(): void {
     this.loadUsers();
-    this.loadNotifications(); // AJOUTER CETTE LIGNE
-  this.startNotificationPolling(); // AJOUTER CETTE LIGNE
+    this.loadNotifications();
+    this.startNotificationPolling();
     this.loadInterventionsEnCours();
     this.loadDemandesRessources();
   }
+ // === GESTION DES NOTIFICATIONS ===
+  loadNotifications(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) return;
 
+    this.notificationService.getNotificationsByUser(userId).subscribe({
+      next: (data: Notification[]) => {
+        this.notifications = data;
+        this.unreadCount = data.filter(n => !n.readable).length;
+        console.log('📨 Notifications chargées:', data.length);
+      },
+      error: (err: any) => console.error('Erreur chargement notifications:', err)
+    });
+  }
+
+  private startNotificationPolling(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) return;
+
+    // Poll toutes les 30 secondes
+    this.notificationSubscription = this.notificationService.pollNotifications(userId).subscribe({
+      next: (notifications: Notification[]) => {
+        this.notifications = notifications;
+        this.unreadCount = notifications.filter(n => !n.readable).length;
+      },
+      error: (err: any) => console.error('Erreur polling notifications:', err)
+    });
+  }
   ngAfterViewInit(): void {
     setTimeout(() => this.initMap(), 100);
   }
@@ -193,34 +218,9 @@ motifRefusRessource: string = '';
   }
 
   // === GESTION DES NOTIFICATIONS ===
-  loadNotifications(): void {
-    const userId = this.authService.getUserId();
-    if (!userId) return;
 
-    this.notificationService.getNotificationsByUser(userId).subscribe({
-      next: (data) => {
-        this.notifications = data.sort((a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        this.unreadCount = this.notifications.filter(n => !n.readable).length;
-      },
-      error: (err) => console.error('Erreur chargement notifications:', err)
-    });
-  }
 
-  startNotificationPolling(): void {
-  const userId = this.authService.getUserId();
-  if (!userId) return;
 
-  this.unreadCountSubscription = this.notificationService.pollUnreadCount(userId).pipe(
-    switchMap((response: { unreadCount: number }) => of(response.unreadCount))
-  ).subscribe({
-    next: (unreadCount: number) => {
-      this.unreadCount = unreadCount;
-    },
-    error: (err) => console.error('Erreur polling notifications:', err)
-  });
-}
 
   addCompetence(): void {
     if (this.competenceInput.trim()) {
@@ -538,77 +538,78 @@ getDemandesFiltrees(): DemandeRessource[] {
 
 
 markAsRead(notification: Notification): void {
-  if (notification.readable) return;
+    if (notification.readable) return;
 
-  this.notificationService.markAsRead(notification.idNotification).subscribe({
-    next: () => {
-      notification.readable = true;
-      this.unreadCount = this.notifications.filter(n => !n.readable).length;
-    },
-    error: (err) => console.error('Erreur marquage notification:', err)
-  });
-}
+    this.notificationService.markAsRead(notification.idNotification).subscribe({
+      next: () => {
+        notification.readable = true;
+        this.unreadCount = this.notifications.filter(n => !n.readable).length;
+      },
+      error: (err: any) => console.error('Erreur marquage notification:', err)
+    });
+  }
 
-formatNotificationDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
+  formatNotificationDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
 
-  if (minutes < 1) return 'À l\'instant';
-  if (minutes < 60) return `Il y a ${minutes} min`;
-  if (hours < 24) return `Il y a ${hours}h`;
-  return `Il y a ${days}j`;
-}
-
+    if (minutes < 1) return 'À l\'instant';
+    if (minutes < 60) return `Il y a ${minutes} min`;
+    if (hours < 24) return `Il y a ${hours}h`;
+    return `Il y a ${days}j`;
+  }
 
 toggleNotificationsDropdown(): void {
-  this.showNotificationsDropdown = !this.showNotificationsDropdown;
-  if (this.showNotificationsDropdown) {
-    this.loadNotifications();
+    this.showNotificationsDropdown = !this.showNotificationsDropdown;
+    if (this.showNotificationsDropdown) {
+      this.loadNotifications();
+    }
   }
-}
 
 // Méthode pour envoyer notification d'acceptation au chef
-private sendAcceptNotificationToChef(demande: DemandeRessource, adminId: number): void {
-  const message = `✅ Votre demande de ressource a été ACCEPTÉE !\n` +
-                 `📋 Détails:\n` +
-                 `   • Référence: #${demande.id}\n` +
-                 `   • Désignation: ${demande.designation}\n` +
-                 `   • Quantité: ${demande.quantite} unités\n` +
-                 `   • Budget: ${demande.budget} DT\n` +
-                 `🎉 La ressource a été ajoutée au stock avec succès.`;
+  private sendAcceptNotificationToChef(demande: DemandeRessource, adminId: number): void {
+    const message = `✅ Votre demande de ressource a été ACCEPTÉE !\n` +
+                   `📋 Détails:\n` +
+                   `   • Référence: #${demande.id}\n` +
+                   `   • Désignation: ${demande.designation}\n` +
+                   `   • Quantité: ${demande.quantite} unités\n` +
+                   `   • Budget: ${demande.budget} DT\n` +
+                   `🎉 La ressource a été ajoutée au stock avec succès.`;
 
-  this.notificationService.testCreateNotification(demande.chefId, message).subscribe({
-    next: (response: any) => {
-      console.log('📨 Notification d\'acceptation envoyée:', response);
-    },
-    error: (error: any) => {
-      console.error('❌ Erreur envoi notification d\'acceptation:', error);
-    }
-  });
-}
+    // Utilisez l'endpoint /create de NotificationController
+    this.notificationService.testCreateNotification(demande.chefId, message).subscribe({
+      next: (response: any) => {
+        console.log('📨 Notification d\'acceptation envoyée:', response);
+      },
+      error: (error: any) => {
+        console.error('❌ Erreur envoi notification d\'acceptation:', error);
+      }
+    });
+  }
 
-// Méthode pour envoyer notification de refus
-private sendRefusNotificationToChef(demande: DemandeRessource, motif: string): void {
-  const message = `❌ Votre demande de ressource a été REFUSÉE\n` +
-                 `📋 Détails:\n` +
-                 `   • Référence: #${demande.id}\n` +
-                 `   • Désignation: ${demande.designation}\n` +
-                 `   • Motif: ${motif}\n` +
-                 `💡 Vous pouvez soumettre une nouvelle demande avec les corrections nécessaires.`;
+  // Méthode pour envoyer notification de refus
+  private sendRefusNotificationToChef(demande: DemandeRessource, motif: string): void {
+    const message = `❌ Votre demande de ressource a été REFUSÉE\n` +
+                   `📋 Détails:\n` +
+                   `   • Référence: #${demande.id}\n` +
+                   `   • Désignation: ${demande.designation}\n` +
+                   `   • Motif: ${motif}\n` +
+                   `💡 Vous pouvez soumettre une nouvelle demande avec les corrections nécessaires.`;
 
-  this.notificationService.testCreateNotification(demande.chefId, message).subscribe({
-    next: (response:any) => {
-      console.log('📨 Notification de refus envoyée:', response);
-    },
-    error: (error:any) => {
-      console.error('❌ Erreur envoi notification de refus:', error);
-    }
-  });
-}
+    // Utilisez l'endpoint /create de NotificationController
+    this.notificationService.testCreateNotification(demande.chefId, message).subscribe({
+      next: (response: any) => {
+        console.log('📨 Notification de refus envoyée:', response);
+      },
+      error: (error: any) => {
+        console.error('❌ Erreur envoi notification de refus:', error);
+      }
+    });
+  }
 // ===============================================
 // AJOUTER CES MÉTHODES MANQUANTES
 // ===============================================

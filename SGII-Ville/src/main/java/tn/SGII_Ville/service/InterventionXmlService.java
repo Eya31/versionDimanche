@@ -523,36 +523,36 @@ public class InterventionXmlService {
     }
 
     public boolean affecterTechnicien(int interventionId, int technicienId) {
-        try {
-            Document doc = xmlService.loadXmlDocument("Interventions");
-            NodeList nodes = doc.getElementsByTagNameNS(xmlService.getNamespaceUri(), "Intervention");
+    try {
+        Document doc = xmlService.loadXmlDocument("Interventions");
+        NodeList nodes = doc.getElementsByTagNameNS(xmlService.getNamespaceUri(), "Intervention");
 
-            for (int i = 0; i < nodes.getLength(); i++) {
-                Element el = (Element) nodes.item(i);
-                if (Integer.parseInt(xmlService.getElementTextContent(el, "id")) == interventionId) {
-                    // Mettre à jour technicienId
-                    NodeList techNodes = el.getElementsByTagNameNS(xmlService.getNamespaceUri(), "technicienId");
-                    if (techNodes.getLength() > 0) {
-                        techNodes.item(0).setTextContent(String.valueOf(technicienId));
-                    }
-                    
-                    // Si intervention en attente → la mettre en cours
-                    String currentEtat = xmlService.getElementTextContent(el, "etat");
-                    if ("EN_ATTENTE".equals(currentEtat)) {
-                        NodeList etatNodes = el.getElementsByTagNameNS(xmlService.getNamespaceUri(), "etat");
-                        if (etatNodes.getLength() > 0) {
-                            etatNodes.item(0).setTextContent(EtatInterventionType.EN_COURS.name());
-                        }
-                    }
-
-                    xmlService.saveXmlDocument(doc, "Interventions");
-                    return true;
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Element el = (Element) nodes.item(i);
+            if (Integer.parseInt(xmlService.getElementTextContent(el, "id")) == interventionId) {
+                // Mettre à jour technicienId seulement
+                NodeList techNodes = el.getElementsByTagNameNS(xmlService.getNamespaceUri(), "technicienId");
+                if (techNodes.getLength() > 0) {
+                    techNodes.item(0).setTextContent(String.valueOf(technicienId));
                 }
-            }
+                
+                // ⚠️ SUPPRIMER CETTE PARTIE qui change l'état automatiquement
+                // String currentEtat = xmlService.getElementTextContent(el, "etat");
+                // if ("EN_ATTENTE".equals(currentEtat)) {
+                //     NodeList etatNodes = el.getElementsByTagNameNS(xmlService.getNamespaceUri(), "etat");
+                //     if (etatNodes.getLength() > 0) {
+                //         etatNodes.item(0).setTextContent(EtatInterventionType.EN_COURS.name());
+                //     }
+                // }
 
-        } catch (Exception e) {
-            logger.error("Erreur affectation technicien {} à intervention {}", technicienId, interventionId, e);
+                xmlService.saveXmlDocument(doc, "Interventions");
+                return true;
+            }
         }
-        return false;
+
+    } catch (Exception e) {
+        logger.error("Erreur affectation technicien {} à intervention {}", technicienId, interventionId, e);
     }
+    return false;
+}
 }

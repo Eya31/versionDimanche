@@ -91,6 +91,17 @@
           <span class="intervention-id">#{{ intervention.id }}</span>
           <span class="intervention-desc">{{ intervention.description || 'Sans description' }}</span>
           <span class="intervention-priority">{{ getPrioriteLabel(intervention.priorite) }}</span>
+          <button *ngIf="intervention.etat === 'EN_ATTENTE'"
+            (click)="confirmerReception(intervention.id)"
+            class="btn-small">
+        ✅ Confirmer la réception
+    </button>
+
+    <button *ngIf="intervention.etat === 'EN_COURS'"
+            (click)="voirDetails(intervention.id)"
+            class="btn-small">
+        🔧 Commencer les tâches
+    </button>
         </div>
         <div *ngIf="interventionsFiltrees.length === 0" class="no-interventions">
           Aucune intervention pour cette date

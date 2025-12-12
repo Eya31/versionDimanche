@@ -90,21 +90,7 @@ export class TechnicienDashboardComponent implements OnInit {
     });
   }
 
-  confirmerReception(id: number): void {
-    if (confirm('Confirmer la réception de cette intervention ?')) {
-      this.technicienService.confirmerIntervention(id).subscribe({
-        next: () => {
-          alert('✅ Intervention confirmée avec succès');
-          this.loadMyInterventions();
-        },
-        error: (err: any) => {
-          console.error('Erreur confirmation:', err);
-          alert('❌ Erreur lors de la confirmation: ' + (err.error?.message || err.message || 'Erreur inconnue'));
-        }
-      });
-    }
-  }
-
+  
   voirDetails(id: number): void {
     this.router.navigate(['/technicien/intervention', id]);
   }
@@ -274,5 +260,20 @@ private notifierChefInterventionTerminee(intervention: Intervention): void {
       console.error('❌ Erreur envoi notification chef:', error);
     }
   });
+}
+// technicien-dashboard.component.ts
+confirmerReception(id: number): void {
+    if (confirm('Confirmer la réception de cette intervention ?')) {
+        this.technicienService.confirmerIntervention(id).subscribe({
+            next: () => {
+                alert('✅ Intervention confirmée avec succès');
+                this.loadMyInterventions(); // Recharger la liste
+            },
+            error: (err: any) => {
+                console.error('Erreur confirmation:', err);
+                alert('❌ Erreur lors de la confirmation');
+            }
+        });
+    }
 }
 }

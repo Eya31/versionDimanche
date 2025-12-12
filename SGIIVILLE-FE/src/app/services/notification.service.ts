@@ -21,14 +21,14 @@ export class NotificationService {
   /**
    * Récupère les notifications d'un utilisateur
    */
-  getNotificationsByUser(userId: number): Observable<Notification[]> {
+   getNotificationsByUser(userId: number): Observable<Notification[]> {
     return this.http.get<Notification[]>(`${this.baseUrl}/user/${userId}`);
   }
 
   /**
    * Compte les notifications non lues
    */
-  getUnreadCount(userId: number): Observable<{ unreadCount: number }> {
+getUnreadCount(userId: number): Observable<{ unreadCount: number }> {
     return this.http.get<{ unreadCount: number }>(`${this.baseUrl}/user/${userId}/unread-count`);
   }
 
@@ -43,9 +43,9 @@ export class NotificationService {
    * Polling des notifications toutes les 30 secondes
    * Commence immédiatement avec un premier appel
    */
-  pollNotifications(userId: number): Observable<Notification[]> {
+ pollNotifications(userId: number): Observable<Notification[]> {
     return interval(30000).pipe(
-      startWith(0), // Commencer immédiatement
+      startWith(0),
       switchMap(() => this.getNotificationsByUser(userId))
     );
   }
@@ -56,10 +56,11 @@ export class NotificationService {
    */
   pollUnreadCount(userId: number): Observable<{ unreadCount: number }> {
     return interval(15000).pipe(
-      startWith(0), // Commencer immédiatement
+      startWith(0),
       switchMap(() => this.getUnreadCount(userId))
     );
   }
+
  notifierTechnicienChangementTache(data: {
     technicienId: number;
     tacheId: number;
@@ -90,4 +91,33 @@ notifierTechnicienVerification(technicienId: number, interventionId: number, mes
     message: message
   });
 }
+ /**
+   * Test de création de notification (pour le frontend)
+   */
+  testCreateNotification(userId: number, message: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/test`, {
+      userId: userId,
+      message: message
+    });
+  }
+
+  createNotification(userId: number, message: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/create`, {
+      userId: userId,
+      message: message
+    });
+  }
+  /**
+   * Méthode pour le chef : charger ses propres notifications
+   */
+  getChefNotifications(chefId: number): Observable<Notification[]> {
+    return this.http.get<Notification[]>(`${this.baseUrl}/user/${chefId}`);
+  }
+
+  /**
+   * Marquer comme lue
+   */
+  markNotificationAsRead(notificationId: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${notificationId}/mark-read`, {});
+  }
 }

@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
            targetNamespace="http://example.com/gestion-interventions" 
-           xmlns:tns="http://example.com/gestion-interventions" 
+           xmlns:tns="http://example.com/gestion-interventions"
+           xmlns:common="http://example.com/gestion-interventions/common"
+           xmlns:citoyen="http://example.com/gestion-interventions/citoyens"
+           xmlns:chef="http://example.com/gestion-interventions/chefDeService"
+           xmlns:admin="http://example.com/gestion-interventions/administrateur"
            elementFormDefault="qualified">
 
   <!-- Imports de tous les types -->
-  <xs:include schemaLocation="common/utilisateur-base.xsd"/>
+  <xs:import namespace="http://example.com/gestion-interventions/common" schemaLocation="common/utilisateur-base.xsd"/>
+  <xs:import namespace="http://example.com/gestion-interventions/citoyens" schemaLocation="entities/citoyens.xsd"/>
+  <xs:import namespace="http://example.com/gestion-interventions/chefDeService" schemaLocation="entities/chefDeService.xsd"/>
+  <xs:import namespace="http://example.com/gestion-interventions/administrateur" schemaLocation="entities/administrateur.xsd"/>
+  <xs:include schemaLocation="entities/techniciens.xsd"/>
+  <xs:include schemaLocation="entities/maindoeuvre.xsd"/>
   <xs:include schemaLocation="entities/demandes.xsd"/>
   <xs:include schemaLocation="entities/interventions.xsd"/>
   <xs:include schemaLocation="entities/fournisseurs.xsd"/>
   <xs:include schemaLocation="entities/equipements.xsd"/>
   <xs:include schemaLocation="entities/ressources.xsd"/>
-    <xs:include schemaLocation="entities/demandesAjout.xsd"/>
-
-  <!-- SUPPRIMER maindoeuvre.xsd -->
+  <xs:include schemaLocation="entities/demandesAjout.xsd"/>
   <xs:include schemaLocation="entities/taches.xsd"/>
   <xs:include schemaLocation="entities/photos.xsd"/>
   <xs:include schemaLocation="workflow/notifications.xsd"/>
@@ -26,11 +33,10 @@
         <xs:element name="Utilisateurs" minOccurs="0">
           <xs:complexType>
             <xs:choice maxOccurs="unbounded">
-              <xs:element name="Citoyen" type="tns:CitoyenType"/>
+              <xs:element name="Citoyen" type="citoyen:CitoyenType"/>
               <xs:element name="Technicien" type="tns:TechnicienType"/>
-              <xs:element name="ChefDeService" type="tns:ChefDeServiceType"/>
-              <xs:element name="Administrateur" type="tns:AdministrateurType"/>
-              <!-- CHANGEMENT : Utiliser MainDOeuvreType au lieu de AgentMainDOeuvreType -->
+              <xs:element name="ChefDeService" type="chef:ChefDeServiceType"/>
+              <xs:element name="Administrateur" type="admin:AdministrateurType"/>
               <xs:element name="MainDOeuvre" type="tns:MainDOeuvreType"/>
             </xs:choice>
           </xs:complexType>

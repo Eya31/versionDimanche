@@ -2,22 +2,23 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://example.com/gestion-interventions"
            xmlns:tns="http://example.com/gestion-interventions"
+           xmlns:base="http://example.com/gestion-interventions/common"
            elementFormDefault="qualified">
 
-  <!-- On inclut ton typesBase.xsd existant (inchangé) -->
-  <xs:include schemaLocation="../common/typesBase.xsd"/>
+  <!-- Import du type base -->
+  <xs:import namespace="http://example.com/gestion-interventions/common"
+             schemaLocation="../common/utilisateur-base.xsd"/>
 
-  
-    <xs:complexType name="TechnicienType">
-        <xs:complexContent>
-            <xs:extension base="base:UtilisateurType">
-                <xs:sequence>
-                    <xs:element name="competences" type="xs:string" maxOccurs="unbounded"/>
-                    <xs:element name="disponibilite" type="xs:boolean"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
+  <xs:complexType name="TechnicienType">
+      <xs:complexContent>
+          <xs:extension base="base:UtilisateurType">
+              <xs:sequence>
+                  <xs:element name="competences" type="xs:string" maxOccurs="unbounded"/>
+                  <xs:element name="disponibilite" type="xs:boolean"/>
+              </xs:sequence>
+          </xs:extension>
+      </xs:complexContent>
+  </xs:complexType>
 
   <!-- Liste des techniciens -->
   <xs:element name="Techniciens">

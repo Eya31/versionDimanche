@@ -24,8 +24,8 @@ public class Tache {
     private String commentaireTechnicien; // Commentaire du technicien lors de la vérification
     private Integer ordre; // Ordre d'exécution (1, 2, 3...)
     private boolean verifiee = false; // Si le technicien a vérifié que la tâche est bien terminée
-private Map<String, Object> interventionInfo;
- public Map<String, Object> getInterventionInfo() {
+    private Map<String, Object> interventionInfo;
+    public Map<String, Object> getInterventionInfo() {
         return interventionInfo;
     }
     

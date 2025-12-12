@@ -60,6 +60,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/error").permitAll()
+                .requestMatchers("/api/demandes/uploads/**").permitAll()  // <-- AJOUTEZ CETTE LIGNE
+
                 
                 // Endpoints ADMIN
                 .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMINISTRATEUR", "ROLE_ADMIN")
@@ -81,6 +83,7 @@ public class SecurityConfig {
                 
                 // Endpoints MAIN_DOEUVRE
                 .requestMatchers("/api/main-doeuvre/**").hasAnyAuthority("ROLE_MAIN_DOEUVRE", "ROLE_ADMINISTRATEUR", "ROLE_ADMIN", "ROLE_CHEF_SERVICE")
+                
                 
                 // Toutes les autres requêtes nécessitent une authentification
                 .anyRequest().authenticated()

@@ -2,6 +2,7 @@ package tn.SGII_Ville.controller;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -229,26 +230,37 @@ public class DemandeController {
         }
     }
 
-    // ==================== SERVE UPLOADED FILES ====================
     @GetMapping("/uploads/{filename:.+}")
-    public ResponseEntity<byte[]> serveUpload(@PathVariable String filename) {
-        try {
-            Path p = fileStorageService.getFilePath(filename);
-            if (p == null || !Files.exists(p)) return ResponseEntity.notFound().build();
-
-            String contentType = Files.probeContentType(p);
-            if (contentType == null) contentType = "application/octet-stream";
-
-            byte[] data = Files.readAllBytes(p);
-            return ResponseEntity.ok()
-                    .header("Content-Disposition", "inline; filename=\"" + filename + "\"")
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .body(data);
-        } catch (IOException e) {
-            logger.error("Erreur lors du chargement du fichier: {}", filename, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+public ResponseEntity<byte[]> serveUpload(@PathVariable String filename) {
+    try {
+        // Décoder le nom de fichier URL-encoded
+        String decodedFilename = URLDecoder.decode(filename, "UTF-8");
+        
+        Path p = fileStorageService.getFilePath(decodedFilename);
+        if (p == null || !Files.exists(p)) {
+            // Essayer sans décodage
+            p = fileStorageService.getFilePath(filename);
+            if (p == null || !Files.exists(p)) {
+                return ResponseEntity.notFound().build();
+            }
         }
+        
+        String contentType = Files.probeContentType(p);
+        if (contentType == null) contentType = "application/octet-stream";
+        
+        byte[] data = Files.readAllBytes(p);
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "inline; filename=\"" + filename + "\"")
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(data);
+    } catch (IOException e) {
+        logger.error("Erreur lors du chargement du fichier: {}", filename, e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    } catch (Exception e) {
+        logger.error("Erreur décodage filename: {}", filename, e);
+        return ResponseEntity.notFound().build();
     }
+}
 
     // ==================== PLANIFIER UNE DEMANDE COMPLÈTE (AVEC TECHNICIEN, RESSOURCES, etc.) ====================
     
@@ -282,7 +294,7 @@ public class DemandeController {
             }
 
             // 3. Notifier le citoyen
-            if (demande.getCitoyenId() > 0) {
+            if (demande.getCitoyenId() != null && demande.getCitoyenId() > 0) {
                 notificationService.notifierCitoyenInterventionLancee(demande.getCitoyenId(), request.getDemandeId(), intervention.getId());
             }
 
@@ -337,7 +349,7 @@ public ResponseEntity<?> planifierDemande(@PathVariable int id) {
         System.out.println("   ✅ Notification admin envoyée");
         
         // 2. Notifier le citoyen que sa demande est acceptée
-        if (demande.getCitoyenId() > 0) {
+        if (demande.getCitoyenId() != null && demande.getCitoyenId() > 0) {
             System.out.println("2️⃣ Notification CITOYEN (ID: " + demande.getCitoyenId() + ") pour intervention lancée...");
             notificationService.notifierCitoyenInterventionLancee(demande.getCitoyenId(), id, intervention.getId());
             System.out.println("   ✅ Notification citoyen envoyée");

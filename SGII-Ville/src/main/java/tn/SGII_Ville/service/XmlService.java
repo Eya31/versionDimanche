@@ -157,7 +157,9 @@ public class XmlService {
                     } catch (NumberFormatException ignored) {}
                 }
             }
+            
         }
+        
         return maxId + 1;
     }
 

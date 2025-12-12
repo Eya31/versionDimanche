@@ -42,6 +42,7 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
   // États UI
   loading = false;
   showNotifications = false;
+  isSubmitting = false; // Flag pour éviter les doubles soumissions
 
   // Filtres
   filtreEtat: string = '';
@@ -171,7 +172,8 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           console.error('Erreur démarrage tâche:', err);
-          alert('❌ Erreur: ' + (err.error?.message || err.message));
+          const errorMsg = err.error?.error || err.error?.message || err.message || 'Erreur inconnue';
+          alert('❌ Erreur: ' + errorMsg);
         }
       });
       this.subscriptions.push(sub);
@@ -188,29 +190,61 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
   }
 
   terminerTache(): void {
-    if (!this.selectedTache) return;
+    if (!this.selectedTache || this.isSubmitting) return;
+
+    this.isSubmitting = true;
 
     const sub = this.mainDoeuvreTacheService.terminerTache(
-      this.selectedTache.id,
-      this.terminerTacheRequest
+        this.selectedTache.id,
+        this.terminerTacheRequest
     ).subscribe({
-      next: (tacheMaj) => {
-        this.mettreAJourTache(tacheMaj as TacheEtendue);
+        next: (tacheMaj) => {
+            this.mettreAJourTache(tacheMaj as TacheEtendue);
+            this.fermerModal();
+            alert('✅ Tâche terminée avec succès');
 
-        // VÉRIFIER SI TOUTES LES TÂCHES DE L'INTERVENTION SONT TERMINÉES
-        this.verifierEtNotifierSiToutesTachesTerminees(tacheMaj.interventionId);
-
-        this.fermerModal();
-        alert('✅ Tâche terminée avec succès');
-      },
-      error: (err) => {
-        console.error('Erreur terminaison tâche:', err);
-        alert('❌ Erreur: ' + (err.error?.message || err.message));
-      }
+            // Afficher une notification spéciale si c'était la dernière tâche
+            this.mainDoeuvreTacheService.verifierToutesTachesTerminees(tacheMaj.interventionId)
+                .subscribe({
+                    next: (result: any) => {
+                        if (result.toutesTerminees) {
+                            this.showSuccessMessage(
+                                '🎉 FÉLICITATIONS !',
+                                `Vous avez terminé toutes les tâches de l'intervention #${tacheMaj.interventionId}.
+                                Le technicien a été notifié et va maintenant vérifier l'intervention.`
+                            );
+                        }
+                    }
+                });
+        },
+        error: (err) => {
+            console.error('Erreur terminaison tâche:', err);
+            console.error('Full error response:', JSON.stringify(err, null, 2));
+            const errorMsg = err.error?.error || err.error?.message || err.message || 'Erreur inconnue';
+            alert('❌ Erreur: ' + errorMsg);
+        },
+        complete: () => {
+            this.isSubmitting = false;
+        }
     });
     this.subscriptions.push(sub);
-  }
+}
 
+private showSuccessMessage(title: string, message: string): void {
+    // Vous pouvez utiliser un service de toast ou une alerte stylée
+    const toast = document.createElement('div');
+    toast.className = 'success-toast';
+    toast.innerHTML = `
+        <div class="toast-header">
+            <strong>${title}</strong>
+        </div>
+        <div class="toast-body">
+            ${message}
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 5000);
+}
   ouvrirModalCommenter(tache: TacheEtendue): void {
     this.selectedTache = tache;
     this.modalAction = 'commenter';
@@ -260,7 +294,8 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Erreur report tâche:', err);
-        alert('❌ Erreur: ' + (err.error?.message || err.message));
+        const errorMsg = err.error?.error || err.error?.message || err.message || 'Erreur inconnue';
+        alert('❌ Erreur: ' + errorMsg);
       }
     });
     this.subscriptions.push(sub);
@@ -289,7 +324,8 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Erreur suspension tâche:', err);
-        alert('❌ Erreur: ' + (err.error?.message || err.message));
+        const errorMsg = err.error?.error || err.error?.message || err.message || 'Erreur inconnue';
+        alert('❌ Erreur: ' + errorMsg);
       }
     });
     this.subscriptions.push(sub);
@@ -303,8 +339,9 @@ export class MainDOeuvreDashboardComponent implements OnInit, OnDestroy {
           alert('✅ Tâche reprise avec succès');
         },
         error: (err) => {
-          console.error('Erreur reprise tâche:', err);
-          alert('❌ Erreur: ' + (err.error?.message || err.message));
+          console.error('Erreur vérification tâche:', err);
+          const errorMsg = err.error?.error || err.error?.message || err.message || 'Erreur inconnue';
+          alert('❌ Erreur: ' + errorMsg);
         }
       });
       this.subscriptions.push(sub);

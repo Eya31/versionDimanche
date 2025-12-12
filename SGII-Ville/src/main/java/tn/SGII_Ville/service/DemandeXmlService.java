@@ -120,29 +120,62 @@ public class DemandeXmlService {
             localisation.setLongitude(lng);
         }
 
-        // Photos
-        List<Integer> photoRefs = new ArrayList<>();
-        List<Photo> photos = new ArrayList<>();
+        // Photos - CORRECTION POUR photoIds
+List<Integer> photoRefs = new ArrayList<>();
+List<Photo> photos = new ArrayList<>();
 
-        Element attachmentsEl = (Element) demandeElement.getElementsByTagNameNS(xmlService.getNamespaceUri(), "attachments").item(0);
+// Chercher l'élément photoIds (avec namespace d'abord)
+Element photoIdsEl = null;
+NodeList photoIdsList = demandeElement.getElementsByTagNameNS(xmlService.getNamespaceUri(), "photoIds");
+if (photoIdsList.getLength() > 0) {
+    photoIdsEl = (Element) photoIdsList.item(0);
+} 
+// Fallback : sans namespace
+else {
+    NodeList fallbackPhotoIds = demandeElement.getElementsByTagName("photoIds");
+    if (fallbackPhotoIds.getLength() > 0) {
+        photoIdsEl = (Element) fallbackPhotoIds.item(0);
+    }
+}
 
-        if (attachmentsEl != null) {
-            NodeList refNodes = attachmentsEl.getElementsByTagNameNS(xmlService.getNamespaceUri(), "photoRef");
-
-            for (int i = 0; i < refNodes.getLength(); i++) {
-                try {
-                    int photoId = Integer.parseInt(
-                            xmlService.getElementTextContent((Element) refNodes.item(i), "id_photo")
-                    );
-
-                    photoRefs.add(photoId);
-
-                    Photo p = photoXmlService.findById(photoId);
-                    if (p != null) photos.add(p);
-
-                } catch (Exception ignored) {}
+if (photoIdsEl != null) {
+    System.out.println("=== DEBUG PHOTO PARSING FOR DEMANDE #" + id + " ===");
+    System.out.println("DEBUG: Found photoIds element for demande #" + id);
+    
+    // Chercher les éléments photoId
+    NodeList photoIdNodes = photoIdsEl.getElementsByTagNameNS(xmlService.getNamespaceUri(), "photoId");
+    if (photoIdNodes.getLength() == 0) {
+        // Fallback : sans namespace
+        photoIdNodes = photoIdsEl.getElementsByTagName("photoId");
+    }
+    
+    System.out.println("DEBUG: Found " + photoIdNodes.getLength() + " photoId elements");
+    
+    for (int i = 0; i < photoIdNodes.getLength(); i++) {
+        // Pour photoId, l'ID est directement le contenu textuel de l'élément
+        String photoIdStr = photoIdNodes.item(i).getTextContent().trim();
+        
+        if (photoIdStr != null && !photoIdStr.isEmpty()) {
+            try {
+                int photoId = Integer.parseInt(photoIdStr);
+                photoRefs.add(photoId);
+                
+                Photo p = photoXmlService.findById(photoId);
+                if (p != null) {
+                    photos.add(p);
+                    System.out.println("DEBUG: Added photo ID " + photoId + " - URL: " + p.getUrl());
+                } else {
+                    System.out.println("WARNING: Photo ID " + photoId + " not found in photoXmlService");
+                }
+                
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid photo ID format: " + photoIdStr);
             }
         }
+    }
+} else {
+    System.out.println("DEBUG: No photoIds element found for demande #" + id);
+}
 
  // Lecture du champ isAnonymous
     String isAnonymousStr = xmlService.getElementTextContent(demandeElement, "isAnonymous");

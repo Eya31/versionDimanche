@@ -1138,7 +1138,7 @@ public class TechnicienController {
             // Notification au citoyen
             if (intervention.getDemandeId() > 0) {
                 Demande demande = demandeService.findById(intervention.getDemandeId());
-                if (demande != null && demande.getCitoyenId() > 0) {
+                if (demande != null && demande.getCitoyenId() != null && demande.getCitoyenId() > 0) {
                     notificationService.notifierCitoyen(demande.getCitoyenId(),
                         "Votre demande #" + demande.getId() + " a été traitée avec succès ! Intervention #" + interventionId + " terminée.");
                 }
@@ -1163,4 +1163,38 @@ public class TechnicienController {
         
         return user.getId();
     }
+    /**
+ * GET /api/technicien/interventions/{id}/taches/statut
+ * Vérifie si toutes les tâches d'une intervention sont terminées
+ */
+@GetMapping("/interventions/{id}/taches/statut")
+public ResponseEntity<?> verifierStatutTaches(@PathVariable int id) {
+    try {
+        Intervention intervention = interventionService.findById(id);
+        if (intervention == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        // Récupérer toutes les tâches
+        List<Tache> taches = tacheService.findByInterventionId(id);
+        
+        Map<String, Object> result = new HashMap<>();
+        result.put("interventionId", id);
+        result.put("totalTaches", taches.size());
+        result.put("tachesTerminees", taches.stream()
+                .filter(t -> "TERMINEE".equals(t.getEtat()))
+                .count());
+        result.put("tachesVerifiees", taches.stream()
+                .filter(t -> "VERIFIEE".equals(t.getEtat()))
+                .count());
+        result.put("toutesTerminees", taches.stream()
+                .allMatch(t -> "TERMINEE".equals(t.getEtat()) || "VERIFIEE".equals(t.getEtat())));
+        
+        return ResponseEntity.ok(result);
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
 }

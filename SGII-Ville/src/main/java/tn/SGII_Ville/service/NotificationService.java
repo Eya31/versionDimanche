@@ -6,6 +6,7 @@ import tn.SGII_Ville.entities.Notification;
 import tn.SGII_Ville.entities.Utilisateur;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -142,15 +143,7 @@ public class NotificationService {
     /**
      * Notifie un technicien (méthode générique)
      */
-    public void notifierTechnicien(int technicienId, String message) {
-        Notification notification = new Notification();
-        notification.setMessage(message);
-        notification.setCreatedAt(LocalDateTime.now());
-        notification.setUserId(technicienId);
-        notification.setReadable(false);
-        
-        notificationXmlService.save(notification);
-    }
+    
 
     /**
      * Notifie une main-d'œuvre
@@ -319,5 +312,56 @@ public void notifierTechnicienChangementEtatTache(int technicienId, int tacheId,
     
     notificationXmlService.save(notification);
     System.out.println("📢 Notification envoyée au technicien #" + technicienId + " : changement état tâche #" + tacheId + " (" + ancienEtat + " → " + nouvelEtat + ")");
+}
+public boolean creerNotificationPourDemande(int userId, String message) {
+        try {
+            Notification notification = new Notification();
+            notification.setMessage(message);
+            notification.setUserId(userId);
+            notification.setCreatedAt(LocalDateTime.now());
+            notification.setReadable(false);
+            
+            notificationXmlService.save(notification);
+            return true;
+        } catch (Exception e) {
+            System.err.println("❌ Erreur création notification: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean creerNotificationTest(int userId, String message) {
+        try {
+            String testMessage = "🧪 TEST: " + message + " - " + 
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            
+            return creerNotificationPourDemande(userId, testMessage);
+        } catch (Exception e) {
+            System.err.println("❌ Erreur test notification: " + e.getMessage());
+            return false;
+        }
+    }
+    /**
+ * Notifie un technicien (méthode générique)
+ */
+public void notifierTechnicien(int technicienId, String message) {
+    System.out.println("🔔 NOTIFICATION TECHNICIEN appelée");
+    System.out.println("👷 Technicien ID: " + technicienId);
+    System.out.println("📝 Message: " + message);
+    
+    try {
+        Notification notification = new Notification();
+        notification.setMessage(message);
+        notification.setCreatedAt(LocalDateTime.now());
+        notification.setUserId(technicienId);
+        notification.setReadable(false);
+        
+        System.out.println("💾 Sauvegarde notification...");
+        Notification saved = notificationXmlService.save(notification);
+        System.out.println("✅ Notification créée avec ID: " + saved.getIdNotification());
+        
+    } catch (Exception e) {
+        System.err.println("❌ Erreur création notification technicien: " + e.getMessage());
+        e.printStackTrace();
+    }
 }
 }
